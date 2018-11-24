@@ -1,0 +1,54 @@
+<html>
+<meta charset="utf-8">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Data Pipeline Dashboard</title>
+  
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-firestore.js"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCUHQE4gDk35-BtZrlNEkNbr1nX2Yn4l5Q",
+            authDomain: "avf-dashboards.firebaseapp.com",
+            databaseURL: "https://avf-dashboards.firebaseio.com",
+            projectId: "avf-dashboards",
+            storageBucket: "avf-dashboards.appspot.com",
+            messagingSenderId: "1063777163571"
+        };
+        firebase.initializeApp(config);
+    </script>
+</head>
+<body>
+    
+<script src="coding_progress.js"></script>
+
+<table>
+    <thead>
+    <tr>
+        <td>Dataset</td>
+        <td>Messages</td>
+        <td>Messages with a label</td>
+        <td>Done</td>
+    </tr>
+    </thead>
+    <tbody id="coding_status_body">
+    </tbody>
+</table>
+
+<hr />
+
+<div id="last_update">Last updated: </div>
+
+
+</body>
+</html>
