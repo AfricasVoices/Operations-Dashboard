@@ -1,0 +1,29 @@
+
+.nav{
+    background: #8D3538;
+    width: 100%;
+    max-width:initial;
+  }
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+  }
+.row > div{
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #fff;
+}
+.row{
+  margin: 40px auto;
+}
+
+.brand-logo{
+  font-weight:900;
+  padding:5;
+}
+th {
+    background-color: #5CA5AE;
+    color: white;
+    height: 50 px;
+}

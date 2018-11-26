@@ -4,10 +4,10 @@ progress_fs.settings(settings);
 progress_fs.doc('metrics/coda').onSnapshot(res => {
     update_progress_ui(res.data());
 });
-
 function update_progress_ui(data) {
     console.log("update_ui: " + JSON.stringify(data));
     var status_body = document.getElementById('coding_status_body');
+
     
     while (status_body.firstChild) {
         status_body.removeChild(status_body.firstChild);
@@ -15,6 +15,7 @@ function update_progress_ui(data) {
 
     last_update = data["last_update"]
     document.getElementById('last_update').innerText = "Last updated: " + last_update
+
 
     for (var dataset_id in data["coding_progress"]) {
         var messages_count = data["coding_progress"][dataset_id]["messages_count"]
