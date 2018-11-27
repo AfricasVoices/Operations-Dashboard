@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Pipeline Dashboard</title>
-    
+    <title>Data Pipeline Dashboard</title>  
     <!-- Compiled and minified CSS -->
     <script
     src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"> </script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-firestore.js" ></script>
     <script>
@@ -28,34 +27,31 @@
         };
         firebase.initializeApp(config);
     </script>
-
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
-<nav class='nav'>
-    <div class="nav-wrapper">
-        <a href="https://www.africasvoices.org/wp-content/themes/africa/static/img/africas-voices-logo-pad.svg" class="brand-logo center">Operations Dashboard</a>
-            <ul class="right hide-on-med-and-down">
-            <li><a href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">Message Coding</a></li>
+    <nav class='nav'>
+        <div class="nav-wrapper container">
+            <img class='brand-logo'src="avfdashboardlogo.png">
+            <ul class="right">
+                <li><a class='nav-link' href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">MESSAGE CODING</a></li>       
             </ul>
+        </div>
+    </nav>    
+    <script src="coding_progress.js"></script>
+    <div class="container">
+        <table id='codingtable'>
+            <thead>
+                <tr class='table-heading'>
+                    <th>Dataset</th>
+                    <th>Messages</th>
+                    <th>Messages with a label</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody id="coding_status_body"></tbody>
+        </table>
+        <div id="last_update">Last updated: </div>
     </div>
-</nav>    
-<script src="coding_progress.js"></script>
-<div class="container">
-<table class='datatable'>
-    <thead>
-    <tr>
-        <th>Dataset</th>
-        <th>Messages</th>
-        <th>Messages with a label</th>
-        <th>Done</th>
-    </tr>
-    </thead>
-    <tbody id="coding_status_body">
-    </tbody>
-</table>
-
-<div id="last_update">Last updated: </div>
-</div>
-
 </body>
 </html>

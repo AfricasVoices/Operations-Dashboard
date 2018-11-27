@@ -1,29 +1,18 @@
-
 .nav{
-    background: #8D3538;
+    background: #ffff;
     width: 100%;
     max-width:initial;
+    height:80px;
   }
-.line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 2px;
-  }
-.row > div{
-  padding: 10px;
-  background: #fff;
-  border: 1px solid #fff;
+  .nav-link {
+    color: #8d3538; 
 }
-.row{
-  margin: 40px auto;
-}
-
 .brand-logo{
-  font-weight:900;
   padding:5;
+  height:60px;
 }
-th {
-    background-color: #5CA5AE;
-    color: white;
+.table-heading {
+    background-color: #8e3436;
     height: 50 px;
+    color:#ffff;
 }
