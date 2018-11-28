@@ -19,7 +19,7 @@ function update_progress_ui(data) {
         rw.insertCell().innerText = dataset_id
         rw.insertCell().innerText = messages_count
         rw.insertCell().innerText = messages_with_label
-        rw.insertCell().innerText = (100 * messages_with_label / messages_count).toFixed(2) + "%"  
+        rw.insertCell().innerText = (100 * messages_with_label / messages_count).toFixed(2) + '%' 
         console.log(dataset_id, messages_count, messages_with_label);
       }
 }
