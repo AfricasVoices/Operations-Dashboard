@@ -27,27 +27,6 @@
         };
         firebase.initializeApp(config);
     </script>
-    <script>
-            $(document).ready(function(){
-                //Grab the cells of the last rows
-                $('#codingtable td:nth-child(4)').each(function() {
-                    var Done = $(this).text();
-                    //Style the entire row conditionally based on the cell value
-                    if ((Done > 0) && (Done <= 25)) {
-					    $(this).parent().css('background-color', '#ffe5e5'); 
-					}
-					else if((Done > 25) && (Done <= 50)) {
-						$(this).parent().css('background-color', '#87cefa'); 
-					}
-					else if((Done > 50) && (Done <= 75)) {
-						$(this).parent().css('background-color', '#d6ffd9'); 
-					}
-					else {
-						$(this).parent().css('background-color', 'white'); 
-					}
-                });
-            });
-    </script>
 </head>
 <body>
     <nav class='nav'>

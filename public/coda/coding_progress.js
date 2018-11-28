@@ -19,7 +19,32 @@ function update_progress_ui(data) {
         rw.insertCell().innerText = dataset_id
         rw.insertCell().innerText = messages_count
         rw.insertCell().innerText = messages_with_label
-        rw.insertCell().innerText = (100 * messages_with_label / messages_count).toFixed(2) + '%' 
+        rw.insertCell().innerText = (100 * messages_with_label / messages_count).toFixed(2) + '%'
         console.log(dataset_id, messages_count, messages_with_label);
-      }
+    //Formating the rows based on cell value
+        $(document).ready(function(){
+            //Grab the cells of the last rows
+            $('#codingtable td:nth-child(4)').each(function() {
+               var Done = $(this).text();
+                //Style the entire row conditionally based on the cell value
+                if ((parseFloat(Done) >= 0) && (parseFloat(Done) <= 25)) {
+                    $(this).parent().css('background-color', '#ffe5e5');
+                }
+                else if((parseFloat(Done) > 25) && (parseFloat(Done) <= 50)) {
+                    $(this).parent().css('background-color', '#87cefa'); 
+                }
+                else if((parseFloat(Done)> 50) && (parseFloat(Done) <= 75)) {
+                    $(this).parent().css('background-color', '#fff6d6'); 
+                }
+                else if((parseFloat(Done) > 75) && (parseFloat(Done) <100)) {
+                    $(this).parent().css('background-color', '#d6ffd9'); 
+                }
+                else {
+                    $(this).parent().css('background-color', 'white'); 
+                }
+            });
+        });
+        
+
+    }
 }
