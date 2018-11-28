@@ -33,10 +33,10 @@ function update_progress_ui(data) {
                 else if((parseFloat(Done) > 25) && (parseFloat(Done) <= 50)) {
                     $(this).parent().css('background-color', '#87cefa'); 
                 }
-                else if((parseFloat(Done)> 50) && (parseFloat(Done) <= 75)) {
+                else if((parseFloat(Done) > 50) && (parseFloat(Done) <= 75)) {
                     $(this).parent().css('background-color', '#fff6d6'); 
                 }
-                else if((parseFloat(Done) > 75) && (parseFloat(Done) <100)) {
+                else if((parseFloat(Done) > 75) && (parseFloat(Done) < 100)) {
                     $(this).parent().css('background-color', '#d6ffd9'); 
                 }
                 else {
