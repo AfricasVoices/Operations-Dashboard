@@ -20,7 +20,6 @@ function update_progress_ui(data) {
         rw.insertCell().innerText = messages_count
         rw.insertCell().innerText = messages_with_label
         rw.insertCell().innerText = (100 * messages_with_label / messages_count).toFixed(2) + '%'
-        console.log(dataset_id, messages_count, messages_with_label);
     //Formating the rows based on cell value
         $(document).ready(function(){
             //Grab the cells of the last rows
@@ -44,7 +43,11 @@ function update_progress_ui(data) {
                 }
             });
         });
-        
-
+        //Table sorting using tablesorter plugin based on fraction of message labelling complete
+        $(function() {
+            $("#codingtable").tablesorter({
+                    sortList : [[3,0]]
+            });
+        });   
     }
 }
