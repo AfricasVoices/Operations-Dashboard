@@ -28,19 +28,19 @@ function update_progress_ui(data) {
                var Done = $(this).text();
                 //Style the entire row conditionally based on the cell value
                 if ((parseFloat(Done) >= 0) && (parseFloat(Done) <= 25)) {
-                    $(this).parent().css('background-color', '#ffe5e5');
+                    $(this).parent().addClass('coding-below25'); 
                 }
                 else if((parseFloat(Done) > 25) && (parseFloat(Done) <= 50)) {
-                    $(this).parent().css('background-color', '#87cefa'); 
+                    $(this).parent().addClass('coding-above25'); 
                 }
                 else if((parseFloat(Done)> 50) && (parseFloat(Done) <= 75)) {
-                    $(this).parent().css('background-color', '#fff6d6'); 
+                    $(this).parent().addClass('coding-above50'); 
                 }
                 else if((parseFloat(Done) > 75) && (parseFloat(Done) <100)) {
-                    $(this).parent().css('background-color', '#d6ffd9'); 
+                    $(this).parent().addClass('coding-above75'); 
                 }
                 else {
-                    $(this).parent().css('background-color', 'white'); 
+                    $(this).parent().addClass('coding-complete'); 
                 }
             });
         });
