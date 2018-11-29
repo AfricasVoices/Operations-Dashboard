@@ -47,6 +47,7 @@ function update_progress_ui(data) {
         //Table sorting using tablesorter plugin based on fraction of message labelling complete
         $(function() {
             $("#codingtable").tablesorter({
+                //sorting on page load, column four in descending order i.e from least coded to most coded.
                     sortList : [[3,0]]
             });
         });   
