@@ -44,7 +44,5 @@ function update_progress_ui(data) {
                 }
             });
         });
-        
-
     }
 }
