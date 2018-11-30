@@ -11,6 +11,9 @@
   height:40px;
   margin-top:10px;
 }
+a {
+    color: black;
+}
 .table-heading {
     background-color: #8e3436;
     height: 30px;
@@ -37,7 +40,12 @@
     line-height:4px;
 }
 .coding-below25{
-    background-color:#ffe5e5;
+    background-color:#ffd1d1;
+    font-size:16;
+    line-height:4px;
+}
+.coding-notstarted{
+    background-color:#fc9f9f;
     font-size:16;
     line-height:4px;
 }
