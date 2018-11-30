@@ -2,17 +2,50 @@
     background: #ffff;
     width: 100%;
     max-width:initial;
-    height:80px;
+    height:60px;
   }
 .nav-link {
     color: #8d3538; 
 }
 .brand-logo{
-  padding:5;
-  height:60px;
+  height:40px;
+  margin-top:10px;
+}
+a {
+    color: black;
 }
 .table-heading {
     background-color: #8e3436;
-    height: 50 px;
+    height: 30px;
     color:#ffff;
+}
+.coding-notstarted{
+    background-color:#fc9f9f;
+    font-size:16;
+    line-height:4px;
+}
+.coding-below25{
+    background-color:#ffd1d1;
+    font-size:16;
+    line-height:4px;
+}
+.coding-above25{
+    background-color:#87cefa;
+    font-size:16;
+    line-height:4px;
+}
+.coding-above50{
+    background-color: #fff6d6;
+    font-size:16;
+    line-height:4px;
+}
+.coding-above75{
+    background-color:#d6ffd9;
+    font-size:16;
+    line-height:3px;
+}
+.coding-complete{
+    background-color: white;
+    font-size:15;
+    line-height:1px;
 }
