@@ -12,17 +12,15 @@ function update_progress_ui(data) {
     }
     last_update = data["last_update"]
     document.getElementById('last_update').innerText = "Last updated: " + last_update
-    Ke_time=new Date(last_update)
-    console.log(Ke_time);
     for (var dataset_id in data["coding_progress"]) {
         var messages_count = data["coding_progress"][dataset_id]["messages_count"]
         var messages_with_label = data["coding_progress"][dataset_id]["messages_with_label"]
-        var dataset_url = document.createElement("a")
-            dataset_url.setAttribute("href", "https://web-coda.firebaseapp.com/?dataset="+dataset_id)
-            dataset_url.setAttribute('target', '_blank')
-            dataset_url.innerText=dataset_id     
+        var dataset_link = document.createElement("a")
+            dataset_link.setAttribute("href", "https://web-coda.firebaseapp.com/?dataset="+dataset_id)
+            dataset_link.setAttribute('target', '_blank')
+            dataset_link.innerText=dataset_id     
         rw = status_body.insertRow()
-        rw.insertCell().appendChild(dataset_url)
+        rw.insertCell().appendChild(dataset_link)
         rw.insertCell().innerText = messages_count
         rw.insertCell().innerText = messages_with_label
         rw.insertCell().innerText = (100 * messages_with_label / messages_count).toFixed(2) + '%'

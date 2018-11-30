@@ -19,23 +19,8 @@ a {
     height: 30px;
     color:#ffff;
 }
-.coding-complete{
-    background-color: white;
-    font-size:15;
-    line-height:1px;
-}
-.coding-above75{
-    background-color:#d6ffd9;
-    font-size:16;
-    line-height:3px;
-}
-.coding-above50{
-    background-color: #fff6d6;
-    font-size:16;
-    line-height:4px;
-}
-.coding-above25{
-    background-color:#87cefa;
+.coding-notstarted{
+    background-color:#fc9f9f;
     font-size:16;
     line-height:4px;
 }
@@ -44,8 +29,23 @@ a {
     font-size:16;
     line-height:4px;
 }
-.coding-notstarted{
-    background-color:#fc9f9f;
+.coding-above25{
+    background-color:#87cefa;
     font-size:16;
     line-height:4px;
+}
+.coding-above50{
+    background-color: #fff6d6;
+    font-size:16;
+    line-height:4px;
+}
+.coding-above75{
+    background-color:#d6ffd9;
+    font-size:16;
+    line-height:3px;
+}
+.coding-complete{
+    background-color: white;
+    font-size:15;
+    line-height:1px;
 }
