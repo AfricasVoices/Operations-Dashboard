@@ -12,21 +12,22 @@
     crossorigin="anonymous"> </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-firestore.js" ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.1/js/jquery.tablesorter.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-auth.js"></script>
+    <script type="text/javascript"  src="auth.js"></script>
     <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyCUHQE4gDk35-BtZrlNEkNbr1nX2Yn4l5Q",
-            authDomain: "avf-dashboards.firebaseapp.com",
-            databaseURL: "https://avf-dashboards.firebaseio.com",
-            projectId: "avf-dashboards",
-            storageBucket: "avf-dashboards.appspot.com",
-            messagingSenderId: "1063777163571"
-        };
-        firebase.initializeApp(config);
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyCUHQE4gDk35-BtZrlNEkNbr1nX2Yn4l5Q",
+        authDomain: "avf-dashboards.firebaseapp.com",
+        databaseURL: "https://avf-dashboards.firebaseio.com",
+        projectId: "avf-dashboards",
+        storageBucket: "avf-dashboards.appspot.com",
+        messagingSenderId: "1063777163571"
+      };
+      firebase.initializeApp(config);
     </script>
 </head>
 <body>
@@ -34,8 +35,9 @@
         <div class="nav-wrapper container">
             <img class='brand-logo'src="avfdashboardlogo.png">
             <ul class="right">
-                <li><a class='nav-link' href="https://avf-dashboards.firebaseapp.com/index.html">MESSAGE CODING</a></li>       
-            </ul>
+                <li><a class='nav-link' href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">MESSAGE CODING</a></li>       
+                <li><a class='nav-link' onClick="logout();">Logout</a></li>   
+              </ul>
         </div>
     </nav>    
     <script src="coding_progress.js"></script>
