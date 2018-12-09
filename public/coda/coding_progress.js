@@ -26,7 +26,7 @@ function update_progress_ui(data) {
         var messages_count = data["coding_progress"][dataset_id]["messages_count"]
         var messages_with_label = data["coding_progress"][dataset_id]["messages_with_label"]
         var wrong_scheme_messages = data['coding_progress'][dataset_id]['wrong_scheme_messages']
-        var not_codable_messages = data['coding_progress'][dataset_id]['not_coded_messages']
+        var not_coded_messages = data['coding_progress'][dataset_id]['not_coded_messages']
         var dataset_link = document.createElement("a")
             dataset_link.setAttribute("href", "https://web-coda.firebaseapp.com/?dataset="+dataset_id)
             dataset_link.setAttribute('target', '_blank')
@@ -36,11 +36,11 @@ function update_progress_ui(data) {
         rw.insertCell().innerText = messages_count
         rw.insertCell().innerText = messages_with_label
         rw.insertCell().innerText = (100 * messages_with_label / messages_count).toFixed(2) + '%'
-        rw.insertCell().innerText = wrong_scheme_messages
-        rw.insertCell().innerText = (100 * wrong_scheme_messages / messages_count).toFixed(2) + '%'
-        rw.insertCell().innerText = not_codable_messages
-        rw.insertCell().innerText = (100 * not_codable_messages / messages_count).toFixed(2) + '%'
-        console.log(dataset_id, messages_count, messages_with_label,wrong_scheme_messages,not_codable_messages);
+        rw.insertCell().innerText = wrong_scheme_messages != null ? wrong_scheme_messages : "-"
+        rw.insertCell().innerText = wrong_scheme_messages != null ? (100 * wrong_scheme_messages / messages_count).toFixed(2) + '%' : "-"
+        rw.insertCell().innerText = not_coded_messages != null ? not_coded_messages : "-"
+        rw.insertCell().innerText = not_coded_messages != null ?(100 * not_coded_messages / messages_count).toFixed(2) + '%' : "-"
+        console.log(dataset_id, messages_count, messages_with_label,wrong_scheme_messages,not_coded_messages);
         //Table sorting using tablesorter plugin based on fraction of message labelling complete   
         $("#codingtable").tablesorter({
             //sorting on page load, column four in descending order i.e from least coded to most coded.
