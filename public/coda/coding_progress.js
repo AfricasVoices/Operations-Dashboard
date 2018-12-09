@@ -1,9 +1,19 @@
-const progress_fs = firebase.firestore();
-const settings = {timestampsInSnapshots: true};
-progress_fs.settings(settings);
-progress_fs.doc('metrics/coda').onSnapshot(res => {
-    update_progress_ui(res.data());
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        console.log("Attempting to bind: " + user.email)
+        const progress_fs = firebase.firestore();
+        const settings = {timestampsInSnapshots: true};
+        progress_fs.settings(settings);
+        progress_fs.doc('metrics/coda').onSnapshot(res => {
+            update_progress_ui(res.data());
+        });
+        
+        console.log('Bind Successful');
+    } else {
+        window.location.replace('auth.html')
+    }
 });
+
 function update_progress_ui(data) {
     console.log("update_ui: " + JSON.stringify(data));
     var status_body = document.getElementById('coding_status_body');
