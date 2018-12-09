@@ -16,7 +16,7 @@ function update_progress_ui(data) {
         var messages_count = data["coding_progress"][dataset_id]["messages_count"]
         var messages_with_label = data["coding_progress"][dataset_id]["messages_with_label"]
         var wrong_scheme_messages = data['coding_progress'][dataset_id]['wrong_scheme_messages']
-        var not_codable_messages = data['coding_progress'][dataset_id]['not_codable_messages']
+        var not_codable_messages = data['coding_progress'][dataset_id]['not_coded_messages']
         var dataset_link = document.createElement("a")
             dataset_link.setAttribute("href", "https://web-coda.firebaseapp.com/?dataset="+dataset_id)
             dataset_link.setAttribute('target', '_blank')
