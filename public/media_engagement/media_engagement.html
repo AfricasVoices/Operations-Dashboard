@@ -1,5 +1,4 @@
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,8 +17,7 @@
     <script type="text/javascript" src="../../public/coda/auth.js"></script>
     <script type="text/javascript" src="firebase.js"></script>
 </head>
-
-<body>
+<body class="body">
     <nav class='nav'>
         <div class="nav-wrapper container">
             <img class='brand-logo' src="avfdashboardlogo.png">
@@ -31,29 +29,44 @@
         </div>
     </nav>
     <div class="container">
-        <div class="row totalsmsgraph"></div>
-        <div class="row operatorgraph"></div>
+        <div class="row ">
+            <div class="card white z-depth-1 totalsmsgraph"></div>
+        </div>
+        <div class="row ">
+            <div class="card white z-depth-1 operatorgraph"></div>
+        </div>
         <div class="row">
-            <div class='col s6 m6 l6 responsetext'>
-                <b>Response Information</b></br>
-                <div id="total_received">Total Messasages received: </div>
-                <div id="total_sent">Total Messages Sent: </div>
-                <div id="response_rate">Response rate: </div>
-                <div id="last_update">Last updated: </div>
+            <div class='col s4 m4 l4'>
+                <div class='card white z-depth-2  responsetext '>
+                    <b>Response information</b></br>
+                    <div id="total_sms_received"></div>
+                    <div id="total_sent">Total messages sent: </div>
+                    <div id="response_rate">Response rate: </div>
+                    <div id="last_update">Last updated: </div>
+                </div>
             </div>
-            <div class='col s6 m6 l6 operatortext'>
-                <b>Total Message per operator</b></br>
-                <div>Golis: </div>
-                <div>Hormud: </div>
-                <div>Hormud: </div>
-                <div>NationLink: </div>
-                <div>Somtel: </div>
-                <div>Telesom: </div>
+            <div class='col s4 m4 l4'>
+                <div class='card white z-depth-2 operatortext'>
+                    <b>Total messages received per operator</b></br>
+                    <div id="total_golis_messages"></div>
+                    <div id="total_hormud_messages"></div>
+                    <div id="total_nationlink_messages"></div>
+                    <div id="total_somtel_messages"></div>
+                    <div id="total_telesom_messages"></div>
+                </div>
+            </div>
+            <div class='col s4 m4 l4'>
+                <div class='card white z-depth-2 operatortext'>
+                    <b>Project Details</b></br>
+                    <div id="project_name">Project Name:</div>
+                    <div id="texit_units_used">Textit Units Used:</div>
+                    <div id="texit_units_bal">Texit Unit balance:</div>
+                    <div id="africastalking_units_used">AT Units Used:</div>
+                    <div id="africastalking_units_bal">AT Units Balance</div>
+                </div>
             </div>
         </div>
-    </div>
-    <script src="https://d3js.org/d3.v5.js"></script>
-    <script src="media_engagement.js"></script>
+        <script src="https://d3js.org/d3.v5.js"></script>
+        <script src="media_engagement.js"></script>
 </body>
-
 </html>
