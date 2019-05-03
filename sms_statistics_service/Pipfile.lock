@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "720231f1f98dca799ef0ffed79a836cd8b774e2d6260c3a6cb2ef5b39a51c777"
+            "sha256": "0298cca7ded5bcfff2580893b6eb4dfb5e45b6d7985928d52a3a98f43a70b1ae"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -180,6 +180,14 @@
             ],
             "version": "==2.8"
         },
+        "iso8601": {
+            "hashes": [
+                "sha256:210e0134677cc0d02f6028087fee1df1e1d76d372ee1db0bf30bf66c5c1c89a3",
+                "sha256:49c4b20e1f38aa5cf109ddcd39647ac419f928512c869dc01d5c7098eddede82",
+                "sha256:bbbae5fb4a7abfe71d4688fd64bff70b91bbd74ef6a99d964bab18f7fdf286dd"
+            ],
+            "version": "==0.1.12"
+        },
         "jsonpickle": {
             "hashes": [
                 "sha256:0231d6f7ebc4723169310141352d9c9b7bbbd6f3be110cf634575d2bf2af91f0",
@@ -277,6 +285,7 @@
                 "sha256:7e6584c74aeed623791615e26efd690f29817a27c73085b78e4bad02493df2fb",
                 "sha256:c89805f6f4d64db21ed966fda138f8a5ed7a4fdbc1a8ee329ce1b74e3c74da9e"
             ],
+            "index": "pypi",
             "version": "==2.8.0"
         },
         "pytz": {
@@ -285,6 +294,18 @@
                 "sha256:d747dd3d23d77ef44c6a3526e274af6efeb0a6f1afd5a69ba4d5be4098c8e141"
             ],
             "version": "==2019.1"
+        },
+        "rapidpro-python": {
+            "hashes": [
+                "sha256:19dea98782f6055a23816d727073d2024bf8f001f0208fcf7baa87aad86773b7",
+                "sha256:a1d09839051ceb23bf0251fc76b9a5ffbd2a98a59d1470968dd669180c9ff4f1"
+            ],
+            "version": "==2.5.1"
+        },
+        "rapidprotools": {
+            "editable": true,
+            "git": "https://www.github.com/AfricasVoices/RapidProTools",
+            "ref": "e0d9421da0fd26b59c66fb4b1817787a465b1d67"
         },
         "requests": {
             "hashes": [
