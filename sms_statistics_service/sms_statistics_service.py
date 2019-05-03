@@ -16,7 +16,9 @@ log = Logger(__name__)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="TODO")
+    parser = argparse.ArgumentParser(description="Updates the incoming/outgoing/errored message counts for the "
+                                                 "currently active projects over the requested time range. "
+                                                 "Active projects are read from Firestore")
 
     parser.add_argument("google_cloud_credentials_file_path", metavar="google-cloud-credentials-file-path",
                         help="Path to a Google Cloud service account credentials file to use to access the "
@@ -25,9 +27,9 @@ if __name__ == "__main__":
                         help="GS URL to the credentials file to use to access the Firestore instance with "
                              "the operations statistics")
     parser.add_argument("start_minute_inclusive", metavar="start-minute-inclusive",
-                        help="ISO 8601 string for the starting datetime range to ")
+                        help="ISO 8601 string for the start of the datetime range to update sms statistics for")
     parser.add_argument("end_minute_exclusive", metavar="end-minute-inclusive",
-                        help="ISO 8601 string for the ending datetime range to ")
+                        help="ISO 8601 string for the end of the datetime range to update sms statistics for ")
 
     args = parser.parse_args()
 
@@ -59,7 +61,7 @@ if __name__ == "__main__":
 
         log.info("Computing message stats for each minute...")
         # Create a table of counts for all the minutes of interest, with all counts initialised to 0
-        stats = dict()  # of minute -> SMSStats
+        stats = dict()  # of minute iso_string -> SMSStats
         minute = start_minute_inclusive
         while minute < end_minute_exclusive:
             stats[minute.astimezone(pytz.utc).isoformat(timespec="minutes")] = SMSStats()
