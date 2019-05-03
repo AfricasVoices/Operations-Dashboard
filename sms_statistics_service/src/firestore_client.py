@@ -17,6 +17,12 @@ class FirestoreClient(object):
         firebase_admin.initialize_app(cred)
         self.client = firestore.client()
 
+    def _get_active_projects_collection_ref(self):
+        return self.client.collection(f"active_projects")
+
+    def _get_sms_stat_doc_ref(self, project_name, iso_string):
+        return self.client.document(f"metrics/rapid_pro/{project_name}/{iso_string}")
+
     def get_active_projects(self):
         """
         Downloads all the active projects from Firestore
@@ -25,12 +31,9 @@ class FirestoreClient(object):
         :rtype: list of ActiveProject
         """
         active_projects = []
-        for doc in self.client.collection(f"active_projects").get():
+        for doc in self._get_active_projects_collection_ref().get():
             active_projects.append(ActiveProject.from_dict(doc.to_dict()))
         return active_projects
-
-    def _get_sms_stat_reference(self, project_name, iso_string):
-        return self.client.document(f"metrics/rapid_pro/{project_name}/{iso_string}")
 
     def update_sms_stats(self, project_name, iso_string, sms_stats):
         """
@@ -43,7 +46,7 @@ class FirestoreClient(object):
         :type sms_stats: data_models.SMSStats
         """
         log.info(f"Updating SMS stats for project {project_name} at time {iso_string}...")
-        self._get_sms_stat_reference(project_name, iso_string).set(sms_stats.to_dict())
+        self._get_sms_stat_doc_ref(project_name, iso_string).set(sms_stats.to_dict())
         log.info("SMS stats updated")
 
     def update_sms_stats_batch(self, project_name, sms_stats_batch):
@@ -57,7 +60,7 @@ class FirestoreClient(object):
         log.info(f"Batch updating {len(sms_stats_batch)} SMS stats for project {project_name}...")
         batch = self.client.batch()
         for iso_string, sms_stats in sms_stats_batch.items():
-            batch.set(self._get_sms_stat_reference(project_name, iso_string), sms_stats.to_dict())
+            batch.set(self._get_sms_stat_doc_ref(project_name, iso_string), sms_stats.to_dict())
         batch.commit()
         log.info("SMS stats updated")
 
