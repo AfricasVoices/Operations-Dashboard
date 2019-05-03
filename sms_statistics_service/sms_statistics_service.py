@@ -38,6 +38,11 @@ if __name__ == "__main__":
     start_minute_inclusive = isoparse(args.start_minute_inclusive)
     end_minute_exclusive = isoparse(args.end_minute_exclusive)
 
+    assert start_minute_inclusive.second == 0
+    assert start_minute_inclusive.microsecond == 0
+    assert end_minute_exclusive.second == 0
+    assert end_minute_exclusive.microsecond == 0
+
     log.info("Initialising the Firestore client...")
     firestore_credentials = json.loads(google_cloud_utils.download_blob_to_string(
             google_cloud_credentials_file_path, firestore_credentials_url))
