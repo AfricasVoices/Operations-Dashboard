@@ -5,27 +5,28 @@ set -e
 IMAGE_NAME=sms_statistics_service
 
 # Check that the correct number of arguments were provided.
-if [[ $# -ne 4 ]]; then
+if [[ $# -ne 5 ]]; then
     echo "Usage: ./docker-run-sms-statics-service.sh
-    <google-cloud-credentials-file-path> <firestore-credentials-url>
+    <cache-volume-name> <google-cloud-credentials-file-path> <firestore-credentials-url>
     <start-minute-inclusive> <end-minute-exclusive>"
     exit
 fi
 
 # Assign the program arguments to bash variables.
-GOOGLE_CLOUD_CREDENTIALS_FILE_PATH=$1
-FIRESTORE_CREDENTIALS_URL=$2
-START_MINUTE_INCLUSIVE=$3
-END_MINUTE_EXCLUSIVE=$4
+CACHE_VOLUME_NAME=$1
+GOOGLE_CLOUD_CREDENTIALS_FILE_PATH=$2
+FIRESTORE_CREDENTIALS_URL=$3
+START_MINUTE_INCLUSIVE=$4
+END_MINUTE_EXCLUSIVE=$5
 
 # Build an image for this pipeline stage.
 docker build -t "$IMAGE_NAME" .
 
 CMD="pipenv run python -u sms_statistics_service.py \
-    /credentials/google-cloud-credentials.json \"$FIRESTORE_CREDENTIALS_URL\" \
+    /cache /credentials/google-cloud-credentials.json \"$FIRESTORE_CREDENTIALS_URL\" \
     \"$START_MINUTE_INCLUSIVE\" \"$END_MINUTE_EXCLUSIVE\"
 "
-container="$(docker container create -w /app "$IMAGE_NAME" /bin/bash -c "$CMD")"
+container="$(docker container create -w /app --mount source="$CACHE_VOLUME_NAME",target=/cache "$IMAGE_NAME" /bin/bash -c "$CMD")"
 
 function finish {
     # Tear down the container when done.
