@@ -8,7 +8,7 @@ from dateutil.parser import isoparse
 from rapid_pro_tools.rapid_pro_client import RapidProClient
 from storage.google_cloud import google_cloud_utils
 
-from src import FirestoreClient
+from src import FirestoreClient, Cache
 from src.data_models import SMSStats
 
 Logger.set_project_name("OpsDashboard")
@@ -48,9 +48,12 @@ if __name__ == "__main__":
             google_cloud_credentials_file_path, firestore_credentials_url))
     firestore_client = FirestoreClient(firestore_credentials)
 
-    log.info("Downloading the active project details from Firestore...")
-    active_projects = firestore_client.get_active_projects()
-    log.info(f"Downloaded the details for {len(active_projects)} active projects")
+    log.info("Initialising the cache...")
+    cache = Cache("cache", firestore_client)
+
+    log.info("Loading the active project details...")
+    active_projects = cache.get_active_projects()
+    log.info(f"Loaded the details for {len(active_projects)} active projects")
 
     for project in active_projects:
         log.info(f"Computing SMS statistics for project {project.project_name}...")
