@@ -49,18 +49,19 @@ if __name__ == "__main__":
     firestore_client = FirestoreClient(firestore_credentials)
 
     log.info("Initialising the cache...")
-    cache = Cache("cache", firestore_client)
+    cache = Cache("cache")
 
     log.info("Loading the active project details...")
-    active_projects = cache.get_active_projects()
+    active_projects = cache.get_active_projects(firestore_client)
     log.info(f"Loaded the details for {len(active_projects)} active projects")
 
     for project in active_projects:
         log.info(f"Computing SMS statistics for project {project.project_name}...")
 
-        log.info(f"Downloading the Rapid Pro credentials token from '{project.rapid_pro_token_url}'...")
-        rapid_pro_token = google_cloud_utils.download_blob_to_string(
-            google_cloud_credentials_file_path, project.rapid_pro_token_url).strip()
+        log.info("Loading the Rapid Pro token...")
+        rapid_pro_token = cache.get_rapid_pro_token_for_project(
+            project.project_name, google_cloud_credentials_file_path, project.rapid_pro_token_url)
+        log.info("Loaded the Rapid Pro token")
 
         log.info(f"Downloading raw messages from Rapid Pro...")
         rapid_pro = RapidProClient(project.rapid_pro_domain, rapid_pro_token)
