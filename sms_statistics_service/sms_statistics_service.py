@@ -3,6 +3,7 @@ import datetime
 import json
 
 import pytz
+from core_data_modules.cleaners import PhoneCleaner
 from core_data_modules.logging import Logger
 from dateutil.parser import isoparse
 from rapid_pro_tools.rapid_pro_client import RapidProClient
@@ -10,6 +11,7 @@ from storage.google_cloud import google_cloud_utils
 
 from src import FirestoreClient
 from src.data_models import SMSStats
+from src.data_models.sms_stats import SMSOperatorStats
 
 Logger.set_project_name("OpsDashboard")
 log = Logger(__name__)
@@ -58,9 +60,9 @@ if __name__ == "__main__":
         log.info(f"Downloading the Rapid Pro credentials token from '{project.rapid_pro_token_url}'...")
         rapid_pro_token = google_cloud_utils.download_blob_to_string(
             google_cloud_credentials_file_path, project.rapid_pro_token_url).strip()
+        rapid_pro = RapidProClient(project.rapid_pro_domain, rapid_pro_token)
 
         log.info(f"Downloading raw messages from Rapid Pro...")
-        rapid_pro = RapidProClient(project.rapid_pro_domain, rapid_pro_token)
         raw_messages = rapid_pro.get_raw_messages(created_after_inclusive=start_minute_inclusive,
                                                   created_before_exclusive=end_minute_exclusive)
 
@@ -72,18 +74,33 @@ if __name__ == "__main__":
             stats[minute.astimezone(pytz.utc).isoformat(timespec="minutes")] = SMSStats()
             minute += datetime.timedelta(minutes=1)
 
-        # Loop over all of the downloaded messages and increment the appropriate count
+        # Loop over all of the downloaded messages and increment the appropriate counts
         unhandled_status_count = 0
         for msg in raw_messages:
+            # Get the stats object for this minute
             minute_stats = stats[msg.created_on.astimezone(pytz.utc).isoformat(timespec="minutes")]
 
+            # Get the stats object for this minute/operator
+            if msg.urn.startswith("tel"):
+                # Set the operator name from the phone number
+                operator_name = PhoneCleaner.clean_operator(msg.urn)
+            else:
+                # Set the operator name from the channel type e.g. 'telegram', 'twitter'
+                operator_name = msg.urn.split(":")[0]
+            if operator_name not in minute_stats.operators:
+                minute_stats.operators[operator_name] = SMSOperatorStats()
+            operator_stats = minute_stats.operators[operator_name]
+
+            # Increase the appropriate counts
             if msg.direction == "in":
                 minute_stats.total_received += 1
+                operator_stats.received += 1
             elif msg.direction == "out":
                 if msg.status == "errored" or msg.status == "failed":
                     minute_stats.total_errored += 1
                 elif msg.status == "wired":
                     minute_stats.total_sent += 1
+                    operator_stats.sent += 1
                 else:
                     unhandled_status_count += 1
                     log.warning(f"Unexpected message status '{msg.status}'")
