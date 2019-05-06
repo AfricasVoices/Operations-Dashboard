@@ -20,6 +20,8 @@ if __name__ == "__main__":
                                                  "currently active projects over the requested time range. "
                                                  "Active projects are read from Firestore")
 
+    parser.add_argument("cache_dir", metavar="cache-dir",
+                        help="Directory to cache downloaded active projects and Rapid Pro tokens in")
     parser.add_argument("google_cloud_credentials_file_path", metavar="google-cloud-credentials-file-path",
                         help="Path to a Google Cloud service account credentials file to use to access the "
                              "credentials bucket")
@@ -33,6 +35,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    cache_dir = args.cache_dir
     google_cloud_credentials_file_path = args.google_cloud_credentials_file_path
     firestore_credentials_url = args.firestore_credentials_url
     start_minute_inclusive = isoparse(args.start_minute_inclusive)
@@ -49,7 +52,7 @@ if __name__ == "__main__":
     firestore_client = FirestoreClient(firestore_credentials)
 
     log.info("Initialising the cache...")
-    cache = Cache("cache")
+    cache = Cache(cache_dir)
 
     log.info("Loading the active project details...")
     active_projects = cache.get_active_projects(firestore_client)
