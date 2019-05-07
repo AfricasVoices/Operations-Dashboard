@@ -6,7 +6,7 @@ IMAGE_NAME=sms_statistics_service
 
 # Check that the correct number of arguments were provided.
 if [[ $# -ne 5 ]]; then
-    echo "Usage: ./docker-run-sms-statics-service.sh
+    echo "Usage: ./docker-run-sms-statistics-service.sh
     <cache-volume-name> <google-cloud-credentials-file-path> <firestore-credentials-url>
     <start-minute-inclusive> <end-minute-exclusive>"
     exit
