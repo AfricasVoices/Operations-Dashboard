@@ -8,7 +8,7 @@ from dateutil.parser import isoparse
 from rapid_pro_tools.rapid_pro_client import RapidProClient
 from storage.google_cloud import google_cloud_utils
 
-from src import FirestoreClient
+from src import FirestoreWrapper
 from src.data_models import SMSStats
 
 Logger.set_project_name("OpsDashboard")
@@ -46,10 +46,10 @@ if __name__ == "__main__":
     log.info("Initialising the Firestore client...")
     firestore_credentials = json.loads(google_cloud_utils.download_blob_to_string(
             google_cloud_credentials_file_path, firestore_credentials_url))
-    firestore_client = FirestoreClient(firestore_credentials)
+    firestore_wrapper = FirestoreWrapper(firestore_credentials)
 
     log.info("Downloading the active project details from Firestore...")
-    active_projects = firestore_client.get_active_projects()
+    active_projects = firestore_wrapper.get_active_projects()
     log.info(f"Downloaded the details for {len(active_projects)} active projects")
 
     for project in active_projects:
@@ -79,22 +79,22 @@ if __name__ == "__main__":
 
             if msg.direction == "in":
                 minute_stats.total_received += 1
-            elif msg.direction == "out":
-                if msg.status == "errored" or msg.status == "failed":
-                    minute_stats.total_errored += 1
-                elif msg.status == "wired":
-                    minute_stats.total_sent += 1
-                else:
-                    unhandled_status_count += 1
-                    log.warning(f"Unexpected message status '{msg.status}'")
+                continue
+
+            assert msg.direction == "out", f"Expected msg.direction to be either 'in' or 'out', but was {msg.direction}"
+
+            if msg.status == "errored" or msg.status == "failed":
+                minute_stats.total_errored += 1
+            elif msg.status == "wired":
+                minute_stats.total_sent += 1
             else:
                 unhandled_status_count += 1
-                log.warning(f"Unexpected message direction '{msg.direction}'")
+                log.warning(f"Unexpected message status '{msg.status}'")
 
         if unhandled_status_count > 0:
             log.warning(f"Exported data contained {unhandled_status_count} unhandled message statuses.")
 
         log.info("Uploading message stats to Firestore...")
-        firestore_client.update_sms_stats(project.project_name, stats)
+        firestore_wrapper.update_sms_stats(project.project_name, stats)
 
         log.info(f"Completed updating the SMS statistics for project {project.project_name}")
