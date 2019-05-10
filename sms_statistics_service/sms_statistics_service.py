@@ -79,17 +79,17 @@ if __name__ == "__main__":
 
             if msg.direction == "in":
                 minute_stats.total_received += 1
-            elif msg.direction == "out":
-                if msg.status == "errored" or msg.status == "failed":
-                    minute_stats.total_errored += 1
-                elif msg.status == "wired":
-                    minute_stats.total_sent += 1
-                else:
-                    unhandled_status_count += 1
-                    log.warning(f"Unexpected message status '{msg.status}'")
+                continue
+
+            assert msg.direction == "out", f"Expected msg.direction to be either 'in' or 'out', but was {msg.direction}"
+
+            if msg.status == "errored" or msg.status == "failed":
+                minute_stats.total_errored += 1
+            elif msg.status == "wired":
+                minute_stats.total_sent += 1
             else:
                 unhandled_status_count += 1
-                log.warning(f"Unexpected message direction '{msg.direction}'")
+                log.warning(f"Unexpected message status '{msg.status}'")
 
         if unhandled_status_count > 0:
             log.warning(f"Exported data contained {unhandled_status_count} unhandled message statuses.")
