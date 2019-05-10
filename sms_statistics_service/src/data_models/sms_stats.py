@@ -24,7 +24,7 @@ class SMSOperatorStats(object):
 
 
 class SMSStats(object):
-    def __init__(self, total_received=0, total_sent=0, total_errored=0, operators=None):
+    def __init__(self, total_received=0, total_sent=0, total_pending=0, total_errored=0, operators=None):
         """
         :param total_received: Total number of messages received, across all operators.
         :type total_received: int
@@ -37,9 +37,9 @@ class SMSStats(object):
         """
         if operators is None:
             operators = dict()
-
         self.total_received = total_received
         self.total_sent = total_sent
+        self.total_pending = total_pending
         self.total_errored = total_errored
         self.operators = operators
 
@@ -47,6 +47,7 @@ class SMSStats(object):
         return {
             "total_received": self.total_received,
             "total_sent": self.total_sent,
+            "total_pending": self.total_pending,
             "total_errored": self.total_errored,
             "operators": {operator_name: operator_stats.to_dict()
                           for operator_name, operator_stats in self.operators.items()}
@@ -56,7 +57,8 @@ class SMSStats(object):
     def from_dict(cls, source):
         total_received = source["total_received"]
         total_sent = source["total_sent"]
+        total_pending = source["total_pending"]
         total_errored = source["total_errored"]
         operators = source["operators"]
 
-        return cls(total_received, total_sent, total_errored, operators)
+        return cls(total_received, total_sent, total_pending, total_errored, operators)

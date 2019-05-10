@@ -1,1 +1,1 @@
-from .firestore_client import FirestoreClient
+from .firestore_wrapper import FirestoreWrapper
