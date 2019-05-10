@@ -1,7 +1,8 @@
 class SMSStats(object):
-    def __init__(self, total_received=0, total_sent=0, total_errored=0):
+    def __init__(self, total_received=0, total_sent=0, total_pending=0, total_errored=0):
         self.total_received = total_received
         self.total_sent = total_sent
+        self.total_pending = total_pending
         self.total_errored = total_errored
         # TODO: per-operator counts
 
@@ -9,6 +10,7 @@ class SMSStats(object):
         return {
             "total_received": self.total_received,
             "total_sent": self.total_sent,
+            "total_pending": self.total_pending,
             "total_errored": self.total_errored
         }
 
@@ -16,6 +18,7 @@ class SMSStats(object):
     def from_dict(cls, source):
         total_received = source["total_received"]
         total_sent = source["total_sent"]
+        total_pending = source["total_pending"]
         total_errored = source["total_errored"]
 
-        return cls(total_received, total_sent, total_errored)
+        return cls(total_received, total_sent, total_pending, total_errored)

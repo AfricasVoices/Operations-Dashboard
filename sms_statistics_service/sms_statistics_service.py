@@ -86,7 +86,7 @@ if __name__ == "__main__":
             assert msg.direction == "out", f"Expected msg.direction to be either 'in' or 'out', but was {msg.direction}"
 
             if msg.status in {"initializing", "pending", "queued"}:
-                pass  # Rapid Pro has not attempted to actually send the message yet, so don't increment any totals
+                minute_stats.total_pending += 1
             elif msg.status in {"wired", "sent", "delivered", "resent"}:
                 minute_stats.total_sent += 1
             elif msg.status in {"errored", "failed"}:
