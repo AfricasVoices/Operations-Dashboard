@@ -77,16 +77,20 @@ if __name__ == "__main__":
         for msg in raw_messages:
             minute_stats = stats[msg.created_on.astimezone(pytz.utc).isoformat(timespec="minutes")]
 
+            # Message statuses are "documented" here:
+            # https://github.com/rapidpro/rapidpro/blob/c972205aae29f7219582fc29478e8ecacb579f9f/temba/msgs/models.py#L79
             if msg.direction == "in":
                 minute_stats.total_received += 1
                 continue
 
             assert msg.direction == "out", f"Expected msg.direction to be either 'in' or 'out', but was {msg.direction}"
 
-            if msg.status == "errored" or msg.status == "failed":
-                minute_stats.total_errored += 1
-            elif msg.status == "wired":
+            if msg.status in {"initializing", "pending", "queued"}:
+                minute_stats.total_pending += 1
+            elif msg.status in {"wired", "sent", "delivered", "resent"}:
                 minute_stats.total_sent += 1
+            elif msg.status in {"errored", "failed"}:
+                minute_stats.total_errored += 1
             else:
                 unhandled_status_count += 1
                 log.warning(f"Unexpected message status '{msg.status}'")
