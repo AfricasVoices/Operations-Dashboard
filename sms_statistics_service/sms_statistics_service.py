@@ -101,13 +101,11 @@ if __name__ == "__main__":
             assert msg.direction == "out", f"Expected msg.direction to be either 'in' or 'out', but was {msg.direction}"
 
             if msg.status in {"initializing", "pending", "queued"}:
-                operator_stats.pending += 1
                 minute_stats.total_pending += 1
             elif msg.status in {"wired", "sent", "delivered", "resent"}:
                 operator_stats.sent += 1
                 minute_stats.total_sent += 1
             elif msg.status in {"errored", "failed"}:
-                operator_stats.errored ==1
                 minute_stats.total_errored += 1
             else:
                 unhandled_status_count += 1
