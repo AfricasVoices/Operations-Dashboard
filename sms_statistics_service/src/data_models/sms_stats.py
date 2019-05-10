@@ -30,6 +30,9 @@ class SMSStats(object):
         :type total_received: int
         :param total_sent: Total number of messages sent, across all operators.
         :type total_sent: int
+        :param total_pending: Total number of outgoing messages created in Rapid Pro but which are yet to be sent,
+                              across all operators.
+        :type total_pending: int
         :param total_errored: Total number of messages which failed, to send across all operators.
         :type total_errored: int
         :param operators: Dictionary of operator name to operator stats.
@@ -37,6 +40,7 @@ class SMSStats(object):
         """
         if operators is None:
             operators = dict()
+
         self.total_received = total_received
         self.total_sent = total_sent
         self.total_pending = total_pending
