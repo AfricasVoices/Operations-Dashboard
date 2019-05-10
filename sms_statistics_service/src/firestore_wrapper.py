@@ -7,7 +7,7 @@ from src.data_models.active_project import ActiveProject
 log = Logger(__name__)
 
 
-class FirestoreClient(object):
+class FirestoreWrapper(object):
     MAX_BATCH_SIZE = 500
 
     def __init__(self, cert):
