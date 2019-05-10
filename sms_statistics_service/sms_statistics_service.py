@@ -1,10 +1,10 @@
 import argparse
 import json
 
-from storage.google_cloud import google_cloud_utils
 from core_data_modules.logging import Logger
+from storage.google_cloud import google_cloud_utils
 
-from src import FirestoreClient
+from src import FirestoreWrapper
 
 Logger.set_project_name("OpsDashboard")
 log = Logger(__name__)
@@ -28,10 +28,10 @@ if __name__ == "__main__":
     log.info("Initialising the Firestore client...")
     firestore_credentials = json.loads(google_cloud_utils.download_blob_to_string(
             google_cloud_credentials_file_path, firestore_credentials_url))
-    firestore_client = FirestoreClient(firestore_credentials)
+    firestore_wrapper = FirestoreWrapper(firestore_credentials)
 
     log.info("Downloading the active projects from Firestore...")
-    active_projects = firestore_client.get_active_projects()
+    active_projects = firestore_wrapper.get_active_projects()
 
     log.info("Active projects found:")
     for project in active_projects:

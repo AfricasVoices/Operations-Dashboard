@@ -4,7 +4,7 @@ from firebase_admin import credentials, firestore
 from src.data_models.active_project import ActiveProject
 
 
-class FirestoreClient(object):
+class FirestoreWrapper(object):
     def __init__(self, cert):
         """
         :param cert: Path to a certificate file or a dict representing the contents of a certificate.
