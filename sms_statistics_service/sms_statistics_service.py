@@ -69,7 +69,7 @@ if __name__ == "__main__":
         stats = dict()  # of minute iso_string -> SMSStats
         minute = start_minute_inclusive
         while minute < end_minute_exclusive:
-            stats[minute.astimezone(pytz.utc).isoformat(timespec="minutes")] = SMSStats()
+            stats[minute.astimezone(pytz.utc).isoformat(timespec="minutes")] = SMSStats(minute.astimezone(pytz.utc))
             minute += datetime.timedelta(minutes=1)
 
         # Loop over all of the downloaded messages and increment the appropriate count
