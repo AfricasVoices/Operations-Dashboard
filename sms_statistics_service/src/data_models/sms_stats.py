@@ -1,3 +1,6 @@
+import pytz
+
+
 class SMSOperatorStats(object):
     def __init__(self, received=0, sent=0):
         """
@@ -24,8 +27,10 @@ class SMSOperatorStats(object):
 
 
 class SMSStats(object):
-    def __init__(self, total_received=0, total_sent=0, total_pending=0, total_errored=0, operators=None):
+    def __init__(self, datetime, total_received=0, total_sent=0, total_pending=0, total_errored=0, operators=None):
         """
+        :param datetime: Datetime that the stats in this object cover.
+        :type datetime: datetime.datetime
         :param total_received: Total number of messages received, across all operators.
         :type total_received: int
         :param total_sent: Total number of messages sent, across all operators.
@@ -41,6 +46,7 @@ class SMSStats(object):
         if operators is None:
             operators = dict()
 
+        self.datetime = datetime
         self.total_received = total_received
         self.total_sent = total_sent
         self.total_pending = total_pending
@@ -49,6 +55,7 @@ class SMSStats(object):
 
     def to_dict(self):
         return {
+            "datetime": self.datetime.astimezone(pytz.utc),
             "total_received": self.total_received,
             "total_sent": self.total_sent,
             "total_pending": self.total_pending,
@@ -56,13 +63,3 @@ class SMSStats(object):
             "operators": {operator_name: operator_stats.to_dict()
                           for operator_name, operator_stats in self.operators.items()}
         }
-
-    @classmethod
-    def from_dict(cls, source):
-        total_received = source["total_received"]
-        total_sent = source["total_sent"]
-        total_pending = source["total_pending"]
-        total_errored = source["total_errored"]
-        operators = source["operators"]
-
-        return cls(total_received, total_sent, total_pending, total_errored, operators)
