@@ -12,7 +12,7 @@ class SMSStats(object):
 
     def to_dict(self):
         return {
-            "datetime": self.datetime.astimezone(pytz.utc).isoformat(timespec="minutes"),
+            "datetime": self.datetime.astimezone(pytz.utc),
             "total_received": self.total_received,
             "total_sent": self.total_sent,
             "total_pending": self.total_pending,
