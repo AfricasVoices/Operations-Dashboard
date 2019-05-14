@@ -74,7 +74,8 @@ if __name__ == "__main__":
         stats = dict()  # of minute iso_string -> SMSStats
         interval = start_time_inclusive
         while interval < end_time_exclusive:
-            stats[interval.isoformat()] = SMSStats(interval)
+            stats[interval.isoformat()] = SMSStats(
+                interval, operators={operator_name: SMSOperatorStats() for operator_name in project.operator_names})
             interval += UPDATE_RESOLUTION
 
         # Loop over all of the downloaded messages and increment the appropriate counts
@@ -85,13 +86,14 @@ if __name__ == "__main__":
             interval_stats = stats[interval.isoformat()]
 
             # Get the stats object for this minute/operator
-            if msg.urn.startswith("tel"):
+            if msg.urn.startswith("tel:"):
                 # Set the operator name from the phone number
                 operator_name = PhoneCleaner.clean_operator(msg.urn)
             else:
                 # Set the operator name from the channel type e.g. 'telegram', 'twitter'
                 operator_name = msg.urn.split(":")[0]
             if operator_name not in interval_stats.operators:
+                log.warning(f"Message has unknown operator '{operator_name}'")
                 interval_stats.operators[operator_name] = SMSOperatorStats()
             operator_stats = interval_stats.operators[operator_name]
 
