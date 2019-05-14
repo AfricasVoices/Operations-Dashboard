@@ -1,6 +1,6 @@
 import argparse
-import datetime
 import json
+from datetime import datetime, timedelta
 
 import pytz
 from core_data_modules.logging import Logger
@@ -14,6 +14,26 @@ from src.data_models import SMSStats
 Logger.set_project_name("OpsDashboard")
 log = Logger(__name__)
 
+UPDATE_RESOLUTION = timedelta(minutes=10)
+
+
+def floor_timestamp_at_resolution(dt, resolution):
+    """
+    :param dt:
+    :type dt: datetime.datetime
+    :param resolution:
+    :type resolution: datetime.timedelta
+    :return:
+    :rtype: datetime.datetime
+    """
+    assert resolution.total_seconds() < timedelta(days=1).total_seconds()
+
+    day = datetime(dt.year, dt.month, dt.day, tzinfo=dt.tzinfo)
+    seconds_today = (dt - day).total_seconds()
+    floored_seconds_today = (seconds_today // resolution.total_seconds()) * resolution.total_seconds()
+
+    return day + timedelta(seconds=floored_seconds_today)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Updates the incoming/outgoing/errored message counts for the "
@@ -26,22 +46,22 @@ if __name__ == "__main__":
     parser.add_argument("firestore_credentials_url", metavar="firestore-credentials-url",
                         help="GS URL to the credentials file to use to access the Firestore instance with "
                              "the operations statistics")
-    parser.add_argument("start_minute_inclusive", metavar="start-minute-inclusive",
+    parser.add_argument("start_time_inclusive", metavar="start-time-inclusive",
                         help="ISO 8601 string for the start of the datetime range to update sms statistics for")
-    parser.add_argument("end_minute_exclusive", metavar="end-minute-inclusive",
+    parser.add_argument("end_time_exclusive", metavar="end-time-inclusive",
                         help="ISO 8601 string for the end of the datetime range to update sms statistics for ")
 
     args = parser.parse_args()
 
     google_cloud_credentials_file_path = args.google_cloud_credentials_file_path
     firestore_credentials_url = args.firestore_credentials_url
-    start_minute_inclusive = isoparse(args.start_minute_inclusive)
-    end_minute_exclusive = isoparse(args.end_minute_exclusive)
+    start_time_inclusive = isoparse(args.start_time_inclusive).astimezone(pytz.utc)
+    end_time_exclusive = isoparse(args.end_time_exclusive).astimezone(pytz.utc)
 
-    assert start_minute_inclusive.second == 0
-    assert start_minute_inclusive.microsecond == 0
-    assert end_minute_exclusive.second == 0
-    assert end_minute_exclusive.microsecond == 0
+    assert start_time_inclusive == floor_timestamp_at_resolution(start_time_inclusive, UPDATE_RESOLUTION), \
+        f"Start time {start_time_inclusive.isoformat()} is not a multiple of the update resolution {UPDATE_RESOLUTION}"
+    assert end_time_exclusive == floor_timestamp_at_resolution(end_time_exclusive, UPDATE_RESOLUTION), \
+        f"End time {end_time_exclusive.isoformat()} is not a multiple of the update resolution {UPDATE_RESOLUTION}"
 
     log.info("Initialising the Firestore client...")
     firestore_credentials = json.loads(google_cloud_utils.download_blob_to_string(
@@ -61,36 +81,37 @@ if __name__ == "__main__":
 
         log.info(f"Downloading raw messages from Rapid Pro...")
         rapid_pro = RapidProClient(project.rapid_pro_domain, rapid_pro_token)
-        raw_messages = rapid_pro.get_raw_messages(created_after_inclusive=start_minute_inclusive,
-                                                  created_before_exclusive=end_minute_exclusive)
+        raw_messages = rapid_pro.get_raw_messages(created_after_inclusive=start_time_inclusive,
+                                                  created_before_exclusive=end_time_exclusive)
 
         log.info("Computing message stats for each minute...")
         # Create a table of counts for all the minutes of interest, with all counts initialised to 0
         stats = dict()  # of minute iso_string -> SMSStats
-        minute = start_minute_inclusive
-        while minute < end_minute_exclusive:
-            stats[minute.astimezone(pytz.utc).isoformat(timespec="minutes")] = SMSStats(minute.astimezone(pytz.utc))
-            minute += datetime.timedelta(minutes=1)
+        interval = start_time_inclusive
+        while interval < end_time_exclusive:
+            stats[interval.isoformat()] = SMSStats(interval)
+            interval += UPDATE_RESOLUTION
 
         # Loop over all of the downloaded messages and increment the appropriate count
         unhandled_status_count = 0
         for msg in raw_messages:
-            minute_stats = stats[msg.created_on.astimezone(pytz.utc).isoformat(timespec="minutes")]
+            interval_stats = stats[
+                floor_timestamp_at_resolution(msg.created_on, UPDATE_RESOLUTION).astimezone(pytz.utc).isoformat()]
 
             # Message statuses are "documented" here:
             # https://github.com/rapidpro/rapidpro/blob/c972205aae29f7219582fc29478e8ecacb579f9f/temba/msgs/models.py#L79
             if msg.direction == "in":
-                minute_stats.total_received += 1
+                interval_stats.total_received += 1
                 continue
 
             assert msg.direction == "out", f"Expected msg.direction to be either 'in' or 'out', but was {msg.direction}"
 
             if msg.status in {"initializing", "pending", "queued"}:
-                minute_stats.total_pending += 1
+                interval_stats.total_pending += 1
             elif msg.status in {"wired", "sent", "delivered", "resent"}:
-                minute_stats.total_sent += 1
+                interval_stats.total_sent += 1
             elif msg.status in {"errored", "failed"}:
-                minute_stats.total_errored += 1
+                interval_stats.total_errored += 1
             else:
                 unhandled_status_count += 1
                 log.warning(f"Unexpected message status '{msg.status}'")
