@@ -104,6 +104,6 @@ if __name__ == "__main__":
             log.warning(f"Exported data contained {unhandled_status_count} unhandled message statuses.")
 
         log.info("Uploading message stats to Firestore...")
-        firestore_wrapper.update_sms_stats(project.project_name, stats)
+        firestore_wrapper.update_sms_stats_batch(project.project_name, stats)
 
         log.info(f"Completed updating the SMS statistics for project {project.project_name}")
