@@ -1,9 +1,10 @@
 import argparse
 import json
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import pytz
 from core_data_modules.logging import Logger
+from core_data_modules.util import TimeUtils
 from dateutil.parser import isoparse
 from rapid_pro_tools.rapid_pro_client import RapidProClient
 from storage.google_cloud import google_cloud_utils
@@ -15,24 +16,6 @@ Logger.set_project_name("OpsDashboard")
 log = Logger(__name__)
 
 UPDATE_RESOLUTION = timedelta(minutes=10)
-
-
-def floor_timestamp_at_resolution(dt, resolution):
-    """
-    :param dt:
-    :type dt: datetime.datetime
-    :param resolution:
-    :type resolution: datetime.timedelta
-    :return:
-    :rtype: datetime.datetime
-    """
-    assert resolution.total_seconds() < timedelta(days=1).total_seconds()
-
-    day = datetime(dt.year, dt.month, dt.day, tzinfo=dt.tzinfo)
-    seconds_today = (dt - day).total_seconds()
-    floored_seconds_today = (seconds_today // resolution.total_seconds()) * resolution.total_seconds()
-
-    return day + timedelta(seconds=floored_seconds_today)
 
 
 if __name__ == "__main__":
@@ -58,9 +41,9 @@ if __name__ == "__main__":
     start_time_inclusive = isoparse(args.start_time_inclusive).astimezone(pytz.utc)
     end_time_exclusive = isoparse(args.end_time_exclusive).astimezone(pytz.utc)
 
-    assert start_time_inclusive == floor_timestamp_at_resolution(start_time_inclusive, UPDATE_RESOLUTION), \
+    assert start_time_inclusive == TimeUtils.floor_timestamp_at_resolution(start_time_inclusive, UPDATE_RESOLUTION), \
         f"Start time {start_time_inclusive.isoformat()} is not a multiple of the update resolution {UPDATE_RESOLUTION}"
-    assert end_time_exclusive == floor_timestamp_at_resolution(end_time_exclusive, UPDATE_RESOLUTION), \
+    assert end_time_exclusive == TimeUtils.floor_timestamp_at_resolution(end_time_exclusive, UPDATE_RESOLUTION), \
         f"End time {end_time_exclusive.isoformat()} is not a multiple of the update resolution {UPDATE_RESOLUTION}"
 
     log.info("Initialising the Firestore client...")
@@ -95,8 +78,8 @@ if __name__ == "__main__":
         # Loop over all of the downloaded messages and increment the appropriate count
         unhandled_status_count = 0
         for msg in raw_messages:
-            interval_stats = stats[
-                floor_timestamp_at_resolution(msg.created_on, UPDATE_RESOLUTION).astimezone(pytz.utc).isoformat()]
+            interval = TimeUtils.floor_timestamp_at_resolution(msg.created_on, UPDATE_RESOLUTION).astimezone(pytz.utc)
+            interval_stats = stats[interval.isoformat()]
 
             # Message statuses are "documented" here:
             # https://github.com/rapidpro/rapidpro/blob/c972205aae29f7219582fc29478e8ecacb579f9f/temba/msgs/models.py#L79
