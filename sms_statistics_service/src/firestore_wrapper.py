@@ -78,5 +78,8 @@ class FirestoreWrapper(object):
         if batch_counter > 0:
             batch.commit()
             log.info(f"Final batch of {batch_counter} messages committed")
+            batch_counter = 0
+
+        assert batch_counter == 0
 
         log.info("SMS stats updated")
