@@ -73,7 +73,6 @@ class FirestoreWrapper(object):
             if batch_counter >= self.MAX_BATCH_SIZE:
                 batch.commit()
                 log.info(f"Batch of {batch_counter} messages committed, progress: {total_counter} / {len(sms_stats_batch)}")
-                batch = self.client.batch()
                 batch_counter = 0
 
         if batch_counter > 0:
