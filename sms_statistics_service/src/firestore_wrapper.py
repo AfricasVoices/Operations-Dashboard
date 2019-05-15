@@ -64,15 +64,15 @@ class FirestoreWrapper(object):
         log.info(f"Batch updating {len(sms_stats_batch)} SMS stats for project {project_name}...")
         batch = self.client.batch()
         batch_counter = 0
-        total_progress = 0
+        total_counter = 0
         for iso_string, sms_stats in sms_stats_batch.items():
             batch.set(self._get_sms_stat_doc_ref(project_name, iso_string), sms_stats.to_dict())
             batch_counter += 1
-            total_progress += 1
+            total_counter += 1
 
             if batch_counter >= self.MAX_BATCH_SIZE:
                 batch.commit()
-                log.info(f"Batch of {batch_counter} messages committed, progress: {total_progress} / {len(sms_stats_batch)}")
+                log.info(f"Batch of {batch_counter} messages committed, progress: {total_counter} / {len(sms_stats_batch)}")
                 batch = self.client.batch()
                 batch_counter = 0
 
