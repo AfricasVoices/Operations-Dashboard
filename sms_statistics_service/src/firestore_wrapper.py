@@ -22,8 +22,8 @@ class FirestoreWrapper(object):
     def _get_active_projects_collection_ref(self):
         return self.client.collection(f"active_projects")
 
-    def _get_sms_stat_doc_ref(self, project_name, iso_string):
-        return self.client.document(f"metrics/rapid_pro/{project_name}/{iso_string}")
+    def _get_sms_stat_doc_ref(self, project_name, date_string):
+        return self.client.document(f"metrics/rapid_pro/{project_name}/{date_string}")
 
     def get_active_projects(self):
         """
