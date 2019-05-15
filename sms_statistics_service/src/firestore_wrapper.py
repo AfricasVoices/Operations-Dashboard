@@ -80,5 +80,4 @@ class FirestoreWrapper(object):
             batch.commit()
             log.info(f"Final batch of {batch_counter} messages committed")
 
-        batch.commit()
         log.info("SMS stats updated")
