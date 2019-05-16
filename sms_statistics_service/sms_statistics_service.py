@@ -3,6 +3,7 @@ import json
 from datetime import timedelta
 
 import pytz
+from core_data_modules.cleaners import PhoneCleaner
 from core_data_modules.logging import Logger
 from core_data_modules.util import TimeUtils
 from dateutil.parser import isoparse
@@ -11,6 +12,7 @@ from storage.google_cloud import google_cloud_utils
 
 from src import FirestoreWrapper, Cache
 from src.data_models import SMSStats
+from src.data_models.sms_stats import SMSOperatorStats
 
 Logger.set_project_name("OpsDashboard")
 log = Logger(__name__)
@@ -68,9 +70,9 @@ if __name__ == "__main__":
         rapid_pro_token = cache.get_rapid_pro_token_for_project(
             project.project_name, google_cloud_credentials_file_path, project.rapid_pro_token_url)
         log.info("Loaded the Rapid Pro token")
+        rapid_pro = RapidProClient(project.rapid_pro_domain, rapid_pro_token)
 
         log.info(f"Downloading raw messages from Rapid Pro...")
-        rapid_pro = RapidProClient(project.rapid_pro_domain, rapid_pro_token)
         raw_messages = rapid_pro.get_raw_messages(created_after_inclusive=start_time_inclusive,
                                                   created_before_exclusive=end_time_exclusive)
 
@@ -79,18 +81,33 @@ if __name__ == "__main__":
         stats = dict()  # of minute iso_string -> SMSStats
         interval = start_time_inclusive
         while interval < end_time_exclusive:
-            stats[interval.isoformat()] = SMSStats(interval)
+            stats[interval.isoformat()] = SMSStats(
+                interval, operators={operator_name: SMSOperatorStats() for operator_name in project.operator_names})
             interval += UPDATE_RESOLUTION
 
-        # Loop over all of the downloaded messages and increment the appropriate count
+        # Loop over all of the downloaded messages and increment the appropriate counts
         unhandled_status_count = 0
         for msg in raw_messages:
+            # Get the stats object for this minute
             interval = TimeUtils.floor_timestamp_at_resolution(msg.created_on, UPDATE_RESOLUTION).astimezone(pytz.utc)
             interval_stats = stats[interval.isoformat()]
+
+            # Get the stats object for this minute/operator
+            if msg.urn.startswith("tel:"):
+                # Set the operator name from the phone number
+                operator_name = PhoneCleaner.clean_operator(msg.urn)
+            else:
+                # Set the operator name from the channel type e.g. 'telegram', 'twitter'
+                operator_name = msg.urn.split(":")[0]
+            if operator_name not in interval_stats.operators:
+                log.warning(f"Message has unknown operator '{operator_name}'")
+                interval_stats.operators[operator_name] = SMSOperatorStats()
+            operator_stats = interval_stats.operators[operator_name]
 
             # Message statuses are "documented" here:
             # https://github.com/rapidpro/rapidpro/blob/c972205aae29f7219582fc29478e8ecacb579f9f/temba/msgs/models.py#L79
             if msg.direction == "in":
+                operator_stats.received += 1
                 interval_stats.total_received += 1
                 continue
 
@@ -99,6 +116,7 @@ if __name__ == "__main__":
             if msg.status in {"initializing", "pending", "queued"}:
                 interval_stats.total_pending += 1
             elif msg.status in {"wired", "sent", "delivered", "resent"}:
+                operator_stats.sent += 1
                 interval_stats.total_sent += 1
             elif msg.status in {"errored", "failed"}:
                 interval_stats.total_errored += 1
