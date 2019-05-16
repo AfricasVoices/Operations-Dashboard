@@ -1,5 +1,4 @@
 import argparse
-import json
 from datetime import timedelta
 
 import pytz
@@ -8,7 +7,6 @@ from core_data_modules.logging import Logger
 from core_data_modules.util import TimeUtils
 from dateutil.parser import isoparse
 from rapid_pro_tools.rapid_pro_client import RapidProClient
-from storage.google_cloud import google_cloud_utils
 
 from src import FirestoreWrapper, Cache
 from src.data_models import SMSStats
@@ -51,13 +49,13 @@ if __name__ == "__main__":
     assert end_time_exclusive == TimeUtils.floor_timestamp_at_resolution(end_time_exclusive, UPDATE_RESOLUTION), \
         f"End time {end_time_exclusive.isoformat()} is not a multiple of the update resolution {UPDATE_RESOLUTION}"
 
-    log.info("Initialising the Firestore client...")
-    firestore_credentials = json.loads(google_cloud_utils.download_blob_to_string(
-            google_cloud_credentials_file_path, firestore_credentials_url))
-    firestore_wrapper = FirestoreWrapper(firestore_credentials)
-
     log.info("Initialising the cache...")
     cache = Cache(cache_dir)
+
+    log.info("Initialising the Firestore client...")
+    firestore_credentials = cache.get_firestore_credentials(
+        google_cloud_credentials_file_path, firestore_credentials_url)
+    firestore_wrapper = FirestoreWrapper(firestore_credentials)
 
     log.info("Loading the active project details...")
     active_projects = cache.get_active_projects(firestore_wrapper)
