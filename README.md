@@ -14,13 +14,15 @@ To add a new project, add a new document to `active_projects` with the following
 - `rapid_pro_domain: string`: Domain of the instance of Rapid Pro for this project.
 - `rapid_pro_token_url: string`: GS URL to the credentials file containing the the Rapid Pro access token for this
   project's organisation.
+- `operator_names: array of string`: The names of all the operators of interest. The outputted SMS stats will contain
+  counts for all of these operators in each document. (plus one-off inclusions of any other observed operators).
 
 #### 2. Run the SMS statistics service
 This script updates the received/sent/failed counts for all of the projects which were defined as active in the previous
 step, for the requested time range.
 
 ```
-$ ./docker-run-sms-statistics-service.sh <cache-volume-name> <google-cloud-credentials-file-path> <firestore-credentials-url> <start-minute-inclusive> <end-minute-exclusive>
+$ ./docker-run-sms-statistics-service.sh <cache-volume-name> <google-cloud-credentials-file-path> <firestore-credentials-url> <start-time-inclusive> <end-time-exclusive>
 ```
 
 where:
@@ -32,8 +34,8 @@ where:
   for accessing a cloud storage credentials bucket containing all the other project credentials files.
 - `firestore-credentials-url` is a GS URL to the credentials file to use to access the Firestore instance containing 
   the operations statistics.
-- `start-minute-inclusive` is an ISO 8601 string for the start of the datetime range to update sms statistics for.
-- `end-minute-inclusive` is an ISO 8601 string for the end of the datetime range to update sms statistics for.
+- `start-time-inclusive` is an ISO 8601 string for the start of the datetime range to update sms statistics for.
+- `end-time-inclusive` is an ISO 8601 string for the end of the datetime range to update sms statistics for.
 
 <!--
 ### Generate Coda Statistics
