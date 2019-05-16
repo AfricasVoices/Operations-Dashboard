@@ -1,7 +1,7 @@
 import json
 
 from core_data_modules.logging import Logger
-from core_data_modules.util import IOUtils
+from core_data_modules.util import IOUtils, SHAUtils
 from storage.google_cloud import google_cloud_utils
 
 from src.data_models import ActiveProject
@@ -12,6 +12,26 @@ log = Logger(__name__)
 class Cache(object):
     def __init__(self, cache_dir_path):
         self.cache_dir_path = cache_dir_path
+
+    def get_firestore_credentials(self, google_cloud_credentials_file_path, firestore_credentials_url):
+        cache_file_path = f"{self.cache_dir_path}/firestore_credentials/{SHAUtils.sha_string(firestore_credentials_url)}.json"
+        try:
+            log.info(f"Attempting to read Firestore credentials file for '{firestore_credentials_url}'' from the "
+                     f"cache at '{cache_file_path}'...")
+            with open(cache_file_path) as f:
+                firestore_credentials = json.load(f)
+            log.info("Loaded the Firestore credentials from the cache")
+            return firestore_credentials
+        except FileNotFoundError:
+            log.info(f"Cache file '{cache_file_path}' not found; will download from Firestore")
+            firestore_credentials = json.loads(google_cloud_utils.download_blob_to_string(
+                google_cloud_credentials_file_path, firestore_credentials_url))
+
+            log.info(f"Saving the downloaded Firestore credentials to '{cache_file_path}'...")
+            IOUtils.ensure_dirs_exist_for_file(cache_file_path)
+            with open(cache_file_path, "w") as f:
+                json.dump(firestore_credentials, f)
+            return firestore_credentials
 
     def get_active_projects(self, firestore_client):
         cache_file_path = f"{self.cache_dir_path}/active_projects.json"
@@ -26,7 +46,7 @@ class Cache(object):
             active_projects = firestore_client.get_active_projects()
 
             log.info(f"Saving the downloaded active projects to the cache at '{cache_file_path}'...")
-            IOUtils.ensure_dirs_exist(self.cache_dir_path)
+            IOUtils.ensure_dirs_exist_for_file(cache_file_path)
             with open(cache_file_path, "w") as f:
                 json.dump([ap.to_dict() for ap in active_projects], f)
             return active_projects

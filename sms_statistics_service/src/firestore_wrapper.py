@@ -22,8 +22,8 @@ class FirestoreWrapper(object):
     def _get_active_projects_collection_ref(self):
         return self.client.collection(f"active_projects")
 
-    def _get_sms_stats_doc_ref(self, project_name):
-        return self.client.document(f"metrics/rapid_pro/projects/{project_name}")
+    def _get_sms_stat_doc_ref(self, project_name, date_string):
+        return self.client.document(f"metrics/rapid_pro/{project_name}/{date_string}")
 
     def get_active_projects(self):
         """
@@ -39,7 +39,22 @@ class FirestoreWrapper(object):
         log.info(f"Downloaded {len(active_projects)} active projects from Firestore")
         return active_projects
 
-    def update_sms_stats(self, project_name, sms_stats_batch):
+    def update_sms_stats(self, project_name, iso_string, sms_stats):
+        """
+        Updates the SMS stats for the given project and timestamp.
+
+        :param project_name: Name of project to update the SMS stats of.
+        :type project_name: str
+        :param iso_string: ISO 8601 formatted string to update the SMS stats of.
+        :type iso_string: str
+        :param sms_stats: SMS stats to update with.
+        :type sms_stats: src.data_models.SMSStats
+        """
+        log.info(f"Updating SMS stats for project {project_name} at time {iso_string}...")
+        self._get_sms_stat_doc_ref(project_name, iso_string).set(sms_stats.to_dict())
+        log.info("SMS stats updated")
+
+    def update_sms_stats_batch(self, project_name, sms_stats_batch):
         """
         Updates a batch of SMS stats for the given project.
 
@@ -49,14 +64,24 @@ class FirestoreWrapper(object):
         :type sms_stats_batch: dict of str -> src.data_models.SMSStats
         """
         log.info(f"Batch updating {len(sms_stats_batch)} SMS stats for project {project_name}...")
+        batch = self.client.batch()
+        batch_counter = 0
+        total_counter = 0
+        for iso_string, sms_stats in sms_stats_batch.items():
+            batch.set(self._get_sms_stat_doc_ref(project_name, iso_string), sms_stats.to_dict())
+            batch_counter += 1
+            total_counter += 1
 
-        doc_ref = self._get_sms_stats_doc_ref(project_name)
-        updates = {iso_string: sms_stats.to_dict() for iso_string, sms_stats in sms_stats_batch.items()}
+            if batch_counter >= self.MAX_BATCH_SIZE:
+                batch.commit()
+                log.info(f"Batch of {batch_counter} messages committed, progress: {total_counter} / {len(sms_stats_batch)}")
+                batch_counter = 0
 
-        if not doc_ref.get().exists:
-            log.warning(f"No SMS stats document exists for project {project_name}; will create one...")
-            doc_ref.set(updates)
-        else:
-            doc_ref.update(updates)
+        if batch_counter > 0:
+            batch.commit()
+            log.info(f"Final batch of {batch_counter} messages committed")
+            batch_counter = 0
+
+        assert batch_counter == 0
 
         log.info("SMS stats updated")
