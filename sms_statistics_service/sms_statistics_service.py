@@ -1,10 +1,5 @@
 import argparse
-<<<<<<< HEAD
-import datetime
-=======
-import json
 from datetime import timedelta
->>>>>>> update-operator-totals
 
 import pytz
 from core_data_modules.cleaners import PhoneCleaner
