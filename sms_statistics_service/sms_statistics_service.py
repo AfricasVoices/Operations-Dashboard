@@ -9,7 +9,7 @@ from dateutil.parser import isoparse
 from rapid_pro_tools.rapid_pro_client import RapidProClient
 from storage.google_cloud import google_cloud_utils
 
-from src import FirestoreWrapper
+from src import FirestoreWrapper, Cache
 from src.data_models import SMSStats
 
 Logger.set_project_name("OpsDashboard")
@@ -23,6 +23,8 @@ if __name__ == "__main__":
                                                  "currently active projects over the requested time range. "
                                                  "Active projects are read from Firestore")
 
+    parser.add_argument("cache_dir", metavar="cache-dir",
+                        help="Directory to cache downloaded active projects and Rapid Pro tokens in")
     parser.add_argument("google_cloud_credentials_file_path", metavar="google-cloud-credentials-file-path",
                         help="Path to a Google Cloud service account credentials file to use to access the "
                              "credentials bucket")
@@ -36,6 +38,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    cache_dir = args.cache_dir
     google_cloud_credentials_file_path = args.google_cloud_credentials_file_path
     firestore_credentials_url = args.firestore_credentials_url
     start_time_inclusive = isoparse(args.start_time_inclusive).astimezone(pytz.utc)
@@ -51,16 +54,20 @@ if __name__ == "__main__":
             google_cloud_credentials_file_path, firestore_credentials_url))
     firestore_wrapper = FirestoreWrapper(firestore_credentials)
 
-    log.info("Downloading the active project details from Firestore...")
-    active_projects = firestore_wrapper.get_active_projects()
-    log.info(f"Downloaded the details for {len(active_projects)} active projects")
+    log.info("Initialising the cache...")
+    cache = Cache(cache_dir)
+
+    log.info("Loading the active project details...")
+    active_projects = cache.get_active_projects(firestore_wrapper)
+    log.info(f"Loaded the details for {len(active_projects)} active projects")
 
     for project in active_projects:
         log.info(f"Computing SMS statistics for project {project.project_name}...")
 
-        log.info(f"Downloading the Rapid Pro credentials token from '{project.rapid_pro_token_url}'...")
-        rapid_pro_token = google_cloud_utils.download_blob_to_string(
-            google_cloud_credentials_file_path, project.rapid_pro_token_url).strip()
+        log.info("Loading the Rapid Pro token...")
+        rapid_pro_token = cache.get_rapid_pro_token_for_project(
+            project.project_name, google_cloud_credentials_file_path, project.rapid_pro_token_url)
+        log.info("Loaded the Rapid Pro token")
 
         log.info(f"Downloading raw messages from Rapid Pro...")
         rapid_pro = RapidProClient(project.rapid_pro_domain, rapid_pro_token)
