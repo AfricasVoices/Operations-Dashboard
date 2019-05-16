@@ -22,8 +22,8 @@ class FirestoreWrapper(object):
     def _get_active_projects_collection_ref(self):
         return self.client.collection(f"active_projects")
 
-    def _get_sms_stat_doc_ref(self, project_name, iso_string):
-        return self.client.document(f"metrics/rapid_pro/{project_name}/{iso_string}")
+    def _get_sms_stat_doc_ref(self, project_name, date_string):
+        return self.client.document(f"metrics/rapid_pro/{project_name}/{date_string}")
 
     def get_active_projects(self):
         """
@@ -66,21 +66,22 @@ class FirestoreWrapper(object):
         log.info(f"Batch updating {len(sms_stats_batch)} SMS stats for project {project_name}...")
         batch = self.client.batch()
         batch_counter = 0
-        total_progress = 0
+        total_counter = 0
         for iso_string, sms_stats in sms_stats_batch.items():
             batch.set(self._get_sms_stat_doc_ref(project_name, iso_string), sms_stats.to_dict())
             batch_counter += 1
-            total_progress += 1
+            total_counter += 1
 
             if batch_counter >= self.MAX_BATCH_SIZE:
                 batch.commit()
-                log.info(f"Batch of {batch_counter} messages committed, progress: {total_progress} / {len(sms_stats_batch)}")
-                batch = self.client.batch()
+                log.info(f"Batch of {batch_counter} messages committed, progress: {total_counter} / {len(sms_stats_batch)}")
                 batch_counter = 0
 
         if batch_counter > 0:
             batch.commit()
             log.info(f"Final batch of {batch_counter} messages committed")
+            batch_counter = 0
 
-        batch.commit()
+        assert batch_counter == 0
+
         log.info("SMS stats updated")
