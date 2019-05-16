@@ -32,9 +32,11 @@ class FirestoreWrapper(object):
         :return: list of active projects.
         :rtype: list of ActiveProject
         """
+        log.info("Downloading the list of active projects from Firestore...")
         active_projects = []
         for doc in self._get_active_projects_collection_ref().get():
             active_projects.append(ActiveProject.from_dict(doc.to_dict()))
+        log.info(f"Downloaded {len(active_projects)} active projects from Firestore")
         return active_projects
 
     def update_sms_stats(self, project_name, iso_string, sms_stats):
