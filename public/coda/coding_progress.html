@@ -1,4 +1,5 @@
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,9 +7,8 @@
     <link rel="shortcut icon" type="image/png" href="favicon.png" />
     <title>Data Pipeline Dashboard</title>
     <!-- Compiled and minified CSS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" 
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"> </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
@@ -18,12 +18,14 @@
     <script type="text/javascript" src="auth.js"></script>
     <script type="text/javascript" src='firebase.js'></script>
 </head>
+
 <body>
     <nav class='nav'>
         <div class="nav-wrapper container">
             <img class='brand-logo' src="avfdashboardlogo.png">
             <ul class="right">
                 <li><a class='nav-link' href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">MESSAGE CODING</a></li>
+                <li><a class='nav-link' href="https://avf-dashboards.firebaseapp.com/media_engagement/media_engagement.html">MEDIA ENGAGEMENT</a></li>
                 <li><a class='nav-link' onClick="logout();">Logout</a></li>
             </ul>
         </div>
@@ -48,4 +50,5 @@
         <div id="last_update">Last updated: </div>
     </div>
 </body>
+
 </html>
