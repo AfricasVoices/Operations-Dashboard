@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+firebase-admin = "*"
+google-cloud-firestore = "*"
+pipelineinfrastructure = {editable = true,git = "https://www.github.com/AfricasVoices/Pipeline-Infrastructure",ref = "v0.0.1"}
+coredatamodules = {editable = true,git = "https://www.github.com/AfricasVoices/CoreDataModules",ref = "floor-timestamp-at-resolution"}
+rapidprotools = {editable = true,git = "https://www.github.com/AfricasVoices/RapidProTools",ref = "log-fetched-messages"}
+python-dateutil = "*"
+
+[requires]
+python_version = "3.6"
