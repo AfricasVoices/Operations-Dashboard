@@ -29,7 +29,7 @@ if __name__ == "__main__":
                         help="Path to a Google Cloud service account credentials file to use to access the "
                              "credentials bucket")
     parser.add_argument("firestore_credentials_url", metavar="firestore-credentials-url",
-                        help="GS URL to the credentials file to use to access the Firestore instance with "
+                        help="GS URL to the credentials file to use to access the Firestore instance containing "
                              "the operations statistics")
     parser.add_argument("start_time_inclusive", metavar="start-time-inclusive",
                         help="ISO 8601 string for the start of the datetime range to update sms statistics for")
