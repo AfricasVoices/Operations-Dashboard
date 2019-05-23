@@ -66,7 +66,7 @@ var total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
         "translate(" + Margin.left + "," + Margin.top + ")");
 
 // Format TimeStamp  
-var timeFormat = d3.timeFormat("%d %H:%M:%S");
+var timeFormat = d3.timeFormat("%H %d %m %Y");
 // Create tooltip variables
 const tooltip = d3.select('#tooltip');
 
@@ -304,7 +304,7 @@ const update = (data) => {
             "translate(" + (Width / 2) + " ," +
             (Height + Margin.top + 10) + ")")
         .style("text-anchor", "middle")
-        .text("Time (D:H:M:S)");
+        .text("Time (H/D/M/Y)");
     
     // Add the Y Axis for the total received sms graph
     total_received_sms_graph.append("g")
@@ -333,7 +333,7 @@ const update = (data) => {
             "translate(" + (Width / 2) + " ," +
             (Height + Margin.top + 10) + ")")
         .style("text-anchor", "middle")
-        .text("Time (D:H:M:S)");
+        .text("Time (H/D/M/Y)");
     
     // Add the Y Axis for the total sent sms graph
     total_sent_sms_graph.append("g")
@@ -362,7 +362,7 @@ const update = (data) => {
             "translate(" + (Width / 2) + " ," +
             (Height + Margin.top + 10) + ")")
         .style("text-anchor", "middle")
-        .text("Time (D:H:M:S)");
+        .text("Time (H/D/M/Y)");
     
     // Add the Y Axis for the total failed sms graph
     total_failed_sms_graph.append("g")
