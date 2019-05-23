@@ -1,4 +1,4 @@
-//Permorm Authentication then update data 
+//Perform Authentication then update data 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         console.log("Attempting to bind: " + user.email)
@@ -65,7 +65,7 @@ var total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
         "translate(" + Margin.left + "," + Margin.top + ")");
 
 // Format TimeStamp  
-var timeFormat = d3.timeFormat("%d %H:%M:%S");
+var timeFormat = d3.timeFormat("%H %d %m %Y");
 // Create tooltip variables
 const tooltip = d3.select('#tooltip');
 
@@ -77,19 +77,19 @@ const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
 
 // Define line paths for total received sms(s)
 const total_received_line = d3.line()
-    .curve(d3.curveCatmullRom)
+    .curve(d3.curveLinear)
     .x(function (d) { return x(new Date(d.datetime)) })
     .y(function (d) { return y_total_received_sms(d.total_received); })
 
 // Define line paths for total sent sms(s)
 const total_sent_line = d3.line()
-    .curve(d3.curveCatmullRom)
+    .curve(d3.curveLinear)
     .x(function (d) { return x(new Date(d.datetime)) })
     .y(function (d) { return y_total_sent_sms(d.total_sent); })
 
 // Define line paths for total failed sms(s)
 const total_failed_line = d3.line()
-    .curve(d3.curveCatmullRom)
+    .curve(d3.curveLinear)
     .x(function (d) { return x(new Date(d.datetime)) })
     .y(function (d) { return y_total_failed_sms(d.total_errored); })
 
