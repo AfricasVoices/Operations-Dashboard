@@ -3,6 +3,7 @@ from datetime import timedelta
 
 import pytz
 from core_data_modules.cleaners import PhoneCleaner
+from core_data_modules.data_models import validators
 from core_data_modules.logging import Logger
 from core_data_modules.util import TimeUtils
 from dateutil.parser import isoparse
@@ -41,7 +42,11 @@ if __name__ == "__main__":
     cache_dir = args.cache_dir
     google_cloud_credentials_file_path = args.google_cloud_credentials_file_path
     firestore_credentials_url = args.firestore_credentials_url
+
+    validators.validate_utc_iso_string(args.start_time_inclusive, f"start_time_inclusive '{args.start_time_inclusive}'")
     start_time_inclusive = isoparse(args.start_time_inclusive).astimezone(pytz.utc)
+
+    validators.validate_utc_iso_string(args.end_time_exclusive, f"end_time_exclusive '{args.end_time_exclusive}'")
     end_time_exclusive = isoparse(args.end_time_exclusive).astimezone(pytz.utc)
 
     assert start_time_inclusive == TimeUtils.floor_timestamp_at_resolution(start_time_inclusive, UPDATE_RESOLUTION), \
