@@ -1,7 +1,7 @@
 FROM python:3.6-slim
 
 # Install Python tools (git + pipenv)
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git dateutils
 RUN pip install pipenv
 
 # Make a directory for private credentials files
