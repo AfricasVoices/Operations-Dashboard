@@ -22,7 +22,7 @@ docker build -t "$IMAGE_NAME" .
 
 CMD="
 LAST_UPDATE=\$(</last-update/last-update-timestamp.txt) && THIS_UPDATE=\$(dateutils.dround now /-10m -f '%Y-%m-%dT%H:%M:%S+00:00') && \
-pipenv run python -u sms_statistics_service.py /cache ${GOOGLE_CLOUD_CREDENTIALS_FILE_PATH} ${FIRESTORE_CREDENTIALS_URL} \${LAST_UPDATE} \${THIS_UPDATE} && \
+pipenv run python -u sms_statistics_service.py /cache /credentials/google-cloud-credentials.json ${FIRESTORE_CREDENTIALS_URL} \${LAST_UPDATE} \${THIS_UPDATE} && \
 echo \"Updating the last-update-timestamp.txt file with timestamp \$THIS_UPDATE\" && \
 echo \${THIS_UPDATE} >/last-update/last-update-timestamp.txt
 "
