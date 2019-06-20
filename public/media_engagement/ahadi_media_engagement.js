@@ -35,9 +35,11 @@ firebase.auth().onAuthStateChanged(function (user) {
         window.location.replace('auth.html')
     }
 });
+
+
 //Create margins for the two graphs
-const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
-const Width = 900 - Margin.right - Margin.left;
+const Margin = { top: 40, right: 130, bottom: 50, left: 70 };
+const Width = 1000 - Margin.right - Margin.left;
 const Height = 500 - Margin.top - Margin.bottom;
 
 // Append total received sms graph to svg
@@ -100,14 +102,16 @@ const total_failed_path = total_failed_sms_graph.append('path');
 
 // Function to update data
 const update = (data) => {
+    // console.log(data[0].operators)
 
     // format the data  
     data.forEach(function (d) {
-        d.datetime = new Date(d.datetime);
+        d.datetime = new Date(d.datetime)
         d.total_received = +d.total_received
         d.total_sent = +d.total_sent
         d.total_pending = +d.total_pending
         d.total_errored = +d.total_errored
+        d.operators = new Object(d.operators)
     });
 
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
@@ -225,7 +229,7 @@ const update = (data) => {
     
     // Label Lines for the total received sms graph
     total_received_sms_graph.append("text")
-        .attr("transform", "translate(" + (Width + 3) + "," + y_total_received_sms(data[data.length - 1].total_received) + ")")
+        .attr("transform", `translate(${Width - Margin.right + 150},${Margin.top})`)
         .attr("dy", ".35em")
         .attr("text-anchor", "start")
         .style("fill", "green")
@@ -233,14 +237,14 @@ const update = (data) => {
     
      // Label Lines for the total sent sms graph
      total_sent_sms_graph.append("text")
-        .attr("transform", "translate(" + (Width + 3) + "," + y_total_received_sms(data[data.length - 1].total_sent) + ")")
+        .attr("transform", `translate(${Width - Margin.right + 150},${Margin.top})`)
         .attr("dy", ".35em")
         .attr("text-anchor", "start")
         .style("fill", "blue")
         .text("Total Outgoing");
         // Label Lines for the total failed sms graph
         total_failed_sms_graph.append("text")
-        .attr("transform", "translate(" + (Width + 3) + "," + y_total_received_sms(data[data.length - 1].total_errored) + ")")
+        .attr("transform", `translate(${Width - Margin.right + 150},${Margin.top})`)
         .attr("dy", ".35em")
         .attr("text-anchor", "start")
         .style("fill", "red")
