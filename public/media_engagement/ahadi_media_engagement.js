@@ -36,11 +36,13 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-
 //Create margins for the two graphs
 const Margin = { top: 40, right: 130, bottom: 50, left: 70 };
 const Width = 1000 - Margin.right - Margin.left;
 const Height = 500 - Margin.top - Margin.bottom;
+
+// Ticks for log scale
+ticks = [1, 10, 100, 1000, 10000]
 
 // Append total received sms graph to svg
 var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
@@ -73,15 +75,15 @@ const tooltip = d3.select('#tooltip');
 
 // Set x and y scales
 const x = d3.scaleTime().range([0, Width]);
-const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
-const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
-const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
+const y_total_received_sms = d3.scaleLog().base(10).range([Height, 0]);
+const y_total_sent_sms = d3.scaleLog().range([Height, 0]);
+const y_total_failed_sms = d3.scaleLog().range([Height, 0]);
 
 // Define line paths for total received sms(s)
 const total_received_line = d3.line()
     .curve(d3.curveLinear)
     .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.total_received); })
+    .y(function (d) { console.log(d.total_received); return y_total_received_sms(d.total_received); })
 
 // Define line paths for total sent sms(s)
 const total_sent_line = d3.line()
@@ -115,19 +117,27 @@ const update = (data) => {
     });
 
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+    const nonEmptyReceived = []
+
+    data.forEach(function (d) {
+        if (d.total_received != 0) {
+            nonEmptyReceived.push(d)
+        }
+    })
     
     // set scale domains
     x.domain(d3.extent(data, d => new Date(d.datetime)));
-    y_total_received_sms.domain([0, d3.max(data, function (d) { return Math.max(d.total_received); })]);
+    y_total_received_sms.domain([1, 1000]);
     y_total_sent_sms.domain([0, d3.max(data, function (d) { return Math.max(d.total_sent); })]);
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return Math.max(d.total_errored); })]);
 
     // update path data for total incoming sms(s)
-    total_received_path.data([data])
+    total_received_path.data([nonEmptyReceived])
         .attr("class", "line")
         .style("stroke", "green")
         .attr("d", total_received_line);
-    
+
     // update path data for total outgoing sms(s)
     total_sent_path.data([data])
         .attr("class", "line")
@@ -158,7 +168,9 @@ const update = (data) => {
     // Add the Y Axis for the total received sms graph
     total_received_sms_graph.append("g")
         .attr("class", "axisSteelBlue")
-        .call(d3.axisLeft(y_total_received_sms));
+        .call(d3.axisLeft(y_total_received_sms)
+        .tickValues(ticks)
+        .tickFormat(d3.format("d")));
     
     // Y axis Label for the total received sms graph
     total_received_sms_graph.append("text")
