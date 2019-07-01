@@ -119,43 +119,61 @@ const update = (data, yAxisScaleType) => {
 
     const nonEmptyReceived = []
 
-    if (yAxisScaleType == "log") {
+    var yAxisScaleType = "linear"
 
-        data.forEach(function (d) {
-            if (d.total_received != 0) {
-                nonEmptyReceived.push(d)
-            }
-        })
+    // function linear_script()  {
+    //     yAxisScaleType = "linear"
+    // }
+
+    // function log_script()  {
+    //     yAxisScaleType = "log"
+    // }
+
+
+    // if (yAxisScaleType == "log") {
+
+    //     data.forEach(function (d) {
+    //         if (d.total_received != 0) {
+    //             nonEmptyReceived.push(d)
+    //         }
+    //     })
     
-        // set scale domains
-        x.domain(d3.extent(data, d => new Date(d.datetime)));
-        y_total_received_sms.domain([1, 1000]);
-        y_total_sent_sms.domain([1, 1000]);
-        y_total_failed_sms.domain([1, 1000]);
+    //     // set scale domains
+    //     x.domain(d3.extent(data, d => new Date(d.datetime)));
+    //     y_total_received_sms.domain([1, 1000]);
+    //     y_total_sent_sms.domain([1, 1000]);
+    //     y_total_failed_sms.domain([1, 1000]);
 
-         // Add the Y Axis for the total received sms graph
-        total_received_sms_graph.append("g")
-            .attr("class", "axisSteelBlue")
-            .call(d3.axisLeft(y_total_received_sms)
-            .tickValues(ticks)
-            .tickFormat(d3.format("d")));
+    //      // Add the Y Axis for the total received sms graph
+    //     total_received_sms_graph.append("g")
+    //         .attr("class", "axisSteelBlue")
+    //         .call(d3.axisLeft(y_total_received_sms)
+    //         .tickValues(ticks)
+    //         .tickFormat(d3.format("d")));
 
-        // Add the Y Axis for the total sent sms graph
-        total_sent_sms_graph.append("g")
-            .attr("class", "axisSteelBlue")
-            .call(d3.axisLeft(y_total_sent_sms)
-            .tickValues(ticks)
-            .tickFormat(d3.format("d")));
+    //     // Add the Y Axis for the total sent sms graph
+    //     total_sent_sms_graph.append("g")
+    //         .attr("class", "axisSteelBlue")
+    //         .call(d3.axisLeft(y_total_sent_sms)
+    //         .tickValues(ticks)
+    //         .tickFormat(d3.format("d")));
 
-        // Add the Y Axis for the total failed sms graph
-        total_failed_sms_graph.append("g")
-            .attr("class", "axisSteelBlue")
-            .call(d3.axisLeft(y_total_failed_sms)
-            .tickValues(ticks)
-            .tickFormat(d3.format("d")));
-    }
+    //     // Add the Y Axis for the total failed sms graph
+    //     total_failed_sms_graph.append("g")
+    //         .attr("class", "axisSteelBlue")
+    //         .call(d3.axisLeft(y_total_failed_sms)
+    //         .tickValues(ticks)
+    //         .tickFormat(d3.format("d")));
 
-    if (yAxisScaleType == "linear") {
+            // update path data for total incoming sms(s)
+        // total_received_path.data([nonEmptyReceived])
+            // .attr("class", "line")
+            // .style("stroke", "green")
+            // .attr("d", total_received_line);
+    // }
+
+
+    if (yAxisScaleType == "linear") {   
 
         // set scale domains
         x.domain(d3.extent(data, d => new Date(d.datetime)));
@@ -180,7 +198,7 @@ const update = (data, yAxisScaleType) => {
     }
 
     // update path data for total incoming sms(s)
-    total_received_path.data([nonEmptyReceived])
+    total_received_path.data([data])
         .attr("class", "line")
         .style("stroke", "green")
         .attr("d", total_received_line);

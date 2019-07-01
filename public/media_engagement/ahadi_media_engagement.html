@@ -15,8 +15,58 @@
     <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-auth.js"></script>
     <script type="text/javascript" src="../../public/coda/auth.js"></script>
     <script type="text/javascript" src="firebase.js"></script>
+    <style>
+
+            /* Dropdown Button */
+                .dropbtn {
+                    background-color: #3498DB;
+                    color: white;
+                    padding: 16px;
+                    font-size: 16px;
+                    border: none;
+                    cursor: pointer;
+            }
+            /* Dropdown button on hover & focus */
+                .dropbtn:hover, .dropbtn:focus {
+                background-color: #2980B9;
+            }
+           
+           /* The container <div> - needed to position the dropdown content */
+                .dropdown {
+                position: relative;
+                display: inline-block;
+                float: right;
+                overflow: hidden;
+                }
+           
+           /* Dropdown Content (Hidden by Default) */
+                .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 10;
+                    }
+
+            /* Links inside the dropdown */
+                .dropdown-content p {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                }
+
+            /* Change color of dropdown links on hover */
+                .dropdown-content p:hover {background-color: #ddd}
+
+            /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+                .show {display:block;}
+            </style>
+            
 </head>
-<body>
+
+<body>  
     <nav class="nav">
         <div class="nav-wrapper container">
             <img class='brand-logo' src="avfdashboardlogo.png">
@@ -29,22 +79,23 @@
             </ul>
         </div>
     </nav>
-</ul>
-<div class="row">
-    <div class="col s6 offset-s10"><span class="text">Select view</span></div>
-    <select class="col s6 offset-s10" id="chartType">
-        <option>Select Chart Type</option>
-        <option>line</option>
-        <option>pie</option>
-        <option>area</option>
-        <option>bar</option>
-    </select>
-    <div class="col s6 offset-s10"></br></div>
-</div>
-</div>
+
+    <div class="container">
+        <div class="row">
+                <div class="dropdown">
+                        <button onclick="toggleDropdown()" class="dropbtn">Select view</button>
+                        <ul id="viewDropdown" class="dropdown-content">
+                            <li><p onclick="linear_script()">Linear</p></li>
+                            <li><p onclick="log_script">Log</p></li>
+                        </ul>
+                </div>
+        </div>
+    </div>
+
     <div class="container">
          <div class="row ">
-            <div class="card white z-depth-1 total_received_sms_graph"></div>
+            <div class="card white z-depth-1 total_received_sms_graph">
+            </div>
         </div>
         <div class="row ">
             <div class="card white z-depth-1 total_sent_sms_graph"></div>
@@ -82,5 +133,26 @@
         </div>
         <script src="https://d3js.org/d3.v5.js"></script>
         <script src="ahadi_media_engagement.js"></script>
+        <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function toggleDropdown() {
+                document.getElementById("viewDropdown").classList.toggle("show");
+            }
+        
+            // Close the dropdown menu if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                    }
+                }
+                }
+            } 
+        </script>
 </body>
 </html>
