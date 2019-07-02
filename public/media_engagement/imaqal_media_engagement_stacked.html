@@ -1,0 +1,76 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" type="image/png" href="../../public/coda/favicon.png" />
+    <title>Engagement & Media Dashboard</title>
+    <!-- Compiled and minified CSS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-firestore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.1/js/jquery.tablesorter.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-auth.js"></script>
+    <script type="text/javascript" src="../../public/coda/auth.js"></script>
+    <script type="text/javascript" src="firebase.js"></script>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-wrapper container">
+            <img class='brand-logo' src="avfdashboardlogo.png">
+            <ul class="right">
+                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">MESSAGE CODING</a></li>
+                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/media_engagement/imaqal_media_engagement.html">IMAQAL_E&M</a></li>
+                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/media_engagement/icraf_media_engagement.html">ICRAF_E&M</a></li>
+                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/media_engagement/ahadi_media_engagement.html">AHADI_E&M</a></li>
+                <li><a class="nav-link" onClick="logout();">Logout</a></li>  
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row ">
+            <div class="card white z-depth-1 total_received_sms_graph"></div>
+        </div>
+        <div class="row ">
+            <div class="card white z-depth-1 total_sent_sms_graph"></div>
+        </div>
+        <div class="row ">
+            <div class="card white z-depth-1 total_failed_sms_graph"></div>
+        </div>
+        <div class="row">
+            <div class='col s4 m4 l4'>
+                <div class='card white z-depth-2  responsetext '>
+                    <b>Message metrics</b></br>
+                    <div id="total_received">Total Incoming Messages</div>
+                    <div id="total_sent">Total Outgoing Messages: </div>
+                    <div id="last_update">Last updated: </div>
+                </div>
+            </div>
+            <div class='col s4 m4 l4'>
+                <div class='card white z-depth-2 operatortext'>
+                    <b>Operator metrics</b></br>
+                    <div id="total_golis_messages"></div>
+                    <div id="total_hormud_messages"></div>
+                    <div id="total_nationlink_messages"></div>
+                    <div id="total_somtel_messages"></div>
+                    <div id="total_somnet_messages"></div>
+                    <div id="total_telesom_messages"></div>
+                </div>
+            </div>
+            <div class='col s4 m4 l4'>
+                <div class='card white z-depth-2 operatortext'>
+                    <b>Project Details</b></br>
+                    <div id="project_name">Project Name:</div>
+                    <div id="texit_units_used">Textit Units Used:</div>
+                    <div id="texit_units_bal">Texit Unit balance:</div>
+                    <div id="shaqadoon_units_used">Shaqadoon Units Used:</div>
+                    <div id="shaqadoon_units_bal">Shaqadoon Units Balance</div>
+                </div>
+            </div>
+        </div>
+        <script src="https://d3js.org/d3.v5.js"></script>
+        <script src="imaqal_media_engagement.js"></script>
+</body>
+</html>
