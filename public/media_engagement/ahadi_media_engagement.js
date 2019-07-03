@@ -35,80 +35,83 @@ firebase.auth().onAuthStateChanged(function (user) {
         window.location.replace('auth.html')
     }
 });
-//Create margins for the two graphs
-const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
-const Width = 900 - Margin.right - Margin.left;
-const Height = 500 - Margin.top - Margin.bottom;
-
-// Append total received sms graph to svg
-var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
-    .attr("width", Width + Margin.left + Margin.right)
-    .attr("height", Height + Margin.top + Margin.bottom)
-    .append("g")
-    .attr("transform",
-        "translate(" + Margin.left + "," + Margin.top + ")");
-
-// Append total sent sms graph to svg
-var total_sent_sms_graph = d3.select(".total_sent_sms_graph").append("svg")
-    .attr("width", Width + Margin.left + Margin.right)
-    .attr("height", Height + Margin.top + Margin.bottom)
-    .append("g")
-    .attr("transform",
-        "translate(" + Margin.left + "," + Margin.top + ")");
-
-// Append total sent sms graph to svg
-var total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
-    .attr("width", Width + Margin.left + Margin.right)
-    .attr("height", Height + Margin.top + Margin.bottom)
-    .append("g")
-    .attr("transform",
-        "translate(" + Margin.left + "," + Margin.top + ")");
-
-// Format TimeStamp  
-var timeFormat = d3.timeFormat("%H %d %m %Y");
-// Create tooltip variables
-const tooltip = d3.select('#tooltip');
-
-// Set x and y scales
-const x = d3.scaleTime().range([0, Width]);
-const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
-const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
-const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
-
-// Define line paths for total received sms(s)
-const total_received_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.total_received); })
-
-// Define line paths for total sent sms(s)
-const total_sent_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_sent_sms(d.total_sent); })
-
-// Define line paths for total failed sms(s)
-const total_failed_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_failed_sms(d.total_errored); })
-
-// Create line path element for each message variable
-const total_received_path = total_received_sms_graph.append('path');
-const total_sent_path = total_sent_sms_graph.append('path');
-const total_failed_path = total_failed_sms_graph.append('path');
 
 // Function to update data
 const update = (data) => {
 
-    // format the data  
-    data.forEach(function (d) {
-        d.datetime = new Date(d.datetime);
-        d.total_received = +d.total_received
-        d.total_sent = +d.total_sent
-        d.total_pending = +d.total_pending
-        d.total_errored = +d.total_errored
-    });
+    d3.selectAll("svg").remove();
+
+        //Create margins for the two graphs
+    const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
+    const Width = 900 - Margin.right - Margin.left;
+    const Height = 500 - Margin.top - Margin.bottom;
+
+    // Append total received sms graph to svg
+    var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
+        .attr("width", Width + Margin.left + Margin.right)
+        .attr("height", Height + Margin.top + Margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + Margin.left + "," + Margin.top + ")");
+
+    // Append total sent sms graph to svg
+    var total_sent_sms_graph = d3.select(".total_sent_sms_graph").append("svg")
+        .attr("width", Width + Margin.left + Margin.right)
+        .attr("height", Height + Margin.top + Margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + Margin.left + "," + Margin.top + ")");
+
+    // Append total sent sms graph to svg
+    var total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
+        .attr("width", Width + Margin.left + Margin.right)
+        .attr("height", Height + Margin.top + Margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + Margin.left + "," + Margin.top + ")");
+
+    // Format TimeStamp  
+    var timeFormat = d3.timeFormat("%H %d %m %Y");
+    // Create tooltip variables
+    const tooltip = d3.select('#tooltip');
+
+    // Set x and y scales
+    const x = d3.scaleTime().range([0, Width]);
+    const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
+    const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
+    const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
+
+    // Define line paths for total received sms(s)
+    const total_received_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_received_sms(d.total_received); })
+
+    // Define line paths for total sent sms(s)
+    const total_sent_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_sent_sms(d.total_sent); })
+
+    // Define line paths for total failed sms(s)
+    const total_failed_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_failed_sms(d.total_errored); })
+
+    // Create line path element for each message variable
+    const total_received_path = total_received_sms_graph.append('path');
+    const total_sent_path = total_sent_sms_graph.append('path');
+    const total_failed_path = total_failed_sms_graph.append('path');
+
+        // format the data  
+        data.forEach(function (d) {
+            d.datetime = new Date(d.datetime);
+            d.total_received = +d.total_received
+            d.total_sent = +d.total_sent
+            d.total_pending = +d.total_pending
+            d.total_errored = +d.total_errored
+        });
 
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
     

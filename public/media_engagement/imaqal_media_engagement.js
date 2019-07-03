@@ -12,7 +12,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             res.docChanges().forEach(change => {
 
                 const doc = { ...change.doc.data(), id: change.doc.id };
-
+                
                 switch (change.type) {
                     case 'added':
                         data.push(doc);
@@ -36,164 +36,167 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-//Create margins for the two graphs
-const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
-const Width = 900 - Margin.right - Margin.left;
-const Height = 500 - Margin.top - Margin.bottom;
-
-// Append total received sms graph to svg
-var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
-    .attr("width", Width + Margin.left + Margin.right)
-    .attr("height", Height + Margin.top + Margin.bottom)
-    .append("g")
-    .attr("transform",
-        "translate(" + Margin.left + "," + Margin.top + ")");
-
-// Append total sent sms graph to svg
-var total_sent_sms_graph = d3.select(".total_sent_sms_graph").append("svg")
-    .attr("width", Width + Margin.left + Margin.right)
-    .attr("height", Height + Margin.top + Margin.bottom)
-    .append("g")
-    .attr("transform",
-        "translate(" + Margin.left + "," + Margin.top + ")");
-
-// Append total sent sms graph to svg
-var total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
-    .attr("width", Width + Margin.left + Margin.right)
-    .attr("height", Height + Margin.top + Margin.bottom)
-    .append("g")
-    .attr("transform",
-        "translate(" + Margin.left + "," + Margin.top + ")");
-
-// Format TimeStamp  
-var timeFormat = d3.timeFormat("%H %d %m %Y");
-// Create tooltip variables
-const tooltip = d3.select('#tooltip');
-
-// Set x and y scales
-const x = d3.scaleTime().range([0, Width]);
-const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
-const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
-const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
-
-// Define line paths for total received sms(s)
-const total_received_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.total_received); })
-
-// Define line paths for total sent sms(s)
-const total_sent_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_sent_sms(d.total_sent); })
-
-// Define line paths for total pending sms(s)
-const total_pending_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_errored_pending_sms(d.total_pending); })
-
-// Define line paths for total failed sms(s)
-const total_failed_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_failed_sms(d.total_errored); })
-
-// Define line path for total golis received sms(s)
-const total_golis_received_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.golis_received); })
-
-// Define line path for total hormud received sms(s)
-const total_hormud_received_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.hormud_received); })
-
-// Define line path for total nationlink received sms(s)
-const total_nationlink_received_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.nationlink_received); })
-
-// Define line path for total somnet received sms(s)
-const total_somnet_received_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.somnet_received); })
-
-// Define line path for total somtel received sms(s)
-const total_somtel_received_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.somtel_received); })
-
-// Define line path for total telesom received sms(s)
-const total_telesom_received_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_received_sms(d.telesom_received); })
-
-// Define line path for total golis sent sms(s)
-const total_golis_sent_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_sent_sms(d.golis_sent); })
-
-// Define line path for total hormud sent sms(s)
-const total_hormud_sent_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_sent_sms(d.hormud_sent); })
-
-// Define line path for total nationlink sent sms(s)
-const total_nationlink_sent_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_sent_sms(d.nationlink_sent); })
-
-// Define line path for total somnet sent sms(s)
-const total_somnet_sent_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_sent_sms(d.somnet_sent); })
-
-// Define line path for total somtel sent sms(s)
-const total_somtel_sent_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_sent_sms(d.somtel_sent); })
-
-// Define line path for total telesom sent sms(s)
-const total_telesom_sent_line = d3.line()
-    .curve(d3.curveLinear)
-    .x(function (d) { return x(new Date(d.datetime)) })
-    .y(function (d) { return y_total_sent_sms(d.telesom_sent); })
-
-// Create line path element for each message variable
-const total_received_path = total_received_sms_graph.append('path');
-const total_golis_received_path = total_received_sms_graph.append('path');
-const total_hormud_received_path = total_received_sms_graph.append('path');
-const total_nationlink_received_path = total_received_sms_graph.append('path');
-const total_somnet_received_path = total_received_sms_graph.append('path');
-const total_somtel_received_path = total_received_sms_graph.append('path');
-const total_telesom_received_path = total_received_sms_graph.append('path');
-
-const total_sent_path = total_sent_sms_graph.append('path');
-const total_golis_sent_path = total_sent_sms_graph.append('path');
-const total_hormud_sent_path = total_sent_sms_graph.append('path');
-const total_nationlink_sent_path = total_sent_sms_graph.append('path');
-const total_somnet_sent_path = total_sent_sms_graph.append('path');
-const total_somtel_sent_path = total_sent_sms_graph.append('path');
-const total_telesom_sent_path = total_sent_sms_graph.append('path');
-
-const total_pending_path = total_failed_sms_graph.append('path');
-const total_failed_path = total_failed_sms_graph.append('path');
-
 // Function to update data
 const update = (data) => {
+
+    d3.selectAll("svg").remove();
+
+        //Create margins for the two graphs
+    const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
+    const Width = 900 - Margin.right - Margin.left;
+    const Height = 500 - Margin.top - Margin.bottom;
+
+    // Append total received sms graph to svg
+    var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
+        .attr("width", Width + Margin.left + Margin.right)
+        .attr("height", Height + Margin.top + Margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + Margin.left + "," + Margin.top + ")");
+
+    // Append total sent sms graph to svg
+    var total_sent_sms_graph = d3.select(".total_sent_sms_graph").append("svg")
+        .attr("width", Width + Margin.left + Margin.right)
+        .attr("height", Height + Margin.top + Margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + Margin.left + "," + Margin.top + ")");
+
+    // Append total sent sms graph to svg
+    var total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
+        .attr("width", Width + Margin.left + Margin.right)
+        .attr("height", Height + Margin.top + Margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + Margin.left + "," + Margin.top + ")");
+
+    // Format TimeStamp  
+    var timeFormat = d3.timeFormat("%H %d %m %Y");
+    // Create tooltip variables
+    const tooltip = d3.select('#tooltip');
+
+    // Set x and y scales
+    const x = d3.scaleTime().range([0, Width]);
+    const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
+    const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
+    const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
+
+    // Define line paths for total received sms(s)
+    const total_received_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_received_sms(d.total_received); })
+
+    // Define line paths for total sent sms(s)
+    const total_sent_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_sent_sms(d.total_sent); })
+
+    // Define line paths for total pending sms(s)
+    const total_pending_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_errored_pending_sms(d.total_pending); })
+
+    // Define line paths for total failed sms(s)
+    const total_failed_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_failed_sms(d.total_errored); })
+
+    // Define line path for total golis received sms(s)
+    const total_golis_received_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_received_sms(d.golis_received); })
+
+    // Define line path for total hormud received sms(s)
+    const total_hormud_received_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_received_sms(d.hormud_received); })
+
+    // Define line path for total nationlink received sms(s)
+    const total_nationlink_received_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_received_sms(d.nationlink_received); })
+
+    // Define line path for total somnet received sms(s)
+    const total_somnet_received_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_received_sms(d.somnet_received); })
+
+    // Define line path for total somtel received sms(s)
+    const total_somtel_received_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_received_sms(d.somtel_received); })
+
+    // Define line path for total telesom received sms(s)
+    const total_telesom_received_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_received_sms(d.telesom_received); })
+
+    // Define line path for total golis sent sms(s)
+    const total_golis_sent_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_sent_sms(d.golis_sent); })
+
+    // Define line path for total hormud sent sms(s)
+    const total_hormud_sent_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_sent_sms(d.hormud_sent); })
+
+    // Define line path for total nationlink sent sms(s)
+    const total_nationlink_sent_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_sent_sms(d.nationlink_sent); })
+
+    // Define line path for total somnet sent sms(s)
+    const total_somnet_sent_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_sent_sms(d.somnet_sent); })
+
+    // Define line path for total somtel sent sms(s)
+    const total_somtel_sent_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_sent_sms(d.somtel_sent); })
+
+    // Define line path for total telesom sent sms(s)
+    const total_telesom_sent_line = d3.line()
+        .curve(d3.curveLinear)
+        .x(function (d) { return x(new Date(d.datetime)) })
+        .y(function (d) { return y_total_sent_sms(d.telesom_sent); })
+
+    // Create line path element for each message variable
+    const total_received_path = total_received_sms_graph.append('path');
+    const total_golis_received_path = total_received_sms_graph.append('path');
+    const total_hormud_received_path = total_received_sms_graph.append('path');
+    const total_nationlink_received_path = total_received_sms_graph.append('path');
+    const total_somnet_received_path = total_received_sms_graph.append('path');
+    const total_somtel_received_path = total_received_sms_graph.append('path');
+    const total_telesom_received_path = total_received_sms_graph.append('path');
+
+    const total_sent_path = total_sent_sms_graph.append('path');
+    const total_golis_sent_path = total_sent_sms_graph.append('path');
+    const total_hormud_sent_path = total_sent_sms_graph.append('path');
+    const total_nationlink_sent_path = total_sent_sms_graph.append('path');
+    const total_somnet_sent_path = total_sent_sms_graph.append('path');
+    const total_somtel_sent_path = total_sent_sms_graph.append('path');
+    const total_telesom_sent_path = total_sent_sms_graph.append('path');
+
+    const total_pending_path = total_failed_sms_graph.append('path');
+    const total_failed_path = total_failed_sms_graph.append('path');
+
 
     // format the data  
     data.forEach(function (d) {
