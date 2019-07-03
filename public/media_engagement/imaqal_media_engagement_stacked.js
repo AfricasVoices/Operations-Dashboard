@@ -112,7 +112,12 @@ const update = (data) => {
 
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
-    data = data.filter(a => a.datetime > new Date("2019-07-01T12:30:00+00:00"));
+    var offset = new Date()
+    
+    offset.setDate(offset.getDate() - 2)
+    console.log(offset)
+
+    data = data.filter(a => a.datetime > offset);
     
     receivedKeys = ["NC_received", "golis_received", "hormud_received", "nationlink_received", "somnet_received", 
     "somtel_received", "telegram_received", "telesom_received"]
@@ -309,6 +314,4 @@ const update = (data) => {
         .style("text-decoration", "bold")
         .text("Total Failed Messages(s) / hr");     
 
-
-        
 };
