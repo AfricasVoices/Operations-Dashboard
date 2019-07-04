@@ -110,14 +110,11 @@ const update = (data) => {
         d.somnet_sent= +d.operators["somnet"]["sent"]
         d.somtel_sent= +d.operators["somtel"]["sent"]
         d.telesom_sent= +d.operators["telesom"]["sent"]
-        const ordered_operators = {};
         Object.keys(d.operators).sort().forEach(function(key) {
-            ordered_operators[key] = d.operators[key]
             if (!(key in operators)) {
                 operators.add(key)
             };
         });
-        d.operators = ordered_operators
     });
 
     operators = Array.from(operators)
@@ -360,6 +357,6 @@ const update = (data) => {
     .attr("dy", ".35em")
     .attr("text-anchor", "start")
     .style("fill", "blue")
-.text("Total Failed");
+    .text("Total Failed");
       
 };
