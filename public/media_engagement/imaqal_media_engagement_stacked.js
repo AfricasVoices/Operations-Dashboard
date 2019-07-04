@@ -326,7 +326,6 @@ const update = (data) => {
         .style("text-decoration", "bold")
         .text("Total Failed Messages(s) / hr");     
 
-
     // Total received graph legend
     total_received_sms_graph.append("g")
         .attr("class", "receivedLegend")
@@ -341,7 +340,6 @@ const update = (data) => {
     d3.select(".receivedLegend")
         .call(receivedLegend);
 
-
     // Total sent graph legend
     total_sent_sms_graph.append("g")
     .attr("class", "sentLegend")
@@ -355,5 +353,13 @@ const update = (data) => {
 
     d3.select(".sentLegend")
         .call(sentLegend);
+
+    // Label Lines for the total failed sms graph
+    total_failed_sms_graph.append("text")
+    .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top})`)
+    .attr("dy", ".35em")
+    .attr("text-anchor", "start")
+    .style("fill", "blue")
+.text("Total Failed");
       
 };
