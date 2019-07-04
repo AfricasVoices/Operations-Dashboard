@@ -89,6 +89,8 @@ const total_failed_path = total_failed_sms_graph.append('path');
 // Function to update data
 const update = (data) => {
 
+    let operators = new Set()
+
     // format the data  
     data.forEach(function (d) {
         d.datetime = new Date(d.datetime);
@@ -108,31 +110,46 @@ const update = (data) => {
         d.somnet_sent= +d.operators["somnet"]["sent"]
         d.somtel_sent= +d.operators["somtel"]["sent"]
         d.telesom_sent= +d.operators["telesom"]["sent"]
+        const ordered_operators = {};
+        Object.keys(d.operators).sort().forEach(function(key) {
+            ordered_operators[key] = d.operators[key]
+            if (!(key in operators)) {
+                operators.add(key)
+            };
+        });
+        d.operators = ordered_operators
     });
+
+    operators = Array.from(operators)
 
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
     var offset = new Date()
     
     offset.setDate(offset.getDate() - 2)
-    console.log(offset)
 
     data = data.filter(a => a.datetime > offset);
-    
-    receivedKeys = ["NC_received", "golis_received", "hormud_received", "nationlink_received", "somnet_received", 
-    "somtel_received", "telegram_received", "telesom_received"]
+
+    receivedKeys = []
+    sentKeys = []
+
+    var receivedStr = ""
+    var sentStr = ""
+
+    for (var i=0; i<operators.length; i++) {
+        receivedStr = operators[i] + "_received";
+        receivedKeys.push(receivedStr)
+        sentStr = operators[i] + "_sent"
+        sentKeys.push(sentStr)
+    }
 
     let stackReceived = d3.stack()
             .keys(receivedKeys)
     let receivedDataStacked = stackReceived(data)
 
-    sentKeys = ["NC_sent", "golis_sent", "hormud_sent", "nationlink_sent", "somnet_sent", 
-    "somtel_sent", "telegram_sent", "telesom_sent"]
-
     let stackSent = d3.stack()
             .keys(sentKeys)
     let sentdDataStacked = stackSent(data)
-
 
     // set scale domains
     x.domain(d3.extent(data, d => new Date(d.datetime)));
@@ -141,6 +158,10 @@ const update = (data) => {
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return Math.max(d.total_errored); })]);
 
     let color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    let colorReceived = d3.scaleOrdinal(d3.schemeCategory10).domain(receivedKeys)
+    let colorSent = d3.scaleOrdinal(d3.schemeCategory10).domain(sentKeys)
+
 
     // Received bar chart
 
@@ -156,7 +177,7 @@ const update = (data) => {
         .attr("x", 0 - (Height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("No.of Incoming Message (s)");
+        .text("No. of Incoming Message (s)");
 
     let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
         .data(receivedDataStacked)
@@ -196,15 +217,6 @@ const update = (data) => {
     total_sent_sms_graph.append("g")
         .attr("class", "axisSteelBlue")
         .call(d3.axisLeft(y_total_sent_sms));
-    
-    // Y axis Label for the total sent sms graph
-    total_sent_sms_graph.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - Margin.left)
-        .attr("x", 0 - (Height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("No.of Sent Message (s)");
 
     let sentLayer = total_sent_sms_graph.selectAll('#sentStack')
         .data(sentdDataStacked)
@@ -250,12 +262,12 @@ const update = (data) => {
         .attr("x", 0 - (Height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("No.of Outgoing Message (s)");
+        .text("No. of Outgoing Message (s)");
       
     // update path data for total failed sms(s)
     total_failed_path.data([data])
         .attr("class", "line")
-        .style("stroke", "red")
+        .style("stroke", "blue")
         .attr("d", total_failed_line);
 
     //Add the X Axis for the total failed sms graph
@@ -285,7 +297,7 @@ const update = (data) => {
         .attr("x", 0 - (Height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("No.of Failed Message (s)");
+        .text("No. of Failed Message (s)");
 
      // Total Sms(s) graph title
      total_received_sms_graph.append("text")
@@ -314,4 +326,34 @@ const update = (data) => {
         .style("text-decoration", "bold")
         .text("Total Failed Messages(s) / hr");     
 
+
+    // Total received graph legend
+    total_received_sms_graph.append("g")
+        .attr("class", "receivedLegend")
+        .attr("transform", `translate(${Width - Margin.right + 80},${Margin.top - 30})`)
+
+    var receivedLegend = d3.legendColor()
+        .shapeWidth(30)
+        .orient('vertical')
+        .scale(colorReceived)
+        .labels(operators);
+
+    d3.select(".receivedLegend")
+        .call(receivedLegend);
+
+
+    // Total sent graph legend
+    total_sent_sms_graph.append("g")
+    .attr("class", "sentLegend")
+    .attr("transform", `translate(${Width - Margin.right + 80},${Margin.top - 30})`)
+
+    var sentLegend = d3.legendColor()
+        .shapeWidth(30)
+        .orient('vertical')
+        .scale(colorSent)
+        .labels(operators);
+
+    d3.select(".sentLegend")
+        .call(sentLegend);
+      
 };
