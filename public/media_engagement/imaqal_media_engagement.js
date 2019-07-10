@@ -189,7 +189,9 @@ const update = (data) => {
     const total_failed_path = total_failed_sms_graph.append('path');
 
     // set scale domains
-    x.domain(d3.extent(data, d => new Date(d.datetime)));
+    // x.domain(d3.extent(data, d => new Date(d.datetime)));
+    x.domain(d3.extent(data, d => new Date(d.day)));
+    
     // x.domain(d3.extent(data, d => dayDateFormat(d.datetime)));
     // y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
     y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
@@ -240,7 +242,7 @@ const update = (data) => {
         .data(function(d) { return d })
         .enter()
       .append('rect')
-        .attr('x', function (d) { return x(d.data.day) })
+        .attr('x', function (d) { return x(d.key) })
         .attr('y', function (d) { return y_total_received_sms(d[1]) })
         .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
         .attr('width', Width / Object.keys(dailyReceivedTotal).length);
