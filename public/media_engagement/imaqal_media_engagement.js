@@ -43,9 +43,12 @@ const update = (data) => {
 
     let operators = new Set()
 
+    var dayDateFormat = d3.timeFormat("%Y-%m-%d")	
+
     // format the data  
     data.forEach(function (d) {
         d.datetime = new Date(d.datetime);
+        d.day = dayDateFormat(d.datetime)
         d.total_received = +d.total_received
         d.total_sent = +d.total_sent
         d.total_pending = +d.total_pending
@@ -73,11 +76,36 @@ const update = (data) => {
 
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
-    var offset = new Date()
-    
-    offset.setDate(offset.getDate() - 7)
+    var dailyReceivedTotal = d3.nest()
+        .key(function(d) { return d.day; })
+        .rollup(function(v) { return {
+            hormud_received: d3.sum(v, function(d) {return d.hormud_received}),
+            nationlink_received: d3.sum(v, function(d) {return d.nationlink_received}),
+            somnet_received: d3.sum(v, function(d) {return d.somnet_received}),
+            somtel_received: d3.sum(v, function(d) {return d.somtel_received}),
+            telesom_received: d3.sum(v, function(d) {return d.telesom_received}),
+            golis_received: d3.sum(v, function(d) {return d.golis_received}),
+            total_received: d3.sum(v, function(d) {return d.total_received}),
 
-    data = data.filter(a => a.datetime > offset);
+        };
+         })
+        .entries(data);
+
+    for (var entry in dailyReceivedTotal) {
+        var valueList = dailyReceivedTotal[entry].value
+        for (var key in valueList) {
+            dailyReceivedTotal[entry][key] = valueList[key]
+        }
+        delete dailyReceivedTotal[entry]["value"]
+    }
+
+    console.log(JSON.stringify(dailyReceivedTotal));
+
+    // var offset = new Date()
+    
+    // offset.setDate(offset.getDate() - 7)
+
+    // data = data.filter(a => a.datetime > offset);
 
     receivedKeys = []
     sentKeys = []
@@ -92,9 +120,16 @@ const update = (data) => {
         sentKeys.push(sentStr)
     }
 
+    // let stackReceived = d3.stack()
+    //         .keys(receivedKeys)
+    // let receivedDataStacked = stackReceived(data)
+
+
     let stackReceived = d3.stack()
             .keys(receivedKeys)
-    let receivedDataStacked = stackReceived(data)
+    let receivedDataStacked = stackReceived(dailyReceivedTotal)
+
+    console.log(receivedDataStacked)
 
     let stackSent = d3.stack()
             .keys(sentKeys)
@@ -130,7 +165,9 @@ const update = (data) => {
             "translate(" + Margin.left + "," + Margin.top + ")");
 
     // Format TimeStamp  
-    var timeFormat = d3.timeFormat("%H %d %m %Y");
+    // var timeFormat = d3.timeFormat("%H %d %m %Y");
+
+    var timeFormat = d3.timeFormat("%Y-%m-%d");
     // Create tooltip variables
     const tooltip = d3.select('#tooltip');
 
@@ -151,10 +188,12 @@ const update = (data) => {
     // Create line path element for failed line graph
     const total_failed_path = total_failed_sms_graph.append('path');
 
-
     // set scale domains
     x.domain(d3.extent(data, d => new Date(d.datetime)));
-    y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
+    // x.domain(d3.extent(data, d => dayDateFormat(d.datetime)));
+    // y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
+    y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
+
     y_total_sent_sms.domain([0, d3.max(data, function (d) { return d.total_sent; })]);
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
 
@@ -188,14 +227,24 @@ const update = (data) => {
         .attr('class', function(d, i) { return receivedKeys[i] })
         .style('fill', function (d, i) { return color(i) })
     
+    // receivedLayer.selectAll('rect')
+    //     .data(function(d) { return d })
+    //     .enter()
+    //   .append('rect')
+    //     .attr('x', function (d) { return x(d.data.datetime) })
+    //     .attr('y', function (d) { return y_total_received_sms(d[1]) })
+    //     .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+    //     .attr('width', Width / Object.keys(data).length)
+
     receivedLayer.selectAll('rect')
         .data(function(d) { return d })
         .enter()
       .append('rect')
-        .attr('x', function (d) { return x(d.data.datetime) })
+        .attr('x', function (d) { return x(d.data.day) })
         .attr('y', function (d) { return y_total_received_sms(d[1]) })
         .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
-        .attr('width', Width / Object.keys(data).length)
+        .attr('width', Width / Object.keys(dailyReceivedTotal).length);
+    
     
     //Add the X Axis for the total received sms graph
         total_received_sms_graph.append("g")
