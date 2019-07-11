@@ -36,19 +36,6 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-//Create margins for the two graphs
-const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
-const Width = 900 - Margin.right - Margin.left;
-const Height = 500 - Margin.top - Margin.bottom;
-
-
-// Set x and y scales
-const x = d3.scaleTime().range([0, Width]);
-const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
-const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
-const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
-
-
 // Function to update data
 const update = (data) => {
 
@@ -112,6 +99,19 @@ const update = (data) => {
     let stackSent = d3.stack()
             .keys(sentKeys)
     let sentdDataStacked = stackSent(data)
+
+    //Create margins for the two graphs
+    const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
+    const Width = 900 - Margin.right - Margin.left;
+    const Height = 500 - Margin.top - Margin.bottom;
+
+
+    // Set x and y scales
+    const x = d3.scaleTime().range([0, Width]);
+    const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
+    const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
+    const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
+
 
     // Append total received sms graph to svg
     var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
@@ -364,7 +364,7 @@ const update = (data) => {
     .style("fill", "blue")
     .text("Total Failed");
 
-    function updateChart() {
+    function updateReceivedChart() {
         // Get the value of the button
         var ylimit = this.value
     
@@ -383,8 +383,28 @@ const update = (data) => {
     
     }
 
+    function updateSentChart() {
+        // Get the value of the button
+        var ylimit = this.value
+    
+        y_total_sent_sms.domain([0, ylimit]);
+
+        // Add the Y Axis for the total sent sms graph
+        total_sent_sms_graph.selectAll(".axisSteelBlue")
+        .call(d3.axisLeft(y_total_sent_sms));
+        
+        sentLayer.selectAll('rect')
+            .data(function(d) { return d })
+            .attr('x', function (d) { return x(d.data.datetime) })
+            .attr('y', function (d) { return y_total_sent_sms(d[1]) })
+            .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+            .attr('width', Width / Object.keys(data).length)
+    
+    }
+
     // Add an event listener to the button created in the html part
-    d3.select("#buttonYlim").on("input", updateChart )
+    d3.select("#buttonYLimitReceived").on("input", updateReceivedChart )
+    d3.select("#buttonYLimitSent").on("input", updateSentChart )
 
       
 };
