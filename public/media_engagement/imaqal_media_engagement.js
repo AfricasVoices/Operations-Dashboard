@@ -36,6 +36,19 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
+//Create margins for the two graphs
+const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
+const Width = 900 - Margin.right - Margin.left;
+const Height = 500 - Margin.top - Margin.bottom;
+
+
+// Set x and y scales
+const x = d3.scaleTime().range([0, Width]);
+const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
+const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
+const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
+
+
 // Function to update data
 const update = (data) => {
 
@@ -100,11 +113,6 @@ const update = (data) => {
             .keys(sentKeys)
     let sentdDataStacked = stackSent(data)
 
-        //Create margins for the two graphs
-    const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
-    const Width = 900 - Margin.right - Margin.left;
-    const Height = 500 - Margin.top - Margin.bottom;
-
     // Append total received sms graph to svg
     var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
         .attr("width", Width + Margin.left + Margin.right)
@@ -133,13 +141,6 @@ const update = (data) => {
     var timeFormat = d3.timeFormat("%H %d %m %Y");
     // Create tooltip variables
     const tooltip = d3.select('#tooltip');
-
-    // Set x and y scales
-    const x = d3.scaleTime().range([0, Width]);
-    const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
-    const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
-    const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
-
 
     // Define line paths for total failed sms(s)
     const total_failed_line = d3.line()
@@ -362,5 +363,30 @@ const update = (data) => {
     .attr("text-anchor", "start")
     .style("fill", "blue")
     .text("Total Failed");
+
+    function updateChart() {
+        // Get the value of the button
+        var ylimit = this.value
+    
+        y_total_received_sms.domain([0, ylimit]);
+
+        // Add the Y Axis for the total received sms graph
+        total_received_sms_graph.selectAll(".axisSteelBlue")
+        .call(d3.axisLeft(y_total_received_sms));
+        
+        receivedLayer.selectAll('rect')
+            .data(function(d) { return d })
+            .attr('x', function (d) { return x(d.data.datetime) })
+            .attr('y', function (d) { return y_total_received_sms(d[1]) })
+            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('width', Width / Object.keys(data).length)
+    
+    }
+
+    // Add an event listener to the button created in the html part
+    d3.select("#buttonYlim").on("input", updateChart )
+
       
 };
+
+
