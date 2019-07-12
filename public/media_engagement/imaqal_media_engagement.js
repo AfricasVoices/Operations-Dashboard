@@ -86,7 +86,6 @@ const update = (data) => {
             telesom_received: d3.sum(v, function(d) {return d.telesom_received}),
             golis_received: d3.sum(v, function(d) {return d.golis_received}),
             total_received: d3.sum(v, function(d) {return d.total_received}),
-
         };
          })
         .entries(data);
@@ -96,7 +95,10 @@ const update = (data) => {
         for (var key in valueList) {
             dailyReceivedTotal[entry][key] = valueList[key]
         }
+        dailyReceivedTotal[entry]["day"] = dailyReceivedTotal[entry].key
         delete dailyReceivedTotal[entry]["value"]
+        delete dailyReceivedTotal[entry]["key"]
+
     }
 
     console.log(JSON.stringify(dailyReceivedTotal));
@@ -168,8 +170,6 @@ const update = (data) => {
     // var timeFormat = d3.timeFormat("%H %d %m %Y");
 
     var timeFormat = d3.timeFormat("%Y-%m-%d");
-    // Create tooltip variables
-    const tooltip = d3.select('#tooltip');
 
     // Set x and y scales
     const x = d3.scaleTime().range([0, Width]);
@@ -192,9 +192,8 @@ const update = (data) => {
     // x.domain(d3.extent(data, d => new Date(d.datetime)));
     x.domain(d3.extent(data, d => new Date(d.day)));
     
-    // x.domain(d3.extent(data, d => dayDateFormat(d.datetime)));
     // y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
-    y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
+    y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
 
     y_total_sent_sms.domain([0, d3.max(data, function (d) { return d.total_sent; })]);
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
@@ -242,7 +241,7 @@ const update = (data) => {
         .data(function(d) { return d })
         .enter()
       .append('rect')
-        .attr('x', function (d) { return x(d.key) })
+        .attr('x', function (d) { return x(d.data.day) })
         .attr('y', function (d) { return y_total_received_sms(d[1]) })
         .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
         .attr('width', Width / Object.keys(dailyReceivedTotal).length);
@@ -253,7 +252,7 @@ const update = (data) => {
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
             .ticks(5)
-            .tickFormat(timeFormat));
+            .tickFormat(dayDateFormat));
     
     //Add X axis label for the total received sms graph
     total_received_sms_graph.append("text")
