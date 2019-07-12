@@ -48,7 +48,7 @@ const update = (data) => {
     // format the data  
     data.forEach(function (d) {
         d.datetime = new Date(d.datetime);
-        d.day = dayDateFormat(d.datetime)
+        d.day = dayDateFormat(new Date(d.datetime))
         d.total_received = +d.total_received
         d.total_sent = +d.total_sent
         d.total_pending = +d.total_pending
@@ -193,7 +193,7 @@ const update = (data) => {
     x.domain(d3.extent(data, d => new Date(d.day)));
     
     // y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
-    y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
+    y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
 
     y_total_sent_sms.domain([0, d3.max(data, function (d) { return d.total_sent; })]);
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
@@ -241,7 +241,7 @@ const update = (data) => {
         .data(function(d) { return d })
         .enter()
       .append('rect')
-        .attr('x', function (d) { return x(d.data.day) })
+        .attr('x', function (d) { return x(new Date(d.data.day)) })
         .attr('y', function (d) { return y_total_received_sms(d[1]) })
         .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
         .attr('width', Width / Object.keys(dailyReceivedTotal).length);
@@ -380,7 +380,7 @@ const update = (data) => {
     // Total received graph legend
     total_received_sms_graph.append("g")
         .attr("class", "receivedLegend")
-        .attr("transform", `translate(${Width - Margin.right + 80},${Margin.top - 30})`)
+        .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top - 30})`)
 
     var receivedLegend = d3.legendColor()
         .shapeWidth(30)
