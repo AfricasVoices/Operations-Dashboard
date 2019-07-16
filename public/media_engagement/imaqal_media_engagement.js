@@ -98,6 +98,30 @@ const update = (data) => {
         dailyReceivedTotal[entry]["day"] = dailyReceivedTotal[entry].key
         delete dailyReceivedTotal[entry]["value"]
         delete dailyReceivedTotal[entry]["key"]
+    }
+
+    var dailySentTotal = d3.nest()
+        .key(function(d) { return d.day; })
+        .rollup(function(v) { return {
+            hormud_sent: d3.sum(v, function(d) {return d.hormud_sent}),
+            nationlink_sent: d3.sum(v, function(d) {return d.nationlink_sent}),
+            somnet_sent: d3.sum(v, function(d) {return d.somnet_sent}),
+            somtel_sent: d3.sum(v, function(d) {return d.somtel_sent}),
+            telesom_sent: d3.sum(v, function(d) {return d.telesom_sent}),
+            golis_sent: d3.sum(v, function(d) {return d.golis_sent}),
+            total_sent: d3.sum(v, function(d) {return d.total_sent}),
+        };
+         })
+        .entries(data);
+
+    for (var entry in dailySentTotal) {
+        var valueList = dailySentTotal[entry].value
+        for (var key in valueList) {
+            dailySentTotal[entry][key] = valueList[key]
+        }
+        dailySentTotal[entry]["day"] = dailySentTotal[entry].key
+        delete dailySentTotal[entry]["value"]
+        delete dailySentTotal[entry]["key"]
 
     }
 
@@ -122,20 +146,16 @@ const update = (data) => {
         sentKeys.push(sentStr)
     }
 
-    // let stackReceived = d3.stack()
-    //         .keys(receivedKeys)
-    // let receivedDataStacked = stackReceived(data)
-
-
-    let stackReceived = d3.stack()
+   
+    let stackReceivedDaily = d3.stack()
             .keys(receivedKeys)
-    let receivedDataStacked = stackReceived(dailyReceivedTotal)
+    let receivedDataStackedDaily = stackReceivedDaily(dailyReceivedTotal)
 
-    console.log(receivedDataStacked)
+    console.log(receivedDataStackedDaily)
 
     let stackSent = d3.stack()
             .keys(sentKeys)
-    let sentdDataStacked = stackSent(data)
+    let sentdDataStacked = stackSent(dailySentTotal)
 
         //Create margins for the two graphs
     const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
@@ -167,9 +187,7 @@ const update = (data) => {
             "translate(" + Margin.left + "," + Margin.top + ")");
 
     // Format TimeStamp  
-    // var timeFormat = d3.timeFormat("%H %d %m %Y");
-
-    var timeFormat = d3.timeFormat("%Y-%m-%d");
+    var timeFormat = d3.timeFormat("%H %d %m %Y");
 
     // Set x and y scales
     const x = d3.scaleTime().range([0, Width]);
@@ -221,7 +239,7 @@ const update = (data) => {
         .text("No. of Incoming Message (s)");
 
     let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
-        .data(receivedDataStacked)
+        .data(receivedDataStackedDaily)
         .enter()    
       .append('g')
         .attr('id', 'receivedStack')    
@@ -249,9 +267,10 @@ const update = (data) => {
     
     //Add the X Axis for the total received sms graph
         total_received_sms_graph.append("g")
+        .attr("id", "xAxis")
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
-            .ticks(5)
+            .ticks(d3.timeWeek.every(1))
             .tickFormat(dayDateFormat));
     
     //Add X axis label for the total received sms graph
@@ -383,7 +402,7 @@ const update = (data) => {
         .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top - 30})`)
 
     var receivedLegend = d3.legendColor()
-        .shapeWidth(30)
+        .shapeWidth(20)
         .orient('vertical')
         .scale(colorReceived)
         .labels(operators);
@@ -412,5 +431,123 @@ const update = (data) => {
     .attr("text-anchor", "start")
     .style("fill", "blue")
     .text("Total Failed");
+
+
+    function updateView() {
+        var view = this.value
+
+        if (view == "10min") {
+            draw10MinGraph()
+        }
+
+        else if (view == "1day") {
+            drawOneDayGraph()
+        }
+    }
+
+    function updateView10Minutes() {
+
+        draw10MinGraph()
+            
+    }
+
+    function updateViewOneDay() {
+
+        drawOneDayGraph()
+ 
+    }
+
+    function draw10MinGraph() {
+
+        var offset = new Date()
+    
+        offset.setDate(offset.getDate() - 7)
+
+        dataFiltered = data.filter(a => a.datetime > offset);
+
+        let stackReceived = d3.stack()
+            .keys(receivedKeys)
+        let receivedDataStacked = stackReceived(dataFiltered)
+
+        // set scale domains
+        x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
+        y_total_received_sms.domain([0, d3.max(dataFiltered, function (d) { return d.total_received; })]);
+
+        // Add the Y Axis for the total received sms graph
+        total_received_sms_graph.selectAll(".axisSteelBlue")
+        .call(d3.axisLeft(y_total_received_sms));
+
+        d3.selectAll("#receivedStack").remove();
+        // d3.selectAll("#xAxis").remove();
+
+        let receivedLayer10min = total_received_sms_graph.selectAll('#receivedStack10min')
+        .data(receivedDataStacked)
+        .enter()    
+      .append('g')
+        .attr('id', 'receivedStack10min')    
+        .attr('class', function(d, i) { return receivedKeys[i] })
+        .style('fill', function (d, i) { return color(i) })
+        
+        receivedLayer10min.selectAll('rect')
+        .data(function(dataFiltered) { return dataFiltered })
+        .enter()
+      .append('rect')
+        .attr('x', function (d) { return x(d.data.datetime) })
+        .attr('y', function (d) { return y_total_received_sms(d[1]) })
+        .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+        .attr('width', Width / Object.keys(dataFiltered).length)
+
+        //Add the X Axis for the total received sms graph
+        total_received_sms_graph.selectAll("#xAxis")
+        .attr("transform", "translate(0," + Height + ")")
+        .call(d3.axisBottom(x)
+            .ticks(5)
+            .tickFormat(timeFormat));
+    }
+
+    function drawOneDayGraph() {
+
+        // set scale domains
+        x.domain(d3.extent(data, d => new Date(d.day)));
+        y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
+
+        // Add the Y Axis for the total received sms graph
+        total_received_sms_graph.selectAll(".axisSteelBlue")
+            .call(d3.axisLeft(y_total_received_sms));
+
+        d3.selectAll("#receivedStack10min").remove();
+        // d3.selectAll("#xAxis").remove();
+
+       let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
+        .data(receivedDataStackedDaily)
+        .enter()    
+      .append('g')
+        .attr('id', 'receivedStack')    
+        .attr('class', function(d, i) { return receivedKeys[i] })
+        .style('fill', function (d, i) { return color(i) })
+
+        receivedLayer.selectAll('rect')
+            .data(function(d) { return d })
+            .enter()
+            .append('rect')
+            .attr('x', function (d) { return x(new Date(d.data.day)) })
+            .attr('y', function (d) { return y_total_received_sms(d[1]) })
+            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('width', Width / Object.keys(dailyReceivedTotal).length);
+
+        //Add the X Axis for the total received sms graph
+        total_received_sms_graph.selectAll("#xAxis")
+        .attr("transform", "translate(0," + Height + ")")
+        .call(d3.axisBottom(x)
+            .ticks(d3.timeWeek.every(1))
+            .tickFormat(dayDateFormat)); 
+
+    }
       
+    // Add an event listener to the buttons
+    d3.select("#buttonUpdateView10Minutes").on("click", updateView10Minutes )
+    d3.select("#buttonUpdateViewOneDay").on("click", updateViewOneDay )
+
+    // d3.select("input[name='view']").on("change", updateView)
+
 };
