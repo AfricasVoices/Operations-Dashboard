@@ -364,7 +364,7 @@ const update = (data) => {
     .style("fill", "blue")
     .text("Total Failed");
 
-    function updateReceivedChart() {
+    function updateReceivedChartLimit() {
         // Get the value of the button
         var ylimit = this.value
     
@@ -383,7 +383,7 @@ const update = (data) => {
     
     }
 
-    function updateSentChart() {
+    function updateSentChartLimit() {
         // Get the value of the button
         var ylimit = this.value
     
@@ -403,8 +403,8 @@ const update = (data) => {
     }
 
     // Add an event listener to the button created in the html part
-    d3.select("#buttonYLimitReceived").on("input", updateReceivedChart )
-    d3.select("#buttonYLimitSent").on("input", updateSentChart )
+    d3.select("#buttonYLimitReceived").on("input", updateReceivedChartLimit )
+    d3.select("#buttonYLimitSent").on("input", updateSentChartLimit )
 
       
 };
