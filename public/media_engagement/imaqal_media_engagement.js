@@ -125,14 +125,6 @@ const update = (data) => {
 
     }
 
-    console.log(JSON.stringify(dailyReceivedTotal));
-
-    // var offset = new Date()
-    
-    // offset.setDate(offset.getDate() - 7)
-
-    // data = data.filter(a => a.datetime > offset);
-
     receivedKeys = []
     sentKeys = []
 
@@ -146,16 +138,14 @@ const update = (data) => {
         sentKeys.push(sentStr)
     }
 
-   
     let stackReceivedDaily = d3.stack()
             .keys(receivedKeys)
     let receivedDataStackedDaily = stackReceivedDaily(dailyReceivedTotal)
 
-    console.log(receivedDataStackedDaily)
-
-    let stackSent = d3.stack()
-            .keys(sentKeys)
-    let sentdDataStacked = stackSent(dailySentTotal)
+    let stackSentDaily = d3.stack()
+        .keys(sentKeys)
+    let sentDataStackedDaily = stackSentDaily(dailySentTotal)
+  
 
         //Create margins for the two graphs
     const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
@@ -206,30 +196,19 @@ const update = (data) => {
     // Create line path element for failed line graph
     const total_failed_path = total_failed_sms_graph.append('path');
 
-    // set scale domains
-    // x.domain(d3.extent(data, d => new Date(d.datetime)));
-    x.domain(d3.extent(data, d => new Date(d.day)));
-    
-    // y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
-    y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
-
-    y_total_sent_sms.domain([0, d3.max(data, function (d) { return d.total_sent; })]);
-    y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
-
     let color = d3.scaleOrdinal(d3.schemeCategory10);
 
     let colorReceived = d3.scaleOrdinal(d3.schemeCategory10).domain(receivedKeys)
     let colorSent = d3.scaleOrdinal(d3.schemeCategory10).domain(sentKeys)
 
 
-    // Received bar chart
+    // set scale domains
+    y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
 
-    // Add the Y Axis for the total received sms graph
-    total_received_sms_graph.append("g")
-        .attr("class", "axisSteelBlue")
-        .call(d3.axisLeft(y_total_received_sms));
+    drawOneDayReceivedGraph()
+    drawOneDaySentGraph()
     
-    // Y axis Label for the total received sms graph
+    // // Y axis Label for the total received sms graph
     total_received_sms_graph.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - Margin.left)
@@ -238,93 +217,6 @@ const update = (data) => {
         .style("text-anchor", "middle")
         .text("No. of Incoming Message (s)");
 
-    let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
-        .data(receivedDataStackedDaily)
-        .enter()    
-      .append('g')
-        .attr('id', 'receivedStack')    
-        .attr('class', function(d, i) { return receivedKeys[i] })
-        .style('fill', function (d, i) { return color(i) })
-    
-    // receivedLayer.selectAll('rect')
-    //     .data(function(d) { return d })
-    //     .enter()
-    //   .append('rect')
-    //     .attr('x', function (d) { return x(d.data.datetime) })
-    //     .attr('y', function (d) { return y_total_received_sms(d[1]) })
-    //     .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
-    //     .attr('width', Width / Object.keys(data).length)
-
-    receivedLayer.selectAll('rect')
-        .data(function(d) { return d })
-        .enter()
-      .append('rect')
-        .attr('x', function (d) { return x(new Date(d.data.day)) })
-        .attr('y', function (d) { return y_total_received_sms(d[1]) })
-        .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
-        .attr('width', Width / Object.keys(dailyReceivedTotal).length);
-    
-    
-    //Add the X Axis for the total received sms graph
-        total_received_sms_graph.append("g")
-        .attr("id", "xAxis")
-        .attr("transform", "translate(0," + Height + ")")
-        .call(d3.axisBottom(x)
-            .ticks(d3.timeWeek.every(1))
-            .tickFormat(dayDateFormat));
-    
-    //Add X axis label for the total received sms graph
-    total_received_sms_graph.append("text")
-        .attr("transform",
-            "translate(" + (Width / 2) + " ," +
-            (Height + Margin.top + 10) + ")")
-        .style("text-anchor", "middle")
-        .text("Time (D:H:M:S)");
-
-    
-    // Sent bar chart
-    // Add the Y Axis for the total sent sms graph
-    total_sent_sms_graph.append("g")
-        .attr("class", "axisSteelBlue")
-        .call(d3.axisLeft(y_total_sent_sms));
-
-    let sentLayer = total_sent_sms_graph.selectAll('#sentStack')
-        .data(sentdDataStacked)
-        .enter()    
-      .append('g')
-        .attr('id', 'sentStack')    
-        .attr('class', function(d, i) { return sentKeys[i] })
-        .style('fill', function (d, i) { return color(i) })
-    
-    sentLayer.selectAll('rect')
-        .data(function(d) { return d })
-        .enter()
-      .append('rect')
-        .attr('x', function (d) { return x(d.data.datetime) })
-        .attr('y', function (d) { return y_total_sent_sms(d[1]) })
-        .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
-        .attr('width', Width / Object.keys(data).length)
-    
-    //Add the X Axis for the total sent sms graph
-    total_sent_sms_graph.append("g")
-        .attr("transform", "translate(0," + Height + ")")
-        .call(d3.axisBottom(x)
-            .ticks(5)
-            .tickFormat(timeFormat));
-    
-    //Add X axis label for the total sent sms graph
-    total_sent_sms_graph.append("text")
-        .attr("transform",
-            "translate(" + (Width / 2) + " ," +
-            (Height + Margin.top + 10) + ")")
-        .style("text-anchor", "middle")
-        .text("Time (D:H:M:S)");
-    
-    // Add the Y Axis for the total sent sms graph
-    total_sent_sms_graph.append("g")
-        .attr("class", "axisSteelBlue")
-        .call(d3.axisLeft(y_total_sent_sms));
-    
     // Y axis Label for the total sent sms graph
     total_sent_sms_graph.append("text")
         .attr("transform", "rotate(-90)")
@@ -368,24 +260,6 @@ const update = (data) => {
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("No. of Failed Message (s)");
-
-     // Total Sms(s) graph title
-     total_received_sms_graph.append("text")
-        .attr("x", (Width / 2))
-        .attr("y", 0 - (Margin.top / 2))
-        .attr("text-anchor", "middle")
-        .style("font-size", "20px")
-        .style("text-decoration", "bold")
-        .text("Total Incoming Message(s) / hr");
-    
-    // Total Outgoing Sms(s) graph title
-     total_sent_sms_graph.append("text")
-        .attr("x", (Width / 2))
-        .attr("y", 0 - (Margin.top / 2))
-        .attr("text-anchor", "middle")
-        .style("font-size", "20px")
-        .style("text-decoration", "bold")
-        .text("Total Outgoing Messages(s) / hr");
     
     // Total Failed Sms(s) graph title
      total_failed_sms_graph.append("text")
@@ -433,31 +307,17 @@ const update = (data) => {
     .text("Total Failed");
 
 
-    function updateView() {
-        var view = this.value
-
-        if (view == "10min") {
-            draw10MinGraph()
-        }
-
-        else if (view == "1day") {
-            drawOneDayGraph()
-        }
-    }
-
     function updateView10Minutes() {
-
-        draw10MinGraph()
-            
+        draw10MinReceivedGraph()
+        draw10MinSentGraph()       
     }
 
     function updateViewOneDay() {
-
-        drawOneDayGraph()
- 
+        drawOneDayReceivedGraph()
+        drawOneDaySentGraph()
     }
 
-    function draw10MinGraph() {
+    function draw10MinReceivedGraph() {
 
         var offset = new Date()
     
@@ -473,12 +333,16 @@ const update = (data) => {
         x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
         y_total_received_sms.domain([0, d3.max(dataFiltered, function (d) { return d.total_received; })]);
 
-        // Add the Y Axis for the total received sms graph
-        total_received_sms_graph.selectAll(".axisSteelBlue")
-        .call(d3.axisLeft(y_total_received_sms));
-
         d3.selectAll("#receivedStack").remove();
-        // d3.selectAll("#xAxis").remove();
+        d3.selectAll("#receivedTitle").remove();
+        d3.selectAll(".axisSteelBlueReceived").remove();
+        d3.selectAll("#receivedXAxis").remove();
+        d3.selectAll("#receivedXText").remove();
+
+        // Add the Y Axis for the total received sms graph
+        total_received_sms_graph.append("g")
+        .attr("class", "axisSteelBlueReceived")
+        .call(d3.axisLeft(y_total_received_sms));
 
         let receivedLayer10min = total_received_sms_graph.selectAll('#receivedStack10min')
         .data(receivedDataStacked)
@@ -498,33 +362,57 @@ const update = (data) => {
         .attr('width', Width / Object.keys(dataFiltered).length)
 
         //Add the X Axis for the total received sms graph
-        total_received_sms_graph.selectAll("#xAxis")
+        total_received_sms_graph.append("g")
+        .attr("id", "receivedXAxis")
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
-            .ticks(5)
+            .ticks(d3.timeDay.every(1))
             .tickFormat(timeFormat));
+
+        // Add X axis label for the total received sms graph
+        total_received_sms_graph.append("text")
+        .attr("id", "receivedXText")
+        .attr("transform",
+                "translate(" + (Width / 2) + " ," +
+                (Height + Margin.top + 10) + ")")
+            .style("text-anchor", "middle")
+            .text("Date (H-D-M-Y)");
+
+        // Total Sms(s) graph title
+        total_received_sms_graph.append("text")
+        .attr("id", "receivedTitle")
+        .attr("x", (Width / 2))
+        .attr("y", 0 - (Margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .style("text-decoration", "bold")
+        .text("Total Incoming Message(s) / 10 minutes");
     }
 
-    function drawOneDayGraph() {
+    function drawOneDayReceivedGraph() {
 
         // set scale domains
         x.domain(d3.extent(data, d => new Date(d.day)));
         y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
 
-        // Add the Y Axis for the total received sms graph
-        total_received_sms_graph.selectAll(".axisSteelBlue")
-            .call(d3.axisLeft(y_total_received_sms));
-
         d3.selectAll("#receivedStack10min").remove();
-        // d3.selectAll("#xAxis").remove();
+        d3.selectAll("#receivedTitle").remove();
+        d3.selectAll("#receivedXAxis").remove();
+        d3.selectAll(".axisSteelBlueReceieved").remove();
+        d3.selectAll("#receivedXText").remove();
+
+         // Add the Y Axis for the total received sms graph
+         total_received_sms_graph.append("g")
+         .attr("class", "axisSteelBlueReceived")
+         .call(d3.axisLeft(y_total_received_sms));
 
        let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
-        .data(receivedDataStackedDaily)
-        .enter()    
-      .append('g')
-        .attr('id', 'receivedStack')    
-        .attr('class', function(d, i) { return receivedKeys[i] })
-        .style('fill', function (d, i) { return color(i) })
+            .data(receivedDataStackedDaily)
+            .enter()    
+        .append('g')
+            .attr('id', 'receivedStack')    
+            .attr('class', function(d, i) { return receivedKeys[i] })
+            .style('fill', function (d, i) { return color(i) })
 
         receivedLayer.selectAll('rect')
             .data(function(d) { return d })
@@ -534,20 +422,173 @@ const update = (data) => {
             .attr('y', function (d) { return y_total_received_sms(d[1]) })
             .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
             .attr('width', Width / Object.keys(dailyReceivedTotal).length);
-
-        //Add the X Axis for the total received sms graph
-        total_received_sms_graph.selectAll("#xAxis")
+    
+         //Add the X Axis for the total received sms graph
+        total_received_sms_graph.append("g")
+        .attr("id", "receivedXAxis")
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
             .ticks(d3.timeWeek.every(1))
-            .tickFormat(dayDateFormat)); 
+            .tickFormat(dayDateFormat));
+
+        // Add X axis label for the total received sms graph
+        total_received_sms_graph.append("text")
+            .attr("id", "receivedXText")
+            .attr("transform",
+                    "translate(" + (Width / 2) + " ," +
+                    (Height + Margin.top + 10) + ")")
+                .style("text-anchor", "middle")
+                .text("Date (Y-M-D)");
+
+        // Total Sms(s) graph title
+        total_received_sms_graph.append("text")
+        .attr("id", "receivedTitle")
+        .attr("x", (Width / 2))
+        .attr("y", 0 - (Margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .style("text-decoration", "bold")
+        .text("Total Incoming Message(s) / day");
+    }
+
+    function draw10MinSentGraph() {
+
+        var offset = new Date()
+    
+        offset.setDate(offset.getDate() - 7)
+
+        dataFiltered = data.filter(a => a.datetime > offset);
+
+        let stackSent = d3.stack()
+            .keys(sentKeys)
+        let sentDataStacked = stackSent(dataFiltered)
+
+        // set scale domains
+        x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
+        y_total_sent_sms.domain([0, d3.max(dataFiltered, function (d) { return d.total_sent; })]);
+
+        d3.selectAll("#sentStack").remove();
+        d3.selectAll("#sentTitle").remove();
+        d3.selectAll("#sentXAxis").remove();
+        d3.selectAll(".axisSteelBlueSent").remove();
+        d3.selectAll("#sentXText").remove();
+
+        // Add the Y Axis for the total sent sms graph
+       total_sent_sms_graph.append("g")
+        .attr("class", "axisSteelBlueSent")
+        .call(d3.axisLeft(y_total_sent_sms));
+
+        let sentLayer10min = total_sent_sms_graph.selectAll('#sentStack10min')
+        .data(sentDataStacked)
+        .enter()    
+      .append('g')
+        .attr('id', 'sentStack10min')    
+        .attr('class', function(d, i) { return sentKeys[i] })
+        .style('fill', function (d, i) { return color(i) })
+        
+        sentLayer10min.selectAll('rect')
+        .data(function(dataFiltered) { return dataFiltered })
+        .enter()
+      .append('rect')
+        .attr('x', function (d) { return x(d.data.datetime) })
+        .attr('y', function (d) { return y_total_sent_sms(d[1]) })
+        .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+        .attr('width', Width / Object.keys(dataFiltered).length)
+
+        //Add the X Axis for the total sent sms graph
+        total_sent_sms_graph.append("g")
+        .attr("id", "sentXAxis")
+        .attr("transform", "translate(0," + Height + ")")
+        .call(d3.axisBottom(x)
+            .ticks(d3.timeDay.every(1))
+            .tickFormat(timeFormat));
+
+        // Add X axis label for the total sent sms graph
+        total_sent_sms_graph.append("text")
+        .attr("id", "sentXText")
+        .attr("transform",
+                "translate(" + (Width / 2) + " ," +
+                (Height + Margin.top + 10) + ")")
+            .style("text-anchor", "middle")
+            .text("Date (H-D-M-Y)");
+
+        // Total Sms(s) graph title
+        total_sent_sms_graph.append("text")
+        .attr("id", "sentTitle")
+        .attr("x", (Width / 2))
+        .attr("y", 0 - (Margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .style("text-decoration", "bold")
+        .text("Total Outgoing Message(s) / 10 minutes");
+        
+    }
+
+    function drawOneDaySentGraph() {
+
+        // set scale domains
+        x.domain(d3.extent(data, d => new Date(d.day)));
+        y_total_sent_sms.domain([0, d3.max(dailySentTotal, function (d) { return d.total_sent; })]);
+
+        d3.selectAll("#sentStack10min").remove();
+        d3.selectAll("#sentTitle").remove();
+        d3.selectAll("#sentXAxis").remove();
+        d3.selectAll(".axisSteelBlueSent").remove();
+        d3.selectAll("#sentXText").remove();
+
+         // Add the Y Axis for the total sent sms graph
+        total_sent_sms_graph.append("g")
+        .attr("class", "axisSteelBlueSent")
+        .call(d3.axisLeft(y_total_sent_sms));
+
+       let sentLayer = total_sent_sms_graph.selectAll('#sentStack')
+            .data(sentDataStackedDaily)
+            .enter()    
+        .append('g')
+            .attr('id', 'sentStack')    
+            .attr('class', function(d, i) { return sentKeys[i] })
+            .style('fill', function (d, i) { return color(i) })
+
+        sentLayer.selectAll('rect')
+            .data(function(d) { return d })
+            .enter()
+            .append('rect')
+            .attr('x', function (d) { return x(new Date(d.data.day)) })
+            .attr('y', function (d) { return y_total_sent_sms(d[1]) })
+            .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+            .attr('width', Width / Object.keys(dailySentTotal).length);
+      
+         //Add the X Axis for the total sent sms graph
+         total_sent_sms_graph.append("g")
+         .attr("id", "sentXAxis")
+         .attr("transform", "translate(0," + Height + ")")
+         .call(d3.axisBottom(x)
+             .ticks(d3.timeWeek.every(1))
+             .tickFormat(dayDateFormat));
+ 
+         // Add X axis label for the total sent sms graph
+         total_sent_sms_graph.append("text")
+             .attr("id", "sentXText")
+             .attr("transform",
+                     "translate(" + (Width / 2) + " ," +
+                     (Height + Margin.top + 10) + ")")
+                 .style("text-anchor", "middle")
+                 .text("Date (Y-M-D)");
+ 
+         // Total Sms(s) graph title
+         total_sent_sms_graph.append("text")
+         .attr("id", "sentTitle")
+         .attr("x", (Width / 2))
+         .attr("y", 0 - (Margin.top / 2))
+         .attr("text-anchor", "middle")
+         .style("font-size", "20px")
+         .style("text-decoration", "bold")
+         .text("Total Outgoing Message(s) / day");
 
     }
-      
+
     // Add an event listener to the buttons
     d3.select("#buttonUpdateView10Minutes").on("click", updateView10Minutes )
     d3.select("#buttonUpdateViewOneDay").on("click", updateViewOneDay )
-
-    // d3.select("input[name='view']").on("change", updateView)
 
 };
