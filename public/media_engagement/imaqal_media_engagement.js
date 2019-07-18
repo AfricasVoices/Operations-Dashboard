@@ -333,15 +333,13 @@ const update = (data) => {
         x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
         y_total_received_sms.domain([0, d3.max(dataFiltered, function (d) { return d.total_received; })]);
 
+        d3.selectAll(".redrawElementReceived").remove();
         d3.selectAll("#receivedStack").remove();
-        d3.selectAll("#receivedTitle").remove();
-        d3.selectAll(".axisSteelBlueReceived").remove();
-        d3.selectAll("#receivedXAxis").remove();
-        d3.selectAll("#receivedXText").remove();
 
         // Add the Y Axis for the total received sms graph
         total_received_sms_graph.append("g")
-        .attr("class", "axisSteelBlueReceived")
+        .attr("id", "axisSteelBlueReceived")
+        .attr("class", "redrawElementReceived")
         .call(d3.axisLeft(y_total_received_sms));
 
         let receivedLayer10min = total_received_sms_graph.selectAll('#receivedStack10min')
@@ -364,6 +362,7 @@ const update = (data) => {
         //Add the X Axis for the total received sms graph
         total_received_sms_graph.append("g")
         .attr("id", "receivedXAxis")
+        .attr("class", "redrawElementReceived")
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
             .ticks(d3.timeDay.every(1))
@@ -372,6 +371,7 @@ const update = (data) => {
         // Add X axis label for the total received sms graph
         total_received_sms_graph.append("text")
         .attr("id", "receivedXText")
+        .attr("class", "redrawElementReceived")
         .attr("transform",
                 "translate(" + (Width / 2) + " ," +
                 (Height + Margin.top + 10) + ")")
@@ -381,6 +381,7 @@ const update = (data) => {
         // Total Sms(s) graph title
         total_received_sms_graph.append("text")
         .attr("id", "receivedTitle")
+        .attr("class", "redrawElementReceived")
         .attr("x", (Width / 2))
         .attr("y", 0 - (Margin.top / 2))
         .attr("text-anchor", "middle")
@@ -395,22 +396,21 @@ const update = (data) => {
         x.domain(d3.extent(data, d => new Date(d.day)));
         y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
 
+        d3.selectAll(".redrawElementReceived").remove();
         d3.selectAll("#receivedStack10min").remove();
-        d3.selectAll("#receivedTitle").remove();
-        d3.selectAll("#receivedXAxis").remove();
-        d3.selectAll(".axisSteelBlueReceieved").remove();
-        d3.selectAll("#receivedXText").remove();
 
          // Add the Y Axis for the total received sms graph
          total_received_sms_graph.append("g")
          .attr("class", "axisSteelBlueReceived")
+         .attr("class", "redrawElementReceived")
          .call(d3.axisLeft(y_total_received_sms));
 
        let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
             .data(receivedDataStackedDaily)
             .enter()    
         .append('g')
-            .attr('id', 'receivedStack')    
+            .attr('id', 'receivedStack') 
+            // .attr("class", "redrawElementReceived")   
             .attr('class', function(d, i) { return receivedKeys[i] })
             .style('fill', function (d, i) { return color(i) })
 
@@ -426,6 +426,7 @@ const update = (data) => {
          //Add the X Axis for the total received sms graph
         total_received_sms_graph.append("g")
         .attr("id", "receivedXAxis")
+        .attr("class", "redrawElementReceived")
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
             .ticks(d3.timeWeek.every(1))
@@ -434,6 +435,7 @@ const update = (data) => {
         // Add X axis label for the total received sms graph
         total_received_sms_graph.append("text")
             .attr("id", "receivedXText")
+            .attr("class", "redrawElementReceived")
             .attr("transform",
                     "translate(" + (Width / 2) + " ," +
                     (Height + Margin.top + 10) + ")")
@@ -443,6 +445,7 @@ const update = (data) => {
         // Total Sms(s) graph title
         total_received_sms_graph.append("text")
         .attr("id", "receivedTitle")
+        .attr("class", "redrawElementReceived")
         .attr("x", (Width / 2))
         .attr("y", 0 - (Margin.top / 2))
         .attr("text-anchor", "middle")
@@ -467,15 +470,13 @@ const update = (data) => {
         x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
         y_total_sent_sms.domain([0, d3.max(dataFiltered, function (d) { return d.total_sent; })]);
 
-        d3.selectAll("#sentStack").remove();
-        d3.selectAll("#sentTitle").remove();
-        d3.selectAll("#sentXAxis").remove();
-        d3.selectAll(".axisSteelBlueSent").remove();
-        d3.selectAll("#sentXText").remove();
+        d3.selectAll(".redrawElementSent").remove();
+        d3.selectAll("sentStack").remove();
 
         // Add the Y Axis for the total sent sms graph
        total_sent_sms_graph.append("g")
         .attr("class", "axisSteelBlueSent")
+        .attr("class", "redrawElementSent")
         .call(d3.axisLeft(y_total_sent_sms));
 
         let sentLayer10min = total_sent_sms_graph.selectAll('#sentStack10min')
@@ -498,6 +499,7 @@ const update = (data) => {
         //Add the X Axis for the total sent sms graph
         total_sent_sms_graph.append("g")
         .attr("id", "sentXAxis")
+        .attr("class", "redrawElementSent")
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
             .ticks(d3.timeDay.every(1))
@@ -506,6 +508,7 @@ const update = (data) => {
         // Add X axis label for the total sent sms graph
         total_sent_sms_graph.append("text")
         .attr("id", "sentXText")
+        .attr("class", "redrawElementSent")
         .attr("transform",
                 "translate(" + (Width / 2) + " ," +
                 (Height + Margin.top + 10) + ")")
@@ -515,6 +518,7 @@ const update = (data) => {
         // Total Sms(s) graph title
         total_sent_sms_graph.append("text")
         .attr("id", "sentTitle")
+        .attr("class", "redrawElementSent")
         .attr("x", (Width / 2))
         .attr("y", 0 - (Margin.top / 2))
         .attr("text-anchor", "middle")
@@ -530,22 +534,20 @@ const update = (data) => {
         x.domain(d3.extent(data, d => new Date(d.day)));
         y_total_sent_sms.domain([0, d3.max(dailySentTotal, function (d) { return d.total_sent; })]);
 
-        d3.selectAll("#sentStack10min").remove();
-        d3.selectAll("#sentTitle").remove();
-        d3.selectAll("#sentXAxis").remove();
-        d3.selectAll(".axisSteelBlueSent").remove();
-        d3.selectAll("#sentXText").remove();
+        d3.selectAll(".redrawElementSent").remove();
+        d3.selectAll("sentStack10min").remove();
 
          // Add the Y Axis for the total sent sms graph
         total_sent_sms_graph.append("g")
         .attr("class", "axisSteelBlueSent")
+        .attr("class", "redrawElementSent")
         .call(d3.axisLeft(y_total_sent_sms));
 
-       let sentLayer = total_sent_sms_graph.selectAll('#sentStack')
+       let sentLayer = total_sent_sms_graph.selectAll('#sentStack1day')
             .data(sentDataStackedDaily)
             .enter()    
         .append('g')
-            .attr('id', 'sentStack')    
+            .attr('id', 'sentStack1day')
             .attr('class', function(d, i) { return sentKeys[i] })
             .style('fill', function (d, i) { return color(i) })
 
@@ -561,6 +563,7 @@ const update = (data) => {
          //Add the X Axis for the total sent sms graph
          total_sent_sms_graph.append("g")
          .attr("id", "sentXAxis")
+         .attr("class", "redrawElementSent")
          .attr("transform", "translate(0," + Height + ")")
          .call(d3.axisBottom(x)
              .ticks(d3.timeWeek.every(1))
@@ -569,6 +572,7 @@ const update = (data) => {
          // Add X axis label for the total sent sms graph
          total_sent_sms_graph.append("text")
              .attr("id", "sentXText")
+             .attr("class", "redrawElementSent")
              .attr("transform",
                      "translate(" + (Width / 2) + " ," +
                      (Height + Margin.top + 10) + ")")
@@ -578,6 +582,7 @@ const update = (data) => {
          // Total Sms(s) graph title
          total_sent_sms_graph.append("text")
          .attr("id", "sentTitle")
+         .attr("class", "redrawElementSent")
          .attr("x", (Width / 2))
          .attr("y", 0 - (Margin.top / 2))
          .attr("text-anchor", "middle")
@@ -588,7 +593,13 @@ const update = (data) => {
     }
 
     // Add an event listener to the buttons
-    d3.select("#buttonUpdateView10Minutes").on("click", updateView10Minutes )
+    // d3.select("#buttonUpdateView10Minutes").on("click", updateView10Minutes )
+
+    var view = "1day"
+    d3.select("#buttonUpdateView10Minutes").on("click", function() {
+        updateView10Minutes
+        view = "10min"
+    } )
     d3.select("#buttonUpdateViewOneDay").on("click", updateViewOneDay )
 
 };
