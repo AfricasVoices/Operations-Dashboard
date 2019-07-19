@@ -36,8 +36,9 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-const TIMEFRAME = 7
-var chartTimeUnit = "1day"
+const TIMEFRAME = 7;
+var chartTimeUnit = "1day";
+var yLimitIsManuallySet = false;
 
 // Function to update data
 const update = (data) => {
@@ -520,6 +521,12 @@ const update = (data) => {
     }
     
     function drawOneDaySentGraph() {
+
+        yLimit = d3.max(dailySentTotal, function (d) { return d.total_sent; })
+
+        if (yLimitIsManuallySet) {
+            yLimit = yLimitSet
+        }
     
         // set scale domains
         x.domain(d3.extent(data, d => new Date(d.day)));
@@ -577,19 +584,38 @@ const update = (data) => {
             .style("font-size", "20px")
             .style("text-decoration", "bold")
             .text("Total Outgoing Message(s) / day");
-    
     }
 
     // Add an event listener to the buttons
     d3.select("#buttonUpdateView10Minutes").on("click", function() {
         chartTimeUnit = "10min"
-        updateView10Minutes()
-        
+        updateView10Minutes()                                                                                                                                                                                                                                       
     } )
+
     d3.select("#buttonUpdateViewOneDay").on("click", function() {
         chartTimeUnit = "1day"      
         updateViewOneDay()
-      
     } )
-    
+
+    // Add an event listener to the button created in the html part
+    d3.select("#buttonYLimitReceived").on("input", function() {
+        yLimitIsManuallySet = true
+        if (chartTimeUnit = "1day") {
+            drawOneDayReceivedGraph()
+        }
+        else if (chartTimeUnit = "10min") {
+            draw10MinReceivedGraph()
+        }
+    })                                                                                                                                                                                  
+     
+    d3.select("#buttonYLimitSent").on("input", function() {
+        yLimitIsManuallySet = true
+        if (chartTimeUnit = "1day") {
+            drawOneDaySentGraph()
+        }
+        else if (chartTimeUnit = "10min") {
+            draw10MinSentGraph()
+        }
+    })  
+
 };
