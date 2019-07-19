@@ -37,11 +37,10 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 const TIMEFRAME = 7
-var view = "1day"
+var chartTimeUnit = "1day"
 
 // Function to update data
 const update = (data) => {
-
     d3.selectAll("svg").remove();
 
     let operators = new Set()
@@ -125,7 +124,6 @@ const update = (data) => {
         dailySentTotal[entry]["day"] = dailySentTotal[entry].key
         delete dailySentTotal[entry]["value"]
         delete dailySentTotal[entry]["key"]
-
     }
 
     receivedKeys = []
@@ -207,12 +205,12 @@ const update = (data) => {
     // set scale domains
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
 
-    if (view == "1day") {
+    if (chartTimeUnit == "1day") {
         drawOneDayReceivedGraph()
         drawOneDaySentGraph()
     }
 
-    else if (view == "10min") {
+    else if (chartTimeUnit == "10min") {
         draw10MinReceivedGraph()
         draw10MinSentGraph()
     }
@@ -519,7 +517,6 @@ const update = (data) => {
             .style("font-size", "20px")
             .style("text-decoration", "bold")
             .text("Total Outgoing Message(s) / 10 minutes");
-        
     }
     
     function drawOneDaySentGraph() {
@@ -586,11 +583,11 @@ const update = (data) => {
     // Add an event listener to the buttons
     d3.select("#buttonUpdateView10Minutes").on("click", function() {
         updateView10Minutes()
-        view = "10min"
+        chartTimeUnit = "10min"
     } )
     d3.select("#buttonUpdateViewOneDay").on("click", function() {
         updateViewOneDay()
-        view = "1day"
+        chartTimeUnit = "1day"
     } )
     
 };
