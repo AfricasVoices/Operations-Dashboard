@@ -582,12 +582,14 @@ const update = (data) => {
 
     // Add an event listener to the buttons
     d3.select("#buttonUpdateView10Minutes").on("click", function() {
-        updateView10Minutes()
         chartTimeUnit = "10min"
+        updateView10Minutes()
+        
     } )
     d3.select("#buttonUpdateViewOneDay").on("click", function() {
+        chartTimeUnit = "1day"      
         updateViewOneDay()
-        chartTimeUnit = "1day"
+      
     } )
     
 };
