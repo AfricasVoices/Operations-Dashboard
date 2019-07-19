@@ -38,10 +38,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 const TIMEFRAME = 7;
 var chartTimeUnit = "1day";
-var yLimitIsManuallySet = false;
+var isYLimitManuallySet = false;
 
 // Function to update data
 const update = (data) => {
+    // Clear previous graphs before redrawing
     d3.selectAll("svg").remove();
 
     let operators = new Set()
@@ -75,10 +76,10 @@ const update = (data) => {
         });
     });
 
-    operators = Array.from(operators)
-
+    // Sort data by date
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
+    // Group received data by day
     var dailyReceivedTotal = d3.nest()
         .key(function(d) { return d.day; })
         .rollup(function(v) { return {
@@ -93,6 +94,7 @@ const update = (data) => {
          })
         .entries(data);
 
+    // Flatten nested data for stacking
     for (var entry in dailyReceivedTotal) {
         var valueList = dailyReceivedTotal[entry].value
         for (var key in valueList) {
@@ -103,6 +105,7 @@ const update = (data) => {
         delete dailyReceivedTotal[entry]["key"]
     }
 
+    // Group sent data by day
     var dailySentTotal = d3.nest()
         .key(function(d) { return d.day; })
         .rollup(function(v) { return {
@@ -117,6 +120,7 @@ const update = (data) => {
          })
         .entries(data);
 
+    // Flatten nested data for stacking
     for (var entry in dailySentTotal) {
         var valueList = dailySentTotal[entry].value
         for (var key in valueList) {
@@ -127,11 +131,14 @@ const update = (data) => {
         delete dailySentTotal[entry]["key"]
     }
 
+    // Create keys to stack by based on operator and direction
     receivedKeys = []
     sentKeys = []
 
     var receivedStr = ""
     var sentStr = ""
+
+    operators = Array.from(operators)
 
     for (var i=0; i<operators.length; i++) {
         receivedStr = operators[i] + "_received";
@@ -140,6 +147,7 @@ const update = (data) => {
         sentKeys.push(sentStr)
     }
 
+    // Stack data by keys created above
     let stackReceivedDaily = d3.stack()
             .keys(receivedKeys)
     let receivedDataStackedDaily = stackReceivedDaily(dailyReceivedTotal)
@@ -147,9 +155,8 @@ const update = (data) => {
     let stackSentDaily = d3.stack()
         .keys(sentKeys)
     let sentDataStackedDaily = stackSentDaily(dailySentTotal)
-  
 
-        //Create margins for the two graphs
+    //Create margins for the two graphs
     const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
     const Width = 900 - Margin.right - Margin.left;
     const Height = 500 - Margin.top - Margin.bottom;
@@ -194,7 +201,6 @@ const update = (data) => {
         .x(function (d) { return x(new Date(d.datetime)) })
         .y(function (d) { return y_total_failed_sms(d.total_errored); })
 
-
     // Create line path element for failed line graph
     const total_failed_path = total_failed_sms_graph.append('path');
 
@@ -206,6 +212,7 @@ const update = (data) => {
     // set scale domains
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
 
+    // Draw graphs according to selected time unit
     if (chartTimeUnit == "1day") {
         drawOneDayReceivedGraph()
         drawOneDaySentGraph()
@@ -313,7 +320,6 @@ const update = (data) => {
         .attr("text-anchor", "start")
         .style("fill", "blue")
         .text("Total Failed");
-
 
     function updateView10Minutes() {
         draw10MinReceivedGraph()
@@ -453,9 +459,9 @@ const update = (data) => {
     }
     
     function draw10MinSentGraph() {
+        // Limit data date range
         var offset = new Date()
         offset.setDate(offset.getDate() - TIMEFRAME)
-    
         dataFiltered = data.filter(a => a.datetime > offset);
     
         let stackSent = d3.stack()
@@ -466,6 +472,7 @@ const update = (data) => {
         x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
         y_total_sent_sms.domain([0, d3.max(dataFiltered, function (d) { return d.total_sent; })]);
     
+        // Remove changing chart elements before redrawing
         d3.selectAll(".redrawElementSent").remove();
         d3.selectAll("#sentStack1day").remove();
     
@@ -475,6 +482,7 @@ const update = (data) => {
             .attr("class", "redrawElementSent")
             .call(d3.axisLeft(y_total_sent_sms));
         
+        // Create stacks
         let sentLayer10min = total_sent_sms_graph.selectAll('#sentStack10min')
             .data(sentDataStacked)
             .enter()    
@@ -521,16 +529,16 @@ const update = (data) => {
     }
     
     function drawOneDaySentGraph() {
-
+        // Set Y axis limit to max of daily values or to the value inputted by the user
         yLimit = d3.max(dailySentTotal, function (d) { return d.total_sent; })
 
-        if (yLimitIsManuallySet) {
-            yLimit = yLimitSet
+        if (isYLimitManuallySet) {
+            yLimit = this.value
         }
     
         // set scale domains
         x.domain(d3.extent(data, d => new Date(d.day)));
-        y_total_sent_sms.domain([0, d3.max(dailySentTotal, function (d) { return d.total_sent; })]);
+        y_total_sent_sms.domain([0, yLimit]);
     
         d3.selectAll(".redrawElementSent").remove();
         d3.selectAll("#sentStack10min").remove();
@@ -541,6 +549,7 @@ const update = (data) => {
             .attr("class", "redrawElementSent")
             .call(d3.axisLeft(y_total_sent_sms));
     
+        // Create stacks
        let sentLayer = total_sent_sms_graph.selectAll('#sentStack1day')
             .data(sentDataStackedDaily)
             .enter()    
@@ -586,7 +595,7 @@ const update = (data) => {
             .text("Total Outgoing Message(s) / day");
     }
 
-    // Add an event listener to the buttons
+    // Update chart time unit on user selection
     d3.select("#buttonUpdateView10Minutes").on("click", function() {
         chartTimeUnit = "10min"
         updateView10Minutes()                                                                                                                                                                                                                                       
@@ -599,7 +608,7 @@ const update = (data) => {
 
     // Add an event listener to the button created in the html part
     d3.select("#buttonYLimitReceived").on("input", function() {
-        yLimitIsManuallySet = true
+        isYLimitManuallySet = true
         if (chartTimeUnit = "1day") {
             drawOneDayReceivedGraph()
         }
@@ -609,7 +618,7 @@ const update = (data) => {
     })                                                                                                                                                                                  
      
     d3.select("#buttonYLimitSent").on("input", function() {
-        yLimitIsManuallySet = true
+        isYLimitManuallySet = true
         if (chartTimeUnit = "1day") {
             drawOneDaySentGraph()
         }
