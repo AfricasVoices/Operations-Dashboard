@@ -428,7 +428,6 @@ const update = (data) => {
         // set scale domains
         x.domain(d3.extent(data, d => new Date(d.day)));
         y_total_received_sms.domain([0, yLimitReceived]);
-        // y_total_received_sms.domain([0, d3.max(dailyReceivedTotal, function (d) { return d.total_received; })]);
     
         d3.selectAll(".redrawElementReceived").remove();
         d3.selectAll("#receivedStack10min").remove();
