@@ -224,14 +224,10 @@ const update = (data) => {
 
     // Draw graphs according to selected time unit
     if (chartTimeUnit == "1day") {
-        // d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
-        // d3.select("#buttonYLimitSent").property("value", yLimitSent);
         updateViewOneDay(yLimitReceived, yLimitSent)
     }
 
     else if (chartTimeUnit == "10min") {
-        // d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
-        // d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
         updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered)
     }
 
