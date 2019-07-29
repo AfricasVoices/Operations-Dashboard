@@ -38,7 +38,8 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 const TIMEFRAME = 7;
 var chartTimeUnit = "1day";
-var isYLimitManuallySet = false;
+var isYLimitReceivedManuallySet = false;
+var isYLimitSentManuallySet = false;
 
 // Function to update data
 const update = (data) => {
@@ -158,7 +159,7 @@ const update = (data) => {
 
     //Create margins for the two graphs
     const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
-    const Width = 900 - Margin.right - Margin.left;
+    const Width = 960 - Margin.right - Margin.left;
     const Height = 500 - Margin.top - Margin.bottom;
 
     // Append total received sms graph to svg
@@ -214,22 +215,24 @@ const update = (data) => {
     var offset = new Date()
     offset.setDate(offset.getDate() - 7)
 
+    // Set default y-axis limits
     dataFiltered = data.filter(a => a.datetime > offset);
     var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
     var yLimitReceivedFiltered = d3.max(dataFiltered, function (d) { return d.total_received; });
+    var yLimitSent = d3.max(dailySentTotal, function (d) { return d.total_sent; });
+    var yLimitSentFiltered = d3.max(dataFiltered, function (d) { return d.total_sent; });
 
-    
     // Draw graphs according to selected time unit
     if (chartTimeUnit == "1day") {
-        d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
-        drawOneDayReceivedGraph(yLimitReceived)
-        drawOneDaySentGraph()
+        // d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
+        // d3.select("#buttonYLimitSent").property("value", yLimitSent);
+        updateViewOneDay(yLimitReceived, yLimitSent)
     }
 
     else if (chartTimeUnit == "10min") {
-        d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
-        draw10MinReceivedGraph(yLimitReceivedFiltered)
-        draw10MinSentGraph()
+        // d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
+        // d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
+        updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered)
     }
 
     // // Y axis Label for the total received sms graph
@@ -297,10 +300,10 @@ const update = (data) => {
     // Total received graph legend
     total_received_sms_graph.append("g")
         .attr("class", "receivedLegend")
-        .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top - 30})`)
+        .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`)
 
     var receivedLegend = d3.legendColor()
-        .shapeWidth(20)
+        .shapeWidth(12)
         .orient('vertical')
         .scale(colorReceived)
         .labels(operators);
@@ -311,10 +314,10 @@ const update = (data) => {
     // Total sent graph legend
     total_sent_sms_graph.append("g")
     .attr("class", "sentLegend")
-    .attr("transform", `translate(${Width - Margin.right + 80},${Margin.top - 30})`)
+    .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`)
 
     var sentLegend = d3.legendColor()
-        .shapeWidth(30)
+        .shapeWidth(12)
         .orient('vertical')
         .scale(colorSent)
         .labels(operators);
@@ -330,33 +333,26 @@ const update = (data) => {
         .style("fill", "blue")
         .text("Total Failed");
 
-    function updateView10Minutes(yLimitReceivedFiltered) {
+    // Set y-axis control button value and draw graphs
+    function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered) {
+        d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
+        d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
         draw10MinReceivedGraph(yLimitReceivedFiltered)
-        draw10MinSentGraph()       
+        draw10MinSentGraph(yLimitSentFiltered)       
     }
 
-    function updateViewOneDay(yLimitReceived) {
-        console.log("updatebutton1day", yLimitReceived, chartTimeUnit)
+    function updateViewOneDay(yLimitReceived, yLimitSent) {
+        d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
+        d3.select("#buttonYLimitSent").property("value", yLimitSent);
         drawOneDayReceivedGraph(yLimitReceived)
-        drawOneDaySentGraph()
+        drawOneDaySentGraph(yLimitSent)
     }
 
     function draw10MinReceivedGraph(yLimitReceived) {
-        // var offset = new Date()
-        // offset.setDate(offset.getDate() - 7)
-
-        // dataFiltered = data.filter(a => a.datetime > offset);
-        // yLimitReceived = d3.max(dataFiltered, function (d) { return d.total_received; });
-
-        // console.log(chartTimeUnit, isYLimitManuallySet)
-
-        // // Set Y axis limit to max of daily values or to the value inputted by the user
-        if (isYLimitManuallySet != true) {
-            yLimitReceivedFiltered = d3.max(dataFiltered, function (d) { return d.total_received; });
-            yLimitReceived = yLimitReceivedFiltered
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        if (isYLimitReceivedManuallySet == false) {
+            yLimitReceived = d3.max(dataFiltered, function (d) { return d.total_received; });
         }
-
-        console.log("updatebutton10min", yLimitReceived, chartTimeUnit, isYLimitManuallySet)
 
         let stackReceived = d3.stack()
             .keys(receivedKeys)
@@ -365,7 +361,6 @@ const update = (data) => {
         // set scale domains
         x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
         y_total_received_sms.domain([0, yLimitReceived]);
-        // y_total_received_sms.domain([0, d3.max(dataFiltered, function (d) { return d.total_received; })]);
 
         d3.selectAll(".redrawElementReceived").remove();
         d3.selectAll("#receivedStack").remove();
@@ -375,7 +370,6 @@ const update = (data) => {
         total_received_sms_graph.append("g")
             .attr("id", "axisSteelBlue")
             .attr("class", "redrawElementReceived")
-        
             .call(d3.axisLeft(y_total_received_sms));
 
         let receivedLayer10min = total_received_sms_graph.selectAll('#receivedStack10min')
@@ -427,7 +421,7 @@ const update = (data) => {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         yLimitReceivedTotal = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
 
-        if (isYLimitManuallySet != true) {
+        if (isYLimitReceivedManuallySet == false) {
             yLimitReceived = yLimitReceivedTotal
         }
 
@@ -491,11 +485,11 @@ const update = (data) => {
             .text("Total Incoming Message(s) / day");
     }
     
-    function draw10MinSentGraph() {
-        // Limit data date range
-        var offset = new Date()
-        offset.setDate(offset.getDate() - TIMEFRAME)
-        dataFiltered = data.filter(a => a.datetime > offset);
+    function draw10MinSentGraph(yLimitSent) {
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        if (isYLimitSentManuallySet == false) {
+            yLimitSent = d3.max(dataFiltered, function (d) { return d.total_sent; });
+        }
     
         let stackSent = d3.stack()
             .keys(sentKeys)
@@ -503,11 +497,12 @@ const update = (data) => {
     
         // set scale domains
         x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
-        y_total_sent_sms.domain([0, d3.max(dataFiltered, function (d) { return d.total_sent; })]);
+        y_total_sent_sms.domain([0, yLimitSent]);
     
         // Remove changing chart elements before redrawing
         d3.selectAll(".redrawElementSent").remove();
         d3.selectAll("#sentStack1day").remove();
+        d3.selectAll("#sentStack10min").remove();
     
         // Add the Y Axis for the total sent sms graph
        total_sent_sms_graph.append("g")
@@ -561,20 +556,21 @@ const update = (data) => {
             .text("Total Outgoing Message(s) / 10 minutes");
     }
     
-    function drawOneDaySentGraph() {
+    function drawOneDaySentGraph(yLimitSent) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
-        yLimit = d3.max(dailySentTotal, function (d) { return d.total_sent; })
+        yLimitSentTotal = d3.max(dailySentTotal, function (d) { return d.total_sent; });
 
-        if (isYLimitManuallySet) {
-            yLimit = this.value
+        if (isYLimitSentManuallySet != true) {
+            yLimitSent = yLimitSentTotal
         }
-    
+
         // set scale domains
         x.domain(d3.extent(data, d => new Date(d.day)));
-        y_total_sent_sms.domain([0, yLimit]);
+        y_total_sent_sms.domain([0, yLimitSent]);
     
         d3.selectAll(".redrawElementSent").remove();
         d3.selectAll("#sentStack10min").remove();
+        d3.selectAll("#sentStack1day").remove();
     
          // Add the Y Axis for the total sent sms graph
         total_sent_sms_graph.append("g")
@@ -630,24 +626,18 @@ const update = (data) => {
 
     // Update chart time unit on user selection
     d3.select("#buttonUpdateView10Minutes").on("click", function() {
-        isYLimitManuallySet = false
         chartTimeUnit = "10min"
-        console.log("10minbutton", yLimitReceivedFiltered)
-        d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
-        updateView10Minutes(yLimitReceivedFiltered)                                                                                                                                                                                                                                       
+        updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered)                                                                                                                                                                                                                                       
     } )
 
     d3.select("#buttonUpdateViewOneDay").on("click", function() {
-        isYLimitManuallySet = false
         chartTimeUnit = "1day"
-        d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
-        updateViewOneDay(yLimitReceived)
+        updateViewOneDay(yLimitReceived, yLimitSent)
     } )
 
-    // Add an event listener to the button created in the html part
+    // Draw received graph with user-selected y-axis limit
     d3.select("#buttonYLimitReceived").on("input", function() {
-        isYLimitManuallySet = true
-        console.log(chartTimeUnit, this.value, isYLimitManuallySet)
+        isYLimitReceivedManuallySet = true
         if (chartTimeUnit == "1day") {
             yLimitReceived = this.value
             drawOneDayReceivedGraph(yLimitReceived)
@@ -657,15 +647,17 @@ const update = (data) => {
             draw10MinReceivedGraph(yLimitReceivedFiltered)
         }
     });                                                                                                                                                                                  
-     
+
+    // Draw sent graph with user-selected y-axis limit
     d3.select("#buttonYLimitSent").on("input", function() {
-        isYLimitManuallySet = true
+        isYLimitSentManuallySet = true
         if (chartTimeUnit == "1day") {
-            drawOneDaySentGraph()
+            yLimitSent = this.value
+            drawOneDaySentGraph(yLimitSent)
         }
         else if (chartTimeUnit == "10min") {
-            draw10MinSentGraph()
+            yLimitSentFiltered = this.value
+            draw10MinSentGraph(yLimitSentFiltered)
         }
-    });  
-
+    });                                                                                                                                                                                  
 };
