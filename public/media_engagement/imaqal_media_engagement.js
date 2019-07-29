@@ -218,14 +218,17 @@ const update = (data) => {
     var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
     var yLimitReceivedFiltered = d3.max(dataFiltered, function (d) { return d.total_received; });
 
+    
     // Draw graphs according to selected time unit
     if (chartTimeUnit == "1day") {
+        d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
         drawOneDayReceivedGraph(yLimitReceived)
         drawOneDaySentGraph()
     }
 
     else if (chartTimeUnit == "10min") {
-        draw10MinReceivedGraph(yLimitReceived)
+        d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
+        draw10MinReceivedGraph(yLimitReceivedFiltered)
         draw10MinSentGraph()
     }
 
@@ -327,12 +330,12 @@ const update = (data) => {
         .style("fill", "blue")
         .text("Total Failed");
 
-    function updateView10Minutes() {
-        draw10MinReceivedGraph(yLimitReceived)
+    function updateView10Minutes(yLimitReceivedFiltered) {
+        draw10MinReceivedGraph(yLimitReceivedFiltered)
         draw10MinSentGraph()       
     }
 
-    function updateViewOneDay() {
+    function updateViewOneDay(yLimitReceived) {
         console.log("updatebutton1day", yLimitReceived, chartTimeUnit)
         drawOneDayReceivedGraph(yLimitReceived)
         drawOneDaySentGraph()
@@ -629,13 +632,16 @@ const update = (data) => {
     d3.select("#buttonUpdateView10Minutes").on("click", function() {
         isYLimitManuallySet = false
         chartTimeUnit = "10min"
-        updateView10Minutes()                                                                                                                                                                                                                                       
+        console.log("10minbutton", yLimitReceivedFiltered)
+        d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
+        updateView10Minutes(yLimitReceivedFiltered)                                                                                                                                                                                                                                       
     } )
 
     d3.select("#buttonUpdateViewOneDay").on("click", function() {
         isYLimitManuallySet = false
-        chartTimeUnit = "1day"      
-        updateViewOneDay()
+        chartTimeUnit = "1day"
+        d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
+        updateViewOneDay(yLimitReceived)
     } )
 
     // Add an event listener to the button created in the html part
@@ -643,10 +649,12 @@ const update = (data) => {
         isYLimitManuallySet = true
         console.log(chartTimeUnit, this.value, isYLimitManuallySet)
         if (chartTimeUnit == "1day") {
-            drawOneDayReceivedGraph(this.value)
+            yLimitReceived = this.value
+            drawOneDayReceivedGraph(yLimitReceived)
         }
         else if (chartTimeUnit == "10min") {
-            draw10MinReceivedGraph(this.value)
+            yLimitReceivedFiltered = this.value
+            draw10MinReceivedGraph(yLimitReceivedFiltered)
         }
     });                                                                                                                                                                                  
      
