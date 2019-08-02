@@ -40,10 +40,26 @@
                         <input type="button" id="buttonUpdateView10Minutes" value="10 minutes">
                     </div>
                     <div class ="col s2 m2 l2 offset-r3">
-                        <input type="button" id="buttonUpdateViewOneDay" value="1 day" checked>
+                        <input type="button" id="buttonUpdateViewOneDay" value="1 day">
                         </div>
                 </div>
+            <div class="row">
+                <div class ="col s3 m3 l3 offset-r1">
+                <span type="text">Set the maximum number of messages you want to see</span>
+            </div>
+                <div class ="col s2 m2 l2 offset-r2">
+                    <input type="number" id="buttonYLimitReceived" step="100" min=10>
+                </div>
+            </div>
             <div class="card white z-depth-1 total_received_sms_graph"></div>
+        </div>
+        <div class="row">
+            <div class ="col s3 m3 l3 offset-r1">
+            <span type="text">Set the maximum number of messages you want to see</span>
+        </div>
+            <div class ="col s2 m2 l2 offset-r2">
+                <input type="number" id="buttonYLimitSent" step="500" min=10>
+            </div>
         </div>
         <div class="row ">
             <div class="card white z-depth-1 total_sent_sms_graph"></div>
