@@ -675,7 +675,4 @@ const update = (data) => {
     }
 
     setInterval(setLastUpdatedAlert, 1000)
-    
-    
-    
 };
