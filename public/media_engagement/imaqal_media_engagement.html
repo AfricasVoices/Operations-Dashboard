@@ -17,6 +17,12 @@
     <script type="text/javascript" src="../../public/coda/auth.js"></script>
     <script type="text/javascript" src="firebase.js"></script>
 </head>
+<style>
+    .alert {
+        color: red;
+        font: 20px bold
+    }
+</style>
 <body>
     <nav class="nav">
         <div class="nav-wrapper container">
@@ -43,6 +49,9 @@
                     </div>
                     <div class ="col s2 m2 l2 offset-r3">
                         <input type="button" id="buttonUpdateViewOneDay" value="1 day">
+                        </div>
+                    <div class ="col s6 m6 l6 offset-r1">
+                        <span type="text">Last updated: </span><span id="lastUpdated" type="text"></span>
                         </div>
                 </div>
             <div class="row">

@@ -656,5 +656,26 @@ const update = (data) => {
         }
     });                        
     
+    var dayHourFormat = d3.timeFormat("%c")	
+
+    // Update timestamp of update and reset formatting
     const timestamp = new Date()
+    d3.select("#lastUpdated").classed("alert", false).text(dayHourFormat(timestamp))
+
+    function setLastUpdatedAlert() {
+        // Calculate time diff bw current and timestamp
+        var currentTime = new Date()
+        var difference_ms = (currentTime.getTime() - timestamp.getTime())/60000
+        var difference_minutes = Math.floor(difference_ms % 60)
+     
+        // if updated more than 20 min ago >> reformat
+        if (difference_minutes > 0) {
+            d3.select("#lastUpdated").classed("alert", true)
+        }
+    }
+
+    setInterval(setLastUpdatedAlert, 1000)
+    
+    
+    
 };
