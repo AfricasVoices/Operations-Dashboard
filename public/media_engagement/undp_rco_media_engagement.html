@@ -6,7 +6,8 @@
     <link rel="shortcut icon" type="image/png" href="../../public/coda/favicon.png" />
     <title>Engagement & Media Dashboard</title>
     <!-- Compiled and minified CSS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
@@ -31,9 +32,8 @@
             </ul>
         </div>
     </nav>
-</ul>
     <div class="container">
-         <div class="row ">
+        <div class="row ">
             <div class="card white z-depth-1 total_received_sms_graph"></div>
         </div>
         <div class="row ">
@@ -54,9 +54,12 @@
             <div class='col s4 m4 l4'>
                 <div class='card white z-depth-2 operatortext'>
                     <b>Operator metrics</b></br>
-                    <div id="total_safaricom_messages"></div>
-                    <div id="total_airtel_messages"></div>
-                    <div id="total_telegram_messages"></div>
+                    <div id="total_golis_messages"></div>
+                    <div id="total_hormud_messages"></div>
+                    <div id="total_nationlink_messages"></div>
+                    <div id="total_somtel_messages"></div>
+                    <div id="total_somnet_messages"></div>
+                    <div id="total_telesom_messages"></div>
                 </div>
             </div>
             <div class='col s4 m4 l4'>
@@ -65,12 +68,13 @@
                     <div id="project_name">Project Name:</div>
                     <div id="texit_units_used">Textit Units Used:</div>
                     <div id="texit_units_bal">Texit Unit balance:</div>
-                    <div id="africastalking_units_used">AT Units Used:</div>
-                    <div id="africastalking_units_bal">AT Units Balance</div>
+                    <div id="shaqadoon_units_used">Shaqadoon Units Used:</div>
+                    <div id="shaqadoon_units_bal">Shaqadoon Units Balance</div>
                 </div>
             </div>
         </div>
         <script src="https://d3js.org/d3.v5.js"></script>
-        <script src="icraf_media_engagement.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+        <script src="undp_rco_media_engagement.js"></script>
 </body>
 </html>
