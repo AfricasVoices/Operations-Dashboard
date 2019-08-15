@@ -669,7 +669,7 @@ const update = (data) => {
         var difference_minutes = Math.floor(difference_ms % 60)
      
         // if updated more than 20 min ago >> reformat
-        if (difference_minutes > 0) {
+        if (difference_minutes > 20) {
             d3.select("#lastUpdated").classed("alert", true)
         }
     }
