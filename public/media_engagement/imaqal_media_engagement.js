@@ -656,11 +656,11 @@ const update = (data) => {
         }
     });                        
     
-    var dayHourFormat = d3.timeFormat("%c")	
+    var fullDateFormat = d3.timeFormat("%c")	
 
     // Update timestamp of update and reset formatting
     const timestamp = new Date()
-    d3.select("#lastUpdated").classed("alert", false).text(dayHourFormat(timestamp))
+    d3.select("#lastUpdated").classed("alert", false).text(fullDateFormat(timestamp))
 
     function setLastUpdatedAlert() {
         // Calculate time diff bw current and timestamp
