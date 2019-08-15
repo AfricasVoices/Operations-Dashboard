@@ -654,5 +654,7 @@ const update = (data) => {
             yLimitSentFiltered = this.value
             draw10MinSentGraph(yLimitSentFiltered)
         }
-    });                                                                                                                                                                                  
+    });                        
+    
+    const timestamp = new Date()
 };
