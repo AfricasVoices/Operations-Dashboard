@@ -218,7 +218,7 @@ const update = (data) => {
     let colorSent = d3.scaleOrdinal(d3.schemeCategory10).domain(sentKeys)
 
     var offset = new Date()
-    offset.setDate(offset.getDate() - 7)
+    offset.setDate(offset.getDate() - TIMEFRAME)
 
     // Set default y-axis limits
     dataFiltered = data.filter(a => a.datetime > offset);

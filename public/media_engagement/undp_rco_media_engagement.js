@@ -158,7 +158,7 @@ const update = (data) => {
         .keys(sentKeys)
     let sentDataStackedDaily = stackSentDaily(dailySentTotal)
 
-        //Create margins for the two graphs
+    //Create margins for the two graphs
     const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
     const Width = 960 - Margin.right - Margin.left;
     const Height = 500 - Margin.top - Margin.bottom;
@@ -216,7 +216,7 @@ const update = (data) => {
     let colorSent = d3.scaleOrdinal(d3.schemeCategory10).domain(sentKeys)
 
     var offset = new Date()
-    offset.setDate(offset.getDate() - 7)
+    offset.setDate(offset.getDate() - TIMEFRAME)
 
     // Set default y-axis limits
     dataFiltered = data.filter(a => a.datetime > offset);
