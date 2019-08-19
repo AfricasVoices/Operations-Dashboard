@@ -161,7 +161,7 @@ const update = (data) => {
 
     //Create margins for the two graphs
     const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
-    const Width = 900 - Margin.right - Margin.left;
+    const Width = 960 - Margin.right - Margin.left;
     const Height = 500 - Margin.top - Margin.bottom;
 
     // Append total received sms graph to svg
@@ -209,7 +209,6 @@ const update = (data) => {
 
     // Create line path element for failed line graph
     const total_failed_path = total_failed_sms_graph.append('path');
-
 
     // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
