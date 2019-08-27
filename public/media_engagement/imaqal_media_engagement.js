@@ -44,7 +44,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 const TIMEFRAME_WEEK = 7;
-const TIMEFRAME_MONTH = 30
+const TIMEFRAME_MONTH = 30;
 var chartTimeUnit = "1day";
 var isYLimitReceivedManuallySet = false;
 var isYLimitSentManuallySet = false;
@@ -88,6 +88,16 @@ const update = (data) => {
     // Sort data by date
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
+    var offsetWeek = new Date()
+    offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK)
+
+    var offsetMonth = new Date()
+    offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH)
+
+    // Set default y-axis limits
+    dataFilteredWeek = data.filter(a => a.datetime > offsetWeek);
+    dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
+
     // Group received data by day
     var dailyReceivedTotal = d3.nest()
         .key(function(d) { return d.day; })
@@ -101,7 +111,7 @@ const update = (data) => {
             total_received: d3.sum(v, function(d) {return d.total_received}),
         };
          })
-        .entries(data);
+        .entries(dataFilteredMonth);
 
     // Flatten nested data for stacking
     for (var entry in dailyReceivedTotal) {
@@ -127,7 +137,7 @@ const update = (data) => {
             total_sent: d3.sum(v, function(d) {return d.total_sent}),
         };
          })
-        .entries(data);
+        .entries(dataFilteredMonth);
 
     // Flatten nested data for stacking
     for (var entry in dailySentTotal) {
@@ -220,18 +230,9 @@ const update = (data) => {
     // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
 
-    var offsetWeek = new Date()
-    offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK)
-
-    var offsetMonth = new Date()
-    offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH)
-
-    // Set default y-axis limits
-    dataFilteredWeek = data.filter(a => a.datetime > offsetWeek);
-    dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
-    var yLimitReceived = d3.max(dataFilteredMonth, function (d) { return d.total_received; });
+    var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
     var yLimitReceivedFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
-    var yLimitSent = d3.max(dataFilteredMonth, function (d) { return d.total_sent; });
+    var yLimitSent = d3.max(dailySentTotal, function (d) { return d.total_sent; });
     var yLimitSentFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
 
     // Draw graphs according to selected time unit
@@ -427,14 +428,14 @@ const update = (data) => {
 
     function drawOneDayReceivedGraph(yLimitReceived) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
-        yLimitReceivedTotal = d3.max(dataFilteredMonth, function (d) { return d.total_received; });
+        yLimitReceivedTotal = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
 
         if (isYLimitReceivedManuallySet == false) {
             yLimitReceived = yLimitReceivedTotal
         }
 
         // set scale domains
-        x.domain(d3.extent(data, d => new Date(d.day)));
+        x.domain(d3.extent(dataFilteredMonth, d => new Date(d.day)));
         y_total_received_sms.domain([0, yLimitReceived]);
     
         d3.selectAll(".redrawElementReceived").remove();
@@ -469,7 +470,7 @@ const update = (data) => {
             .attr("class", "redrawElementReceived")
             .attr("transform", "translate(0," + Height + ")")
             .call(d3.axisBottom(x)
-                .ticks(d3.timeWeek.every(1))
+                .ticks(d3.timeDay.every(4))
                 .tickFormat(dayDateFormat));
     
         // Add X axis label for the total received sms graph
@@ -565,7 +566,7 @@ const update = (data) => {
     
     function drawOneDaySentGraph(yLimitSent) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
-        yLimitSentTotal = d3.max(dataFilteredMonth, function (d) { return d.total_sent; });
+        yLimitSentTotal = d3.max(dailySentTotal, function (d) { return d.total_sent; });
 
         if (isYLimitSentManuallySet != true) {
             yLimitSent = yLimitSentTotal
@@ -608,7 +609,7 @@ const update = (data) => {
             .attr("class", "redrawElementSent")
             .attr("transform", "translate(0," + Height + ")")
             .call(d3.axisBottom(x)
-                .ticks(d3.timeWeek.every(1))
+                .ticks(d3.timeDay.every(4))
                 .tickFormat(dayDateFormat));
     
          // Add X axis label for the total sent sms graph
