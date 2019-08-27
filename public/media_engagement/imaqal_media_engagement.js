@@ -213,7 +213,7 @@ const update = (data) => {
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
 
     var offset = new Date()
-    offset.setDate(offset.getDate() - 7)
+    offset.setDate(offset.getDate() - TIMEFRAME)
 
     // Set default y-axis limits
     dataFiltered = data.filter(a => a.datetime > offset);
@@ -231,7 +231,7 @@ const update = (data) => {
         updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered)
     }
 
-    // // Y axis Label for the total received sms graph
+    // Y axis Label for the total received sms graph
     total_received_sms_graph.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - Margin.left)
@@ -629,7 +629,7 @@ const update = (data) => {
         chartTimeUnit = "1day"
         updateViewOneDay(yLimitReceived, yLimitSent)
     } )
-
+    
     // Draw received graph with user-selected y-axis limit
     d3.select("#buttonYLimitReceived").on("input", function() {
         isYLimitReceivedManuallySet = true
@@ -654,5 +654,27 @@ const update = (data) => {
             yLimitSentFiltered = this.value
             draw10MinSentGraph(yLimitSentFiltered)
         }
-    });                                                                                                                                                                                  
+    });                        
+    
+    var fullDateFormat = d3.timeFormat("%c")	
+
+    // Update timestamp of update and reset formatting
+    const timestamp = new Date()
+    d3.select("#lastUpdated").classed("alert", false).text(fullDateFormat(timestamp))
+
+    function setLastUpdatedAlert() {
+        // Calculate time diff bw current and timestamp
+        var currentTime = new Date()
+        var difference_ms = (currentTime.getTime() - timestamp.getTime())/60000
+        var difference_minutes = Math.floor(difference_ms % 60)
+        // if updated more than 20 min ago >> reformat
+        if (difference_minutes > 20) {
+            d3.select("#lastUpdated").classed("alert", true)
+        }
+    };
+
+    setInterval(setLastUpdatedAlert, 1000)
 };
+
+
+
