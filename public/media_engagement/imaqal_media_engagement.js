@@ -6,7 +6,13 @@ firebase.auth().onAuthStateChanged(function (user) {
         const settings = { timestampsInSnapshots: true };
         mediadb.settings(settings);
         var data = [];
-        mediadb.collection('/metrics/rapid_pro/IMAQAL/').onSnapshot(res => {
+        var offset = new Date()
+        timerange = 30
+        offset.setDate(offset.getDate() - timerange)
+        var iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
+        offsetString = iso(offset)
+
+        mediadb.collection('/metrics/rapid_pro/IMAQAL/').where("datetime", ">", offsetString).onSnapshot(res => {
             console.log(res)
             // Update data every time it changes in firestore
             res.docChanges().forEach(change => {
@@ -29,6 +35,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 }
             });
             update(data);
+            console.log(data)
         });
         console.log('Bind Successful');
     } else {
@@ -36,7 +43,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-const TIMEFRAME = 7;
+const TIMEFRAME_WEEK = 7;
+const TIMEFRAME_MONTH = 30;
 var chartTimeUnit = "1day";
 var isYLimitReceivedManuallySet = false;
 var isYLimitSentManuallySet = false;
@@ -80,6 +88,16 @@ const update = (data) => {
     // Sort data by date
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
+    var offsetWeek = new Date()
+    offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK)
+
+    var offsetMonth = new Date()
+    offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH)
+
+    // Set default y-axis limits
+    dataFilteredWeek = data.filter(a => a.datetime > offsetWeek);
+    dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
+
     // Group received data by day
     var dailyReceivedTotal = d3.nest()
         .key(function(d) { return d.day; })
@@ -93,7 +111,7 @@ const update = (data) => {
             total_received: d3.sum(v, function(d) {return d.total_received}),
         };
          })
-        .entries(data);
+        .entries(dataFilteredMonth);
 
     // Flatten nested data for stacking
     for (var entry in dailyReceivedTotal) {
@@ -119,7 +137,7 @@ const update = (data) => {
             total_sent: d3.sum(v, function(d) {return d.total_sent}),
         };
          })
-        .entries(data);
+        .entries(dataFilteredMonth);
 
     // Flatten nested data for stacking
     for (var entry in dailySentTotal) {
@@ -212,15 +230,10 @@ const update = (data) => {
     // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
 
-    var offset = new Date()
-    offset.setDate(offset.getDate() - TIMEFRAME)
-
-    // Set default y-axis limits
-    dataFiltered = data.filter(a => a.datetime > offset);
     var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
-    var yLimitReceivedFiltered = d3.max(dataFiltered, function (d) { return d.total_received; });
+    var yLimitReceivedFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
     var yLimitSent = d3.max(dailySentTotal, function (d) { return d.total_sent; });
-    var yLimitSentFiltered = d3.max(dataFiltered, function (d) { return d.total_sent; });
+    var yLimitSentFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
 
     // Draw graphs according to selected time unit
     if (chartTimeUnit == "1day") {
@@ -347,15 +360,15 @@ const update = (data) => {
     function draw10MinReceivedGraph(yLimitReceived) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (isYLimitReceivedManuallySet == false) {
-            yLimitReceived = d3.max(dataFiltered, function (d) { return d.total_received; });
+            yLimitReceived = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
         }
 
         let stackReceived = d3.stack()
             .keys(receivedKeys)
-        let receivedDataStacked = stackReceived(dataFiltered)
+        let receivedDataStacked = stackReceived(dataFilteredWeek)
 
         // set scale domains
-        x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
+        x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
         y_total_received_sms.domain([0, yLimitReceived]);
 
         d3.selectAll(".redrawElementReceived").remove();
@@ -377,13 +390,13 @@ const update = (data) => {
             .style('fill', function (d, i) { return color(i) })
         
         receivedLayer10min.selectAll('rect')
-            .data(function(dataFiltered) { return dataFiltered })
+            .data(function(dataFilteredWeek) { return dataFilteredWeek })
             .enter()
         .append('rect')
             .attr('x', function (d) { return x(d.data.datetime) })
             .attr('y', function (d) { return y_total_received_sms(d[1]) })
             .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
-            .attr('width', Width / Object.keys(dataFiltered).length)
+            .attr('width', Width / Object.keys(dataFilteredWeek).length)
 
         //Add the X Axis for the total received sms graph
         total_received_sms_graph.append("g")
@@ -422,7 +435,7 @@ const update = (data) => {
         }
 
         // set scale domains
-        x.domain(d3.extent(data, d => new Date(d.day)));
+        x.domain(d3.extent(dataFilteredMonth, d => new Date(d.day)));
         y_total_received_sms.domain([0, yLimitReceived]);
     
         d3.selectAll(".redrawElementReceived").remove();
@@ -457,7 +470,7 @@ const update = (data) => {
             .attr("class", "redrawElementReceived")
             .attr("transform", "translate(0," + Height + ")")
             .call(d3.axisBottom(x)
-                .ticks(d3.timeWeek.every(1))
+                .ticks(d3.timeDay.every(4))
                 .tickFormat(dayDateFormat));
     
         // Add X axis label for the total received sms graph
@@ -483,15 +496,15 @@ const update = (data) => {
     function draw10MinSentGraph(yLimitSent) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (isYLimitSentManuallySet == false) {
-            yLimitSent = d3.max(dataFiltered, function (d) { return d.total_sent; });
+            yLimitSent = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
         }
     
         let stackSent = d3.stack()
             .keys(sentKeys)
-        let sentDataStacked = stackSent(dataFiltered)
+        let sentDataStacked = stackSent(dataFilteredWeek)
     
         // set scale domains
-        x.domain(d3.extent(dataFiltered, d => new Date(d.datetime)));
+        x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
         y_total_sent_sms.domain([0, yLimitSent]);
     
         // Remove changing chart elements before redrawing
@@ -515,13 +528,13 @@ const update = (data) => {
             .style('fill', function (d, i) { return color(i) })
             
         sentLayer10min.selectAll('rect')
-            .data(function(dataFiltered) { return dataFiltered })
+            .data(function(dataFilteredWeek) { return dataFilteredWeek })
             .enter()
         .append('rect')
             .attr('x', function (d) { return x(d.data.datetime) })
             .attr('y', function (d) { return y_total_sent_sms(d[1]) })
             .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
-            .attr('width', Width / Object.keys(dataFiltered).length)
+            .attr('width', Width / Object.keys(dataFilteredWeek).length)
         
         //Add the X Axis for the total sent sms graph
         total_sent_sms_graph.append("g")
@@ -596,7 +609,7 @@ const update = (data) => {
             .attr("class", "redrawElementSent")
             .attr("transform", "translate(0," + Height + ")")
             .call(d3.axisBottom(x)
-                .ticks(d3.timeWeek.every(1))
+                .ticks(d3.timeDay.every(4))
                 .tickFormat(dayDateFormat));
     
          // Add X axis label for the total sent sms graph
