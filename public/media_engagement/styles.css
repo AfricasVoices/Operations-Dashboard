@@ -1,11 +1,24 @@
-.nav {
-    background: #ffff;
-    width: 100%;
-    max-width: initial;
-    height: 60px;
+.logo {
+    height: 3rem;
+}
+.navbar {
+    box-shadow: 0 2px 2px -2px steelblue;
+}
+.navbar-brown{
+    color: #8d3538;
 }
 .nav-link {
     color: #8d3538;
+}
+.nav-link:hover {
+    color: steelblue;
+}
+.active-link {
+    border-bottom: 2px brown solid;
+}
+.active-item {
+    color: #8d3538;
+    background-color: lightcyan;
 }
 .line {
     fill: none;
@@ -75,10 +88,10 @@
         width: 80%;
     }
 }
-.card {
+/* .card {
     padding: 15px;
     border-radius: 3px;
-}
+} */
 .body {
     background: #fafafa
 }
