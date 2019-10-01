@@ -9,11 +9,11 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css"> -->
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
+
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-firestore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.1/js/jquery.tablesorter.min.js"></script>
@@ -50,50 +50,66 @@
                         </div>
                     </li> 
 
-                    <li class="px-2 pt-1"><button class="btn btn-sm btn-outline-danger text-dark shadow">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
+                    <li class="px-2 pt-1 border-top border-right"><button class="btn btn-sm btn-outline-danger text-dark shadow">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
                 </ul>
             </div>
         </div>
     </nav>
-</ul>
-    <div class="container">
-         <div class="row ">
-            <div class="card white z-depth-1 total_received_sms_graph"></div>
-        </div>
-        <div class="row ">
-            <div class="card white z-depth-1 total_sent_sms_graph"></div>
-        </div>
-        <div class="row ">
-            <div class="card white z-depth-1 total_failed_sms_graph"></div>
-        </div>
-        <div class="row">
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2  responsetext '>
-                    <b>Message metrics</b></br>
-                    <div id="total_received">Total Incoming Messages</div>
-                    <div id="total_sent">Total Outgoing Messages: </div>
-                    <div id="last_update">Last updated: </div>
+
+
+
+    <div class="container bg-light p-4">
+        <!-- DYNAMIC TABBED INTERFACES-->
+        <div>
+            <!-- TAB TRIGGER -->
+            <ul class="nav nav-tabs justify-content-center mb-3" id="myTab" role="tablist">
+                <li><strong class="nav-link">AHADI MEDIA :</strong></li>
+                <li><a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">PROJECT DETAILS & METRICS</a></li>
+                <li><a class="nav-link" id="received-tab" data-toggle="tab" href="#received" role="tab" aria-controls="received" aria-selected="false">TOTAL RECEIVED SMS</a></li>
+                <li><a class="nav-link" id="sent-tab" data-toggle="tab" href="#sent" role="tab" aria-controls="sent" aria-selected="false">TOTAL SENT SMS</a></li>
+                <li><a class="nav-link" id="failed-tab" data-toggle="tab" href="#failed" role="tab" aria-controls="failed" aria-selected="false">TOTAL FAILED SMS</a></li>  
+            </ul>
+            <!-- TAB CONTENT -->
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade" id="received" role="tabpanel" aria-labelledby="received-tab"><div class="card shadow total_received_sms_graph mb-2"></div></div>
+                <div class="tab-pane fade" id="sent" role="tabpanel" aria-labelledby="sent-tab"><div class="card shadow white z-depth-1 total_sent_sms_graph"></div></div>
+                <div class="tab-pane fade" id="failed" role="tabpanel" aria-labelledby="failed-tab"><div class="card shadow white z-depth-1 total_failed_sms_graph"></div></div>
+                <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card shadow">
+                                <div class="card-header">Project Details</div>
+                                <div class="card-body">
+                                    <div id="project_name">Project Name:</div>
+                                    <div id="texit_units_used">Textit Units Used:</div>
+                                    <div id="texit_units_bal">Texit Unit balance:</div>
+                                    <div id="africastalking_units_used">AT Units Used:</div>
+                                    <div id="africastalking_units_bal">AT Units Balance</div> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow">
+                                <div class="card-header">Operator metrics</div>
+                                <div class="card-body">
+                                    <div id="total_safaricom_messages"></div>
+                                    <div id="total_airtel_messages"></div>
+                                    <div id="total_telegram_messages"></div>
+                                </div>
+                            </div>
+                            <div class="card shadow">
+                                <div class="card-header">Message metrics</div>
+                                <div class="card-body">
+                                    <div id="total_received">Total Incoming Messages</div>
+                                    <div id="total_sent">Total Outgoing Messages: </div>
+                                    <div id="last_update">Last updated: </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2 operatortext'>
-                    <b>Operator metrics</b></br>
-                    <div id="total_safaricom_messages"></div>
-                    <div id="total_airtel_messages"></div>
-                    <div id="total_telegram_messages"></div>
-                </div>
-            </div>
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2 operatortext'>
-                    <b>Project Details</b></br>
-                    <div id="project_name">Project Name:</div>
-                    <div id="texit_units_used">Textit Units Used:</div>
-                    <div id="texit_units_bal">Texit Unit balance:</div>
-                    <div id="africastalking_units_used">AT Units Used:</div>
-                    <div id="africastalking_units_bal">AT Units Balance</div>
-                </div>
-            </div>
-        </div>
+        </div>      
         <script src="https://d3js.org/d3.v5.js"></script>
         <script src="icraf_media_engagement.js"></script>
 </body>
