@@ -28,6 +28,7 @@
     }
 </style>
 <body>
+
     <!-- NAVBAR WITH DROPDOWN & RESPONSIVE TOGGLE-->
     <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-3">
         <div class="container">
@@ -61,9 +62,9 @@
             </div>
         </div>
     </nav>
-
-    <!-- SET TIMESCALE -->
+   
     <section>
+         <!-- SET TIMESCALE UNDER THE ACCORDION -->
         <div class="container">
             <div id="accordion">
                 <div class="card">
@@ -73,14 +74,14 @@
                     </div>
                 
                     <!-- ACCORDION CONTENT -->
-                    <div id="collapse1" class="collapse"> <!-- use class show to make accordion default opened -->
+                    <div id="collapse1" class="collapse"> <!-- use class show to make the accordion default opened -->
                         <div class="card-body">
                             <div class="d-md-flex justify-content-around">
                                 <div>
                                     <span type="text">Set the timescale</span>
-                                    <div class="btn-group btn-sm" role="group" aria-label="timescale">
-                                        <input class="btn btn-secondary" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                                        <input class="btn btn-secondary" type="button" id="buttonUpdateViewOneDay" value="1 day">
+                                    <div class="btn-group" role="group" aria-label="timescale">
+                                        <input class="btn btn-sm btn-secondary" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
+                                        <input class="btn btn-sm btn-secondary" type="button" id="buttonUpdateViewOneDay" value="1 day">
                                     </div>
                                 </div>
                                 <div>
@@ -94,79 +95,107 @@
         </div>
     </section>
 
+    <section class="container bg-light p-4">
+        <!-- DYNAMIC TABBED INTERFACES-->
+        <div>
+            <!-- TAB TRIGGER -->
+            <ul class="nav nav-tabs justify-content-center mb-3" id="myTab" role="tablist">
+                <li><strong class="nav-link">IMAQAL MEDIA :</strong></li>
+                <li><a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">PROJECT DETAILS & METRICS</a></li>
+                <li><a class="nav-link" id="graphs-tab" data-toggle="tab" href="#graphs" role="tab" aria-controls="graphs" aria-selected="false">MEDIA ENGAGEMENT GRAPHS</a></li>
+            </ul>
 
-    <div class="row">
-        <div class ="col s3 m3 l3 offset-r1">
-        <span type="text">Set the maximum number of messages you want to see</span>
-    </div>
-        <div class ="col s2 m2 l2 offset-r2">
-            <input type="number" id="buttonYLimitReceived" step="100" min=10>
-        </div>
-    </div>
+            <!-- TAB CONTENT -->
+            <div class="tab-content" id="myTabContent">
+        
+                <!-- CONTENT 1: GRAPHS -->
+                <div class="tab-pane fade" id="graphs" role="tabpanel" aria-labelledby="graphs-tab">
 
-    <div class="container">
-        <div class="row ">
-            <div class="card white z-depth-1 total_received_sms_graph"></div>
-        </div>
-        <div class="row">
-            <div class ="col s3 m3 l3 offset-r1">
-            <span type="text">Set the maximum number of messages you want to see</span>
-        </div>
-            <div class ="col s2 m2 l2 offset-r2">
-                <input type="number" id="buttonYLimitSent" step="500" min=10>
-            </div>
-        </div>
-        <div class="row ">
-            <div class="card white z-depth-1 total_sent_sms_graph"></div>
-        </div>
-        <div class="row ">
-            <div class="card white z-depth-1 total_failed_sms_graph"></div>
-        </div>
-        <div class="row">
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2  responsetext '>
-                    <b>Message metrics</b></br>
-                    <div id="total_received">Total Incoming Messages</div>
-                    <div id="total_sent">Total Outgoing Messages: </div>
-                    <div id="last_update">Last updated: </div>
+                    <!-- scrollspy trigger to navigate graphs easily -->
+                    <nav id="navbar2" class="navbar navbar-white bg-light sticky-top justify-content-center mb-3">
+                        <ul class="nav nav-tabs shadow-lg">
+                            <li class="nav-item"><a class="nav-link" href="#received"> TOTAL RECEIVED SMS </a></li>
+                            <li class="nav-item"><a class="nav-link" href="#sent">TOTAL SENT SMS</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#failed">TOTAL FAILED SMS</a></li>
+                        </ul>
+                    </nav>
+
+                    <!-- scrolly spy content  -->
+                    <div data-spy="scroll" data-target="#navbar2" data-offset="0">
+                        <hr>
+                        <div id="received" class="card">
+                            <div class="d-flex card-header card-header-sm justify-content-center">
+                                <p class="lead">Set the maximum number of messages you want to see</p>
+                                <div class="col-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitReceived" step="100" min=10></div>
+                            </div>
+                            <div class="total_received_sms_graph mb-2"></div>
+                        </div>
+                        <div><hr></div>
+                        <div id="sent" class="card">
+                            <div class="d-flex card-header justify-content-center">
+                                <p class="lead" type="text">Set the maximum number of messages you want to see</p>
+                                <div class="col-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitSent" step="100" min=10></div>
+                            </div>
+                            <div class="total_sent_sms_graph pb-2 mb-2"></div>
+                        </div>
+                        <hr>
+                        <div id="failed" class="card">
+                            <div class="white total_failed_sms_graph pb-2 mb-2"></div>
+                        </div>   
+                    </div>
                 </div>
-            </div>
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2 operatortext'>
-                    <b>Operator metrics</b></br>
-                    <div id="total_golis_messages"></div>
-                    <div id="total_hormud_messages"></div>
-                    <div id="total_nationlink_messages"></div>
-                    <div id="total_somtel_messages"></div>
-                    <div id="total_somnet_messages"></div>
-                    <div id="total_telesom_messages"></div>
+
+                <!-- CONTENT 2: PROJECT DETAILS & METRICS -->
+                <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card shadow">
+                                <div class="card-header">Project Details</div>
+                                <div class="card-body">
+                                    <div id="project_name">Project Name:</div>
+                                    <div id="texit_units_used">Textit Units Used:</div>
+                                    <div id="texit_units_bal">Texit Unit balance:</div>
+                                    <div id="shaqadoon_units_used">Shaqadoon Units Used:</div>
+                                    <div id="shaqadoon_units_bal">Shaqadoon Units Balance</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow">
+                                <div class="card-header">Operator metrics</div>
+                                <div class="card-body">
+                                    <div id="total_golis_messages"></div>
+                                    <div id="total_hormud_messages"></div>
+                                    <div id="total_nationlink_messages"></div>
+                                    <div id="total_somtel_messages"></div>
+                                    <div id="total_somnet_messages"></div>
+                                    <div id="total_telesom_messages"></div>
+                                </div>
+                                </div>
+                                    <div class="card shadow">
+                                        <div class="card-header">Message metrics</div>
+                                        <div class="card-body">
+                                            <div id="total_received">Total Incoming Messages</div>
+                                            <div id="total_sent">Total Outgoing Messages: </div>
+                                            <div id="last_update">Last updated: </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2 operatortext'>
-                    <b>Project Details</b></br>
-                    <div id="project_name">Project Name:</div>
-                    <div id="texit_units_used">Textit Units Used:</div>
-                    <div id="texit_units_bal">Texit Unit balance:</div>
-                    <div id="shaqadoon_units_used">Shaqadoon Units Used:</div>
-                    <div id="shaqadoon_units_bal">Shaqadoon Units Balance</div>
-                </div>
+
             </div>
         </div>
-        <script src="https://d3js.org/d3.v5.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" type="module"></script>
-        <script src="imaqal_media_engagement.js"></script>
+    </section>
+        
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" type="module"></script>
+    <script src="imaqal_media_engagement.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
 
 
 
