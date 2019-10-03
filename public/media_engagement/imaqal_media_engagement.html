@@ -96,96 +96,77 @@
     </section>
 
     <section class="container bg-light p-4">
-        <!-- DYNAMIC TABBED INTERFACES-->
         <div>
-            <!-- TAB TRIGGER -->
-            <ul class="nav nav-tabs justify-content-center mb-3" id="myTab" role="tablist">
-                <li><strong class="nav-link">IMAQAL MEDIA :</strong></li>
-                <li><a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="true">PROJECT DETAILS & METRICS</a></li>
-                <li><a class="nav-link" id="graphs-tab" data-toggle="tab" href="#graphs" role="tab" aria-controls="graphs" aria-selected="false">MEDIA ENGAGEMENT GRAPHS</a></li>
-            </ul>
+            <!-- SCROLLSPY TRIGGER -->
+            <nav id="navbar2" class="navbar navbar-white bg-light sticky-top justify-content-center mb-3">
+                <ul class="nav nav-tabs shadow-lg">
+                    <li><strong class="nav-link">IMAQAL MEDIA :</strong></li>
+                    <li class="nav-item"><a class="nav-link" href="#received"> TOTAL RECEIVED SMS </a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sent">TOTAL SENT SMS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#failed">TOTAL FAILED SMS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#details">DETAILS & METRICS</a></li>
+                </ul>
+            </nav>
 
-            <!-- TAB CONTENT -->
-            <div class="tab-content" id="myTabContent">
-        
-                <!-- CONTENT 1: GRAPHS -->
-                <div class="tab-pane fade" id="graphs" role="tabpanel" aria-labelledby="graphs-tab">
-
-                    <!-- scrollspy trigger to navigate graphs easily -->
-                    <nav id="navbar2" class="navbar navbar-white bg-light sticky-top justify-content-center mb-3">
-                        <ul class="nav nav-tabs shadow-lg">
-                            <li class="nav-item"><a class="nav-link" href="#received"> TOTAL RECEIVED SMS </a></li>
-                            <li class="nav-item"><a class="nav-link" href="#sent">TOTAL SENT SMS</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#failed">TOTAL FAILED SMS</a></li>
-                        </ul>
-                    </nav>
-
-                    <!-- scrolly spy content  -->
-                    <div data-spy="scroll" data-target="#navbar2" data-offset="0">
-                        <hr>
-                        <div id="received" class="card">
-                            <div class="d-flex card-header card-header-sm justify-content-center">
-                                <p class="lead">Set the maximum number of messages you want to see</p>
-                                <div class="col-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitReceived" step="100" min=10></div>
-                            </div>
-                            <div class="total_received_sms_graph mb-2"></div>
-                        </div>
-                        <div><hr></div>
-                        <div id="sent" class="card">
-                            <div class="d-flex card-header justify-content-center">
-                                <p class="lead" type="text">Set the maximum number of messages you want to see</p>
-                                <div class="col-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitSent" step="100" min=10></div>
-                            </div>
-                            <div class="total_sent_sms_graph pb-2 mb-2"></div>
-                        </div>
-                        <hr>
-                        <div id="failed" class="card">
-                            <div class="white total_failed_sms_graph pb-2 mb-2"></div>
-                        </div>   
+            <!-- SCROLLSPY CONTENT -->
+            <div data-spy="scroll" data-target="#navbar2" data-offset="0">
+                <hr>
+                <div id="received" class="card">
+                    <div class="d-flex card-header card-header-sm justify-content-center">
+                        <p class="lead">Set the maximum number of messages you want to see</p>
+                        <div class="col-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitReceived" step="100" min=10></div>
                     </div>
+                    <div class="total_received_sms_graph mb-2"></div>
                 </div>
-
-                <!-- CONTENT 2: PROJECT DETAILS & METRICS -->
-                <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card shadow">
-                                <div class="card-header">Project Details</div>
-                                <div class="card-body">
-                                    <div id="project_name">Project Name:</div>
-                                    <div id="texit_units_used">Textit Units Used:</div>
-                                    <div id="texit_units_bal">Texit Unit balance:</div>
-                                    <div id="shaqadoon_units_used">Shaqadoon Units Used:</div>
-                                    <div id="shaqadoon_units_bal">Shaqadoon Units Balance</div>
-                                </div>
+                <div><hr></div>
+                <div id="sent" class="card">
+                    <div class="d-flex card-header justify-content-center">
+                        <p class="lead" type="text">Set the maximum number of messages you want to see</p>
+                        <div class="col-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitSent" step="100" min=10></div>
+                    </div>
+                    <div class="total_sent_sms_graph pb-2 mb-2"></div>
+                </div>
+                <hr>
+                <div id="failed" class="card">
+                    <div class="white total_failed_sms_graph pb-2 mb-2"></div>
+                </div>   
+                <div id="details" class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow">
+                            <div class="card-header">Project Details</div>
+                            <div class="card-body">
+                                <div id="project_name">Project Name:</div>
+                                <div id="texit_units_used">Textit Units Used:</div>
+                                <div id="texit_units_bal">Texit Unit balance:</div>
+                                <div id="shaqadoon_units_used">Shaqadoon Units Used:</div>
+                                <div id="shaqadoon_units_bal">Shaqadoon Units Balance</div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="card shadow">
-                                <div class="card-header">Operator metrics</div>
-                                <div class="card-body">
-                                    <div id="total_golis_messages"></div>
-                                    <div id="total_hormud_messages"></div>
-                                    <div id="total_nationlink_messages"></div>
-                                    <div id="total_somtel_messages"></div>
-                                    <div id="total_somnet_messages"></div>
-                                    <div id="total_telesom_messages"></div>
-                                </div>
-                                </div>
-                                    <div class="card shadow">
-                                        <div class="card-header">Message metrics</div>
-                                        <div class="card-body">
-                                            <div id="total_received">Total Incoming Messages</div>
-                                            <div id="total_sent">Total Outgoing Messages: </div>
-                                            <div id="last_update">Last updated: </div>
-                                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow">
+                            <div class="card-header">Operator metrics</div>
+                            <div class="card-body">
+                                <div id="total_golis_messages"></div>
+                                <div id="total_hormud_messages"></div>
+                                <div id="total_nationlink_messages"></div>
+                                <div id="total_somtel_messages"></div>
+                                <div id="total_somnet_messages"></div>
+                                <div id="total_telesom_messages"></div>
+                            </div>
+                            </div>
+                                <div class="card shadow">
+                                    <div class="card-header">Message metrics</div>
+                                    <div class="card-body">
+                                        <div id="total_received">Total Incoming Messages</div>
+                                        <div id="total_sent">Total Outgoing Messages: </div>
+                                        <div id="last_update">Last updated: </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
