@@ -1,53 +1,68 @@
-.nav{
-    background: #ffff;
-    width: 100%;
-    max-width:initial;
-    height:60px;
-  }
+.logo {
+    height: 3rem;
+}
+.navbar {
+    box-shadow: 0 2px 2px -2px steelblue;
+}
+.navbar-brown{
+    color: #8d3538;
+}
 .nav-link {
-    color: #8d3538; 
+    color: #8d3538;
 }
-.brand-logo{
-  height:40px;
-  margin-top:10px;
+.nav-link:hover {
+    color: steelblue;
 }
-a {
-    color: black;
+.active-link {
+    border-bottom: 2px #8d3538 solid;
+}
+.active-item {
+    color: #8d3538;
+    background-color: #B6D4E7;
+    
+}
+.btn-logout{
+    border-color: #8d3538;
+    color: #8d3538;
+}
+.btn-logout:hover {
+    color: steelblue;
+    transform: scale(1.05);
 }
 .table-heading {
     background-color: #8e3436;
-    height: 30px;
+    /* height: 30px; */
     color:#ffff;
 }
 .coding-notstarted{
     background-color:#fc9f9f;
     font-size:16;
-    line-height:4px;
+    /* line-height:4px; */
 }
 .coding-below25{
     background-color:#ffd1d1;
     font-size:16;
-    line-height:4px;
+    /* line-height:4px; */
 }
 .coding-above25{
     background-color:#87cefa;
     font-size:16;
-    line-height:4px;
+    /* line-height:4px; */
 }
 .coding-above50{
     background-color: #fff6d6;
     font-size:16;
-    line-height:4px;
+    /* line-height:4px; */
 }
 .coding-above75{
     background-color:#d6ffd9;
     font-size:16;
-    line-height:3px;
+    /* line-height:3px; */
 }
 .coding-complete{
     background-color: white;
     font-size:15;
-    line-height:1px;
+    /* line-height:1px; */
 }
 .login-body{
     margin: 0;
@@ -83,18 +98,4 @@ a {
     text-align: center;
     font-size: 20px;
 }
-.container {
-    margin: 0 auto;
-    max-width: 1280px;
-    width: 85%;
-  }
-  @media only screen and (min-width: 601px) {
-    .container {
-      width: 80%;
-    }
-  }
-  @media only screen and (min-width: 993px) {
-    .container {
-      width: 80%;
-    }
-  }
+
