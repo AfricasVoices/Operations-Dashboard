@@ -14,11 +14,20 @@
     color: steelblue;
 }
 .active-link {
-    border-bottom: 2px brown solid;
+    border-bottom: 2px #8d3538 solid;
 }
 .active-item {
     color: #8d3538;
-    background-color: lightcyan;
+    background-color: #B6D4E7;
+    
+}
+.btn-logout{
+    border-color: #8d3538;
+    color: #8d3538;
+}
+.btn-logout:hover {
+    color: steelblue;
+    transform: scale(1.05);
 }
 .line {
     fill: none;
