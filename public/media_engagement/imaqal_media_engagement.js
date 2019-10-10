@@ -223,9 +223,11 @@ const update = (data) => {
     // Create line path element for failed line graph
     const total_failed_path = total_failed_sms_graph.append('path');
 
-    let color = d3.scaleOrdinal(d3.schemeCategory10);
-    let colorReceived = d3.scaleOrdinal(d3.schemeCategory10).domain(receivedKeys)
-    let colorSent = d3.scaleOrdinal(d3.schemeCategory10).domain(sentKeys)
+    // custom color scheme
+    color_scheme = ["#e6194B", "#f58231", "#3cb44b", "#9A6324", "#4363d8", "#800000", "#f032e6", "#911eb4"]
+    let color = d3.scaleOrdinal(color_scheme);
+    let colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys);
+    let colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
 
     // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
@@ -451,7 +453,7 @@ const update = (data) => {
        let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
             .data(receivedDataStackedDaily)
             .enter()    
-        .append('g')
+            .append('g')
             .attr('id', 'receivedStack') 
             .attr('class', function(d, i) { return receivedKeys[i] })
             .style('fill', function (d, i) { return color(i) })
