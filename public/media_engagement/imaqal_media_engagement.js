@@ -223,9 +223,11 @@ const update = (data) => {
     // Create line path element for failed line graph
     const total_failed_path = total_failed_sms_graph.append('path');
 
-    let color = d3.scaleOrdinal(d3.schemeCategory10);
-    let colorReceived = d3.scaleOrdinal(d3.schemeCategory10).domain(receivedKeys)
-    let colorSent = d3.scaleOrdinal(d3.schemeCategory10).domain(sentKeys)
+    // custom color scheme
+    color_scheme = ["#FF0000", "#f1a201", "#3cb44b", "#181eb4", "#ffe119", "#9A6324", "#fe0991", "#911eb4"]
+    let color = d3.scaleOrdinal(color_scheme);
+    let colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys);
+    let colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
 
     // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
