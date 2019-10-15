@@ -453,7 +453,7 @@ const update = (data) => {
        let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
             .data(receivedDataStackedDaily)
             .enter()    
-            .append('g')
+        .append('g')
             .attr('id', 'receivedStack') 
             .attr('class', function(d, i) { return receivedKeys[i] })
             .style('fill', function (d, i) { return color(i) })
