@@ -4,11 +4,21 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "public": 
+    [
+      "public/coda",
+      "public/media_engagement"
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/auth.html"
+      }
     ],
     "headers": [
       { 
