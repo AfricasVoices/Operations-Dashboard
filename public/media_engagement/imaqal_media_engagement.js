@@ -175,8 +175,8 @@ const update = (data) => {
         .keys(sentKeys)
     let sentDataStackedDaily = stackSentDaily(dailySentTotal)
 
-    //Create margins for the two graphs
-    const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
+    //Create margins for the three graphs
+    const Margin = { top: 40, right: 100, bottom: 90, left: 70 };
     const Width = 960 - Margin.right - Margin.left;
     const Height = 500 - Margin.top - Margin.bottom;
 
@@ -275,13 +275,19 @@ const update = (data) => {
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
             .ticks(5)
-            .tickFormat(timeFormat));
+            .tickFormat(timeFormat))
+        // Rotate axis labels
+        .selectAll("text") 
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
     
     //Add X axis label for the total failed sms graph
     total_failed_sms_graph.append("text")
         .attr("transform",
             "translate(" + (Width / 2) + " ," +
-            (Height + Margin.top + 10) + ")")
+            (Height + Margin.top + 50) + ")")
         .style("text-anchor", "middle")
         .text("Time (D:H:M:S)");
     
@@ -406,14 +412,20 @@ const update = (data) => {
             .attr("transform", "translate(0," + Height + ")")
             .call(d3.axisBottom(x)
                 .ticks(d3.timeDay.every(1))
-                .tickFormat(timeFormat));
+                .tickFormat(timeFormat))
+            // Rotate axis labels
+            .selectAll("text") 
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
 
         // Add X axis label for the total received sms graph
         total_received_sms_graph.append("text")
             .attr("class", "redrawElementReceived")
             .attr("transform",
                     "translate(" + (Width / 2) + " ," +
-                    (Height + Margin.top + 10) + ")")
+                    (Height + Margin.top + 50) + ")")
                 .style("text-anchor", "middle")
                 .text("Date (H-D-M-Y)");
 
@@ -461,7 +473,7 @@ const update = (data) => {
         receivedLayer.selectAll('rect')
             .data(function(d) { return d })
             .enter()
-            .append('rect')
+        .append('rect')
             .attr('x', function (d) { return x(new Date(d.data.day)) })
             .attr('y', function (d) { return y_total_received_sms(d[1]) })
             .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
@@ -473,14 +485,20 @@ const update = (data) => {
             .attr("transform", "translate(0," + Height + ")")
             .call(d3.axisBottom(x)
                 .ticks(d3.timeDay.every(4))
-                .tickFormat(dayDateFormat));
+                .tickFormat(dayDateFormat))
+            // Rotate axis labels
+            .selectAll("text") 
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
     
         // Add X axis label for the total received sms graph
         total_received_sms_graph.append("text")
             .attr("class", "redrawElementReceived")
             .attr("transform",
                     "translate(" + (Width / 2) + " ," +
-                    (Height + Margin.top + 10) + ")")
+                    (Height + Margin.top + 50) + ")")
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
     
@@ -544,14 +562,20 @@ const update = (data) => {
             .attr("transform", "translate(0," + Height + ")")
             .call(d3.axisBottom(x)
                 .ticks(d3.timeDay.every(1))
-                .tickFormat(timeFormat));
+                .tickFormat(timeFormat))
+            // Rotate axis labels
+            .selectAll("text") 
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
     
         // Add X axis label for the total sent sms graph
         total_sent_sms_graph.append("text")
             .attr("class", "redrawElementSent")
             .attr("transform",
                     "translate(" + (Width / 2) + " ," +
-                    (Height + Margin.top + 10) + ")")
+                    (Height + Margin.top + 50) + ")")
                 .style("text-anchor", "middle")
                 .text("Date (H-D-M-Y)");
     
@@ -612,14 +636,20 @@ const update = (data) => {
             .attr("transform", "translate(0," + Height + ")")
             .call(d3.axisBottom(x)
                 .ticks(d3.timeDay.every(4))
-                .tickFormat(dayDateFormat));
+                .tickFormat(dayDateFormat))
+            // Rotate axis labels
+            .selectAll("text") 
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
     
          // Add X axis label for the total sent sms graph
          total_sent_sms_graph.append("text")
              .attr("class", "redrawElementSent")
              .attr("transform",
                      "translate(" + (Width / 2) + " ," +
-                     (Height + Margin.top + 10) + ")")
+                     (Height + Margin.top + 50) + ")")
                  .style("text-anchor", "middle")
                  .text("Date (Y-M-D)");
     
