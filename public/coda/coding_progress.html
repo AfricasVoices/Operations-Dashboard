@@ -7,10 +7,14 @@
     <link rel="shortcut icon" type="image/png" href="favicon.png" />
     <title>Data Pipeline Dashboard</title>
     <!-- Compiled and minified CSS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous">
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
+
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-firestore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.1/js/jquery.tablesorter.min.js"></script>
@@ -20,33 +24,52 @@
 </head>
 
 <body>
-    <nav class='nav'>
-        <div class="nav-wrapper container">
-            <img class='brand-logo' src="avfdashboardlogo.png">
-            <ul class="right">
-                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">MESSAGE CODING</a></li>
-                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/media_engagement/ahadi_media_engagement.html">AHADI_E&M</a></li>
-                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/media_engagement/icraf_media_engagement.html">ICRAF_E&M</a></li>
-                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/media_engagement/imaqal_media_engagement.html">IMAQAL_E&M</a></li>
-                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/media_engagement/ocha_media_engagement.html">OCHA_E&M</a></li>
-                <li><a class="nav-link" href="https://avf-dashboards.firebaseapp.com/media_engagement/undp_rco_media_engagement.html">UNDP_RCO_E&M</a></li>
-                <li><a class="nav-link" onClick="logout();">Logout</a></li>
-            </ul>
+    <!-- NAVBAR WITH DROPDOWN & RESPONSIVE TOGGLE-->
+    <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-1">
+        <div class="container">
+            <a class="navbar-brand" href="#"><img class="logo" src="avfdashboardlogo.png" alt="avf-logo"></a>
+
+            <!-- TOOGLE TRIGGER FOR SMALL DEVICES -->
+            <button class="navbar-light navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- RESPONSIVE TOGGLE -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li><a class="nav-link border-left border-top border-right active-link" href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">MESSAGE CODING</a></li>
+
+                    <li class="nav-item dropdown">
+                        <!-- DROPDOWN TRIGGER -->
+                        <a href="#" class="nav-link border-top border-right dropdown-toggle" data-toggle="dropdown">TRAFFIC</a> 
+                        <!-- DROPDOWN MENU -->
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/ahadi_media_engagement.html">AHADI_E&M</a> <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/icraf_media_engagement.html">ICRAF_E&M</a> <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/imaqal_media_engagement.html">IMAQAL_E&M</a> <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/ocha_media_engagement.html">OCHA_E&M</a> <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/undp_rco_media_engagement.html">UNDP_RCO_E&M</a> 
+                        </div>
+                    </li> 
+
+                    <li class="px-2 pt-1 border-top border-right"><button class="btn btn-logout btn-sm shadow">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
+                </ul>
+            </div>
         </div>
     </nav>
     <script src="coding_progress.js"></script>
-    <div class="container">
-        <table id='codingtable'>
+    <div class="container table-responsive-md">
+        <table id='codingtable' class='table'>
             <thead>
-                <tr class='table-heading'>
-                    <th>Dataset</th>
-                    <th>Messages</th>
-                    <th>Messages with a label</th>
-                    <th>Done</th>
-                    <th>Wrong Scheme messages</th>
-                    <th>WS %</th>
-                    <th>Not Coded messages</th>
-                    <th>NC %</th>
+                <tr class="table-heading">
+                    <th scope="col">Dataset</th>
+                    <th scope="col">Messages</th>
+                    <th scope="col">Messages with a label</th>
+                    <th scope="col">Done</th>
+                    <th scope="col">Wrong Scheme messages</th>
+                    <th scope="col">WS %</th>
+                    <th scope="col">Not Coded messages</th>
+                    <th scope="col">NC %</th>
                 </tr>
             </thead>
             <tbody id="coding_status_body"></tbody>
