@@ -9,11 +9,9 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
-    
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-firestore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.1/js/jquery.tablesorter.min.js"></script>
@@ -26,17 +24,14 @@
      <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-3">
         <div class="container">
             <a class="navbar-brand" href="#"><img class="logo" src="avfdashboardlogo.PNG" alt="avf-logo"></a>
-
             <!-- Toggle trigger for small devices -->
             <button class="navbar-light navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <!-- Responsive toggle -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li><a class="nav-link border-left border-top border-right" href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">MESSAGE CODING</a></li>
-
                     <li class="nav-item dropdown">
                         <!-- Dropdown trigger -->
                         <a href="#" class="nav-link border-top border-right active-link dropdown-toggle" data-toggle="dropdown">TRAFFIC</a> 
@@ -50,7 +45,6 @@
                             <a class="dropdown-item active-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/worldbank_plr_sms_traffic.html">WORLDBANK_PLR</a>
                         </div>
                     </li> 
-
                     <li class="px-2 pt-1 border-top border-right"><button class="btn btn-logout btn-sm shadow">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
                 </ul>
             </div>
@@ -67,7 +61,6 @@
                 <input class="btn btn-sm btn-logout" type="button" id="buttonUpdateViewOneDay" value="1 day"> 
             </div>
         </div>
-
         <!-- Received Messages Graph -->
         <section>
             <div class="d-md-flex justify-content-center my-2">
@@ -76,7 +69,6 @@
             </div>
             <div class="card shadow-sm total_received_sms_graph"></div>
         </section>
-
         <!-- Sent Messages Graph -->
         <section>
             <div class="d-md-flex justify-content-center my-2">
@@ -85,11 +77,8 @@
             </div>
             <div class="card shadow-sm total_sent_sms_graph"></div>
         </section>
-
         <!-- Failed Messages Graph -->
         <div class="card shadow-sm total_failed_sms_graph my-4"></div>
-
-
         <!-- Project details & metrics -->
         <div class="row">
             <div class="col">
@@ -123,7 +112,6 @@
             </div>
         </div>
     </div>
-
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
     <script src="worldbank_plr_sms_traffic.js"></script>

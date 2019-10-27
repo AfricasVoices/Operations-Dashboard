@@ -213,7 +213,6 @@ const update = (data) => {
     const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
     const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
 
-
     // Define line paths for total failed sms(s)
     const total_failed_line = d3.line()
         .curve(d3.curveLinear)
@@ -717,7 +716,6 @@ const update = (data) => {
             d3.select("#lastUpdated").classed("alert", true)
         }
     };
-
     setInterval(setLastUpdatedAlert, 1000)
 };
 
