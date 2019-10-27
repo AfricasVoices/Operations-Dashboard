@@ -34,6 +34,7 @@ a {
 }
 .table-heading {
     background-color: #8e3436;
+    height: 30px;
     color:#ffff;
 }
 table > tbody > tr > td{
@@ -41,21 +42,33 @@ table > tbody > tr > td{
 }
 .coding-notstarted{
     background-color:#fc9f9f;
+    font-size: 16;
+    line-height: 4px;
 }
 .coding-below25{
     background-color:#ffd1d1;
+    font-size: 16;
+    line-height: 4px;
 }
 .coding-above25{
     background-color:#87cefa;
+    font-size: 16;
+    line-height: 4px;
 }
 .coding-above50{
     background-color: #fff6d6;
+    font-size: 16;
+    line-height: 4px;
 }
 .coding-above75{
     background-color:#d6ffd9;
+    font-size: 16;
+    line-height: 3px;
 }
 .coding-complete{
     background-color: white;
+    font-size: 15;
+    line-height: 1px;
 }
 .login-body{
     margin: 0;
