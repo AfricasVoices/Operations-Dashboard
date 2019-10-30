@@ -66,18 +66,22 @@ const update = (data) => {
         d.total_sent = +d.total_sent
         d.total_pending = +d.total_pending
         d.total_errored = +d.total_errored
+        d.NC_received = +d.operators["NC"]["received"]
         d.golis_received= +d.operators["golis"]["received"]
         d.hormud_received= +d.operators["hormud"]["received"]
         d.nationlink_received= +d.operators["nationlink"]["received"]
         d.somnet_received= +d.operators["somnet"]["received"]
         d.somtel_received= +d.operators["somtel"]["received"]
         d.telesom_received= +d.operators["telesom"]["received"]
+        d.telegram_received= +d.operators["telegram"]["received"]
         d.golis_sent= +d.operators["golis"]["sent"]
         d.hormud_sent= +d.operators["hormud"]["sent"]
         d.nationlink_sent= +d.operators["nationlink"]["sent"]
         d.somnet_sent= +d.operators["somnet"]["sent"]
         d.somtel_sent= +d.operators["somtel"]["sent"]
         d.telesom_sent= +d.operators["telesom"]["sent"]
+        d.telegram_sent= +d.operators["telegram"]["sent"]
+        d.NC_sent = +d.operators["NC"]["sent"]
         Object.keys(d.operators).sort().forEach(function(key) {
             if (!(key in operators)) {
                 operators.add(key)
@@ -102,11 +106,13 @@ const update = (data) => {
     var dailyReceivedTotal = d3.nest()
         .key(function(d) { return d.day; })
         .rollup(function(v) { return {
+            NC_received: d3.sum(v, function(d) {return d.NC_received}),
             hormud_received: d3.sum(v, function(d) {return d.hormud_received}),
             nationlink_received: d3.sum(v, function(d) {return d.nationlink_received}),
             somnet_received: d3.sum(v, function(d) {return d.somnet_received}),
             somtel_received: d3.sum(v, function(d) {return d.somtel_received}),
             telesom_received: d3.sum(v, function(d) {return d.telesom_received}),
+            telegram_received: d3.sum(v, function(d) {return d.telegram_received}),
             golis_received: d3.sum(v, function(d) {return d.golis_received}),
             total_received: d3.sum(v, function(d) {return d.total_received}),
         };
@@ -128,10 +134,12 @@ const update = (data) => {
     var dailySentTotal = d3.nest()
         .key(function(d) { return d.day; })
         .rollup(function(v) { return {
+            NC_sent: d3.sum(v, function(d) {return d.NC_sent}),
             hormud_sent: d3.sum(v, function(d) {return d.hormud_sent}),
             nationlink_sent: d3.sum(v, function(d) {return d.nationlink_sent}),
             somnet_sent: d3.sum(v, function(d) {return d.somnet_sent}),
             somtel_sent: d3.sum(v, function(d) {return d.somtel_sent}),
+            telegram_sent: d3.sum(v, function(d) {return d.telegram_sent}),
             telesom_sent: d3.sum(v, function(d) {return d.telesom_sent}),
             golis_sent: d3.sum(v, function(d) {return d.golis_sent}),
             total_sent: d3.sum(v, function(d) {return d.total_sent}),
@@ -196,7 +204,7 @@ const update = (data) => {
         .attr("transform",
             "translate(" + Margin.left + "," + Margin.top + ")");
 
-    // Append total sent sms graph to svg
+    // Append total failed sms graph to svg
     var total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
         .attr("width", Width + Margin.left + Margin.right)
         .attr("height", Height + Margin.top + Margin.bottom)
@@ -476,7 +484,7 @@ const update = (data) => {
             .attr('x', function (d) { return x(new Date(d.data.day)) })
             .attr('y', function (d) { return y_total_received_sms(d[1]) })
             .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
-            .attr('width', Width / Object.keys(dailyReceivedTotal).length);
+            .attr('width', Width / Object.keys(dailyReceivedTotal).length); 
     
          //Add the X Axis for the total received sms graph
         total_received_sms_graph.append("g")
