@@ -45,9 +45,17 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 const TIMEFRAME_WEEK = 7;
 const TIMEFRAME_MONTH = 30;
+const EXTEND_X_AXIS_BY_HOURS = 32
 var chartTimeUnit = "1day";
 var isYLimitReceivedManuallySet = false;
 var isYLimitSentManuallySet = false;
+
+// Date objects inherit from Date.prototype
+// Add the addHours property to the date object
+Date.prototype.addHours= function(h){
+    this.setHours(this.getHours()+h);
+    return this;
+}
 
 // Function to update data
 const update = (data) => {
@@ -449,7 +457,7 @@ const update = (data) => {
         }
 
         // set scale domains
-        x.domain(d3.extent(dataFilteredMonth, d => new Date(d.day)));
+        x.domain(d3.extent(dataFilteredMonth, d => new Date(d.day).addHours(EXTEND_X_AXIS_BY_HOURS)));
         y_total_received_sms.domain([0, yLimitReceived]);
     
         d3.selectAll(".redrawElementReceived").remove();
@@ -599,7 +607,7 @@ const update = (data) => {
         }
 
         // set scale domains
-        x.domain(d3.extent(data, d => new Date(d.day)));
+        x.domain(d3.extent(data, d => new Date(d.day).addHours(EXTEND_X_AXIS_BY_HOURS)));
         y_total_sent_sms.domain([0, yLimitSent]);
     
         d3.selectAll(".redrawElementSent").remove();
