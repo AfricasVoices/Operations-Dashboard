@@ -1,5 +1,5 @@
 //Perform Authentication then update data 
-firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(user => {
     if (user) {
         console.log("Attempting to bind: " + user.email)
         const mediadb = firebase.firestore();
@@ -59,7 +59,7 @@ const update = (data) => {
     var dayDateFormat = d3.timeFormat("%Y-%m-%d")	
 
     // format the data  
-    data.forEach(function (d) {
+    data.forEach(d => {
         d.datetime = new Date(d.datetime);
         d.day = dayDateFormat(new Date(d.datetime))
         d.total_received = +d.total_received
@@ -78,7 +78,7 @@ const update = (data) => {
         d.somnet_sent= +d.operators["somnet"]["sent"]
         d.somtel_sent= +d.operators["somtel"]["sent"]
         d.telesom_sent= +d.operators["telesom"]["sent"]
-        Object.keys(d.operators).sort().forEach(function(key) {
+        Object.keys(d.operators).sort().forEach(key => {
             if (!(key in operators)) {
                 operators.add(key)
             };
@@ -100,15 +100,15 @@ const update = (data) => {
 
     // Group received data by day
     var dailyReceivedTotal = d3.nest()
-        .key(function(d) { return d.day; })
-        .rollup(function(v) { return {
-            hormud_received: d3.sum(v, function(d) {return d.hormud_received}),
-            nationlink_received: d3.sum(v, function(d) {return d.nationlink_received}),
-            somnet_received: d3.sum(v, function(d) {return d.somnet_received}),
-            somtel_received: d3.sum(v, function(d) {return d.somtel_received}),
-            telesom_received: d3.sum(v, function(d) {return d.telesom_received}),
-            golis_received: d3.sum(v, function(d) {return d.golis_received}),
-            total_received: d3.sum(v, function(d) {return d.total_received}),
+        .key(d => d.day)
+        .rollup(v => { return {
+            hormud_received: d3.sum(v, d => d.hormud_received),
+            nationlink_received: d3.sum(v, d => d.nationlink_received),
+            somnet_received: d3.sum(v, d => d.somnet_received),
+            somtel_received: d3.sum(v, d => d.somtel_received),
+            telesom_received: d3.sum(v, d => d.telesom_received),
+            golis_received: d3.sum(v, d => d.golis_received),
+            total_received: d3.sum(v, d => d.total_received),
         };
          })
         .entries(dataFilteredMonth);
@@ -126,15 +126,15 @@ const update = (data) => {
 
     // Group sent data by day
     var dailySentTotal = d3.nest()
-        .key(function(d) { return d.day; })
-        .rollup(function(v) { return {
-            hormud_sent: d3.sum(v, function(d) {return d.hormud_sent}),
-            nationlink_sent: d3.sum(v, function(d) {return d.nationlink_sent}),
-            somnet_sent: d3.sum(v, function(d) {return d.somnet_sent}),
-            somtel_sent: d3.sum(v, function(d) {return d.somtel_sent}),
-            telesom_sent: d3.sum(v, function(d) {return d.telesom_sent}),
-            golis_sent: d3.sum(v, function(d) {return d.golis_sent}),
-            total_sent: d3.sum(v, function(d) {return d.total_sent}),
+        .key(d => d.day)
+        .rollup(v => { return {
+            hormud_sent: d3.sum(v, d => d.hormud_sent),
+            nationlink_sent: d3.sum(v, d => d.nationlink_sent),
+            somnet_sent: d3.sum(v, d => d.somnet_sent),
+            somtel_sent: d3.sum(v, d => d.somtel_sent),
+            telesom_sent: d3.sum(v, d => d.telesom_sent),
+            golis_sent: d3.sum(v, d => d.golis_sent),
+            total_sent: d3.sum(v, d => d.total_sent),
         };
          })
         .entries(dataFilteredMonth);
@@ -218,8 +218,8 @@ const update = (data) => {
     // Define line paths for total failed sms(s)
     const total_failed_line = d3.line()
         .curve(d3.curveLinear)
-        .x(function (d) { return x(new Date(d.datetime)) })
-        .y(function (d) { return y_total_failed_sms(d.total_errored); })
+        .x(d => x(new Date(d.datetime)))
+        .y(d => y_total_failed_sms(d.total_errored))
 
     // Create line path element for failed line graph
     const total_failed_path = total_failed_sms_graph.append('path');
@@ -231,12 +231,12 @@ const update = (data) => {
     let colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
 
     // set scale domain for failed graph
-    y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
+    y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
 
-    var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
-    var yLimitReceivedFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
-    var yLimitSent = d3.max(dailySentTotal, function (d) { return d.total_sent; });
-    var yLimitSentFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
+    var yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received);
+    var yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received);
+    var yLimitSent = d3.max(dailySentTotal, d => d.total_sent);
+    var yLimitSentFiltered = d3.max(dataFilteredWeek, d => d.total_sent);
 
     // Draw graphs according to selected time unit
     if (chartTimeUnit == "1day") {
@@ -357,10 +357,10 @@ const update = (data) => {
         .call(d3.axisLeft(y_total_received_sms));
         
         receivedLayer.selectAll('rect')
-            .data(function(d) { return d })
-            .attr('x', function (d) { return x(d.data.datetime) })
-            .attr('y', function (d) { return y_total_received_sms(d[1]) })
-            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .data(d => d)
+            .attr('x', d => x(d.data.datetime))
+            .attr('y', d => y_total_received_sms(d[1]))
+            .attr('height', d => y_total_received_sms(d[0]) - y_total_received_sms(d[1]))
             .attr('width', Width / Object.keys(data).length)
     
     }
@@ -376,10 +376,10 @@ const update = (data) => {
         .call(d3.axisLeft(y_total_sent_sms));
         
         sentLayer.selectAll('rect')
-            .data(function(d) { return d })
-            .attr('x', function (d) { return x(d.data.datetime) })
-            .attr('y', function (d) { return y_total_sent_sms(d[1]) })
-            .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+            .data(d => d)
+            .attr('x', d => x(d.data.datetime))
+            .attr('y', d => y_total_sent_sms(d[1]))
+            .attr('height', d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
             .attr('width', Width / Object.keys(data).length)
     
     }
@@ -411,7 +411,7 @@ const update = (data) => {
     function draw10MinReceivedGraph(yLimitReceived) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (isYLimitReceivedManuallySet == false) {
-            yLimitReceived = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
+            yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
         }
 
         let stackReceived = d3.stack()
@@ -437,16 +437,16 @@ const update = (data) => {
             .enter()    
         .append('g')
             .attr('id', 'receivedStack10min')    
-            .attr('class', function(d, i) { return receivedKeys[i] })
-            .style('fill', function (d, i) { return color(i) })
+            .attr('class', (d, i) => receivedKeys[i])
+            .style('fill', (d, i) => color(i))
         
         receivedLayer10min.selectAll('rect')
-            .data(function(dataFilteredWeek) { return dataFilteredWeek })
+            .data(dataFilteredWeek => dataFilteredWeek)
             .enter()
         .append('rect')
-            .attr('x', function (d) { return x(d.data.datetime) })
-            .attr('y', function (d) { return y_total_received_sms(d[1]) })
-            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('x', d => x(d.data.datetime))
+            .attr('y', d => y_total_received_sms(d[1]))
+            .attr('height', d => y_total_received_sms(d[0]) - y_total_received_sms(d[1]))
             .attr('width', Width / Object.keys(dataFilteredWeek).length)
 
         //Add the X Axis for the total received sms graph
@@ -485,7 +485,7 @@ const update = (data) => {
 
     function drawOneDayReceivedGraph(yLimitReceived) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
-        yLimitReceivedTotal = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
+        yLimitReceivedTotal = d3.max(dailyReceivedTotal, d => d.total_received);
 
         if (isYLimitReceivedManuallySet == false) {
             yLimitReceived = yLimitReceivedTotal
@@ -510,16 +510,16 @@ const update = (data) => {
             .enter()    
         .append('g')
             .attr('id', 'receivedStack') 
-            .attr('class', function(d, i) { return receivedKeys[i] })
-            .style('fill', function (d, i) { return color(i) })
+            .attr('class', (d, i) => receivedKeys[i])
+            .style('fill',  (d, i) => color(i))
     
         receivedLayer.selectAll('rect')
-            .data(function(d) { return d })
+            .data(d => d)
             .enter()
         .append('rect')
-            .attr('x', function (d) { return x(new Date(d.data.day)) })
-            .attr('y', function (d) { return y_total_received_sms(d[1]) })
-            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('x', d => x(new Date(d.data.day)))
+            .attr('y', d => y_total_received_sms(d[1]))
+            .attr('height', d => y_total_received_sms(d[0]) - y_total_received_sms(d[1]))
             .attr('width', Width / Object.keys(dailyReceivedTotal).length);
     
          //Add the X Axis for the total received sms graph
@@ -559,7 +559,7 @@ const update = (data) => {
     function draw10MinSentGraph(yLimitSent) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (isYLimitSentManuallySet == false) {
-            yLimitSent = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
+            yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
         }
     
         let stackSent = d3.stack()
@@ -587,16 +587,16 @@ const update = (data) => {
             .enter()    
         .append('g')
             .attr('id', 'sentStack10min')    
-            .attr('class', function(d, i) { return sentKeys[i] })
-            .style('fill', function (d, i) { return color(i) })
+            .attr('class', (d, i) => sentKeys[i])
+            .style('fill', (d, i) => color(i))
             
         sentLayer10min.selectAll('rect')
-            .data(function(dataFilteredWeek) { return dataFilteredWeek })
+            .data(dataFilteredWeek => dataFilteredWeek)
             .enter()
         .append('rect')
-            .attr('x', function (d) { return x(d.data.datetime) })
-            .attr('y', function (d) { return y_total_sent_sms(d[1]) })
-            .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+            .attr('x', d => x(d.data.datetime))
+            .attr('y', d => y_total_sent_sms(d[1]))
+            .attr('height', d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
             .attr('width', Width / Object.keys(dataFilteredWeek).length)
         
         //Add the X Axis for the total sent sms graph
@@ -635,7 +635,7 @@ const update = (data) => {
     
     function drawOneDaySentGraph(yLimitSent) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
-        yLimitSentTotal = d3.max(dailySentTotal, function (d) { return d.total_sent; });
+        yLimitSentTotal = d3.max(dailySentTotal, d => d.total_sent);
 
         if (isYLimitSentManuallySet != true) {
             yLimitSent = yLimitSentTotal
@@ -661,16 +661,16 @@ const update = (data) => {
             .enter()    
         .append('g')
             .attr('id', 'sentStack1day')
-            .attr('class', function(d, i) { return sentKeys[i] })
-            .style('fill', function (d, i) { return color(i) })
+            .attr('class', (d, i) => sentKeys[i])
+            .style('fill', (d, i) => color(i))
     
         sentLayer.selectAll('rect')
-            .data(function(d) { return d })
+            .data(d => d)
             .enter()
             .append('rect')
-            .attr('x', function (d) { return x(new Date(d.data.day)) })
-            .attr('y', function (d) { return y_total_sent_sms(d[1]) })
-            .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+            .attr('x', d => x(new Date(d.data.day)))
+            .attr('y', d => y_total_sent_sms(d[1]))
+            .attr('height', d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
             .attr('width', Width / Object.keys(dailySentTotal).length);
       
          //Add the X Axis for the total sent sms graph
