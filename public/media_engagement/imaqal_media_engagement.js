@@ -6,7 +6,13 @@ firebase.auth().onAuthStateChanged(function (user) {
         const settings = { timestampsInSnapshots: true };
         mediadb.settings(settings);
         var data = [];
-        mediadb.collection('/metrics/rapid_pro/IMAQAL/').onSnapshot(res => {
+        var offset = new Date()
+        timerange = 30
+        offset.setDate(offset.getDate() - timerange)
+        var iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
+        offsetString = iso(offset)
+
+        mediadb.collection('/metrics/rapid_pro/IMAQAL/').where("datetime", ">", offsetString).onSnapshot(res => {
             console.log(res)
             // Update data every time it changes in firestore
             res.docChanges().forEach(change => {
@@ -29,6 +35,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 }
             });
             update(data);
+            console.log(data)
         });
         console.log('Bind Successful');
     } else {
@@ -36,16 +43,25 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
+const TIMEFRAME_WEEK = 7;
+const TIMEFRAME_MONTH = 30;
+var chartTimeUnit = "1day";
+var isYLimitReceivedManuallySet = false;
+var isYLimitSentManuallySet = false;
+
 // Function to update data
 const update = (data) => {
-
+    // Clear previous graphs before redrawing
     d3.selectAll("svg").remove();
 
     let operators = new Set()
 
+    var dayDateFormat = d3.timeFormat("%Y-%m-%d")	
+
     // format the data  
     data.forEach(function (d) {
         d.datetime = new Date(d.datetime);
+        d.day = dayDateFormat(new Date(d.datetime))
         d.total_received = +d.total_received
         d.total_sent = +d.total_sent
         d.total_pending = +d.total_pending
@@ -69,21 +85,79 @@ const update = (data) => {
         });
     });
 
-    operators = Array.from(operators)
-
+    // Sort data by date
     data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
-    var offset = new Date()
-    
-    offset.setDate(offset.getDate() - 7)
+    var offsetWeek = new Date()
+    offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK)
 
-    data = data.filter(a => a.datetime > offset);
+    var offsetMonth = new Date()
+    offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH)
 
+    // Set default y-axis limits
+    dataFilteredWeek = data.filter(a => a.datetime > offsetWeek);
+    dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
+
+    // Group received data by day
+    var dailyReceivedTotal = d3.nest()
+        .key(function(d) { return d.day; })
+        .rollup(function(v) { return {
+            hormud_received: d3.sum(v, function(d) {return d.hormud_received}),
+            nationlink_received: d3.sum(v, function(d) {return d.nationlink_received}),
+            somnet_received: d3.sum(v, function(d) {return d.somnet_received}),
+            somtel_received: d3.sum(v, function(d) {return d.somtel_received}),
+            telesom_received: d3.sum(v, function(d) {return d.telesom_received}),
+            golis_received: d3.sum(v, function(d) {return d.golis_received}),
+            total_received: d3.sum(v, function(d) {return d.total_received}),
+        };
+         })
+        .entries(dataFilteredMonth);
+
+    // Flatten nested data for stacking
+    for (var entry in dailyReceivedTotal) {
+        var valueList = dailyReceivedTotal[entry].value
+        for (var key in valueList) {
+            dailyReceivedTotal[entry][key] = valueList[key]
+        }
+        dailyReceivedTotal[entry]["day"] = dailyReceivedTotal[entry].key
+        delete dailyReceivedTotal[entry]["value"]
+        delete dailyReceivedTotal[entry]["key"]
+    }
+
+    // Group sent data by day
+    var dailySentTotal = d3.nest()
+        .key(function(d) { return d.day; })
+        .rollup(function(v) { return {
+            hormud_sent: d3.sum(v, function(d) {return d.hormud_sent}),
+            nationlink_sent: d3.sum(v, function(d) {return d.nationlink_sent}),
+            somnet_sent: d3.sum(v, function(d) {return d.somnet_sent}),
+            somtel_sent: d3.sum(v, function(d) {return d.somtel_sent}),
+            telesom_sent: d3.sum(v, function(d) {return d.telesom_sent}),
+            golis_sent: d3.sum(v, function(d) {return d.golis_sent}),
+            total_sent: d3.sum(v, function(d) {return d.total_sent}),
+        };
+         })
+        .entries(dataFilteredMonth);
+
+    // Flatten nested data for stacking
+    for (var entry in dailySentTotal) {
+        var valueList = dailySentTotal[entry].value
+        for (var key in valueList) {
+            dailySentTotal[entry][key] = valueList[key]
+        }
+        dailySentTotal[entry]["day"] = dailySentTotal[entry].key
+        delete dailySentTotal[entry]["value"]
+        delete dailySentTotal[entry]["key"]
+    }
+
+    // Create keys to stack by based on operator and direction
     receivedKeys = []
     sentKeys = []
 
     var receivedStr = ""
     var sentStr = ""
+
+    operators = Array.from(operators)
 
     for (var i=0; i<operators.length; i++) {
         receivedStr = operators[i] + "_received";
@@ -92,17 +166,18 @@ const update = (data) => {
         sentKeys.push(sentStr)
     }
 
-    let stackReceived = d3.stack()
+    // Stack data by keys created above
+    let stackReceivedDaily = d3.stack()
             .keys(receivedKeys)
-    let receivedDataStacked = stackReceived(data)
+    let receivedDataStackedDaily = stackReceivedDaily(dailyReceivedTotal)
 
-    let stackSent = d3.stack()
-            .keys(sentKeys)
-    let sentdDataStacked = stackSent(data)
+    let stackSentDaily = d3.stack()
+        .keys(sentKeys)
+    let sentDataStackedDaily = stackSentDaily(dailySentTotal)
 
-    //Create margins for the two graphs
-    const Margin = { top: 40, right: 100, bottom: 50, left: 70 };
-    const Width = 900 - Margin.right - Margin.left;
+    //Create margins for the three graphs
+    const Margin = { top: 40, right: 100, bottom: 90, left: 70 };
+    const Width = 960 - Margin.right - Margin.left;
     const Height = 500 - Margin.top - Margin.bottom;
 
 
@@ -139,8 +214,6 @@ const update = (data) => {
 
     // Format TimeStamp  
     var timeFormat = d3.timeFormat("%H %d %m %Y");
-    // Create tooltip variables
-    const tooltip = d3.select('#tooltip');
 
     // Define line paths for total failed sms(s)
     const total_failed_line = d3.line()
@@ -148,30 +221,32 @@ const update = (data) => {
         .x(function (d) { return x(new Date(d.datetime)) })
         .y(function (d) { return y_total_failed_sms(d.total_errored); })
 
-
     // Create line path element for failed line graph
     const total_failed_path = total_failed_sms_graph.append('path');
 
+    // custom color scheme
+    color_scheme = ["#e6194B", "#f58231", "#3cb44b", "#CCCC00", "#4363d8", "#800000", "#f032e6", "#911eb4"]
+    let color = d3.scaleOrdinal(color_scheme);
+    let colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys);
+    let colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
 
-    // set scale domains
-    x.domain(d3.extent(data, d => new Date(d.datetime)));
-    y_total_received_sms.domain([0, d3.max(data, function (d) { return d.total_received; })]);
-    y_total_sent_sms.domain([0, d3.max(data, function (d) { return d.total_sent; })]);
+    // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
 
-    let color = d3.scaleOrdinal(d3.schemeCategory10);
+    var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
+    var yLimitReceivedFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
+    var yLimitSent = d3.max(dailySentTotal, function (d) { return d.total_sent; });
+    var yLimitSentFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
 
-    let colorReceived = d3.scaleOrdinal(d3.schemeCategory10).domain(receivedKeys)
-    let colorSent = d3.scaleOrdinal(d3.schemeCategory10).domain(sentKeys)
+    // Draw graphs according to selected time unit
+    if (chartTimeUnit == "1day") {
+        updateViewOneDay(yLimitReceived, yLimitSent)
+    }
 
+    else if (chartTimeUnit == "10min") {
+        updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered)
+    }
 
-    // Received bar chart
-
-    // Add the Y Axis for the total received sms graph
-    total_received_sms_graph.append("g")
-        .attr("class", "axisSteelBlue")
-        .call(d3.axisLeft(y_total_received_sms));
-    
     // Y axis Label for the total received sms graph
     total_received_sms_graph.append("text")
         .attr("transform", "rotate(-90)")
@@ -181,82 +256,6 @@ const update = (data) => {
         .style("text-anchor", "middle")
         .text("No. of Incoming Message (s)");
 
-    let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
-        .data(receivedDataStacked)
-        .enter()    
-      .append('g')
-        .attr('id', 'receivedStack')    
-        .attr('class', function(d, i) { return receivedKeys[i] })
-        .style('fill', function (d, i) { return color(i) })
-    
-    receivedLayer.selectAll('rect')
-        .data(function(d) { return d })
-        .enter()
-      .append('rect')
-        .attr('x', function (d) { return x(d.data.datetime) })
-        .attr('y', function (d) { return y_total_received_sms(d[1]) })
-        .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
-        .attr('width', Width / Object.keys(data).length)
-    
-    //Add the X Axis for the total received sms graph
-        total_received_sms_graph.append("g")
-        .attr("transform", "translate(0," + Height + ")")
-        .call(d3.axisBottom(x)
-            .ticks(5)
-            .tickFormat(timeFormat));
-    
-    //Add X axis label for the total received sms graph
-    total_received_sms_graph.append("text")
-        .attr("transform",
-            "translate(" + (Width / 2) + " ," +
-            (Height + Margin.top + 10) + ")")
-        .style("text-anchor", "middle")
-        .text("Time (D:H:M:S)");
-
-    
-    // Sent bar chart
-    // Add the Y Axis for the total sent sms graph
-    total_sent_sms_graph.append("g")
-        .attr("class", "axisSteelBlue")
-        .call(d3.axisLeft(y_total_sent_sms));
-
-    let sentLayer = total_sent_sms_graph.selectAll('#sentStack')
-        .data(sentdDataStacked)
-        .enter()    
-      .append('g')
-        .attr('id', 'sentStack')    
-        .attr('class', function(d, i) { return sentKeys[i] })
-        .style('fill', function (d, i) { return color(i) })
-    
-    sentLayer.selectAll('rect')
-        .data(function(d) { return d })
-        .enter()
-      .append('rect')
-        .attr('x', function (d) { return x(d.data.datetime) })
-        .attr('y', function (d) { return y_total_sent_sms(d[1]) })
-        .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
-        .attr('width', Width / Object.keys(data).length)
-    
-    //Add the X Axis for the total sent sms graph
-    total_sent_sms_graph.append("g")
-        .attr("transform", "translate(0," + Height + ")")
-        .call(d3.axisBottom(x)
-            .ticks(5)
-            .tickFormat(timeFormat));
-    
-    //Add X axis label for the total sent sms graph
-    total_sent_sms_graph.append("text")
-        .attr("transform",
-            "translate(" + (Width / 2) + " ," +
-            (Height + Margin.top + 10) + ")")
-        .style("text-anchor", "middle")
-        .text("Time (D:H:M:S)");
-    
-    // Add the Y Axis for the total sent sms graph
-    total_sent_sms_graph.append("g")
-        .attr("class", "axisSteelBlue")
-        .call(d3.axisLeft(y_total_sent_sms));
-    
     // Y axis Label for the total sent sms graph
     total_sent_sms_graph.append("text")
         .attr("transform", "rotate(-90)")
@@ -277,13 +276,19 @@ const update = (data) => {
         .attr("transform", "translate(0," + Height + ")")
         .call(d3.axisBottom(x)
             .ticks(5)
-            .tickFormat(timeFormat));
+            .tickFormat(timeFormat))
+        // Rotate axis labels
+        .selectAll("text") 
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
     
     //Add X axis label for the total failed sms graph
     total_failed_sms_graph.append("text")
         .attr("transform",
             "translate(" + (Width / 2) + " ," +
-            (Height + Margin.top + 10) + ")")
+            (Height + Margin.top + 50) + ")")
         .style("text-anchor", "middle")
         .text("Time (D:H:M:S)");
     
@@ -300,24 +305,6 @@ const update = (data) => {
         .attr("dy", "1em")
         .style("text-anchor", "middle")
         .text("No. of Failed Message (s)");
-
-     // Total Sms(s) graph title
-     total_received_sms_graph.append("text")
-        .attr("x", (Width / 2))
-        .attr("y", 0 - (Margin.top / 2))
-        .attr("text-anchor", "middle")
-        .style("font-size", "20px")
-        .style("text-decoration", "bold")
-        .text("Total Incoming Message(s) / hr");
-    
-    // Total Outgoing Sms(s) graph title
-     total_sent_sms_graph.append("text")
-        .attr("x", (Width / 2))
-        .attr("y", 0 - (Margin.top / 2))
-        .attr("text-anchor", "middle")
-        .style("font-size", "20px")
-        .style("text-decoration", "bold")
-        .text("Total Outgoing Messages(s) / hr");
     
     // Total Failed Sms(s) graph title
      total_failed_sms_graph.append("text")
@@ -331,10 +318,10 @@ const update = (data) => {
     // Total received graph legend
     total_received_sms_graph.append("g")
         .attr("class", "receivedLegend")
-        .attr("transform", `translate(${Width - Margin.right + 80},${Margin.top - 30})`)
+        .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`)
 
     var receivedLegend = d3.legendColor()
-        .shapeWidth(30)
+        .shapeWidth(12)
         .orient('vertical')
         .scale(colorReceived)
         .labels(operators);
@@ -345,10 +332,10 @@ const update = (data) => {
     // Total sent graph legend
     total_sent_sms_graph.append("g")
     .attr("class", "sentLegend")
-    .attr("transform", `translate(${Width - Margin.right + 80},${Margin.top - 30})`)
+    .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`)
 
     var sentLegend = d3.legendColor()
-        .shapeWidth(30)
+        .shapeWidth(12)
         .orient('vertical')
         .scale(colorSent)
         .labels(operators);
@@ -358,11 +345,6 @@ const update = (data) => {
 
     // Label Lines for the total failed sms graph
     total_failed_sms_graph.append("text")
-    .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top})`)
-    .attr("dy", ".35em")
-    .attr("text-anchor", "start")
-    .style("fill", "blue")
-    .text("Total Failed");
 
     function updateReceivedChartLimit() {
         // Get the value of the button
@@ -405,8 +387,380 @@ const update = (data) => {
     // Add an event listener to the button created in the html part
     d3.select("#buttonYLimitReceived").on("input", updateReceivedChartLimit )
     d3.select("#buttonYLimitSent").on("input", updateSentChartLimit )
+        .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top})`)
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "blue")
+        .text("Total Failed");
 
+    // Set y-axis control button value and draw graphs
+    function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered) {
+        d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
+        d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
+        draw10MinReceivedGraph(yLimitReceivedFiltered)
+        draw10MinSentGraph(yLimitSentFiltered)       
+    }
+
+    function updateViewOneDay(yLimitReceived, yLimitSent) {
+        d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
+        d3.select("#buttonYLimitSent").property("value", yLimitSent);
+        drawOneDayReceivedGraph(yLimitReceived)
+        drawOneDaySentGraph(yLimitSent)
+    }
+
+    function draw10MinReceivedGraph(yLimitReceived) {
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        if (isYLimitReceivedManuallySet == false) {
+            yLimitReceived = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
+        }
+
+        let stackReceived = d3.stack()
+            .keys(receivedKeys)
+        let receivedDataStacked = stackReceived(dataFilteredWeek)
+
+        // set scale domains
+        x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+        y_total_received_sms.domain([0, yLimitReceived]);
+
+        d3.selectAll(".redrawElementReceived").remove();
+        d3.selectAll("#receivedStack").remove();
+        d3.selectAll("#receivedStack10min").remove();
+
+        // Add the Y Axis for the total received sms graph
+        total_received_sms_graph.append("g")
+            .attr("id", "axisSteelBlue")
+            .attr("class", "redrawElementReceived")
+            .call(d3.axisLeft(y_total_received_sms));
+
+        let receivedLayer10min = total_received_sms_graph.selectAll('#receivedStack10min')
+            .data(receivedDataStacked)
+            .enter()    
+        .append('g')
+            .attr('id', 'receivedStack10min')    
+            .attr('class', function(d, i) { return receivedKeys[i] })
+            .style('fill', function (d, i) { return color(i) })
+        
+        receivedLayer10min.selectAll('rect')
+            .data(function(dataFilteredWeek) { return dataFilteredWeek })
+            .enter()
+        .append('rect')
+            .attr('x', function (d) { return x(d.data.datetime) })
+            .attr('y', function (d) { return y_total_received_sms(d[1]) })
+            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('width', Width / Object.keys(dataFilteredWeek).length)
+
+        //Add the X Axis for the total received sms graph
+        total_received_sms_graph.append("g")
+            .attr("class", "redrawElementReceived")
+            .attr("transform", "translate(0," + Height + ")")
+            .call(d3.axisBottom(x)
+                .ticks(d3.timeDay.every(1))
+                .tickFormat(timeFormat))
+            // Rotate axis labels
+            .selectAll("text") 
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
+        // Add X axis label for the total received sms graph
+        total_received_sms_graph.append("text")
+            .attr("class", "redrawElementReceived")
+            .attr("transform",
+                    "translate(" + (Width / 2) + " ," +
+                    (Height + Margin.top + 50) + ")")
+                .style("text-anchor", "middle")
+                .text("Date (H-D-M-Y)");
+
+        // Total Sms(s) graph title
+        total_received_sms_graph.append("text")
+            .attr("class", "redrawElementReceived")
+            .attr("x", (Width / 2))
+            .attr("y", 0 - (Margin.top / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("text-decoration", "bold")
+            .text("Total Incoming Message(s) / 10 minutes");
+        }
+
+    function drawOneDayReceivedGraph(yLimitReceived) {
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        yLimitReceivedTotal = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
+
+        if (isYLimitReceivedManuallySet == false) {
+            yLimitReceived = yLimitReceivedTotal
+        }
+
+        // set scale domains
+        x.domain(d3.extent(dataFilteredMonth, d => new Date(d.day)));
+        y_total_received_sms.domain([0, yLimitReceived]);
+    
+        d3.selectAll(".redrawElementReceived").remove();
+        d3.selectAll("#receivedStack10min").remove();
+        d3.selectAll("#receivedStack").remove();
+    
+         // Add the Y Axis for the total received sms graph
+         total_received_sms_graph.append("g")
+            .attr("class", "axisSteelBlue")
+            .attr("class", "redrawElementReceived")
+            .call(d3.axisLeft(y_total_received_sms));
+    
+       let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
+            .data(receivedDataStackedDaily)
+            .enter()    
+        .append('g')
+            .attr('id', 'receivedStack') 
+            .attr('class', function(d, i) { return receivedKeys[i] })
+            .style('fill', function (d, i) { return color(i) })
+    
+        receivedLayer.selectAll('rect')
+            .data(function(d) { return d })
+            .enter()
+        .append('rect')
+            .attr('x', function (d) { return x(new Date(d.data.day)) })
+            .attr('y', function (d) { return y_total_received_sms(d[1]) })
+            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('width', Width / Object.keys(dailyReceivedTotal).length);
+    
+         //Add the X Axis for the total received sms graph
+        total_received_sms_graph.append("g")
+            .attr("class", "redrawElementReceived")
+            .attr("transform", "translate(0," + Height + ")")
+            .call(d3.axisBottom(x)
+                .ticks(d3.timeDay.every(4))
+                .tickFormat(dayDateFormat))
+            // Rotate axis labels
+            .selectAll("text") 
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+    
+        // Add X axis label for the total received sms graph
+        total_received_sms_graph.append("text")
+            .attr("class", "redrawElementReceived")
+            .attr("transform",
+                    "translate(" + (Width / 2) + " ," +
+                    (Height + Margin.top + 50) + ")")
+                .style("text-anchor", "middle")
+                .text("Date (Y-M-D)");
+    
+        // Total Sms(s) graph title
+        total_received_sms_graph.append("text")
+            .attr("class", "redrawElementReceived")
+            .attr("x", (Width / 2))
+            .attr("y", 0 - (Margin.top / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("text-decoration", "bold")
+            .text("Total Incoming Message(s) / day");
+    }
+    
+    function draw10MinSentGraph(yLimitSent) {
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        if (isYLimitSentManuallySet == false) {
+            yLimitSent = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
+        }
+    
+        let stackSent = d3.stack()
+            .keys(sentKeys)
+        let sentDataStacked = stackSent(dataFilteredWeek)
+    
+        // set scale domains
+        x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+        y_total_sent_sms.domain([0, yLimitSent]);
+    
+        // Remove changing chart elements before redrawing
+        d3.selectAll(".redrawElementSent").remove();
+        d3.selectAll("#sentStack1day").remove();
+        d3.selectAll("#sentStack10min").remove();
+    
+        // Add the Y Axis for the total sent sms graph
+       total_sent_sms_graph.append("g")
+            .attr("class", "axisSteelBlue")
+            .attr("class", "redrawElementSent")
+            .call(d3.axisLeft(y_total_sent_sms));
+        
+        // Create stacks
+        let sentLayer10min = total_sent_sms_graph.selectAll('#sentStack10min')
+            .data(sentDataStacked)
+            .enter()    
+        .append('g')
+            .attr('id', 'sentStack10min')    
+            .attr('class', function(d, i) { return sentKeys[i] })
+            .style('fill', function (d, i) { return color(i) })
+            
+        sentLayer10min.selectAll('rect')
+            .data(function(dataFilteredWeek) { return dataFilteredWeek })
+            .enter()
+        .append('rect')
+            .attr('x', function (d) { return x(d.data.datetime) })
+            .attr('y', function (d) { return y_total_sent_sms(d[1]) })
+            .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+            .attr('width', Width / Object.keys(dataFilteredWeek).length)
+        
+        //Add the X Axis for the total sent sms graph
+        total_sent_sms_graph.append("g")
+            .attr("class", "redrawElementSent")
+            .attr("transform", "translate(0," + Height + ")")
+            .call(d3.axisBottom(x)
+                .ticks(d3.timeDay.every(1))
+                .tickFormat(timeFormat))
+            // Rotate axis labels
+            .selectAll("text") 
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+    
+        // Add X axis label for the total sent sms graph
+        total_sent_sms_graph.append("text")
+            .attr("class", "redrawElementSent")
+            .attr("transform",
+                    "translate(" + (Width / 2) + " ," +
+                    (Height + Margin.top + 50) + ")")
+                .style("text-anchor", "middle")
+                .text("Date (H-D-M-Y)");
+    
+        // Total Sms(s) graph title
+        total_sent_sms_graph.append("text")
+            .attr("class", "redrawElementSent")
+            .attr("x", (Width / 2))
+            .attr("y", 0 - (Margin.top / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("text-decoration", "bold")
+            .text("Total Outgoing Message(s) / 10 minutes");
+    }
+    
+    function drawOneDaySentGraph(yLimitSent) {
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        yLimitSentTotal = d3.max(dailySentTotal, function (d) { return d.total_sent; });
+
+        if (isYLimitSentManuallySet != true) {
+            yLimitSent = yLimitSentTotal
+        }
+
+        // set scale domains
+        x.domain(d3.extent(data, d => new Date(d.day)));
+        y_total_sent_sms.domain([0, yLimitSent]);
+    
+        d3.selectAll(".redrawElementSent").remove();
+        d3.selectAll("#sentStack10min").remove();
+        d3.selectAll("#sentStack1day").remove();
+    
+         // Add the Y Axis for the total sent sms graph
+        total_sent_sms_graph.append("g")
+            .attr("class", "axisSteelBlue")
+            .attr("class", "redrawElementSent")
+            .call(d3.axisLeft(y_total_sent_sms));
+    
+        // Create stacks
+       let sentLayer = total_sent_sms_graph.selectAll('#sentStack1day')
+            .data(sentDataStackedDaily)
+            .enter()    
+        .append('g')
+            .attr('id', 'sentStack1day')
+            .attr('class', function(d, i) { return sentKeys[i] })
+            .style('fill', function (d, i) { return color(i) })
+    
+        sentLayer.selectAll('rect')
+            .data(function(d) { return d })
+            .enter()
+            .append('rect')
+            .attr('x', function (d) { return x(new Date(d.data.day)) })
+            .attr('y', function (d) { return y_total_sent_sms(d[1]) })
+            .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+            .attr('width', Width / Object.keys(dailySentTotal).length);
       
-};
+         //Add the X Axis for the total sent sms graph
+         total_sent_sms_graph.append("g")
+            .attr("class", "redrawElementSent")
+            .attr("transform", "translate(0," + Height + ")")
+            .call(d3.axisBottom(x)
+                .ticks(d3.timeDay.every(4))
+                .tickFormat(dayDateFormat))
+            // Rotate axis labels
+            .selectAll("text") 
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+    
+         // Add X axis label for the total sent sms graph
+         total_sent_sms_graph.append("text")
+             .attr("class", "redrawElementSent")
+             .attr("transform",
+                     "translate(" + (Width / 2) + " ," +
+                     (Height + Margin.top + 50) + ")")
+                 .style("text-anchor", "middle")
+                 .text("Date (Y-M-D)");
+    
+         // Total Sms(s) graph title
+         total_sent_sms_graph.append("text")
+            .attr("class", "redrawElementSent")
+            .attr("x", (Width / 2))
+            .attr("y", 0 - (Margin.top / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("text-decoration", "bold")
+            .text("Total Outgoing Message(s) / day");
+    }
 
+    // Update chart time unit on user selection
+    d3.select("#buttonUpdateView10Minutes").on("click", function() {
+        chartTimeUnit = "10min"
+        updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered)                                                                                                                                                                                                                                       
+    } )
+
+    d3.select("#buttonUpdateViewOneDay").on("click", function() {
+        chartTimeUnit = "1day"
+        updateViewOneDay(yLimitReceived, yLimitSent)
+    } )
+    
+    // Draw received graph with user-selected y-axis limit
+    d3.select("#buttonYLimitReceived").on("input", function() {
+        isYLimitReceivedManuallySet = true
+        if (chartTimeUnit == "1day") {
+            yLimitReceived = this.value
+            drawOneDayReceivedGraph(yLimitReceived)
+        }
+        else if (chartTimeUnit == "10min") {
+            yLimitReceivedFiltered = this.value
+            draw10MinReceivedGraph(yLimitReceivedFiltered)
+        }
+    });                                                                                                                                                                                  
+
+    // Draw sent graph with user-selected y-axis limit
+    d3.select("#buttonYLimitSent").on("input", function() {
+        isYLimitSentManuallySet = true
+        if (chartTimeUnit == "1day") {
+            yLimitSent = this.value
+            drawOneDaySentGraph(yLimitSent)
+        }
+        else if (chartTimeUnit == "10min") {
+            yLimitSentFiltered = this.value
+            draw10MinSentGraph(yLimitSentFiltered)
+        }
+    });                        
+    
+    var fullDateFormat = d3.timeFormat("%c")	
+
+    // Update timestamp of update and reset formatting
+    const timestamp = new Date()
+    d3.select("#lastUpdated").classed("alert", false).text(fullDateFormat(timestamp))
+
+    function setLastUpdatedAlert() {
+        // Calculate time diff bw current and timestamp
+        var currentTime = new Date()
+        var difference_ms = (currentTime.getTime() - timestamp.getTime())/60000
+        var difference_minutes = Math.floor(difference_ms % 60)
+        // if updated more than 20 min ago >> reformat
+        if (difference_minutes > 20) {
+            d3.select("#lastUpdated").classed("alert", true)
+        }
+    };
+
+    setInterval(setLastUpdatedAlert, 1000)
+};
 

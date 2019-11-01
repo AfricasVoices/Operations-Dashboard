@@ -1,11 +1,33 @@
-.nav {
-    background: #ffff;
-    width: 100%;
-    max-width: initial;
-    height: 60px;
+.logo {
+    height: 3rem;
+}
+.navbar {
+    box-shadow: 0 2px 2px -2px steelblue;
+}
+.navbar-brown{
+    color: #8d3538;
 }
 .nav-link {
     color: #8d3538;
+}
+.nav-link:hover {
+    color: steelblue;
+}
+.active-link {
+    border-bottom: 2px #8d3538 solid;
+}
+.active-item {
+    color: #8d3538;
+    background-color: #B6D4E7;
+    
+}
+.btn-logout{
+    border-color: #8d3538;
+    color: #8d3538;
+}
+.btn-logout:hover {
+    color: steelblue;
+    transform: scale(1.05);
 }
 .line {
     fill: none;
