@@ -463,8 +463,10 @@ const update = (data) => {
             yLimitReceived = yLimitReceivedTotal
         }
 
+        xMin = d3.min(data, d => new Date(d.day));
+        xMax = d3.max(data, d => new Date(d.day)).addHours(EXTEND_X_AXIS_BY_HOURS)
         // set scale domains
-        x.domain(d3.extent(dataFilteredMonth, d => new Date(d.day).addHours(EXTEND_X_AXIS_BY_HOURS)));
+        x.domain([xMin, xMax]);
         y_total_received_sms.domain([0, yLimitReceived]);
     
         d3.selectAll(".redrawElementReceived").remove();
@@ -613,8 +615,10 @@ const update = (data) => {
             yLimitSent = yLimitSentTotal
         }
 
+        xMin = d3.min(data, d => new Date(d.day));
+        xMax = d3.max(data, d => new Date(d.day)).addHours(EXTEND_X_AXIS_BY_HOURS)
         // set scale domains
-        x.domain(d3.extent(data, d => new Date(d.day).addHours(EXTEND_X_AXIS_BY_HOURS)));
+        x.domain([xMin, xMax]);
         y_total_sent_sms.domain([0, yLimitSent]);
     
         d3.selectAll(".redrawElementSent").remove();
