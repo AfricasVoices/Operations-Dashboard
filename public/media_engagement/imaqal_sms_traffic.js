@@ -46,7 +46,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 const TIMEFRAME_WEEK = 7;
 const TIMEFRAME_MONTH = 30;
 const EXTEND_X_AXIS_BY_HOURS = 32
-var chartTimeUnit = "1day";
+var chartTimeUnit = "10min";
 var isYLimitReceivedManuallySet = false;
 var isYLimitSentManuallySet = false;
 
