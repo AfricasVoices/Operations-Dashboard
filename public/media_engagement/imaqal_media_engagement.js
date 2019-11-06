@@ -45,7 +45,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 const TIMEFRAME_WEEK = 7;
 const TIMEFRAME_MONTH = 30;
-var chartTimeUnit = "1day";
+var chartTimeUnit = "10min";
 var isYLimitReceivedManuallySet = false;
 var isYLimitSentManuallySet = false;
 
@@ -180,6 +180,14 @@ const update = (data) => {
     const Width = 960 - Margin.right - Margin.left;
     const Height = 500 - Margin.top - Margin.bottom;
 
+
+    // Set x and y scales
+    const x = d3.scaleTime().range([0, Width]);
+    const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
+    const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
+    const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
+
+
     // Append total received sms graph to svg
     var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
         .attr("width", Width + Margin.left + Margin.right)
@@ -206,13 +214,6 @@ const update = (data) => {
 
     // Format TimeStamp  
     var timeFormat = d3.timeFormat("%H %d %m %Y");
-
-    // Set x and y scales
-    const x = d3.scaleTime().range([0, Width]);
-    const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
-    const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
-    const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
-
 
     // Define line paths for total failed sms(s)
     const total_failed_line = d3.line()
@@ -344,6 +345,48 @@ const update = (data) => {
 
     // Label Lines for the total failed sms graph
     total_failed_sms_graph.append("text")
+
+    function updateReceivedChartLimit() {
+        // Get the value of the button
+        var ylimit = this.value
+    
+        y_total_received_sms.domain([0, ylimit]);
+
+        // Add the Y Axis for the total received sms graph
+        total_received_sms_graph.selectAll(".axisSteelBlue")
+        .call(d3.axisLeft(y_total_received_sms));
+        
+        receivedLayer.selectAll('rect')
+            .data(function(d) { return d })
+            .attr('x', function (d) { return x(d.data.datetime) })
+            .attr('y', function (d) { return y_total_received_sms(d[1]) })
+            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('width', Width / Object.keys(data).length)
+    
+    }
+
+    function updateSentChartLimit() {
+        // Get the value of the button
+        var ylimit = this.value
+    
+        y_total_sent_sms.domain([0, ylimit]);
+
+        // Add the Y Axis for the total sent sms graph
+        total_sent_sms_graph.selectAll(".axisSteelBlue")
+        .call(d3.axisLeft(y_total_sent_sms));
+        
+        sentLayer.selectAll('rect')
+            .data(function(d) { return d })
+            .attr('x', function (d) { return x(d.data.datetime) })
+            .attr('y', function (d) { return y_total_sent_sms(d[1]) })
+            .attr('height', function (d) { return y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]) })
+            .attr('width', Width / Object.keys(data).length)
+    
+    }
+
+    // Add an event listener to the button created in the html part
+    d3.select("#buttonYLimitReceived").on("input", updateReceivedChartLimit )
+    d3.select("#buttonYLimitSent").on("input", updateSentChartLimit )
         .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top})`)
         .attr("dy", ".35em")
         .attr("text-anchor", "start")
@@ -720,6 +763,4 @@ const update = (data) => {
 
     setInterval(setLastUpdatedAlert, 1000)
 };
-
-
 

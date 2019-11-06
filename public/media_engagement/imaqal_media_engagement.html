@@ -29,7 +29,7 @@
 </style>
 <body>
     <!-- NAVBAR WITH DROPDOWN & RESPONSIVE TOGGLE-->
-    <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-3">
+    <nav class="navbar navbar-sm navbar-expand-sm navbar-brown bg-white mb-3 py-0">
         <div class="container">
             <a class="navbar-brand" href="#"><img class="logo" src="avfdashboardlogo.PNG" alt="avf-logo"></a>
 
@@ -48,11 +48,8 @@
                         <a href="#" class="nav-link border-top border-right active-link dropdown-toggle" data-toggle="dropdown">TRAFFIC</a> 
                         <!-- DROPDOWN MENU -->
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/ahadi_media_engagement.html">AHADI</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/icraf_media_engagement.html">ICRAF</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item active-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/imaqal_media_engagement.html">IMAQAL</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/ocha_media_engagement.html">OCHA</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/undp_rco_media_engagement.html">UNDP_RCO</a> 
+                            <a class="dropdown-item active-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/imaqal_media_engagement.html">IMAQAL</a> 
+                            <!-- <div class="dropdown-divider"></div> -->
                         </div>
                     </li> 
 
@@ -63,27 +60,28 @@
     </nav>
 
     <div class="container">
+          
         <div class="row ">
             <div class="row">
-                    <div class ="col s2 m2 l2 offset-r1">
-                    <span type="text">Set the timescale</span>
-                </div>
-                    <div class ="col s2 m2 l2 offset-r2">
-                        <input type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                    </div>
-                    <div class ="col s2 m2 l2 offset-r3">
-                        <input type="button" id="buttonUpdateViewOneDay" value="1 day">
-                        </div>
-                    <div class ="col s6 m6 l6 offset-r1">
-                        <span type="text">Last updated: </span><span id="lastUpdated" type="text"></span>
-                        </div>
-                </div>
+                 <div class ="col s2 m2 l2 offset-r1">
+                     <span type="text">Set the timescale</span>
+                 </div>
+                 <div class ="col s2 m2 l2 offset-r2">
+                     <input type="button" id="buttonUpdateView10Minutes" value="10 minutes">
+                 </div>
+                 <div class ="col s2 m2 l2 offset-r3">
+                     <input type="button" id="buttonUpdateViewOneDay" value="1 day">
+                 </div>
+                 <div class ="col s6 m6 l6 offset-r1">
+                     <span type="text">Last updated: </span><span id="lastUpdated" type="text"></span>
+                 </div>
+            </div>
             <div class="row">
                 <div class ="col s3 m3 l3 offset-r1">
-                <span type="text">Set the maximum number of messages you want to see</span>
-            </div>
+                    <span type="text">Set the maximum number of messages you want to see</span>
+                </div>
                 <div class ="col s2 m2 l2 offset-r2">
-                    <input type="number" id="buttonYLimitReceived" step="100" min=10>
+                    <input type="number" id="buttonYLimitReceived" step="50" value="400" min=10>
                 </div>
             </div>
             <div class="card white z-depth-1 total_received_sms_graph"></div>
