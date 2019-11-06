@@ -24,11 +24,11 @@
 .txt-brown {
     color: #8d3538; 
 }
-.btn-logout{
+.btn-brown{
     border-color: #8d3538;
     color: #8d3538;
 }
-.btn-logout:hover {
+.btn-brown:hover {
     color: steelblue;
     transform: scale(1.05);
 }
