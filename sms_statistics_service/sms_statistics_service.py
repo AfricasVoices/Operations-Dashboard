@@ -2,7 +2,7 @@ import argparse
 from datetime import timedelta
 
 import pytz
-from core_data_modules.cleaners import PhoneCleaner
+from core_data_modules.cleaners import PhoneCleaner, Codes
 from core_data_modules.data_models import validators
 from core_data_modules.logging import Logger
 from core_data_modules.util import TimeUtils
@@ -99,6 +99,8 @@ if __name__ == "__main__":
             if msg.urn.startswith("tel:"):
                 # Set the operator name from the phone number
                 operator_name = PhoneCleaner.clean_operator(msg.urn)
+            elif msg.urn.startswith("deleted:"):
+                operator_name = Codes.NOT_CODED
             else:
                 # Set the operator name from the channel type e.g. 'telegram', 'twitter'
                 operator_name = msg.urn.split(":")[0]
