@@ -191,7 +191,7 @@ const update = (data) => {
 
     // Set x and y scales
     const x = d3.scaleTime().range([0, Width]);
-    const x_axis_failed_sms = d3.scaleTime().range([0, Width]);
+    const x_axis_failed_sms_range = d3.scaleTime().range([0, Width]);
     const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
     const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
     const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
