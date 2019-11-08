@@ -48,7 +48,12 @@ const TIMEFRAME_MONTH = 30;
 var chartTimeUnit = "10min";
 var isYLimitReceivedManuallySet = false;
 var isYLimitSentManuallySet = false;
-extend_x_max_by_hours = (date) => date.setHours(date.getHours() + 24);
+
+function add_one_day_to_date(day) {
+    var newDate = new Date(day);
+    newDate.setHours(newDate.getHours() + 24);
+    return newDate;
+}
 
 // Function to update data
 const update = (data) => {
@@ -192,7 +197,7 @@ const update = (data) => {
 
     // Set x and y scales
     const x = d3.scaleTime().range([0, Width]);
-    const x_axis_failed_sms_range = d3.scaleTime().range([0, Width]);
+    const failed_messages_x_axis_range = d3.scaleTime().range([0, Width]);
     const y_total_received_sms_range = d3.scaleLinear().range([Height, 0]);
     const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
     const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
@@ -228,7 +233,7 @@ const update = (data) => {
     // Define line paths for total failed sms(s)
     const total_failed_line = d3.line()
         .curve(d3.curveLinear)
-        .x(function (d) { return x_axis_failed_sms_range(new Date(d.datetime)) })
+        .x(function (d) { return failed_messages_x_axis_range(new Date(d.datetime)) })
         .y(function (d) { return y_total_failed_sms(d.total_errored); })
 
     // Create line path element for failed line graph
@@ -243,8 +248,8 @@ const update = (data) => {
     // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
     xMin = d3.min(data, d => new Date(d.day));
-    xMax = d3.max(data, d => extend_x_max_by_hours(new Date(d.day)) )
-    x_axis_failed_sms_range.domain([xMin, xMax]);
+    xMax = d3.max(data, d => add_one_day_to_date(d.day)) 
+    failed_messages_x_axis_range.domain([xMin, xMax]);
 
     var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
     var yLimitReceivedFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
@@ -287,7 +292,7 @@ const update = (data) => {
     //Add the X Axis for the total failed sms graph
     total_failed_sms_graph.append("g")
         .attr("transform", "translate(0," + Height + ")")
-        .call(d3.axisBottom(x_axis_failed_sms_range)
+        .call(d3.axisBottom(failed_messages_x_axis_range)
             .ticks(5)
             .tickFormat(timeFormat))
         // Rotate axis labels
@@ -505,7 +510,7 @@ const update = (data) => {
         }
 
         xMin = d3.min(data, d => new Date(d.day));
-        xMax = d3.max(data, d => extend_x_max_by_hours(new Date(d.day)) )
+        xMax = d3.max(data, d => add_one_day_to_date(d.day)) 
         // set scale domains
         x.domain([xMin, xMax]);
         y_total_received_sms_range.domain([0, yLimitReceived]);
@@ -657,7 +662,7 @@ const update = (data) => {
         }
 
         xMin = d3.min(data, d => new Date(d.day));
-        xMax = d3.max(data, d => extend_x_max_by_hours(new Date(d.day)) )
+        xMax = d3.max(data, d => add_one_day_to_date(d.day)) 
         // set scale domains
         x.domain([xMin, xMax]);
         y_total_sent_sms.domain([0, yLimitSent]);
