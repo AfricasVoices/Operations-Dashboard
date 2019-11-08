@@ -243,7 +243,7 @@ const update = (data) => {
     // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
     xMin = d3.min(data, d => new Date(d.day));
-    xMax = d3.max(data, d => extend_x_max_by_hours(new Date(d.day)) )
+    xMax = d3.max(data, d => extend_x_max_by_hours(new Date(d.day)))
     x_axis_failed_sms_range.domain([xMin, xMax]);
 
     var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
