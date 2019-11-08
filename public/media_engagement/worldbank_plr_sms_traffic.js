@@ -45,17 +45,10 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 const TIMEFRAME_WEEK = 7;
 const TIMEFRAME_MONTH = 30;
-const EXTEND_X_AXIS_BY_HOURS = 32
 var chartTimeUnit = "10min";
 var isYLimitReceivedManuallySet = false;
 var isYLimitSentManuallySet = false;
-
-// Date objects inherit from Date.prototype
-// Add the addHours property to the date object
-Date.prototype.addHours= function(h){
-    this.setHours(this.getHours()+h);
-    return this;
-}
+extend_x_max_by_hours = (date) => date.setHours(date.getHours() + 24);
 
 // Function to update data
 const update = (data) => {
@@ -191,8 +184,8 @@ const update = (data) => {
 
     // Set x and y scales
     const x = d3.scaleTime().range([0, Width]);
-    const x_axis_failed_sms = d3.scaleTime().range([0, Width]);
-    const y_total_received_sms = d3.scaleLinear().range([Height, 0]);
+    const x_axis_failed_sms_range = d3.scaleTime().range([0, Width]);
+    const y_total_received_sms_range = d3.scaleLinear().range([Height, 0]);
     const y_total_sent_sms = d3.scaleLinear().range([Height, 0]);
     const y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
 
@@ -227,7 +220,7 @@ const update = (data) => {
     // Define line paths for total failed sms(s)
     const total_failed_line = d3.line()
         .curve(d3.curveLinear)
-        .x(function (d) { return x_axis_failed_sms(new Date(d.datetime)) })
+        .x(function (d) { return x_axis_failed_sms_range(new Date(d.datetime)) })
         .y(function (d) { return y_total_failed_sms(d.total_errored); })
 
     // Create line path element for failed line graph
@@ -242,8 +235,8 @@ const update = (data) => {
     // set scale domain for failed graph
     y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
     xMin = d3.min(data, d => new Date(d.day));
-    xMax = d3.max(data, d => new Date(d.day)).addHours(EXTEND_X_AXIS_BY_HOURS)
-    x_axis_failed_sms.domain([xMin, xMax]);
+    xMax = d3.max(data, d => extend_x_max_by_hours(new Date(d.day)) )
+    x_axis_failed_sms_range.domain([xMin, xMax]);
 
     var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
     var yLimitReceivedFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
@@ -286,7 +279,7 @@ const update = (data) => {
     //Add the X Axis for the total failed sms graph
     total_failed_sms_graph.append("g")
         .attr("transform", "translate(0," + Height + ")")
-        .call(d3.axisBottom(x_axis_failed_sms)
+        .call(d3.axisBottom(x_axis_failed_sms_range)
             .ticks(5)
             .tickFormat(timeFormat))
         // Rotate axis labels
@@ -371,8 +364,8 @@ const update = (data) => {
         receivedLayer.selectAll('rect')
             .data(function(d) { return d })
             .attr('x', function (d) { return x(d.data.datetime) })
-            .attr('y', function (d) { return y_total_received_sms(d[1]) })
-            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('y', function (d) { return y_total_received_sms_range(d[1]) })
+            .attr('height', function (d) { return y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1]) })
             .attr('width', Width / Object.keys(data).length)
     
     }
@@ -432,7 +425,7 @@ const update = (data) => {
 
         // set scale domains
         x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-        y_total_received_sms.domain([0, yLimitReceived]);
+        y_total_received_sms_range.domain([0, yLimitReceived]);
 
         d3.selectAll(".redrawElementReceived").remove();
         d3.selectAll("#receivedStack").remove();
@@ -442,7 +435,7 @@ const update = (data) => {
         total_received_sms_graph.append("g")
             .attr("id", "axisSteelBlue")
             .attr("class", "redrawElementReceived")
-            .call(d3.axisLeft(y_total_received_sms));
+            .call(d3.axisLeft(y_total_received_sms_range));
 
         let receivedLayer10min = total_received_sms_graph.selectAll('#receivedStack10min')
             .data(receivedDataStacked)
@@ -457,8 +450,8 @@ const update = (data) => {
             .enter()
         .append('rect')
             .attr('x', function (d) { return x(d.data.datetime) })
-            .attr('y', function (d) { return y_total_received_sms(d[1]) })
-            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('y', function (d) { return y_total_received_sms_range(d[1]) })
+            .attr('height', function (d) { return y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1]) })
             .attr('width', Width / Object.keys(dataFilteredWeek).length)
 
         //Add the X Axis for the total received sms graph
@@ -504,10 +497,10 @@ const update = (data) => {
         }
 
         xMin = d3.min(data, d => new Date(d.day));
-        xMax = d3.max(data, d => new Date(d.day)).addHours(EXTEND_X_AXIS_BY_HOURS)
+        xMax = d3.max(data, d => extend_x_max_by_hours(new Date(d.day)) )
         // set scale domains
         x.domain([xMin, xMax]);
-        y_total_received_sms.domain([0, yLimitReceived]);
+        y_total_received_sms_range.domain([0, yLimitReceived]);
     
         d3.selectAll(".redrawElementReceived").remove();
         d3.selectAll("#receivedStack10min").remove();
@@ -517,7 +510,7 @@ const update = (data) => {
          total_received_sms_graph.append("g")
             .attr("class", "axisSteelBlue")
             .attr("class", "redrawElementReceived")
-            .call(d3.axisLeft(y_total_received_sms));
+            .call(d3.axisLeft(y_total_received_sms_range));
     
        let receivedLayer = total_received_sms_graph.selectAll('#receivedStack')
             .data(receivedDataStackedDaily)
@@ -532,8 +525,8 @@ const update = (data) => {
             .enter()
         .append('rect')
             .attr('x', function (d) { return x(new Date(d.data.day)) })
-            .attr('y', function (d) { return y_total_received_sms(d[1]) })
-            .attr('height', function (d) { return y_total_received_sms(d[0]) - y_total_received_sms(d[1]) })
+            .attr('y', function (d) { return y_total_received_sms_range(d[1]) })
+            .attr('height', function (d) { return y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1]) })
             .attr('width', Width / Object.keys(dailyReceivedTotal).length);
     
          //Add the X Axis for the total received sms graph
@@ -656,7 +649,7 @@ const update = (data) => {
         }
 
         xMin = d3.min(data, d => new Date(d.day));
-        xMax = d3.max(data, d => new Date(d.day)).addHours(EXTEND_X_AXIS_BY_HOURS)
+        xMax = d3.max(data, d => extend_x_max_by_hours(new Date(d.day)) )
         // set scale domains
         x.domain([xMin, xMax]);
         y_total_sent_sms.domain([0, yLimitSent]);
