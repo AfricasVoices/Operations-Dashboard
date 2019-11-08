@@ -12,7 +12,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         var iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
         offsetString = iso(offset)
 
-        mediadb.collection('/metrics/rapid_pro/IMAQAL/').where("datetime", ">", offsetString).onSnapshot(res => {
+        mediadb.collection('/metrics/rapid_pro/WorldBank-PLR/').where("datetime", ">", offsetString).onSnapshot(res => {
             console.log(res)
             // Update data every time it changes in firestore
             res.docChanges().forEach(change => {
@@ -67,6 +67,8 @@ const update = (data) => {
         d.total_sent = +d.total_sent
         d.total_pending = +d.total_pending
         d.total_errored = +d.total_errored
+        d.NC_received = +d.operators["NC"]["received"]
+        d.telegram_received= +d.operators["telegram"]["received"]
         d.golis_received= +d.operators["golis"]["received"]
         d.hormud_received= +d.operators["hormud"]["received"]
         d.nationlink_received= +d.operators["nationlink"]["received"]
@@ -79,6 +81,8 @@ const update = (data) => {
         d.somnet_sent= +d.operators["somnet"]["sent"]
         d.somtel_sent= +d.operators["somtel"]["sent"]
         d.telesom_sent= +d.operators["telesom"]["sent"]
+        d.telegram_sent= +d.operators["telegram"]["sent"]
+        d.NC_sent = +d.operators["NC"]["sent"]
         Object.keys(d.operators).sort().forEach(function(key) {
             if (!(key in operators)) {
                 operators.add(key)
@@ -103,6 +107,8 @@ const update = (data) => {
     var dailyReceivedTotal = d3.nest()
         .key(function(d) { return d.day; })
         .rollup(function(v) { return {
+            NC_received: d3.sum(v, function(d) {return d.NC_received}),
+            telegram_received: d3.sum(v, function(d) {return d.telegram_received}),
             hormud_received: d3.sum(v, function(d) {return d.hormud_received}),
             nationlink_received: d3.sum(v, function(d) {return d.nationlink_received}),
             somnet_received: d3.sum(v, function(d) {return d.somnet_received}),
@@ -129,6 +135,8 @@ const update = (data) => {
     var dailySentTotal = d3.nest()
         .key(function(d) { return d.day; })
         .rollup(function(v) { return {
+            NC_sent: d3.sum(v, function(d) {return d.NC_sent}),
+            telegram_sent: d3.sum(v, function(d) {return d.telegram_sent}),
             hormud_sent: d3.sum(v, function(d) {return d.hormud_sent}),
             nationlink_sent: d3.sum(v, function(d) {return d.nationlink_sent}),
             somnet_sent: d3.sum(v, function(d) {return d.somnet_sent}),
@@ -227,7 +235,7 @@ const update = (data) => {
     const total_failed_path = total_failed_sms_graph.append('path');
 
     // custom color scheme
-    color_scheme = ["#e6194B", "#f58231", "#3cb44b", "#CCCC00", "#4363d8", "#800000", "#f032e6", "#911eb4"]
+    color_scheme = ["#31cece", "#f58231", "#3cb44b", "#CCCC00", "#4363d8", "#800000", "#f032e6", "#911eb4", "#e6194B"]
     let color = d3.scaleOrdinal(color_scheme);
     let colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys);
     let colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
