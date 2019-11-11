@@ -21,11 +21,14 @@
     background-color: #B6D4E7;
     
 }
-.btn-logout{
+.txt-brown {
+    color: #8d3538; 
+}
+.btn-brown {
     border-color: #8d3538;
     color: #8d3538;
 }
-.btn-logout:hover {
+.btn-brown:hover {
     color: steelblue;
     transform: scale(1.05);
 }
