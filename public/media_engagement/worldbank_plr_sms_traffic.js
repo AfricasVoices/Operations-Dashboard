@@ -49,9 +49,9 @@ var chartTimeUnit = "10min";
 var isYLimitReceivedManuallySet = false;
 var isYLimitSentManuallySet = false;
 
-function add_one_day_to_date(day) {
-    var newDate = new Date(day);
-    newDate.setHours(newDate.getHours() + 24);
+function add_one_day_to_date(date) {
+    var newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + 1);
     return newDate;
 }
 
