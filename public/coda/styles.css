@@ -1,53 +1,78 @@
-.nav{
-    background: #ffff;
-    width: 100%;
-    max-width:initial;
-    height:60px;
-  }
+.logo {
+    height: 3rem;
+}
+.navbar {
+    box-shadow: 0 2px 2px -2px steelblue;
+}
+.navbar-brown{
+    color: #8d3538;
+}
 .nav-link {
     color: #8d3538; 
 }
-.brand-logo{
-  height:40px;
-  margin-top:10px;
+.nav-link:hover {
+    color: steelblue;
+}
+.active-link {
+    border-bottom: 2px #8d3538 solid;
+}
+.active-item {
+    color: #8d3538;
+    background-color: #B6D4E7;
+
+}
+.btn-logout{
+    border-color: #8d3538;
+    color: #8d3538;
 }
 a {
     color: black;
+}
+.btn-logout:hover {
+    color: steelblue;
+    transform: scale(1.05);
 }
 .table-heading {
     background-color: #8e3436;
     height: 30px;
     color:#ffff;
 }
+.table thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #8e3436;
+}
+table > tbody > tr > td{
+    border-bottom: 1px solid rgb(0,0,0, 0.2);
+}
 .coding-notstarted{
     background-color:#fc9f9f;
-    font-size:16;
-    line-height:4px;
+    font-size: 16;
+    line-height: 0.7rem;
 }
 .coding-below25{
     background-color:#ffd1d1;
-    font-size:16;
-    line-height:4px;
+    font-size: 16;
+    line-height: 0.7rem;
 }
 .coding-above25{
     background-color:#87cefa;
-    font-size:16;
-    line-height:4px;
+    font-size: 16;
+    line-height: 0.7rem;
 }
 .coding-above50{
     background-color: #fff6d6;
-    font-size:16;
-    line-height:4px;
+    font-size: 16;
+    line-height: 0.7rem;
 }
 .coding-above75{
     background-color:#d6ffd9;
-    font-size:16;
-    line-height:3px;
+    font-size: 16;
+    line-height: 0.6rem;
 }
 .coding-complete{
     background-color: white;
-    font-size:15;
-    line-height:1px;
+    font-size: 15;
+    line-height: 0.5rem;
 }
 .login-body{
     margin: 0;
@@ -83,18 +108,20 @@ a {
     text-align: center;
     font-size: 20px;
 }
-.container {
-    margin: 0 auto;
-    max-width: 1280px;
-    width: 85%;
-  }
-  @media only screen and (min-width: 601px) {
+
+/* media query for large desktop */
+@media screen and (min-width: 1400px) {
     .container {
-      width: 80%;
+        width: 80%;
     }
-  }
-  @media only screen and (min-width: 993px) {
+}
+@media screen and (min-width: 1600px) {
     .container {
-      width: 80%;
+        width: 80%;
     }
-  }
+}
+@media screen and (min-width: 1900px) {
+    .container {
+        width: 80%;
+    }
+}
