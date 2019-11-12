@@ -64,29 +64,29 @@
         <div class="d-md-flex justify-content-between p-1">
             <span class="txt-brown my-auto"><b>WORLDBANK_PLR</b></span>
             <div>
-                <span class="align-content-end">Timescale</span>
+                <span class="align-content-end font-weight-bold">Timescale</span>
                 <input class="mr-2 btn btn-sm btn-brown" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
                 <input class="btn btn-sm btn-brown" type="button" id="buttonUpdateViewOneDay" value="1 day"> 
             </div>
         </div>
         <!-- Received Messages Graph -->
         <section>
-            <div class="d-md-flex justify-content-center my-2">
-                <span type="text">Set the maximum number of messages you want to see</span> 
+            <div class="d-md-flex justify-content-start my-2">
+                <span class="font-weight-bold" type="text">Set the maximum number of incoming messages you want to see</span> 
                 <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitReceived" step="100" min=10></div>
             </div>
-            <div class="card shadow-sm total_received_sms_graph"></div>
+            <div class="card shadow total_received_sms_graph"></div>
         </section>
         <!-- Sent Messages Graph -->
         <section>
-            <div class="d-md-flex justify-content-center my-2">
-                <span type="text">Set the maximum number of messages you want to see</span> 
+            <div class="d-md-flex justify-content-start mt-4 mb-3">
+                <span class="font-weight-bold" type="text">Set the maximum number of outgoing messages you want to see</span> 
                 <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitSent" step="500" min=10></div>
             </div>
-            <div class="card shadow-sm total_sent_sms_graph"></div>
+            <div class="card shadow total_sent_sms_graph"></div>
         </section>
         <!-- Failed Messages Graph -->
-        <div class="card shadow-sm total_failed_sms_graph my-4"></div>
+        <div class="card shadow total_failed_sms_graph my-4"></div>
         <div class="row">
             <div class='col s4 m4 l4'>
                 <div class='card white z-depth-2  responsetext '>
