@@ -19,11 +19,17 @@
     <script type="text/javascript" src="../../public/coda/auth.js"></script>
     <script type="text/javascript" src="firebase.js"></script>
 </head>
+<style>
+    .alert {
+        color: red;
+        font: 20px bold
+    }
+</style>
 <body>
     <!-- NAVBAR WITH DROPDOWN & RESPONSIVE TOGGLE-->
-    <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-3">
+    <nav class="navbar navbar-sm navbar-expand-sm navbar-brown bg-white mb-3 py-0">
         <div class="container">
-            <a class="navbar-brand" href="#"><img class="img-fluid logo" src="avfdashboardlogo.PNG" alt="avf-logo"></a>
+            <a class="navbar-brand" href="#"><img class="logo" src="avfdashboardlogo.PNG" alt="avf-logo"></a>
 
             <!-- TOOGLE TRIGGER FOR SMALL DEVICES -->
             <button class="navbar-light navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
@@ -37,71 +43,59 @@
 
                     <li class="nav-item dropdown">
                         <!-- DROPDOWN TRIGGER -->
-                        <a href="#" class="nav-link border-top border-right active-link dropdown-toggle" data-toggle="dropdown">MEDIA ENGAGEMENT</a> 
+                        <a href="#" class="nav-link border-top border-right active-link dropdown-toggle" data-toggle="dropdown">TRAFFIC</a> 
                         <!-- DROPDOWN MENU -->
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="ahadi_media_engagement.html">AHADI_E&M</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="icraf_media_engagement.html">ICRAF_E&M</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="imaqal_media_engagement.html">IMAQAL_E&M</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item active-item" href="ocha_media_engagement.html">OCHA_E&M</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="undp_rco_media_engagement.html">UNDP_RCO_E&M</a> <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="https://avf-dashboards.firebaseapp.com/media_engagement/imaqal_media_engagement.html">IMAQAL</a> 
+                            <!-- <div class="dropdown-divider"></div> -->
                         </div>
                     </li> 
 
-                    <li class="px-2 pt-1 border-top border-right"><button class="btn btn-sm btn-outline-danger text-dark shadow">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
+                    <li class="px-2 pt-1 border-top border-right"><button class="btn btn-brown btn-sm shadow">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container">
-        <div class="row ">
-            <div class="row">
-                    <div class ="col s2 m2 l2 offset-r1">
-                    <span type="text">Set the timescale</span>
-                </div>
-                    <div class ="col s2 m2 l2 offset-r2">
-                        <input type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                    </div>
-                    <div class ="col s2 m2 l2 offset-r3">
-                        <input type="button" id="buttonUpdateViewOneDay" value="1 day">
-                        </div>
-                </div>
-            <div class="row">
-                <div class ="col s3 m3 l3 offset-r1">
-                <span type="text">Set the maximum number of messages you want to see</span>
+        <!-- SMS traffic title & Timescale settings -->
+        <div class="d-md-flex justify-content-between p-1">
+            <span class="txt-brown my-auto"><b>WORLDBANK_PLR</b></span>
+            <div>
+                <span class="align-content-end font-weight-bold">Timescale</span>
+                <input class="mr-2 btn btn-sm btn-brown" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
+                <input class="btn btn-sm btn-brown" type="button" id="buttonUpdateViewOneDay" value="1 day"> 
             </div>
-                <div class ="col s2 m2 l2 offset-r2">
-                    <input type="number" id="buttonYLimitReceived" step="100" min=10>
-                </div>
-            </div>
-            <div class="card white z-depth-1 total_received_sms_graph"></div>
         </div>
+        <!-- Received Messages Graph -->
+        <section>
+            <div class="d-md-flex justify-content-start my-2">
+                <span class="font-weight-bold" type="text">Set the maximum number of incoming messages you want to see</span> 
+                <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitReceived" step="100" min=10></div>
+            </div>
+            <div class="card shadow total_received_sms_graph"></div>
+        </section>
+        <!-- Sent Messages Graph -->
+        <section>
+            <div class="d-md-flex justify-content-start mt-4 mb-3">
+                <span class="font-weight-bold" type="text">Set the maximum number of outgoing messages you want to see</span> 
+                <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitSent" step="500" min=10></div>
+            </div>
+            <div class="card shadow total_sent_sms_graph"></div>
+        </section>
+        <!-- Failed Messages Graph -->
+        <div class="card shadow total_failed_sms_graph my-4"></div>
         <div class="row">
-            <div class ="col s3 m3 l3 offset-r1">
-            <span type="text">Set the maximum number of messages you want to see</span>
-            </div>
-            <div class ="col s2 m2 l2 offset-r2">
-                <input type="number" id="buttonYLimitSent" step="500" min=10>
-            </div>
-        </div>
-        <div class="row ">
-            <div class="card white z-depth-1 total_sent_sms_graph"></div>
-        </div>
-        <div class="row">
-            <div class="card white z-depth-1 total_failed_sms_graph"></div>
-        </div>
-        <div class="row">
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2  responsetext '>
+            <div class="col">
+                <div class="card responsetext">
                     <b>Message metrics</b></br>
                     <div id="total_received">Total Incoming Messages</div>
                     <div id="total_sent">Total Outgoing Messages: </div>
                     <div id="last_update">Last updated: </div>
                 </div>
             </div>
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2 operatortext'>
+            <div class="col">
+                <div class="card operatortext">
                     <b>Operator metrics</b></br>
                     <div id="total_golis_messages"></div>
                     <div id="total_hormud_messages"></div>
@@ -111,8 +105,8 @@
                     <div id="total_telesom_messages"></div>
                 </div>
             </div>
-            <div class='col s4 m4 l4'>
-                <div class='card white z-depth-2 operatortext'>
+            <div class="col">
+                <div class="card operatortext">
                     <b>Project Details</b></br>
                     <div id="project_name">Project Name:</div>
                     <div id="texit_units_used">Textit Units Used:</div>
@@ -122,8 +116,10 @@
                 </div>
             </div>
         </div>
-        <script src="https://d3js.org/d3.v5.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
-        <script src="ocha_media_engagement.js"></script>
+    </div>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" type="module"></script>
+    <script src="worldbank_plr_sms_traffic.js"></script>
 </body>
 </html>
