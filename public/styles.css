@@ -1,0 +1,109 @@
+.logo {
+    height: 3rem;
+}
+.navbar {
+    box-shadow: 0 2px 2px -2px steelblue;
+}
+.navbar-brown{
+    color: #8d3538;
+}
+.nav-link {
+    color: #8d3538;
+}
+.nav-link:hover {
+    color: steelblue;
+}
+.active-link {
+    border-bottom: 2px #8d3538 solid;
+}
+.active-item {
+    color: #8d3538;
+    background-color: #B6D4E7;
+    
+}
+.txt-brown {
+    color: #8d3538; 
+}
+.btn-brown {
+    border-color: #8d3538;
+    color: #8d3538;
+}
+.btn-brown:hover {
+    color: steelblue;
+    transform: scale(1.05);
+}
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+.row>div {
+    padding: 10px;
+}
+.row {
+    margin: 10px auto;
+}
+.container {
+    width: 100%;
+    max-width: initial;
+}
+.brand-logo {
+    height: 40px;
+    margin-top: 10px;
+}
+.login-body {
+    margin: 0;
+    padding: 0;
+    background: #ffff;
+    background-size: cover;
+    background-position: center;
+    font-family: sans-serif;
+}
+.login-box {
+    width: 320px;
+    height: 220px;
+    background: #8d3538;
+    color: #fff;
+    top: 30%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 70px 30px;
+}
+.avatar {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+}
+.login-h1 {
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-size: 20px;
+}
+.container {
+    margin: 0 auto;
+    max-width: 1280px;
+    width: 85%;
+}
+@media only screen and (min-width: 601px) {
+    .container {
+        width: 80%;
+    }
+}
+@media only screen and (min-width: 993px) {
+    .container {
+        width: 80%;
+    }
+}
+.card {
+    padding: 15px;
+    border-radius: 3px;
+}
+.body {
+    background: #fafafa
+}
