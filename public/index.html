@@ -19,6 +19,13 @@
     <script src="firebase.js"></script>
 </head>
 <body>
+    <section class="login-body">
+        <div class="login-box">
+            <img src="avficon.png" class="avatar">
+            <h1 class='login-h1'>Sign in to access Operations Dashboard</h1>
+            <p id="firebaseui-auth-container"></p>
+        </div>
+    </section>
     <!-- NAVBAR WITH DROPDOWN & RESPONSIVE TOGGLE-->
     <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-1 py-0">
         <div class="container">
@@ -44,11 +51,62 @@
                         </div>
                     </li> 
 
-                    <li class="px-2 pt-1 border-top border-right"><button class="btn btn-brown btn-sm shadow" onClick="logout();">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
+                    <li class="px-2 pt-1 border-top border-right"><button class="btn btn-brown btn-sm shadow">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
                 </ul>
             </div>
         </div>
     </nav>  
+    <section class="coding_progress">
+        <div class="container container-fluid table-responsive">
+            <table id='codingtable' class='table'>
+                <thead>
+                    <tr class="table-heading">
+                        <th scope="col">Dataset</th>
+                        <th scope="col">Messages</th>
+                        <th scope="col">Messages with a label</th>
+                        <th scope="col">Done</th>
+                        <th scope="col">Wrong Scheme messages</th>
+                        <th scope="col">WS %</th>
+                        <th scope="col">Not Coded messages</th>
+                        <th scope="col">NC %</th>
+                    </tr>
+                </thead>
+                <tbody id="coding_status_body"></tbody>
+            </table>
+            <div id="last_update">Last updated: </div>
+        </div>
+    </section>
+    <section class="graphs">
+        <div class="container">
+            <!-- SMS traffic title & Timescale settings -->
+            <div class="d-md-flex justify-content-between p-1">
+                <span class="txt-brown my-auto"><b>IMAQAL</b></span>
+                <div>
+                    <span class="align-content-end font-weight-bold">Timescale</span>
+                    <input class="mr-2 btn btn-sm btn-brown" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
+                    <input class="btn btn-sm btn-brown" type="button" id="buttonUpdateViewOneDay" value="1 day"> 
+                </div>
+            </div>
+            <!-- Received Messages Graph -->
+            <section>
+                <div class="d-md-flex justify-content-start my-2">
+                    <span class="font-weight-bold" type="text">Set the maximum number of incoming messages you want to see</span> 
+                    <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitReceived" step="100" min=10></div>
+                </div>
+                <div class="card shadow total_received_sms_graph"></div>
+            </section>
+            <!-- Sent Messages Graph -->
+            <section>
+                <div class="d-md-flex justify-content-start mt-4 mb-3">
+                    <span class="font-weight-bold" type="text">Set the maximum number of outgoing messages you want to see</span> 
+                    <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitSent" step="500" min=10></div>
+                </div>
+                <div class="card shadow total_sent_sms_graph"></div>
+            </section>
+            <!-- Failed Messages Graph -->
+            <div class="card shadow total_failed_sms_graph my-4"></div>
+        </div>
+    </section>
     <script src="app.js"></script>
 </body>
 </html>
