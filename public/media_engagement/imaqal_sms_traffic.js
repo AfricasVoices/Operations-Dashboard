@@ -12,7 +12,8 @@ firebase.auth().onAuthStateChanged(function (user) {
         var iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
         offsetString = iso(offset)
 
-        mediadb.collection('/metrics/rapid_pro/IMAQAL/').where("datetime", ">", offsetString).onSnapshot(res => {
+        var collection = "IMAQAL" 
+        mediadb.collection(`/metrics/rapid_pro/${collection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
             console.log(res)
             // Update data every time it changes in firestore
             res.docChanges().forEach(change => {

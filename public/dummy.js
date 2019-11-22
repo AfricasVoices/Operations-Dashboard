@@ -45,12 +45,164 @@ var authController = (function() {
 
 // DATA CONTROLLER
 var dataController = (function() {
-        
+    const progress_fs = firebase.firestore();
+    const settings = {timestampsInSnapshots: true};
+    progress_fs.settings(settings);
+    var data = [];
+    var offset = new Date()
+    timerange = 30
+    offset.setDate(offset.getDate() - timerange)
+    var iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
+    offsetString = iso(offset)
+// ========================================================================================================== 
+    // write function that accepts data 
+    // format & return the data 
+    data.forEach(function (d) {
+        d.datetime = new Date(d.datetime);
+        d.day = dayDateFormat(new Date(d.datetime))
+        d.total_received = +d.total_received
+        d.total_sent = +d.total_sent
+        d.total_pending = +d.total_pending
+        d.total_errored = +d.total_errored
+        d.NC_received = +d.operators["NC"]["received"]
+        d.telegram_received= +d.operators["telegram"]["received"]
+        d.golis_received= +d.operators["golis"]["received"]
+        d.hormud_received= +d.operators["hormud"]["received"]
+        d.nationlink_received= +d.operators["nationlink"]["received"]
+        d.somnet_received= +d.operators["somnet"]["received"]
+        d.somtel_received= +d.operators["somtel"]["received"]
+        d.telesom_received= +d.operators["telesom"]["received"]
+        d.golis_sent= +d.operators["golis"]["sent"]
+        d.hormud_sent= +d.operators["hormud"]["sent"]
+        d.nationlink_sent= +d.operators["nationlink"]["sent"]
+        d.somnet_sent= +d.operators["somnet"]["sent"]
+        d.somtel_sent= +d.operators["somtel"]["sent"]
+        d.telesom_sent= +d.operators["telesom"]["sent"]
+        d.telegram_sent= +d.operators["telegram"]["sent"]
+        d.NC_sent = +d.operators["NC"]["sent"]
+        Object.keys(d.operators).sort().forEach(function(key) {
+            if (!(key in operators)) {
+                operators.add(key)
+            };
+        });
+    });
+
+    // Sort data by date
+    data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+// ---------------------------------------------------
+    var offsetWeek = new Date()
+    offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK)
+
+    var offsetMonth = new Date()
+    offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH)
+// -----------------------------------------------------
+    // Set default y-axis limits
+    dataFilteredWeek = data.filter(a => a.datetime > offsetWeek);
+    dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
+// =========================================================================================================
+// for loop for both received and sent
+    // Group either sent or received data by day
+    var dailyTotal = d3.nest()
+        .key(function(d) { return d.day; })
+        .rollup(function(v, msg) { return {
+            // msg is received or sent
+            NC_received: d3.sum(v, function(d) {return d[`NC_${msg}`]}),
+            telegram: d3.sum(v, function(d) {return d[`telegram_${msg}`]}),
+            hormud: d3.sum(v, function(d) {return d[`hormud_${msg}`]}),
+            nationlink: d3.sum(v, function(d) {return d[`nationlink_${msg}`]}),
+            somnet: d3.sum(v, function(d) {return d[`somnet_${msg}`]}),
+            somtel: d3.sum(v, function(d) {return d[`somtel_${msg}`]}),
+            telesom: d3.sum(v, function(d) {return d[`telesom_${msg}`]}),
+            golis: d3.sum(v, function(d) {return d[`golis_${msg}`]}),
+            total: d3.sum(v, function(d) {return d[`total_${msg}`]}),
+        };
+         })
+        .entries(dataFilteredMonth);
+
+    // Flatten nested data for stacking
+    for (var entry in dailyTotal) {
+        var valueList = dailyTotal[entry].value
+        for (var key in valueList) {
+            dailyTotal[entry][key] = valueList[key]
+        }
+        // concat received or sent
+        dailyTotal[entry]["day"] = dailyTotal[entry].key
+        delete dailyTotal[entry]["value"]
+        delete dailyTotal[entry]["key"]
+    }
+
+    // Create keys to stack by based on operator and direction
+    receivedKeys = []
+    sentKeys = []
+
+    var receivedStr = ""
+    var sentStr = ""
+
+    operators = Array.from(operators)
+
+    for (var i=0; i<operators.length; i++) {
+        receivedStr = operators[i] + msg;
+        receivedKeys.push(receivedStr)
+        sentStr = operators[i] + "_sent"
+        sentKeys.push(sentStr)
+    }
+
+    // Stack data by keys created above by either received or sent
+    let stackDaily = d3.stack()
+            .keys(receivedKeys)
+    let DataStackedDaily = stackReceivedDaily(dailyTotal)
+// =======================================================================================================
+    return {
+        getDocument: function(document) {
+            mediadb.doc(`/metrics/${document}`).onSnapshot(res => {
+                data = res.data(); 
+                return data;
+            })
+        },
+
+        getCollection: function(collection) {
+            mediadb.collection(`/metrics/rapid_pro/${collection}`)
+                .where("datetime", ">", offsetString)
+            .onSnapshot(res => {
+                console.log(res);
+                // Update data every time it changes in firestore
+                res.docChanges().forEach(change => {
+                    const doc = { ...change.doc.data(), id: change.doc.id };
+                    switch (change.type) {
+                        case 'added':
+                            data.push(doc);
+                            break;
+                        case 'modified':
+                            const index = data.findIndex(item => item.id == doc.id);
+                            data[index] = doc;
+                            break;
+                        case 'removed':
+                            data = data.filter(item => item.id !== doc.id);
+                            break;
+                        default:
+                            break;
+                    }
+                })
+                console.log(data);
+                return data;
+            })
+        },
+    }    
 })();
 
 // GRAPH CONTROLLER
 var graphController = (function() {
+    const TIMEFRAME_WEEK = 7;
+    const TIMEFRAME_MONTH = 30;
+    var chartTimeUnit = "10min";
+    var isYLimitReceivedManuallySet = false;
+    var isYLimitSentManuallySet = false;
 
+    function add_one_day_to_date(date) {
+        var newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + 1);
+        return newDate;
+    }
 })();
 
 // UI CONTROLLER

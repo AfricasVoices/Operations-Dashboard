@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <link rel="shortcut icon" type="image/png" href="coda/favicon.png" />
+    <title>Operations Dashboard</title>
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-auth.js"></script>
@@ -19,13 +20,13 @@
     <script src="firebase.js"></script>
 </head>
 <body>
-    <section class="login-body">
+    <!-- <section class="login-body">
         <div class="login-box">
             <img src="avficon.png" class="avatar">
             <h1 class='login-h1'>Sign in to access Operations Dashboard</h1>
             <p id="firebaseui-auth-container"></p>
         </div>
-    </section>
+    </section> -->
     <!-- NAVBAR WITH DROPDOWN & RESPONSIVE TOGGLE-->
     <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-1 py-0">
         <div class="container">
@@ -39,15 +40,15 @@
             <!-- RESPONSIVE TOGGLE -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
-                    <li><a class="nav-link border-left border-top border-right active-link" href="https://avf-dashboards.firebaseapp.com/coda/coding_progress.html">MESSAGE CODING</a></li>
+                    <li id="coding-progress"><a class="nav-link border-left border-top border-right active-link">MESSAGE CODING</a></li>
 
                     <li class="nav-item dropdown">
                         <!-- DROPDOWN TRIGGER -->
                         <a href="#" class="nav-link border-top border-right dropdown-toggle" data-toggle="dropdown">TRAFFIC</a> 
                         <!-- DROPDOWN MENU -->
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" onclick="getValue(this);">IMAQAL</a> <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" onclick="getValue(this);">WORLDBANK-PLR</a>
+                        <div id="projects" class="dropdown-menu">
+                            <a id="project-imaqal" class="dropdown-item">IMAQAL</a> <div class="dropdown-divider"></div>
+                            <a id="project-worldbank" class="dropdown-item">WORLDBANK-PLR</a>
                         </div>
                     </li> 
 
@@ -107,6 +108,8 @@
             <div class="card shadow total_failed_sms_graph my-4"></div>
         </div>
     </section>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
