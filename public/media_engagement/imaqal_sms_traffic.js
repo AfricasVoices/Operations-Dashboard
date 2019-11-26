@@ -769,7 +769,7 @@ const update = (data) => {
     var fullDateFormat = d3.timeFormat("%c")	
 
     // Update timestamp of update and reset formatting
-    const timestamp = new Date(Math.max.apply(null, data.map(function(d) {
+    const lastTimeStampDataUpdate = new Date(Math.max.apply(null, data.map(function(d) {
         return new Date(d.datetime);
     })));
     d3.select("#lastUpdated").classed("text-danger", false).text(fullDateFormat(timestamp))
@@ -777,14 +777,13 @@ const update = (data) => {
     function setLastUpdatedAlert() {
         // Calculate time diff bw current and timestamp
         var currentTime = new Date()
-        var difference_ms = (currentTime.getTime() - timestamp.getTime())/60000
+        var difference_ms = (currentTime.getTime() - lastTimeStampDataUpdate.getTime())/60000
         var difference_minutes = Math.floor(difference_ms % 60)
-        // if updated more than 20 min ago >> reformat
+        // if updated more than 30 min ago >> reformat
         if (difference_minutes > 30) {
             d3.select("#lastUpdated").classed("text-danger alert alert-danger", true)
         }
     };
-
     setInterval(setLastUpdatedAlert, 1000)
 };
 
