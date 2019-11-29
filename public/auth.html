@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Login AVF Operations Dashboard</title>
+<title>Login to AVF Engagement & Media Dashboard</title>
     <link rel="shortcut icon" type="image/png" href="favicon.png"/>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
@@ -11,7 +11,7 @@
     <script>
         // FirebaseUI config.
         var uiConfig = {
-            signInSuccessUrl: 'coding_progress.html',
+            signInSuccessUrl: "index.html",
             signInOptions: [
             firebase.auth.GoogleAuthProvider.PROVIDER_ID
             ],     
@@ -22,11 +22,38 @@
         ui.start('#firebaseui-auth-container', uiConfig);
     </script>
     </head>
-    <body class='login-body'>
+    <body class="login-body">
         <div class="login-box">
-            <img src="avficon.png" class="avatar">
-            <h1 class='login-h1'>Sign in to access Operations Dashboard</h1>
+            <img src="../../public/coda/avficon.png" class="avatar">
+            <h1 class="login-h1">Sign in to access Media Engagement Dashboard</h1>
             <p id="firebaseui-auth-container"></p>
         </div>
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
