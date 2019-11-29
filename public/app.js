@@ -224,11 +224,11 @@ var UIController = (function() {
             }
         }, 
 
-        addGraphs: function() {
+        addGraphs: function(title) {
             var html;
             html = `<div class="container"> 
                 <div class="d-md-flex justify-content-between p-1">
-                    <span class="txt-brown my-auto"><b>IMAQAL</b></span>
+                    <span class="txt-brown my-auto title"><b>%collection%</b></span>
                     <div>
                         <span class="align-content-end font-weight-bold">Timescale</span>
                         <input class="mr-2 btn btn-sm btn-brown" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
@@ -252,7 +252,8 @@ var UIController = (function() {
                 <div class="card shadow total_failed_sms_graph my-4"></div> 
             </div> `
             // Insert the HTML into the DOM
-            document.querySelector(".coding_progress").insertAdjacentHTML('beforeend', html);
+            newHtml = html.replace('%collection%', title);
+            document.querySelector(".coding_progress").insertAdjacentHTML('beforeend', newHtml);
         }
     }
 })();
@@ -289,7 +290,7 @@ var controller = (function(authCtrl, dataCtrl, graphCtrl, UICtrl) {
         }
         dataCtrl.resetData()
         // Add the graphs container to the UI
-        UICtrl.addGraphs();
+        UICtrl.addGraphs(collection);
         // Update and show the Graphs
         dataCtrl.getCollection(collection, graphCtrl.update_graphs);
     };  
