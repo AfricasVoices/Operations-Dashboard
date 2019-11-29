@@ -8,6 +8,4 @@ var config = {
     appId: "1:1063777163571:web:57361756b9ecb959"
 };
 firebase.initializeApp(config);
-const mediadb = firebase.firestore();
-const settings = { timestampsInSnapshots: true };
-mediadb.settings(settings);
+

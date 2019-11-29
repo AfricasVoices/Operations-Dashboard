@@ -35,18 +35,6 @@ var dataController = (function() {
     offset.setDate(offset.getDate() - timerange)
     var iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
     offsetString = iso(offset)
-  
-    firebase.auth().onAuthStateChanged(function (user) {
-        if (user) { 
-            console.log("Attempting to bind: " + user.email)
-            console.log('Bind Successful')
-            const mediadb = firebase.firestore();
-            const settings = {timestampsInSnapshots: true};
-            mediadb.settings(settings);
-        } else {
-            window.location.replace('auth.html');
-        }
-    });
 
     var updateData = function(res) {
         // Update data every time it changes in firestore
@@ -69,13 +57,20 @@ var dataController = (function() {
                     break;
             }
         });
-        console.log(data2)
+        // console.log(data2)
     }
     
     return {
+        resetData: function() {
+            data = [];
+            gdata = [];
+            data2 = [];
+            operators = new Set()
+        }, 
+
         getProject: function(update) {
             mediadb.collection('active_projects').onSnapshot(res => {
-                console.log(res);
+                // console.log(res);
                 // Update data every time it changes in firestore
                 updateData(res)
                 update(data2);
@@ -90,7 +85,7 @@ var dataController = (function() {
 
         getCollection: function(collection, update) {   
             mediadb.collection(`/metrics/rapid_pro/${collection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
-                console.log(res)
+                // console.log(res)
                 // Update data every time it changes in firestore
                 res.docChanges().forEach(change => {
 
@@ -111,7 +106,7 @@ var dataController = (function() {
                             break;
                     }
                 });
-                console.log(gdata)
+                // console.log(gdata)
                 update(gdata);
             });
         }
@@ -125,23 +120,71 @@ var graphController = (function() {
     var chartTimeUnit = "10min";
     var isYLimitReceivedManuallySet = false;
     var isYLimitSentManuallySet = false;
+    var operators = new Set()
+    var dayDateFormat = d3.timeFormat("%Y-%m-%d")	
 
-    function add_one_day_to_date(date) {
+    var add_one_day_to_date = function (date) {
         var newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
         return newDate;
-    }
+    };
+
+    // var formatData = function(data) {
+    //     data.forEach(function (d) {
+    //         d.datetime = new Date(d.datetime);
+    //         d.day = dayDateFormat(new Date(d.datetime))
+    //         d.total_received = +d.total_received
+    //         d.total_sent = +d.total_sent
+    //         d.total_pending = +d.total_pending
+    //         d.total_errored = +d.total_errored
+    //         d.NC_received = +d.operators["NC"]["received"]
+    //         d.telegram_received= +d.operators["telegram"]["received"]
+    //         d.golis_received= +d.operators["golis"]["received"]
+    //         d.hormud_received= +d.operators["hormud"]["received"]
+    //         d.nationlink_received= +d.operators["nationlink"]["received"]
+    //         d.somnet_received= +d.operators["somnet"]["received"]
+    //         d.somtel_received= +d.operators["somtel"]["received"]
+    //         d.telesom_received= +d.operators["telesom"]["received"]
+    //         d.golis_sent= +d.operators["golis"]["sent"]
+    //         d.hormud_sent= +d.operators["hormud"]["sent"]
+    //         d.nationlink_sent= +d.operators["nationlink"]["sent"]
+    //         d.somnet_sent= +d.operators["somnet"]["sent"]
+    //         d.somtel_sent= +d.operators["somtel"]["sent"]
+    //         d.telesom_sent= +d.operators["telesom"]["sent"]
+    //         d.telegram_sent= +d.operators["telegram"]["sent"]
+    //         d.NC_sent = +d.operators["NC"]["sent"]
+    //         Object.keys(d.operators).sort().forEach(function(key) {
+    //             if (!(key in operators)) {
+    //                 operators.add(key)
+    //             };
+    //         });
+    //     });
+
+    // };
+
+    // Update timestamp of update and reset formatting
+    const timestamp = new Date()
+
+    var setLastUpdatedAlert = function() {
+        // Calculate time diff bw current and timestamp
+        var currentTime = new Date()
+        var difference_ms = (currentTime.getTime() - timestamp.getTime())/60000
+        var difference_minutes = Math.floor(difference_ms % 60)
+        // if updated more than 20 min ago >> reformat
+        if (difference_minutes > 20) {
+            d3.select("#lastUpdated").classed("alert", true)
+        }
+    };
 
     return {
         update_graphs: function(data) {
             // Clear previous graphs before redrawing
             d3.selectAll("svg").remove();
-        
-            let operators = new Set()
-        
-            var dayDateFormat = d3.timeFormat("%Y-%m-%d")	
-        
+
             // format the data  
+            // formatData(data)
+            var operators = new Set()
+     
             data.forEach(function (d) {
                 d.datetime = new Date(d.datetime);
                 d.day = dayDateFormat(new Date(d.datetime))
@@ -171,7 +214,7 @@ var graphController = (function() {
                     };
                 });
             });
-        
+    
             // Sort data by date
             data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
         
@@ -845,20 +888,8 @@ var graphController = (function() {
             
             var fullDateFormat = d3.timeFormat("%c")	
         
-            // Update timestamp of update and reset formatting
-            const timestamp = new Date()
             d3.select("#lastUpdated").classed("alert", false).text(fullDateFormat(timestamp))
         
-            function setLastUpdatedAlert() {
-                // Calculate time diff bw current and timestamp
-                var currentTime = new Date()
-                var difference_ms = (currentTime.getTime() - timestamp.getTime())/60000
-                var difference_minutes = Math.floor(difference_ms % 60)
-                // if updated more than 20 min ago >> reformat
-                if (difference_minutes > 20) {
-                    d3.select("#lastUpdated").classed("alert", true)
-                }
-            };
             setInterval(setLastUpdatedAlert, 1000);  
         },
     };
@@ -869,6 +900,7 @@ var graphController = (function() {
 var UIController = (function() {
     var DOMstrings = {
         projectMenu: '.select__project',
+        codingProgressLink: '.codingprogress__link',
         codingProgressContainer: '.codingprogress__table',
         graphContainer: '.graph__list',
         logoutBtn: '.logout__btn',
@@ -941,7 +973,7 @@ var UIController = (function() {
                 rw.insertCell().innerText = wrong_scheme_messages != null ? (100 * wrong_scheme_messages / messages_count).toFixed(2) + '%' : "-"
                 rw.insertCell().innerText = not_coded_messages != null ? not_coded_messages : "-"
                 rw.insertCell().innerText = not_coded_messages != null ?(100 * not_coded_messages / messages_count).toFixed(2) + '%' : "-"
-                console.log(dataset_id, messages_count, messages_with_label,wrong_scheme_messages,not_coded_messages);
+                // console.log(dataset_id, messages_count, messages_with_label,wrong_scheme_messages,not_coded_messages);
                 //Table sorting using tablesorter plugin based on fraction of message labelling complete   
                 $("#codingtable").tablesorter({
                     //sorting on page load, column four in descending order i.e from least coded to most coded.
@@ -1014,7 +1046,7 @@ var controller = (function(authCtrl, dataCtrl, graphCtrl, UICtrl) {
     var setupEventListeners = function() {
         var DOM = UICtrl.getDOMstrings();
         document.querySelector(DOM.logoutBtn).addEventListener('click', ctrlLogoutDashboard);
-        document.querySelector(DOM.codingProgressContainer).addEventListener('click', ctrlDisplayCodingProgress);
+        document.querySelector(DOM.codingProgressLink).addEventListener('click', ctrlDisplayCodingProgress);
         document.querySelector(DOM.projectMenu).addEventListener('click', ctrlDisplayProject);          
     };
     
@@ -1025,10 +1057,7 @@ var controller = (function(authCtrl, dataCtrl, graphCtrl, UICtrl) {
 
     var ctrlDisplayCodingProgress = function(e) {
         if(e.target && e.target.nodeName == "A") {
-            // Add the coding progress container to the UI
-            UICtrl.addSection();
-            // Update and show the coding progress
-            dataCtrl.getDocument(UICtrl.update_progress_ui);
+            window.location.reload();
         }
     };
     
@@ -1041,6 +1070,7 @@ var controller = (function(authCtrl, dataCtrl, graphCtrl, UICtrl) {
             console.log(e.target.innerText)
             collection = e.target.innerText
         }
+        dataCtrl.resetData()
         // Add the graphs container to the UI
         UICtrl.addGraphs();
         // Update and show the Graphs
@@ -1058,15 +1088,18 @@ var controller = (function(authCtrl, dataCtrl, graphCtrl, UICtrl) {
         init: function() {
             console.log('Application has started.');
             authCtrl.initApp();
+            setupEventListeners();
             dataCtrl.getProject(UICtrl.addDropdownMenu);
             UICtrl.addSection();
             dataCtrl.getDocument(UICtrl.update_progress_ui);
-            setupEventListeners();
         }
     };
     
 })(authController, dataController, graphController, UIController);
 
+const mediadb = firebase.firestore();
+const settings = { timestampsInSnapshots: true };
+mediadb.settings(settings);
 controller.init();
 
 
