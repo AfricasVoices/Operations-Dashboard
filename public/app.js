@@ -1,17 +1,14 @@
 // AUTH CONTROLLER
 var authController = (function() {
-    var isAuthenticated;
-
     return {
         //Authentication state listener
         initApp: function() {
             firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
-                    isAuthenticated = true;
                     console.log('Login Successful');
                     console.log("Attempting to bind: " + user.email)
                     console.log('Bind Successful');
-                    return isAuthenticated;
+                    return user;
                 } else {
                     window.location.replace('auth.html')
                 }
@@ -30,9 +27,6 @@ var authController = (function() {
 
 // DATA CONTROLLER
 var dataController = (function() {
-    const mediadb = firebase.firestore();
-    const settings = {timestampsInSnapshots: true};
-    mediadb.settings(settings);
     var data = [];
     var gdata = [];
     var data2 = [];
@@ -41,94 +35,85 @@ var dataController = (function() {
     offset.setDate(offset.getDate() - timerange)
     var iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
     offsetString = iso(offset)
+  
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) { 
+            console.log("Attempting to bind: " + user.email)
+            console.log('Bind Successful')
+            const mediadb = firebase.firestore();
+            const settings = {timestampsInSnapshots: true};
+            mediadb.settings(settings);
+        } else {
+            window.location.replace('auth.html');
+        }
+    });
+
+    var updateData = function(res) {
+        // Update data every time it changes in firestore
+        res.docChanges().forEach(change => {
+
+            const doc = { ...change.doc.data(), id: change.doc.id };
+
+            switch (change.type) {
+                case 'added':
+                    data2.push(doc);
+                    break;
+                case 'modified':
+                    const index = data2.findIndex(item => item.id == doc.id);
+                    data2[index] = doc;
+                    break;
+                case 'removed':
+                    data2 = data2.filter(item => item.id !== doc.id);
+                    break;
+                default:
+                    break;
+            }
+        });
+        console.log(data2)
+    }
     
     return {
         getProject: function(update) {
-            firebase.auth().onAuthStateChanged(function (user) {
-                if (user) {
-                    console.log("Attempting to bind: " + user.email)
-                    console.log('Bind Successful');
-                    mediadb.collection('active_projects').onSnapshot(res => {
-                        console.log(res);
-                        // Update data every time it changes in firestore
-                        res.docChanges().forEach(change => {
-
-                            const doc = { ...change.doc.data(), id: change.doc.id };
-
-                            switch (change.type) {
-                                case 'added':
-                                    data2.push(doc);
-                                    break;
-                                case 'modified':
-                                    const index = data2.findIndex(item => item.id == doc.id);
-                                    data2[index] = doc;
-                                    break;
-                                case 'removed':
-                                    data2 = data2.filter(item => item.id !== doc.id);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-                        update(data2);
-                        console.log(data2)
-                    });
-                } else {
-                    window.location.replace('auth.html');
-                }
-            })
+            mediadb.collection('active_projects').onSnapshot(res => {
+                console.log(res);
+                // Update data every time it changes in firestore
+                updateData(res)
+                update(data2);
+            });  
         },
 
         getDocument: function(update) {
-            firebase.auth().onAuthStateChanged(function (user) {
-                if (user) {
-                    console.log("Attempting to bind: " + user.email)
-                    console.log('Bind Successful');
-                    mediadb.doc('metrics/coda').onSnapshot(function(res) {
-                        update(res.data());
-                    });
-                } else {
-                    window.location.replace('auth.html');
-                }
+            mediadb.doc('metrics/coda').onSnapshot(function(res) {
+                update(res.data());
             });
         },
 
-        getCollection: function(collection, update) {
-            //Perform Authentication then update data 
-            firebase.auth().onAuthStateChanged(function (user) {
-                if (user) {
-                    console.log("Attempting to bind: " + user.email)
-                    mediadb.collection(`/metrics/rapid_pro/${collection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
-                        console.log(res)
-                        // Update data every time it changes in firestore
-                        res.docChanges().forEach(change => {
+        getCollection: function(collection, update) {   
+            mediadb.collection(`/metrics/rapid_pro/${collection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
+                console.log(res)
+                // Update data every time it changes in firestore
+                res.docChanges().forEach(change => {
 
-                            const doc = { ...change.doc.data(), id: change.doc.id };
-
-                            switch (change.type) {
-                                case 'added':
-                                    gdata.push(doc);
-                                    break;
-                                case 'modified':
-                                    const index = gdata.findIndex(item => item.id == doc.id);
-                                    gdata[index] = doc;
-                                    break;
-                                case 'removed':
-                                    gdata = gdata.filter(item => item.id !== doc.id);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-                        update(gdata);
-                        console.log(gdata)
-                    });
-                    console.log('Bind Successful');
-                } else {
-                    window.location.replace('auth.html')
-                }
+                    const doc = { ...change.doc.data(), id: change.doc.id };
+        
+                    switch (change.type) {
+                        case 'added':
+                            gdata.push(doc);
+                            break;
+                        case 'modified':
+                            const index = gdata.findIndex(item => item.id == doc.id);
+                            gdata[index] = doc;
+                            break;
+                        case 'removed':
+                            gdata = gdata.filter(item => item.id !== doc.id);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+                console.log(gdata)
+                update(gdata);
             });
-
         }
     };
 })();
@@ -882,8 +867,19 @@ var graphController = (function() {
 
 // UI CONTROLLER
 var UIController = (function() {
+    var DOMstrings = {
+        projectMenu: '.select__project',
+        codingProgressContainer: '.codingprogress__table',
+        graphContainer: '.graph__list',
+        logoutBtn: '.logout__btn',
+    };
 
     return {
+
+        getDOMstrings: function() {
+            return DOMstrings;
+        },
+
         addDropdownMenu: function(data) {
             var html, newHtml;
             html = `<a id="project" class="dropdown-item">%project_name%</a><div class="dropdown-divider"></div>`
@@ -1014,41 +1010,64 @@ var UIController = (function() {
 
 // // GLOBAL APP CONTROLLER
 var controller = (function(authCtrl, dataCtrl, graphCtrl, UICtrl) {
-    window.onload = function () {
-        authCtrl.initApp();
-        dataCtrl.getProject(UICtrl.addDropdownMenu);
-        // get and Remove any element from the dom
-        UICtrl.addSection();
-        dataCtrl.getDocument(UICtrl.update_progress_ui);
+
+    var setupEventListeners = function() {
+        var DOM = UICtrl.getDOMstrings();
+        document.querySelector(DOM.logoutBtn).addEventListener('click', ctrlLogoutDashboard);
+        document.querySelector(DOM.codingProgressContainer).addEventListener('click', ctrlDisplayCodingProgress);
+        document.querySelector(DOM.projectMenu).addEventListener('click', ctrlDisplayProject);          
     };
     
-    document.querySelector(".btn-brown").addEventListener('click', function() {
+    // Logout of the dashboard
+    var ctrlLogoutDashboard = function() {
         authCtrl.logout()
-    });
+    };
 
-    document.getElementById("coding-progress").addEventListener("click", function(e) {
+    var ctrlDisplayCodingProgress = function(e) {
         if(e.target && e.target.nodeName == "A") {
-            // get and Remove any element from the dom
+            // Add the coding progress container to the UI
             UICtrl.addSection();
+            // Update and show the coding progress
             dataCtrl.getDocument(UICtrl.update_progress_ui);
         }
-    });
-
-    document.getElementById("projects").addEventListener("click", function(e) {
+    };
+    
+    var ctrlDisplayProject = function(e) {
         var collection;
-        document.querySelector(".coding_progress").innerHTML = "";
-        document.querySelector(".graphs").innerHTML = "";
+        var DOM = UICtrl.getDOMstrings();
+        document.querySelector(DOM.codingProgressContainer).innerHTML = "";
+        document.querySelector(DOM.graphContainer).innerHTML = "";
         if(e.target && e.target.nodeName == "A") {
             console.log(e.target.innerText)
             collection = e.target.innerText
         }
+        // Add the graphs container to the UI
         UICtrl.addGraphs();
+        // Update and show the Graphs
         dataCtrl.getCollection(collection, graphCtrl.update_graphs);
-    });    
+    };  
+
+    // window.onload = function () {
+    //     authCtrl.initApp();
+    //     dataCtrl.getProject(UICtrl.addDropdownMenu);
+    //     UICtrl.addSection();
+    //     dataCtrl.getDocument(UICtrl.update_progress_ui);
+    // };
+
+    return {
+        init: function() {
+            console.log('Application has started.');
+            authCtrl.initApp();
+            dataCtrl.getProject(UICtrl.addDropdownMenu);
+            UICtrl.addSection();
+            dataCtrl.getDocument(UICtrl.update_progress_ui);
+            setupEventListeners();
+        }
+    };
     
 })(authController, dataController, graphController, UIController);
 
-// controller.init();
+controller.init();
 
 
 
