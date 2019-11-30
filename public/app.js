@@ -34,6 +34,29 @@ var dataController = (function() {
     offset.setDate(offset.getDate() - timerange);
     var iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
     offsetString = iso(offset);
+
+    var updateData = function(response, input) {
+        // Update data every time it changes in firestore
+        response.docChanges().forEach(change => {
+
+            const doc = { ...change.doc.data(), id: change.doc.id };
+
+            switch (change.type) {
+                case 'added':
+                    input.push(doc);
+                    break;
+                case 'modified':
+                    const index = input.findIndex(item => item.id == doc.id);
+                    input[index] = doc;
+                    break;
+                case 'removed':
+                    input = input.filter(item => item.id !== doc.id);
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
     
     return {
         resetData: function() {
@@ -45,25 +68,7 @@ var dataController = (function() {
         getProject: function(update) {
             mediadb.collection('active_projects').onSnapshot(res => {
                 // Update data every time it changes in firestore
-                res.docChanges().forEach(change => {
-
-                    const doc = { ...change.doc.data(), id: change.doc.id };
-
-                    switch (change.type) {
-                        case 'added':
-                            activeProjects.push(doc);
-                            break;
-                        case 'modified':
-                            const index = activeProjects.findIndex(item => item.id == doc.id);
-                            activeProjects[index] = doc;
-                            break;
-                        case 'removed':
-                            activeProjects = activeProjects.filter(item => item.id !== doc.id);
-                            break;
-                        default:
-                            break;
-                    }
-                });
+                updateData(res, activeProjects);
                 update(activeProjects);
             });  
         },
@@ -77,25 +82,7 @@ var dataController = (function() {
         getCollection: function(collection, update) {   
             mediadb.collection(`/metrics/rapid_pro/${collection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
                 // Update data every time it changes in firestore
-                res.docChanges().forEach(change => {
-
-                    const doc = { ...change.doc.data(), id: change.doc.id };
-        
-                    switch (change.type) {
-                        case 'added':
-                            data.push(doc);
-                            break;
-                        case 'modified':
-                            const index = data.findIndex(item => item.id == doc.id);
-                            data[index] = doc;
-                            break;
-                        case 'removed':
-                            data = data.filter(item => item.id !== doc.id);
-                            break;
-                        default:
-                            break;
-                    }
-                });
+                updateData(res, data);
                 update(data);
             });
         }
