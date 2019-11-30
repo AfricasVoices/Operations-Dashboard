@@ -13,20 +13,6 @@ var graphController = (function() {
         return newDate;
     };
 
-    // Update timestamp of update and reset formatting
-    const timestamp = new Date()
-
-    var setLastUpdatedAlert = function() {
-        // Calculate time diff bw current and timestamp
-        var currentTime = new Date()
-        var difference_ms = (currentTime.getTime() - timestamp.getTime())/60000
-        var difference_minutes = Math.floor(difference_ms % 60)
-        // if updated more than 20 min ago >> reformat
-        if (difference_minutes > 20) {
-            d3.select("#lastUpdated").classed("alert", true)
-        }
-    };
-
     return {
         update_graphs: function(data) {
             // Clear previous graphs before redrawing
@@ -737,11 +723,24 @@ var graphController = (function() {
                 }
             });                        
             
-            var fullDateFormat = d3.timeFormat("%c")	
-        
-            d3.select("#lastUpdated").classed("alert", false).text(fullDateFormat(timestamp))
-        
-            setInterval(setLastUpdatedAlert, 1000);  
+            var fullDateFormat = d3.timeFormat("%c")
+            
+             // Update timestamp of update and reset formatting
+             const lastUpdateTimeStamp = new Date(Math.max.apply(null, data.map(function(d) {
+                return new Date(d.datetime);
+            })));
+            d3.select("#lastUpdated").classed("text-danger", false).text(fullDateFormat(lastUpdateTimeStamp))
+           
+            function setLastUpdatedAlert() {
+                // Calculate time diff bw current and lastUpdateTimeStamp
+                var currentTime = new Date()
+                var difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime())/60000
+                var difference_minutes = Math.floor(difference_ms % 60)
+                if (difference_minutes > 30) {
+                    d3.select("#lastUpdated").classed("text-danger alert alert-danger", true)
+                }
+            };
+            setInterval(setLastUpdatedAlert, 1000)
         },
     };
 

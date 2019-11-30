@@ -219,11 +219,17 @@ var UIController = (function() {
             var html;
             html = `<div class="container"> 
                 <div class="d-md-flex justify-content-between p-1">
-                    <span class="txt-brown my-auto title"><b>%collection%</b></span>
+                    <div>
+                        <span class="txt-brown my-auto title"><b>%collection%</b></span>
+                    </div>
                     <div>
                         <span class="align-content-end font-weight-bold">Timescale</span>
                         <input class="mr-2 btn btn-sm btn-brown" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
                         <input class="btn btn-sm btn-brown" type="button" id="buttonUpdateViewOneDay" value="1 day"> 
+                    </div>
+                    <div class="d-flex">
+                        <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
+                        <div class="font-weight-bold" id="lastUpdated"></div>
                     </div>
                 </div> 
                 <section>
