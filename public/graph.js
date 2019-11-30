@@ -5,7 +5,6 @@ var graphController = (function() {
     var chartTimeUnit = "10min";
     var isYLimitReceivedManuallySet = false;
     var isYLimitSentManuallySet = false;
-    var operators = new Set()
     var dayDateFormat = d3.timeFormat("%Y-%m-%d")	
 
     var add_one_day_to_date = function (date) {

@@ -124,12 +124,12 @@ var UIController = (function() {
             // Replace the placeholder text with some actual data
             data.forEach(function (obj) {
                 newHtml = html.replace('%project_name%', obj.project_name);
-                document.querySelector(".dropdown-menu").insertAdjacentHTML('beforeend', newHtml);
+                document.querySelector(DOMstrings.projectMenu).insertAdjacentHTML('beforeend', newHtml);
             });
             
         },
 
-        addSection: function() {
+        addCodingProgressSection: function() {
             var html;
             html = `<div class="container container-fluid table-responsive">
                     <table id='codingtable' class='table'>
@@ -150,7 +150,7 @@ var UIController = (function() {
                 <div id="last_update">Last updated: </div>
             </div> `
             // Insert the HTML into the DOM
-            document.querySelector(".coding_progress").insertAdjacentHTML('beforeend', html);
+            document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', html);
         },
 
         update_progress_ui: function(data) {
@@ -168,7 +168,7 @@ var UIController = (function() {
                     var wrong_scheme_messages = data['coding_progress'][dataset_id]['wrong_scheme_messages']
                     var not_coded_messages = data['coding_progress'][dataset_id]['not_coded_messages']
                     var dataset_link = document.createElement("a")
-                        dataset_link.setAttribute("href", "https://web-coda.firebaseapp.com/?dataset="+dataset_id)
+                        dataset_link.setAttribute("href", `https://web-coda.firebaseapp.com/?dataset=${dataset_id}`)
                         dataset_link.setAttribute('target', '_blank')
                         dataset_link.innerText = dataset_id
                     rw = status_body.insertRow()
@@ -244,7 +244,7 @@ var UIController = (function() {
             </div> `
             // Insert the HTML into the DOM
             newHtml = html.replace('%collection%', title);
-            document.querySelector(".coding_progress").insertAdjacentHTML('beforeend', newHtml);
+            document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', newHtml);
         }
     }
 })();
@@ -291,10 +291,15 @@ var controller = (function(authCtrl, dataCtrl, graphCtrl, UICtrl) {
     return {
         init: function() {
             console.log('Application has started.');
+            // initialize the application
             authCtrl.initApp();
+            // set up event listeners
             setupEventListeners();
+            // Add the dropdown menu to the UI
             dataCtrl.getProject(UICtrl.addDropdownMenu);
-            UICtrl.addSection();
+            // Add the coding progress section to the UI
+            UICtrl.addCodingProgressSection();
+            // Get data for coding progress table
             dataCtrl.getDocument(UICtrl.update_progress_ui);
         }
     };
