@@ -1,7 +1,7 @@
 // AUTH CONTROLLER
 var authController = (function() {
     return {
-        //Authentication state listener
+        // Authentication state listener
         initApp: function() {
             firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
@@ -304,7 +304,6 @@ const settings = { timestampsInSnapshots: true };
 mediadb.settings(settings);
 // initialize the app 
 controller.init();
-
 
 
 
