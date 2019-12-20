@@ -27,7 +27,7 @@ https://github.com/christianbach/tablesorter/blob/master/LICENSE<br/>
 Copyright (c) 2014 Christian Bach
 
 ### Bootstrap - front-end framework
-License: MIT<br/>   
+License: MIT<br/> 
 https://github.com/twbs/bootstrap/blob/master/LICENSE<br/> 
 Copyright (c) 2011-2019 Twitter, Inc.<br/> 
 Copyright (c) 2011-2019 The Bootstrap Authors
