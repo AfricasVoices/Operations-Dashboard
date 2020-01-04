@@ -1,26 +1,20 @@
 // AUTH CONTROLLER
-var authController = (function() {
-    return {
-        // Authentication state listener
-        initApp: function() {
-            firebase.auth().onAuthStateChanged(function (user) {
-                if (user) {
-                    console.log('Login Successful');
-                    console.log("Attempting to bind: " + user.email)
-                    console.log('Bind Successful');
-                    return user;
-                } else {
-                    window.location.replace('auth.html')
-                }
-            });
-        },
+class AuthController {
+    // Authentication state listener
+    static login() {
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                console.log("Login Successful");
+            } else {
+                window.location.replace("auth.html")
+            }
+        });
+    }
 
-        //logout function
-        logout: function() {
-            firebase.auth().signOut()
-                .catch(function (err) {
-                    console.log(err);
-                })
-        }
-    };
-})();
+    static logout() {
+        firebase.auth().signOut()
+            .catch(err => {
+                console.log(err);
+            })
+    }
+}
