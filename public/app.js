@@ -21,7 +21,7 @@ class Controller {
     
     // Navigate to the selected project graphs
     static ctrlDisplayProject(e) {
-        let collection, DOM = UICtrl.getDOMstrings();
+        let collection, DOM = UIController.getDOMstrings();
         document.querySelector(DOM.codingProgressContainer).innerHTML = "";
         document.querySelector(DOM.graphContainer).innerHTML = "";
         if(e.target && e.target.nodeName == "A") {
