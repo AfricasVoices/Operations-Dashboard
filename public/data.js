@@ -1,6 +1,6 @@
 // DATA CONTROLLER
 class DataController {
-    static updateData = function(response, input) {
+    static updateData(response, input) {
         // Update data every time it changes in firestore
         response.docChanges().forEach(change => {
 
