@@ -1,65 +1,59 @@
 // GLOBAL APP CONTROLLER
-var controller = (function(authCtrl, dataCtrl, graphCtrl, UICtrl) {
+class Controller {
 
-    var setupEventListeners = function() {
-        var DOM = UICtrl.getDOMstrings();
-        document.querySelector(DOM.logoutBtn).addEventListener('click', ctrlLogoutDashboard);
-        document.querySelector(DOM.codingProgressLink).addEventListener('click', ctrlDisplayCodingProgress);
-        document.querySelector(DOM.projectMenu).addEventListener('click', ctrlDisplayProject);          
+    static setupEventListeners() {
+        let DOM = UIController.getDOMstrings();
+        document.querySelector(DOM.logoutBtn).addEventListener('click', Controller.ctrlLogoutDashboard);
+        document.querySelector(DOM.codingProgressLink).addEventListener('click', Controller.ctrlDisplayCodingProgress);
+        document.querySelector(DOM.projectMenu).addEventListener('click', Controller.ctrlDisplayProject);          
     };
     
-    // Logout of the dashboard
-    var ctrlLogoutDashboard = function() {
-        authCtrl.logout()
+    static ctrlLogoutDashboard() {
+        AuthController.logout()
     };
 
     // Navigate to coding progress page
-    var ctrlDisplayCodingProgress = function(e) {
+    static ctrlDisplayCodingProgress(e) {
         if(e.target && e.target.nodeName == "A") {
             window.location.reload();
         }
     };
     
     // Navigate to the selected project graphs
-    var ctrlDisplayProject = function(e) {
-        var collection;
-        var DOM = UICtrl.getDOMstrings();
+    static ctrlDisplayProject(e) {
+        let collection, DOM = UICtrl.getDOMstrings();
         document.querySelector(DOM.codingProgressContainer).innerHTML = "";
         document.querySelector(DOM.graphContainer).innerHTML = "";
         if(e.target && e.target.nodeName == "A") {
             console.log(e.target.innerText)
             collection = e.target.innerText
         }
-        dataCtrl.resetData()
         // Add the graphs container to the UI
-        UICtrl.addGraphs(collection);
+        UIController.addGraphs(collection);
         // Update and show the Graphs
-        dataCtrl.getCollection(collection, graphCtrl.update_graphs);
+        DataController.getCollection(collection, GraphController.update_graphs);
     };  
 
-    return {
-        init: function() {
-            console.log('Application has started.');
-            // initialize the application
-            authCtrl.initApp();
-            // set up event listeners
-            setupEventListeners();
-            // Add the dropdown menu to the UI
-            dataCtrl.getProject(UICtrl.addDropdownMenu);
-            // Add the coding progress section to the UI
-            UICtrl.addCodingProgressSection();
-            // Get data for coding progress table
-            dataCtrl.getDocument(UICtrl.update_progress_ui);
-        }
-    };
-    
-})(authController, dataController, graphController, UIController);
+    static init() {
+        console.log('Application has started.');
+        // initialize the application
+        AuthController.login();
+        // set up event listeners
+        Controller.setupEventListeners();
+        // Add the dropdown menu to the UI
+        DataController.getProject(UIController.addDropdownMenu);
+        // Add the coding progress section to the UI
+        UIController.addCodingProgressSection();
+        // Get data for coding progress table
+        DataController.getDocument(UIController.update_progress_ui);
+    } 
+} 
 // initialize firestore
 const mediadb = firebase.firestore();
 const settings = { timestampsInSnapshots: true };
 mediadb.settings(settings);
 // initialize the app 
-controller.init();
+Controller.init();
 
 
 
