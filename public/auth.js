@@ -14,6 +14,7 @@ class AuthController {
     static logout() {
         firebase.auth().signOut()
             .catch(err => {
+                alert("An error occurred")
                 console.log(err);
             })
     }
