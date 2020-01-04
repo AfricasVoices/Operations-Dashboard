@@ -37,7 +37,7 @@ class Controller {
     static init() {
         console.log('Application has started.');
         // initialize the application
-        AuthController.login();
+        AuthController.get_user();
         // set up event listeners
         Controller.setupEventListeners();
         // Add the dropdown menu to the UI
