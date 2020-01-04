@@ -1,7 +1,7 @@
 // GRAPH CONTROLLER
 class GraphController {
-    add_one_day_to_date(date) {
-        var newDate = new Date(date);
+    static add_one_day_to_date(date) {
+        let newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
         return newDate;
     };
@@ -10,16 +10,16 @@ class GraphController {
     static update_graphs(data) {
         const TIMEFRAME_WEEK = 7;
         const TIMEFRAME_MONTH = 30;
-        var chartTimeUnit = "10min";
-        var isYLimitReceivedManuallySet = false;
-        var isYLimitSentManuallySet = false;
-        var dayDateFormat = d3.timeFormat("%Y-%m-%d")
+        let chartTimeUnit = "10min";
+        let isYLimitReceivedManuallySet = false;
+        let isYLimitSentManuallySet = false;
+        let dayDateFormat = d3.timeFormat("%Y-%m-%d")
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
         // format the data  
         // formatData(data)
-        var operators = new Set()
+        let operators = new Set()
     
         data.forEach(function (d) {
             d.datetime = new Date(d.datetime);
@@ -54,18 +54,18 @@ class GraphController {
         // Sort data by date
         data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
     
-        var offsetWeek = new Date()
+        let offsetWeek = new Date()
         offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK)
     
-        var offsetMonth = new Date()
+        let offsetMonth = new Date()
         offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH)
     
         // Set default y-axis limits
-        dataFilteredWeek = data.filter(a => a.datetime > offsetWeek);
-        dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
+        let dataFilteredWeek = data.filter(a => a.datetime > offsetWeek);
+        let dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
     
         // Group received data by day
-        var dailyReceivedTotal = d3.nest()
+        let dailyReceivedTotal = d3.nest()
             .key(function(d) { return d.day; })
             .rollup(function(v) { return {
                 NC_received: d3.sum(v, function(d) {return d.NC_received}),
@@ -82,9 +82,9 @@ class GraphController {
             .entries(dataFilteredMonth);
     
         // Flatten nested data for stacking
-        for (var entry in dailyReceivedTotal) {
-            var valueList = dailyReceivedTotal[entry].value
-            for (var key in valueList) {
+        for (let entry in dailyReceivedTotal) {
+            let valueList = dailyReceivedTotal[entry].value
+            for (let key in valueList) {
                 dailyReceivedTotal[entry][key] = valueList[key]
             }
             dailyReceivedTotal[entry]["day"] = dailyReceivedTotal[entry].key
@@ -93,7 +93,7 @@ class GraphController {
         }
     
         // Group sent data by day
-        var dailySentTotal = d3.nest()
+        let dailySentTotal = d3.nest()
             .key(function(d) { return d.day; })
             .rollup(function(v) { return {
                 NC_sent: d3.sum(v, function(d) {return d.NC_sent}),
@@ -110,9 +110,9 @@ class GraphController {
             .entries(dataFilteredMonth);
     
         // Flatten nested data for stacking
-        for (var entry in dailySentTotal) {
-            var valueList = dailySentTotal[entry].value
-            for (var key in valueList) {
+        for (let entry in dailySentTotal) {
+            let valueList = dailySentTotal[entry].value
+            for (let key in valueList) {
                 dailySentTotal[entry][key] = valueList[key]
             }
             dailySentTotal[entry]["day"] = dailySentTotal[entry].key
@@ -121,15 +121,15 @@ class GraphController {
         }
     
         // Create keys to stack by based on operator and direction
-        receivedKeys = []
-        sentKeys = []
+        let receivedKeys = []
+        let sentKeys = []
     
-        var receivedStr = ""
-        var sentStr = ""
+        let receivedStr = ""
+        let sentStr = ""
     
         operators = Array.from(operators)
     
-        for (var i=0; i<operators.length; i++) {
+        for (let i=0; i<operators.length; i++) {
             receivedStr = operators[i] + "_received";
             receivedKeys.push(receivedStr)
             sentStr = operators[i] + "_sent"
@@ -160,7 +160,7 @@ class GraphController {
     
     
         // Append total received sms graph to svg
-        var total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
+        let total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
             .attr("width", Width + Margin.left + Margin.right)
             .attr("height", Height + Margin.top + Margin.bottom)
             .append("g")
@@ -168,7 +168,7 @@ class GraphController {
                 "translate(" + Margin.left + "," + Margin.top + ")");
     
         // Append total sent sms graph to svg
-        var total_sent_sms_graph = d3.select(".total_sent_sms_graph").append("svg")
+        let total_sent_sms_graph = d3.select(".total_sent_sms_graph").append("svg")
             .attr("width", Width + Margin.left + Margin.right)
             .attr("height", Height + Margin.top + Margin.bottom)
             .append("g")
@@ -176,7 +176,7 @@ class GraphController {
                 "translate(" + Margin.left + "," + Margin.top + ")");
     
         // Append total sent sms graph to svg
-        var total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
+        let total_failed_sms_graph = d3.select(".total_failed_sms_graph").append("svg")
             .attr("width", Width + Margin.left + Margin.right)
             .attr("height", Height + Margin.top + Margin.bottom)
             .append("g")
@@ -184,7 +184,7 @@ class GraphController {
                 "translate(" + Margin.left + "," + Margin.top + ")");
     
         // Format TimeStamp  
-        var timeFormat = d3.timeFormat("%H %d %m %Y");
+        let timeFormat = d3.timeFormat("%H %d %m %Y");
     
         // Define line paths for total failed sms(s)
         const total_failed_line = d3.line()
@@ -196,21 +196,21 @@ class GraphController {
         const total_failed_path = total_failed_sms_graph.append('path');
     
         // custom color scheme
-        color_scheme = ["#31cece", "#f58231", "#3cb44b", "#CCCC00", "#4363d8", "#800000", "#f032e6", "#911eb4", "#e6194B"]
+        let color_scheme = ["#31cece", "#f58231", "#3cb44b", "#CCCC00", "#4363d8", "#800000", "#f032e6", "#911eb4", "#e6194B"]
         let color = d3.scaleOrdinal(color_scheme);
         let colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys);
         let colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
     
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
-        xMin = d3.min(data, d => new Date(d.day));
-        xMax = d3.max(data, d => GraphController.add_one_day_to_date(d.day)) 
+        let xMin = d3.min(data, d => new Date(d.day));
+        let xMax = d3.max(data, d => GraphController.add_one_day_to_date(d.day)) 
         failed_messages_x_axis_range.domain([xMin, xMax]);
     
-        var yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
-        var yLimitReceivedFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
-        var yLimitSent = d3.max(dailySentTotal, function (d) { return d.total_sent; });
-        var yLimitSentFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
+        let yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
+        let yLimitReceivedFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_received; });
+        let yLimitSent = d3.max(dailySentTotal, function (d) { return d.total_sent; });
+        let yLimitSentFiltered = d3.max(dataFilteredWeek, function (d) { return d.total_sent; });
     
         // Draw graphs according to selected time unit
         if (chartTimeUnit == "1day") {
@@ -294,7 +294,7 @@ class GraphController {
             .attr("class", "receivedLegend")
             .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`)
     
-        var receivedLegend = d3.legendColor()
+        let receivedLegend = d3.legendColor()
             .shapeWidth(12)
             .orient('vertical')
             .scale(colorReceived)
@@ -308,7 +308,7 @@ class GraphController {
         .attr("class", "sentLegend")
         .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`)
     
-        var sentLegend = d3.legendColor()
+        let sentLegend = d3.legendColor()
             .shapeWidth(12)
             .orient('vertical')
             .scale(colorSent)
@@ -322,7 +322,7 @@ class GraphController {
     
         function updateReceivedChartLimit() {
             // Get the value of the button
-            var ylimit = this.value
+            let ylimit = this.value
         
             y_total_received_sms.domain([0, ylimit]);
     
@@ -341,7 +341,7 @@ class GraphController {
     
         function updateSentChartLimit() {
             // Get the value of the button
-            var ylimit = this.value
+            let ylimit = this.value
         
             y_total_sent_sms.domain([0, ylimit]);
     
@@ -459,7 +459,7 @@ class GraphController {
     
         function drawOneDayReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            yLimitReceivedTotal = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
+            let yLimitReceivedTotal = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
     
             if (isYLimitReceivedManuallySet == false) {
                 yLimitReceived = yLimitReceivedTotal
@@ -611,7 +611,7 @@ class GraphController {
         
         function drawOneDaySentGraph(yLimitSent) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            yLimitSentTotal = d3.max(dailySentTotal, function (d) { return d.total_sent; });
+            let yLimitSentTotal = d3.max(dailySentTotal, function (d) { return d.total_sent; });
     
             if (isYLimitSentManuallySet != true) {
                 yLimitSent = yLimitSentTotal
@@ -722,7 +722,7 @@ class GraphController {
             }
         });                        
         
-        var fullDateFormat = d3.timeFormat("%c")
+        let fullDateFormat = d3.timeFormat("%c")
         
             // Update timestamp of update and reset formatting
             const lastUpdateTimeStamp = new Date(Math.max.apply(null, data.map(function(d) {
@@ -732,9 +732,9 @@ class GraphController {
         
         function setLastUpdatedAlert() {
             // Calculate time diff bw current and lastUpdateTimeStamp
-            var currentTime = new Date()
-            var difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime())/60000
-            var difference_minutes = Math.floor(difference_ms % 60)
+            let currentTime = new Date()
+            let difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime())/60000
+            let difference_minutes = Math.floor(difference_ms % 60)
             if (difference_minutes > 30) {
                 d3.select("#lastUpdated").classed("text-danger alert alert-danger", true)
             }

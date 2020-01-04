@@ -57,12 +57,6 @@ class DataController {
         });  
     }
 
-    static resetData() {
-        data = [];
-        activeProjects = [];
-        operators = new Set()
-    }
-
     static getDocument(update) {
         mediadb.doc('metrics/coda').onSnapshot(function(res) {
             update(res.data());
@@ -72,10 +66,10 @@ class DataController {
     static getCollection(collection, update) {  
         let data = [];
         let offset = new Date();
-        timerange = 30;
+        let timerange = 30;
         offset.setDate(offset.getDate() - timerange);
         let iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
-        offsetString = iso(offset); 
+        let offsetString = iso(offset); 
         mediadb.collection(`/metrics/rapid_pro/${collection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
             // Update data every time it changes in firestore
             DataController.updateData(res, data);
@@ -98,31 +92,19 @@ class UIController {
     }
 
     static addDropdownMenu(data) {
-        let DOMstrings = {
-            projectMenu: '.select__project',
-            codingProgressLink: '.codingprogress__link',
-            codingProgressContainer: '.codingprogress__table',
-            graphContainer: '.graph__list',
-            logoutBtn: '.logout__btn',
-        };
+        let DOM = UIController.getDOMstrings();
         let html, newHtml;
         html = `<a id="project" class="dropdown-item">%project_name%</a><div class="dropdown-divider"></div>`
         // Replace the placeholder text with some actual data
         data.forEach(function (obj) {
             newHtml = html.replace('%project_name%', obj.project_name);
-            document.querySelector(DOMstrings.projectMenu).insertAdjacentHTML('beforeend', newHtml);
+            document.querySelector(DOM.projectMenu).insertAdjacentHTML('beforeend', newHtml);
         });
         
     }
 
     static addCodingProgressSection() {
-        let DOMstrings = {
-            projectMenu: '.select__project',
-            codingProgressLink: '.codingprogress__link',
-            codingProgressContainer: '.codingprogress__table',
-            graphContainer: '.graph__list',
-            logoutBtn: '.logout__btn',
-        };
+        let DOM = UIController.getDOMstrings();
         let html;
         html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
@@ -143,17 +125,10 @@ class UIController {
             <div id="last_update">Last updated: </div>
         </div> `
         // Insert the HTML into the DOM
-        document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', html);
+        document.querySelector(DOM.codingProgressContainer).insertAdjacentHTML('beforeend', html);
     }
 
     static update_progress_ui(data) {
-        let DOMstrings = {
-            projectMenu: '.select__project',
-            codingProgressLink: '.codingprogress__link',
-            codingProgressContainer: '.codingprogress__table',
-            graphContainer: '.graph__list',
-            logoutBtn: '.logout__btn',
-        };
         // console.log("update_ui: " + JSON.stringify(data));
         let status_body = document.getElementById('coding_status_body');
         if (status_body) {
@@ -162,12 +137,12 @@ class UIController {
             }
             last_update = data["last_update"]
             document.getElementById('last_update').innerText = "Last updated: " + last_update
-            for (var dataset_id in data["coding_progress"]) {
-                var messages_count = data["coding_progress"][dataset_id]["messages_count"]
-                var messages_with_label = data["coding_progress"][dataset_id]["messages_with_label"]
-                var wrong_scheme_messages = data['coding_progress'][dataset_id]['wrong_scheme_messages']
-                var not_coded_messages = data['coding_progress'][dataset_id]['not_coded_messages']
-                var dataset_link = document.createElement("a")
+            for (let dataset_id in data["coding_progress"]) {
+                let messages_count = data["coding_progress"][dataset_id]["messages_count"]
+                let messages_with_label = data["coding_progress"][dataset_id]["messages_with_label"]
+                let wrong_scheme_messages = data['coding_progress'][dataset_id]['wrong_scheme_messages']
+                let not_coded_messages = data['coding_progress'][dataset_id]['not_coded_messages']
+                let dataset_link = document.createElement("a")
                     dataset_link.setAttribute("href", `https://web-coda.firebaseapp.com/?dataset=${dataset_id}`)
                     dataset_link.setAttribute('target', '_blank')
                     dataset_link.innerText = dataset_id
@@ -190,7 +165,7 @@ class UIController {
                 $('#codingtable').tablesorter().trigger('update');
                 //Formating rows based on cell value
                 $('#codingtable td:nth-child(4)').each(function () {
-                    var Done = $(this).text();
+                    let Done = $(this).text();
                     //Style the entire row conditionally based on the cell value
                     if ((parseFloat(Done) === 0)) {
                         $(this).parent().addClass('coding-notstarted');
@@ -216,7 +191,8 @@ class UIController {
     } 
 
     static addGraphs(title) {
-        var html;
+        let html;
+        let DOM = UIController.getDOMstrings();
         html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
                 <div>
@@ -249,15 +225,8 @@ class UIController {
             <div class="card shadow total_failed_sms_graph my-4"></div> 
         </div> `
         // Insert the HTML into the DOM
-        let DOMstrings = {
-            projectMenu: '.select__project',
-            codingProgressLink: '.codingprogress__link',
-            codingProgressContainer: '.codingprogress__table',
-            graphContainer: '.graph__list',
-            logoutBtn: '.logout__btn',
-        };
-        newHtml = html.replace('%collection%', title);
-        document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', newHtml);
+        let newHtml = html.replace('%collection%', title);
+        document.querySelector(DOM.codingProgressContainer).insertAdjacentHTML('beforeend', newHtml);
     }
 }
 
@@ -265,35 +234,35 @@ class UIController {
 class controller {
 
     static setupEventListeners() {
-        var DOM = UIController.getDOMstrings();
+        let DOM = UIController.getDOMstrings();
         document.querySelector(DOM.logoutBtn).addEventListener('click', controller.ctrlLogoutDashboard);
         document.querySelector(DOM.codingProgressLink).addEventListener('click', controller.ctrlDisplayCodingProgress);
         document.querySelector(DOM.projectMenu).addEventListener('click', controller.ctrlDisplayProject);          
     };
     
     // Logout of the dashboard
-    ctrlLogoutDashboard() {
+    static ctrlLogoutDashboard() {
         AuthController.logout()
     };
 
     // Navigate to coding progress page
-    ctrlDisplayCodingProgress(e) {
+    static ctrlDisplayCodingProgress(e) {
         if(e.target && e.target.nodeName == "A") {
             window.location.reload();
         }
     };
     
     // Navigate to the selected project graphs
-    ctrlDisplayProject(e) {
-        var collection;
-        var DOM = UIController.getDOMstrings();
+    static ctrlDisplayProject(e) {
+        let collection;
+        let DOM = UIController.getDOMstrings();
         document.querySelector(DOM.codingProgressContainer).innerHTML = "";
         document.querySelector(DOM.graphContainer).innerHTML = "";
         if(e.target && e.target.nodeName == "A") {
             console.log(e.target.innerText)
             collection = e.target.innerText
         }
-        DataController.resetData();
+        // DataController.resetData();
         // Add the graphs container to the UI
         UIController.addGraphs(collection);
         // Update and show the Graphs
