@@ -107,3 +107,9 @@
 .body {
     background: #fafafa
 }
+.text-stale-info {
+    color: #000000;
+}
+.alert-stale-info {
+    background-color: #F08080;
+}

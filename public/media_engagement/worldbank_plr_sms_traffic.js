@@ -769,20 +769,21 @@ const update = (data) => {
     var fullDateFormat = d3.timeFormat("%c")	
 
     // Update timestamp of update and reset formatting
-    const timestamp = new Date()
-    d3.select("#lastUpdated").classed("alert", false).text(fullDateFormat(timestamp))
+    const lastUpdateTimeStamp = new Date(Math.max.apply(null, data.map(function(d) {
+        return new Date(d.datetime);
+    })));
+    d3.select("#lastUpdated").classed("text-danger", false).text(fullDateFormat(lastUpdateTimeStamp))
 
     function setLastUpdatedAlert() {
-        // Calculate time diff bw current and timestamp
+        // Calculate time diff bw current and lastUpdateTimeStamp
         var currentTime = new Date()
-        var difference_ms = (currentTime.getTime() - timestamp.getTime())/60000
+        var difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime())/60000
         var difference_minutes = Math.floor(difference_ms % 60)
-        // if updated more than 20 min ago >> reformat
-        if (difference_minutes > 20) {
-            d3.select("#lastUpdated").classed("alert", true)
+        // if updated more than 30 min ago >> reformat
+        if (difference_minutes > 30) {
+            d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true)
         }
     };
-
     setInterval(setLastUpdatedAlert, 1000)
 };
 
