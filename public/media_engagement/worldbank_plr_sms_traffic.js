@@ -781,7 +781,7 @@ const update = (data) => {
         var difference_minutes = Math.floor(difference_ms % 60)
         // if updated more than 30 min ago >> reformat
         if (difference_minutes > 30) {
-            d3.select("#lastUpdated").classed("text-danger alert alert-danger", true)
+            d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true)
         }
     };
     setInterval(setLastUpdatedAlert, 1000)
