@@ -1,4 +1,4 @@
-# Open Source License Acknowledgements and Third-Party Copyrights
+# Open Source and Third-Party Softwares Licenses and Copyrights Acknowledgements.
 
 Operations-Dashboard is licensed under the terms of the [MIT License](./LICENSE).
 
@@ -38,5 +38,4 @@ https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt
 
 ## Sources of information about licenses
 The GitHub repositories of these packages are used as the source of the information about licenses.
-
 
