@@ -7,6 +7,12 @@ class Controller {
         document.querySelector(DOM.codingProgressLink).addEventListener('click', Controller.ctrlDisplayCodingProgress);
         document.querySelector(DOM.projectMenu).addEventListener('click', Controller.ctrlDisplayProject);          
     };
+
+    static resetDashboard() {
+        let DOM = UIController.getDOMstrings();
+        document.querySelector(DOM.codingProgressContainer).innerHTML = "";
+        document.querySelector(DOM.graphContainer).innerHTML = "";
+    }
     
     static ctrlLogoutDashboard() {
         AuthController.logout()
@@ -14,16 +20,19 @@ class Controller {
 
     // Navigate to coding progress page
     static ctrlDisplayCodingProgress(e) {
+        Controller.resetDashboard()
         if(e.target && e.target.nodeName == "A") {
-            window.location.reload();
+            // Add the coding progress section to the UI
+            UIController.addCodingProgressSection();
+            // Get data for coding progress table
+            DataController.getDocument(UIController.update_progress_ui);
         }
     };
     
     // Navigate to the selected project graphs
     static ctrlDisplayProject(e) {
-        let collection, DOM = UIController.getDOMstrings();
-        document.querySelector(DOM.codingProgressContainer).innerHTML = "";
-        document.querySelector(DOM.graphContainer).innerHTML = "";
+        let collection;
+        Controller.resetDashboard()
         if(e.target && e.target.nodeName == "A") {
             console.log(e.target.innerText)
             collection = e.target.innerText
