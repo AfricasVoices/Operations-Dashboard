@@ -100,7 +100,7 @@ if __name__ == "__main__":
                 # Set the operator name from the phone number
                 operator_name = PhoneCleaner.clean_operator(msg.urn)
             elif msg.urn.startswith("deleted:"):
-                operator_name = Codes.NOT_CODED
+                operator_name = Codes.DELETED
             else:
                 # Set the operator name from the channel type e.g. 'telegram', 'twitter'
                 operator_name = msg.urn.split(":")[0]
