@@ -1,6 +1,5 @@
 // GLOBAL APP CONTROLLER
 class Controller {
-
     static setupEventListeners() {
         let DOM = UIController.getDOMstrings();
         document.querySelector(DOM.logoutBtn).addEventListener('click', Controller.ctrlLogoutDashboard);
@@ -63,4 +62,3 @@ const settings = { timestampsInSnapshots: true };
 mediadb.settings(settings);
 // initialize the app 
 Controller.init();
-
