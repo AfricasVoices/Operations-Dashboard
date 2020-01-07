@@ -23,7 +23,7 @@ class Controller {
             // Add the coding progress section to the UI
             UIController.addCodingProgressSection();
             // Get data for coding progress table
-            DataController.getDocument(UIController.update_progress_ui);
+            DataController.watchCodingProgress(UIController.update_progress_ui);
         }
     };
     
@@ -38,7 +38,7 @@ class Controller {
         // Add the graphs container to the UI
         UIController.addGraphs(collection);
         // Update and show the Graphs
-        DataController.getCollection(collection, GraphController.update_graphs);
+        DataController.watchProjectData(collection, GraphController.update_graphs);
     };  
 
     static init() {
@@ -52,7 +52,7 @@ class Controller {
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
         // Get data for coding progress table
-        DataController.getDocument(UIController.update_progress_ui);
+        DataController.watchCodingProgress(UIController.update_progress_ui);
     } 
 } 
 // initialize firestore

@@ -31,23 +31,24 @@ class DataController {
         });  
     }
 
-    static getDocument(update) {
+    static watchCodingProgress(onChange) {
         mediadb.doc('metrics/coda').onSnapshot(res => {
-            update(res.data());
+            onChange(res.data());
         });
     }
 
-    static getCollection(collection, update) {  
+    static watchProjectData(projectName, onChange) {  
         let data = [];
         let offset = new Date();
         const timerange = 30 
         offset.setDate(offset.getDate() - timerange);
         let iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
         let offsetString = iso(offset)
-        mediadb.collection(`/metrics/rapid_pro/${collection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
+        let projectCollection = projectName
+        mediadb.collection(`/metrics/rapid_pro/${projectCollection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
             // Update data every time it changes in firestore
             DataController.updateData(res, data);
-            update(data);
+            onChange(data);
         });
     }
 }
