@@ -7,7 +7,7 @@ class Controller {
         document.querySelector(DOMstrings.projectMenu).addEventListener('click', Controller.navigateToSelectedProject);          
     };
 
-    static resetDashboard() {
+    static resetUI() {
         let DOMstrings = UIController.getDOMstrings();
         document.querySelector(DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(DOMstrings.graphContainer).innerHTML = "";
