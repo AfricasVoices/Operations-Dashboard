@@ -28,11 +28,10 @@ class Controller {
     };
     
     static navigateToSelectedProject(e) {
-        let project;
         if(e.target && e.target.nodeName == "A") {
             Controller.resetDashboard()
             console.log(e.target.innerText)
-            project = e.target.innerText
+            let project = e.target.innerText
              // Add the graphs container to the UI
             UIController.addGraphs(project);
             // Update and show the Graphs
