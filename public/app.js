@@ -4,7 +4,7 @@ class Controller {
         let DOM = UIController.getDOMstrings();
         document.querySelector(DOM.logoutBtn).addEventListener('click', Controller.ctrlLogoutDashboard);
         document.querySelector(DOM.codingProgressLink).addEventListener('click', Controller.navigateToCodingProgress);
-        document.querySelector(DOM.projectMenu).addEventListener('click', Controller.ctrlDisplayProject);          
+        document.querySelector(DOM.projectMenu).addEventListener('click', Controller.navigateToSelectedProject);          
     };
 
     static resetDashboard() {
@@ -27,8 +27,7 @@ class Controller {
         }
     };
     
-    // Navigate to the selected project graphs
-    static ctrlDisplayProject(e) {
+    static navigateToSelectedProject(e) {
         let collection;
         Controller.resetDashboard()
         if(e.target && e.target.nodeName == "A") {
