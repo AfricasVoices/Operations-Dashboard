@@ -1,6 +1,6 @@
 class AuthController {
     // Authentication state listener
-    static get_user() {
+    static getUser() {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 console.log("User Authorized");
