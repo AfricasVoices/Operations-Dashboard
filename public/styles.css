@@ -129,10 +129,6 @@ table > tbody > tr > td{
 .row {
     margin: 10px auto;
 }
-.container {
-    width: 100%;
-    max-width: initial;
-}
 .brand-logo {
     height: 40px;
     margin-top: 10px;
@@ -170,21 +166,6 @@ table > tbody > tr > td{
     padding: 0 0 20px;
     text-align: center;
     font-size: 20px;
-}
-.container {
-    margin: 0 auto;
-    max-width: 1280px;
-    width: 85%;
-}
-@media only screen and (min-width: 601px) {
-    .container {
-        width: 80%;
-    }
-}
-@media only screen and (min-width: 993px) {
-    .container {
-        width: 80%;
-    }
 }
 .card {
     padding: 15px;
