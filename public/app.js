@@ -1,16 +1,16 @@
 // GLOBAL APP CONTROLLER
 class Controller {
     static setupEventListeners() {
-        let DOM = UIController.getDOMstrings();
-        document.querySelector(DOM.logoutBtn).addEventListener('click', Controller.ctrlLogoutDashboard);
-        document.querySelector(DOM.codingProgressLink).addEventListener('click', Controller.navigateToCodingProgress);
-        document.querySelector(DOM.projectMenu).addEventListener('click', Controller.navigateToSelectedProject);          
+        let DOMstrings = UIController.getDOMstrings();
+        document.querySelector(DOMstrings.logoutBtn).addEventListener('click', Controller.ctrlLogoutDashboard);
+        document.querySelector(DOMstrings.codingProgressLinkSelector).addEventListener('click', Controller.navigateToCodingProgress);
+        document.querySelector(DOMstrings.projectMenu).addEventListener('click', Controller.navigateToSelectedProject);          
     };
 
     static resetDashboard() {
-        let DOM = UIController.getDOMstrings();
-        document.querySelector(DOM.codingProgressContainer).innerHTML = "";
-        document.querySelector(DOM.graphContainer).innerHTML = "";
+        let DOMstrings = UIController.getDOMstrings();
+        document.querySelector(DOMstrings.codingProgressContainer).innerHTML = "";
+        document.querySelector(DOMstrings.graphContainer).innerHTML = "";
     }
     
     static ctrlLogoutDashboard() {

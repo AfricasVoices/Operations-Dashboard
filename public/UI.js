@@ -1,28 +1,27 @@
 // UI CONTROLLER
 class UIController {
     static getDOMstrings() {
-        let DOMstrings = {
-            projectMenu: '.select__project',
-            codingProgressLink: '.codingprogress__link',
-            codingProgressContainer: '.codingprogress__table',
-            graphContainer: '.graph__list',
-            logoutBtn: '.logout__btn',
+        return {
+            projectMenu: '.project-menu',
+            codingProgressLinkSelector: '.coding-progress-link',
+            codingProgressContainer: '.coding-progress-container',
+            graphContainer: '.graph-container',
+            logoutBtn: '.logout-btn',
         };
-        return DOMstrings;
     }
 
     static addDropdownMenu(data) {
-        let DOM = UIController.getDOMstrings();
+        let DOMstrings = UIController.getDOMstrings();
         let html = `<a id="project" class="dropdown-item">%project_name%</a><div class="dropdown-divider"></div>`
         // Replace the placeholder text with some actual data
         data.forEach(obj => {
             let newHtml = html.replace('%project_name%', obj.project_name);
-            document.querySelector(DOM.projectMenu).insertAdjacentHTML('beforeend', newHtml);
+            document.querySelector(DOMstrings.projectMenu).insertAdjacentHTML('beforeend', newHtml);
         });  
     }
 
     static addCodingProgressSection() {
-        let DOM = UIController.getDOMstrings();
+        let DOMstrings = UIController.getDOMstrings();
         let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
                     <thead>
@@ -42,7 +41,7 @@ class UIController {
             <div id="last_update">Last updated: </div>
         </div> `
         // Insert the HTML into the DOM
-        document.querySelector(DOM.codingProgressContainer).insertAdjacentHTML('beforeend', html);
+        document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', html);
     }
 
     static update_progress_ui(data) {
@@ -108,7 +107,7 @@ class UIController {
     }
 
     static addGraphs(title) {
-        let DOM = UIController.getDOMstrings();
+        let DOMstrings = UIController.getDOMstrings();
         let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
                 <div>
@@ -142,7 +141,7 @@ class UIController {
         </div> `
         // Insert the HTML into the DOM
         let newHtml = html.replace('%collection%', title);
-        document.querySelector(DOM.codingProgressContainer).insertAdjacentHTML('beforeend', newHtml);
+        document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', newHtml);
     }
 }
 
