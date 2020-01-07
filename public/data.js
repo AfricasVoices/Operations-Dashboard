@@ -1,20 +1,20 @@
 class DataController {
-    static updateData(response, input) {
+    static updateData(snapshot, data) {
         // Update data every time it changes in firestore
-        response.docChanges().forEach(change => {
+        snapshot.docChanges().forEach(change => {
 
             const doc = { ...change.doc.data(), id: change.doc.id };
 
             switch (change.type) {
                 case "added":
-                    input.push(doc);
+                    data.push(doc);
                     break;
                 case "modified":
-                    const index = input.findIndex(item => item.id == doc.id);
-                    input[index] = doc;
+                    const index = data.findIndex(item => item.id == doc.id);
+                    data[index] = doc;
                     break;
                 case "removed":
-                    input = input.filter(item => item.id !== doc.id);
+                    data = data.filter(item => item.id !== doc.id);
                     break;
                 default:
                     break;
