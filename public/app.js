@@ -18,7 +18,7 @@ class Controller {
     };
 
     // Navigate to coding progress page
-    static ctrlDisplayCodingProgress(e) {
+    static navigateToCodingProgress(e) {
         Controller.resetDashboard()
         if(e.target && e.target.nodeName == "A") {
             // Add the coding progress section to the UI
