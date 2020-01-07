@@ -2,7 +2,7 @@
 class Controller {
     static setupEventListeners() {
         let DOMstrings = UIController.getDOMstrings();
-        document.querySelector(DOMstrings.logoutBtn).addEventListener('click', Controller.ctrlLogoutDashboard);
+        document.querySelector(DOMstrings.logoutBtn).addEventListener('click', AuthController.logout);
         document.querySelector(DOMstrings.codingProgressLinkSelector).addEventListener('click', Controller.navigateToCodingProgress);
         document.querySelector(DOMstrings.projectMenu).addEventListener('click', Controller.navigateToSelectedProject);          
     };
@@ -12,14 +12,10 @@ class Controller {
         document.querySelector(DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(DOMstrings.graphContainer).innerHTML = "";
     }
-    
-    static ctrlLogoutDashboard() {
-        AuthController.logout()
-    };
 
     static navigateToCodingProgress(e) {
         if(e.target && e.target.nodeName == "A") {
-            Controller.resetDashboard()
+            Controller.resetUI()
             // Add the coding progress section to the UI
             UIController.addCodingProgressSection();
             // Get data for coding progress table
@@ -29,13 +25,13 @@ class Controller {
     
     static navigateToSelectedProject(e) {
         if(e.target && e.target.nodeName == "A") {
-            Controller.resetDashboard()
+            Controller.resetUI()
             console.log(e.target.innerText)
             let project = e.target.innerText
              // Add the graphs container to the UI
             UIController.addGraphs(project);
             // Update and show the Graphs
-            DataController.watchProjectData(project, GraphController.update_graphs);
+            DataController.watchProjectTrafficData(project, GraphController.update_graphs);
         }
     };  
 
@@ -53,9 +49,7 @@ class Controller {
         DataController.watchCodingProgress(UIController.update_progress_ui);
     } 
 } 
-// initialize firestore
+
+// Initialize the application
 const mediadb = firebase.firestore();
-const settings = { timestampsInSnapshots: true };
-mediadb.settings(settings);
-// initialize the app 
 Controller.init();

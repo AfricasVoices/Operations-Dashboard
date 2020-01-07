@@ -36,7 +36,7 @@ class DataController {
         });
     }
 
-    static watchProjectData(projectName, onChange) {  
+    static watchProjectTrafficData(projectName, onChange) {  
         let data = [];
         let offset = new Date();
         const timerange = 30 
