@@ -3,7 +3,7 @@ class Controller {
     static setupEventListeners() {
         let DOM = UIController.getDOMstrings();
         document.querySelector(DOM.logoutBtn).addEventListener('click', Controller.ctrlLogoutDashboard);
-        document.querySelector(DOM.codingProgressLink).addEventListener('click', Controller.ctrlDisplayCodingProgress);
+        document.querySelector(DOM.codingProgressLink).addEventListener('click', Controller.navigateToCodingProgress);
         document.querySelector(DOM.projectMenu).addEventListener('click', Controller.ctrlDisplayProject);          
     };
 
@@ -17,7 +17,6 @@ class Controller {
         AuthController.logout()
     };
 
-    // Navigate to coding progress page
     static navigateToCodingProgress(e) {
         Controller.resetDashboard()
         if(e.target && e.target.nodeName == "A") {
