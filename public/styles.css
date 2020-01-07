@@ -66,7 +66,7 @@ a {
 table > tbody > tr > td {
     border-bottom: 1px solid rgb(0,0,0, 0.2);
 }
-.coding-notstarted{
+.coding-notstarted {
     background-color:#fc9f9f;
     font-size: 16;
     line-height: 0.7rem;
