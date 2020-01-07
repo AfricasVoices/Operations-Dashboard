@@ -52,6 +52,6 @@ class Controller {
 
 // Initialize the application
 const mediadb = firebase.firestore();
-const settings = {/* your settings... */ timestampsInSnapshots: true};
+const settings = {timestampsInSnapshots: true};
 mediadb.settings(settings);
 Controller.init();
