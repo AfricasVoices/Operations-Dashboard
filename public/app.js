@@ -41,7 +41,7 @@ class Controller {
 
     static init() {
         console.log('Application has started.');
-        // authorize user
+        // Authorize user
         AuthController.getUser();
         // set up event listeners
         Controller.setupEventListeners();
