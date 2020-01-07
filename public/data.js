@@ -2,7 +2,6 @@ class DataController {
     static updateData(snapshot, data) {
         // Update data every time it changes in firestore
         snapshot.docChanges().forEach(change => {
-
             const doc = { ...change.doc.data(), id: change.doc.id };
 
             switch (change.type) {
