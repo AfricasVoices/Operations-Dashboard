@@ -12,18 +12,18 @@ class UIController {
     }
 
     static addDropdownMenu(data) {
-        let html, newHtml, DOM = UIController.getDOMstrings();
-        html = `<a id="project" class="dropdown-item">%project_name%</a><div class="dropdown-divider"></div>`
+        let DOM = UIController.getDOMstrings();
+        let html = `<a id="project" class="dropdown-item">%project_name%</a><div class="dropdown-divider"></div>`
         // Replace the placeholder text with some actual data
         data.forEach(obj => {
-            newHtml = html.replace('%project_name%', obj.project_name);
+            let newHtml = html.replace('%project_name%', obj.project_name);
             document.querySelector(DOM.projectMenu).insertAdjacentHTML('beforeend', newHtml);
         });  
     }
 
     static addCodingProgressSection() {
-        let html, DOM = UIController.getDOMstrings();
-        html = `<div class="container container-fluid table-responsive">
+        let DOM = UIController.getDOMstrings();
+        let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
                     <thead>
                         <tr class="table-heading">
@@ -108,8 +108,8 @@ class UIController {
     }
 
     static addGraphs(title) {
-        let html, newHtml, DOM = UIController.getDOMstrings();
-        html = `<div class="container"> 
+        let DOM = UIController.getDOMstrings();
+        let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
                 <div>
                     <span class="txt-brown my-auto title"><b>%collection%</b></span>
@@ -141,7 +141,7 @@ class UIController {
             <div class="card shadow total_failed_sms_graph my-4"></div> 
         </div> `
         // Insert the HTML into the DOM
-        newHtml = html.replace('%collection%', title);
+        let newHtml = html.replace('%collection%', title);
         document.querySelector(DOM.codingProgressContainer).insertAdjacentHTML('beforeend', newHtml);
     }
 }
