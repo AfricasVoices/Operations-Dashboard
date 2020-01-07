@@ -12,6 +12,18 @@
 }
 .nav-link:hover {
     color: steelblue;
+    cursor: pointer;
+}
+.dropdown-menu {
+    padding: 0px;
+    border: 1px solid steelblue;
+    border-bottom: none;
+}
+.dropdown-item {
+    border-bottom: 1px solid steelblue;
+}
+.dropdown-item:hover {
+    cursor: pointer;
 }
 .active-link {
     border-bottom: 2px #8d3538 solid;

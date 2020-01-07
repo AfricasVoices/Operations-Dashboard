@@ -12,7 +12,7 @@ class UIController {
 
     static addDropdownMenu(data) {
         let DOMstrings = UIController.getDOMstrings();
-        let html = `<a id="project" class="dropdown-item">%project_name%</a><div class="dropdown-divider"></div>`
+        let html = `<a id="project" class="dropdown-item">%project_name%</a>`
         // Replace the placeholder text with some actual data
         data.forEach(obj => {
             let newHtml = html.replace('%project_name%', obj.project_name);

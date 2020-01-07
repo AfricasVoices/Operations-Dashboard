@@ -28,16 +28,16 @@ class Controller {
     };
     
     static navigateToSelectedProject(e) {
-        let collection;
-        Controller.resetDashboard()
+        let project;
         if(e.target && e.target.nodeName == "A") {
+            Controller.resetDashboard()
             console.log(e.target.innerText)
-            collection = e.target.innerText
+            project = e.target.innerText
+             // Add the graphs container to the UI
+            UIController.addGraphs(project);
+            // Update and show the Graphs
+            DataController.watchProjectData(project, GraphController.update_graphs);
         }
-        // Add the graphs container to the UI
-        UIController.addGraphs(collection);
-        // Update and show the Graphs
-        DataController.watchProjectData(collection, GraphController.update_graphs);
     };  
 
     static init() {
