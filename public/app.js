@@ -18,8 +18,8 @@ class Controller {
     };
 
     static navigateToCodingProgress(e) {
-        Controller.resetDashboard()
         if(e.target && e.target.nodeName == "A") {
+            Controller.resetDashboard()
             // Add the coding progress section to the UI
             UIController.addCodingProgressSection();
             // Get data for coding progress table
