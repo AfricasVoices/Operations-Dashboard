@@ -22,12 +22,12 @@ class DataController {
         });
     }
 
-    static getProject(update) {
+    static watchActiveProjects(onChange) {
         let activeProjects = []
         mediadb.collection('active_projects').onSnapshot(res => {
             // Update data every time it changes in firestore
             DataController.updateData(res, activeProjects);
-            update(activeProjects);
+            onChange(activeProjects);
         });  
     }
 

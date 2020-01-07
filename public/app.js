@@ -44,11 +44,11 @@ class Controller {
     static init() {
         console.log('Application has started.');
         // authorize user
-        AuthController.get_user();
+        AuthController.getUser();
         // set up event listeners
         Controller.setupEventListeners();
         // Add the dropdown menu to the UI
-        DataController.getProject(UIController.addDropdownMenu);
+        DataController.watchActiveProjects(UIController.addDropdownMenu);
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
         // Get data for coding progress table
