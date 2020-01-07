@@ -63,7 +63,7 @@ a {
     vertical-align: bottom;
     border-bottom: 2px solid #8e3436;
 }
-table > tbody > tr > td{
+table > tbody > tr > td {
     border-bottom: 1px solid rgb(0,0,0, 0.2);
 }
 .coding-notstarted{
