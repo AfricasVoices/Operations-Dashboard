@@ -14,17 +14,17 @@ class Controller {
     }
 
     static detachSnapshotListener() {
-        let DOMstrings = UIController.getDOMstrings(), detachListener = true;
+        let DOMstrings = UIController.getDOMstrings(), hasListener = false;
         let nodeList =  document.querySelectorAll(DOMstrings.dropdownItem);
         if (nodeList) {
             // Makes sure all the snapshot listeners of the projects' traffic data are detached 
             Array.prototype.forEach.call(nodeList, obj => {
                 let project = obj.innerText
-                DataController.watchProjectTrafficData(project, GraphController.updateGraphs, detachListener);
+                DataController.watchProjectTrafficData(project, GraphController.updateGraphs, hasListener);
             });
         }
         // detach coda snapshot listener
-        DataController.watchCodingProgress(UIController.updateProgressUI, detachListener);
+        DataController.watchCodingProgress(UIController.updateProgressUI, hasListener);
     }
 
     static navigateToCodingProgress(e) {

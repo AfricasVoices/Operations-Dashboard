@@ -30,20 +30,20 @@ class DataController {
         });  
     }
 
-    static watchCodingProgress(onChange, detachListener = false) {
+    static watchCodingProgress(onChange, hasListener = true) {
         let unsubscribe = mediadb.doc('metrics/coda').onSnapshot(res => {
             onChange(res.data());
         });
-        if (detachListener) {
+        if (!hasListener) {
             unsubscribe()
         }
     }
 
-    static watchProjectTrafficData(projectName, onChange, detachListener = false) {  
+    static watchProjectTrafficData(projectName, onChange, hasListener = true) {  
         let data = [];
         let offset = new Date();
-        const timerange = 30 
-        offset.setDate(offset.getDate() - timerange);
+        const TIMERANGE = 30 
+        offset.setDate(offset.getDate() - TIMERANGE);
         let iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
         let offsetString = iso(offset)
         let projectCollection = projectName
@@ -52,7 +52,7 @@ class DataController {
             DataController.updateData(res, data);
             onChange(data);
         });
-        if (detachListener) {
+        if (!hasListener) {
             unsubscribe()
         }
     }

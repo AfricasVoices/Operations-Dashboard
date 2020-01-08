@@ -37,42 +37,42 @@ class UIController {
                             <th scope="col">NC %</th>
                         </tr>
                     </thead>
-                    <tbody id="coding_status_body"></tbody>
+                    <tbody id="coding-status-body"></tbody>
                 </table>
-            <div id="last_update">Last updated: </div>
+            <div id="last-update">Last updated: </div>
         </div> `
         // Insert the HTML into the DOM
         document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', html);
     }
 
     static updateProgressUI(data) {
-        // console.log("update_ui: " + JSON.stringify(data));
-        let status_body = document.getElementById('coding_status_body');
-        if (status_body) {
-            while (status_body.firstChild) {
-                status_body.removeChild(status_body.firstChild);
+        console.log("update_ui: " + JSON.stringify(data));
+        let statusBody = document.getElementById('coding-status-body');
+        if (statusBody) {
+            while (statusBody.firstChild) {
+                statusBody.removeChild(statusBody.firstChild);
             }
-            let last_update = data["last_update"]
-            document.getElementById('last_update').innerText = "Last updated: " + last_update
-            for (let dataset_id in data["coding_progress"]) {
-                let messages_count = data["coding_progress"][dataset_id]["messages_count"]
-                let messages_with_label = data["coding_progress"][dataset_id]["messages_with_label"]
-                let wrong_scheme_messages = data['coding_progress'][dataset_id]['wrong_scheme_messages']
-                let not_coded_messages = data['coding_progress'][dataset_id]['not_coded_messages']
-                let dataset_link = document.createElement("a")
-                    dataset_link.setAttribute("href", `https://web-coda.firebaseapp.com/?dataset=${dataset_id}`)
-                    dataset_link.setAttribute('target', '_blank')
-                    dataset_link.innerText = dataset_id
-                let rw = status_body.insertRow()
-                rw.insertCell().appendChild(dataset_link)
-                rw.insertCell().innerText = messages_count
-                rw.insertCell().innerText = messages_with_label
-                rw.insertCell().innerText = (100 * messages_with_label / messages_count).toFixed(2) + '%'
-                rw.insertCell().innerText = wrong_scheme_messages != null ? wrong_scheme_messages : "-"
-                rw.insertCell().innerText = wrong_scheme_messages != null ? (100 * wrong_scheme_messages / messages_count).toFixed(2) + '%' : "-"
-                rw.insertCell().innerText = not_coded_messages != null ? not_coded_messages : "-"
-                rw.insertCell().innerText = not_coded_messages != null ?(100 * not_coded_messages / messages_count).toFixed(2) + '%' : "-"
-                // console.log(dataset_id, messages_count, messages_with_label,wrong_scheme_messages,not_coded_messages);
+            let lastUpdate = data['last_update']
+            document.getElementById('last-update').innerText = `Last updated: ${lastUpdate}` 
+            for (let datasetID in data["coding_progress"]) {
+                let messagesCount = data["coding_progress"][datasetID]["messages_count"]
+                let messagesWithLabel = data["coding_progress"][datasetID]["messages_with_label"]
+                let wrongSchemeMessages = data['coding_progress'][datasetID]['wrong_scheme_messages']
+                let notCodedMessages = data['coding_progress'][datasetID]['not_coded_messages']
+                let datasetLink = document.createElement('a')
+                    datasetLink.setAttribute('href', `https://web-coda.firebaseapp.com/?dataset=${datasetID}`)
+                    datasetLink.setAttribute('target', '_blank')
+                    datasetLink.innerText = datasetID
+                let rw = statusBody.insertRow()
+                rw.insertCell().appendChild(datasetLink)
+                rw.insertCell().innerText = messagesCount
+                rw.insertCell().innerText = messagesWithLabel
+                rw.insertCell().innerText = (100 * messagesWithLabel / messagesCount).toFixed(2) + '%'
+                rw.insertCell().innerText = wrongSchemeMessages != null ? wrongSchemeMessages : "-"
+                rw.insertCell().innerText = wrongSchemeMessages != null ? (100 * wrongSchemeMessages / messagesCount).toFixed(2) + '%' : "-"
+                rw.insertCell().innerText = notCodedMessages != null ? notCodedMessages : "-"
+                rw.insertCell().innerText = notCodedMessages != null ?(100 * notCodedMessages / messagesCount).toFixed(2) + '%' : "-"
+                console.log(datasetID, messagesCount, messagesWithLabel, wrongSchemeMessages, notCodedMessages);
                 //Table sorting using tablesorter plugin based on fraction of message labelling complete   
                 $("#codingtable").tablesorter({
                     //sorting on page load, column four in descending order i.e from least coded to most coded.
