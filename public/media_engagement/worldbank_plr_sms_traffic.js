@@ -772,7 +772,7 @@ const update = (data) => {
     const lastUpdateTimeStamp = new Date(Math.max.apply(null, data.map(function(d) {
         return new Date(d.datetime);
     })));
-    d3.select("#lastUpdated").classed("text-danger", false).text(fullDateFormat(lastUpdateTimeStamp))
+    d3.select("#lastUpdated").classed("text-stale-info", false).text(fullDateFormat(lastUpdateTimeStamp))
 
     function setLastUpdatedAlert() {
         // Calculate time diff bw current and lastUpdateTimeStamp
