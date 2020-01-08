@@ -10,14 +10,14 @@
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.4.1/firebaseui.css" />
     <script>
         // FirebaseUI config.
-        var uiConfig = {
+        let uiConfig = {
             signInSuccessUrl: "index.html",
             signInOptions: [
             firebase.auth.GoogleAuthProvider.PROVIDER_ID
             ],     
         };
         // Initialize the FirebaseUI Widget using Firebase.
-        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        let ui = new firebaseui.auth.AuthUI(firebase.auth());
         // The start method will wait until the DOM is loaded.
         ui.start('#firebaseui-auth-container', uiConfig);
     </script>

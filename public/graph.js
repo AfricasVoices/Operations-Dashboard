@@ -1,12 +1,12 @@
 // GRAPH CONTROLLER
 class GraphController {
-    static add_one_day_to_date(date) {
+    static addOneDayToDate(date) {
         let newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
         return newDate;
     };
     
-    static update_graphs(data) {
+    static updateGraphs(data) {
         const TIMEFRAME_WEEK = 7;
         const TIMEFRAME_MONTH = 30;
         let chartTimeUnit = "10min";
@@ -203,7 +203,7 @@ class GraphController {
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, function (d) { return d.total_errored; })]);
         let xMin = d3.min(data, d => new Date(d.day));
-        let xMax = d3.max(data, d => GraphController.add_one_day_to_date(d.day)) 
+        let xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day)) 
         failed_messages_x_axis_range.domain([xMin, xMax]);
     
         let yLimitReceived = d3.max(dailyReceivedTotal, function (d) { return d.total_received; });
@@ -465,7 +465,7 @@ class GraphController {
             }
     
             xMin = d3.min(data, d => new Date(d.day));
-            xMax = d3.max(data, d => GraphController.add_one_day_to_date(d.day)) 
+            xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day)) 
             // set scale domains
             x.domain([xMin, xMax]);
             y_total_received_sms_range.domain([0, yLimitReceived]);
@@ -617,7 +617,7 @@ class GraphController {
             }
     
             xMin = d3.min(data, d => new Date(d.day));
-            xMax = d3.max(data, d => GraphController.add_one_day_to_date(d.day)) 
+            xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day)) 
             // set scale domains
             x.domain([xMin, xMax]);
             y_total_sent_sms.domain([0, yLimitSent]);

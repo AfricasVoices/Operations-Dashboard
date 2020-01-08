@@ -7,6 +7,7 @@ class UIController {
             codingProgressContainer: '.coding-progress-container',
             graphContainer: '.graph-container',
             logoutBtn: '.logout-btn',
+            dropdownItem: '.dropdown-item'
         };
     }
 
@@ -44,14 +45,14 @@ class UIController {
         document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', html);
     }
 
-    static update_progress_ui(data) {
+    static updateProgressUI(data) {
         // console.log("update_ui: " + JSON.stringify(data));
         let status_body = document.getElementById('coding_status_body');
         if (status_body) {
             while (status_body.firstChild) {
                 status_body.removeChild(status_body.firstChild);
             }
-            last_update = data["last_update"]
+            let last_update = data["last_update"]
             document.getElementById('last_update').innerText = "Last updated: " + last_update
             for (let dataset_id in data["coding_progress"]) {
                 let messages_count = data["coding_progress"][dataset_id]["messages_count"]

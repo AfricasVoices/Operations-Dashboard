@@ -26,17 +26,20 @@ class DataController {
         mediadb.collection('active_projects').onSnapshot(res => {
             // Update data every time it changes in firestore
             DataController.updateData(res, activeProjects);
-            onChange(activeProjects);
+                onChange(activeProjects);
         });  
     }
 
-    static watchCodingProgress(onChange) {
-        mediadb.doc('metrics/coda').onSnapshot(res => {
+    static watchCodingProgress(onChange, detachListener = false) {
+        let unsubscribe = mediadb.doc('metrics/coda').onSnapshot(res => {
             onChange(res.data());
         });
+        if (detachListener) {
+            unsubscribe()
+        }
     }
 
-    static watchProjectTrafficData(projectName, onChange) {  
+    static watchProjectTrafficData(projectName, onChange, detachListener = false) {  
         let data = [];
         let offset = new Date();
         const timerange = 30 
@@ -44,10 +47,13 @@ class DataController {
         let iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
         let offsetString = iso(offset)
         let projectCollection = projectName
-        mediadb.collection(`/metrics/rapid_pro/${projectCollection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
+        let unsubscribe = mediadb.collection(`/metrics/rapid_pro/${projectCollection}/`).where("datetime", ">", offsetString).onSnapshot(res => {
             // Update data every time it changes in firestore
             DataController.updateData(res, data);
             onChange(data);
         });
+        if (detachListener) {
+            unsubscribe()
+        }
     }
 }

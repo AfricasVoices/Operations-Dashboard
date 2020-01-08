@@ -1,4 +1,4 @@
-var config = {
+let config = {
     apiKey: "AIzaSyCUHQE4gDk35-BtZrlNEkNbr1nX2Yn4l5Q",
     authDomain: "avf-dashboards.firebaseapp.com",
     databaseURL: "https://avf-dashboards.firebaseio.com",

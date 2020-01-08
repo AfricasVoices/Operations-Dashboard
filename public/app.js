@@ -13,25 +13,41 @@ class Controller {
         document.querySelector(DOMstrings.graphContainer).innerHTML = "";
     }
 
+    static detachSnapshotListener() {
+        let DOMstrings = UIController.getDOMstrings(), detachListener = true;
+        let nodeList =  document.querySelectorAll(DOMstrings.dropdownItem);
+        if (nodeList) {
+            // Makes sure all the snapshot listeners of the projects' traffic data are detached 
+            Array.prototype.forEach.call(nodeList, obj => {
+                let project = obj.innerText
+                DataController.watchProjectTrafficData(project, GraphController.updateGraphs, detachListener);
+            });
+        }
+        // detach coda snapshot listener
+        DataController.watchCodingProgress(UIController.updateProgressUI, detachListener);
+    }
+
     static navigateToCodingProgress(e) {
         if(e.target && e.target.nodeName == "A") {
+            Controller.detachSnapshotListener()
             Controller.resetUI()
             // Add the coding progress section to the UI
             UIController.addCodingProgressSection();
             // Get data for coding progress table
-            DataController.watchCodingProgress(UIController.update_progress_ui);
+            DataController.watchCodingProgress(UIController.updateProgressUI);
         }
     };
     
     static navigateToSelectedProject(e) {
         if(e.target && e.target.nodeName == "A") {
+            Controller.detachSnapshotListener()
             Controller.resetUI()
             console.log(e.target.innerText)
             let project = e.target.innerText
              // Add the graphs container to the UI
             UIController.addGraphs(project);
             // Update and show the Graphs
-            DataController.watchProjectTrafficData(project, GraphController.update_graphs);
+            DataController.watchProjectTrafficData(project, GraphController.updateGraphs);
         }
     };  
 
@@ -46,7 +62,7 @@ class Controller {
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
         // Get data for coding progress table
-        DataController.watchCodingProgress(UIController.update_progress_ui);
+        DataController.watchCodingProgress(UIController.updateProgressUI);
     } 
 } 
 
