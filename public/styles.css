@@ -30,14 +30,14 @@
 }
 .active-item {
     color: #8d3538;
-    background-color: #B6D4E7;
+    background-color: #b6d4e7;
 }
 .btn-logout {
     border-color: #8d3538;
     color: #8d3538;
 }
 .txt-brown {
-    color: #8d3538; 
+    color: #8d3538;
 }
 .btn-brown {
     border-color: #8d3538;
@@ -57,49 +57,49 @@ a {
 .table-heading {
     background-color: #8e3436;
     height: 30px;
-    color:#ffff;
+    color: #ffff;
 }
 .table thead > tr > th {
     vertical-align: bottom;
     border-bottom: 2px solid #8e3436;
 }
 table > tbody > tr > td {
-    border-bottom: 1px solid rgb(0,0,0, 0.2);
+    border-bottom: 1px solid rgb(0, 0, 0, 0.2);
 }
 .coding-notstarted {
-    background-color:#fc9f9f;
+    background-color: #fc9f9f;
     font-size: 16;
     line-height: 0.7rem;
 }
-.coding-below25{
-    background-color:#ffd1d1;
+.coding-below25 {
+    background-color: #ffd1d1;
     font-size: 16;
     line-height: 0.7rem;
 }
-.coding-above25{
-    background-color:#87cefa;
+.coding-above25 {
+    background-color: #87cefa;
     font-size: 16;
     line-height: 0.7rem;
 }
-.coding-above50{
+.coding-above50 {
     background-color: #fff6d6;
     font-size: 16;
     line-height: 0.7rem;
 }
-.coding-above75{
-    background-color:#d6ffd9;
+.coding-above75 {
+    background-color: #d6ffd9;
     font-size: 16;
     line-height: 0.6rem;
 }
-.coding-complete{
+.coding-complete {
     background-color: white;
     font-size: 15;
     line-height: 0.5rem;
 }
-.login-body{
+.login-body {
     margin: 0;
     padding: 0;
-    background:#ffff;
+    background: #ffff;
     background-size: cover;
     background-position: center;
     font-family: sans-serif;
@@ -107,12 +107,12 @@ table > tbody > tr > td {
 .login-box {
     width: 320px;
     height: 220px;
-    background:#8d3538;
+    background: #8d3538;
     color: #fff;
     top: 30%;
     left: 50%;
     position: absolute;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     box-sizing: border-box;
     padding: 70px 30px;
 }
@@ -124,7 +124,7 @@ table > tbody > tr > td {
     top: -50px;
     left: calc(50% - 50px);
 }
-.login-h1{
+.login-h1 {
     margin: 0;
     padding: 0 0 20px;
     text-align: center;
@@ -135,7 +135,7 @@ table > tbody > tr > td {
     stroke: steelblue;
     stroke-width: 2px;
 }
-.row>div {
+.row > div {
     padding: 10px;
 }
 .row {
@@ -184,11 +184,11 @@ table > tbody > tr > td {
     border-radius: 3px;
 }
 .body {
-    background: #fafafa
+    background: #fafafa;
 }
 .text-stale-info {
     color: #000000;
 }
 .alert-stale-info {
-    background-color: #F08080;
+    background-color: #f08080;
 }
