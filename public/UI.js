@@ -2,28 +2,28 @@
 class UIController {
     static getDOMstrings() {
         return {
-            projectMenu: '.project-menu',
-            codingProgressLinkSelector: '.coding-progress-link',
-            codingProgressContainer: '.coding-progress-container',
-            graphContainer: '.graph-container',
-            logoutBtn: '.logout-btn',
-            dropdownItem: '.dropdown-item'
+            projectMenu: ".project-menu",
+            codingProgressLinkSelector: ".coding-progress-link",
+            codingProgressContainer: ".coding-progress-container",
+            graphContainer: ".graph-container",
+            logoutBtn: ".logout-btn",
+            dropdownItem: ".dropdown-item"
         };
     }
 
     static addDropdownMenu(data) {
-        let DOMstrings = UIController.getDOMstrings();
-        let html = `<a id="project" class="dropdown-item">%project_name%</a>`
+        let DOMstrings = UIController.getDOMstrings(),
+            html = `<a id="project" class="dropdown-item">%project_name%</a>`;
         // Replace the placeholder text with some actual data
         data.forEach(obj => {
-            let newHtml = html.replace('%project_name%', obj.project_name);
-            document.querySelector(DOMstrings.projectMenu).insertAdjacentHTML('beforeend', newHtml);
-        });  
+            let newHtml = html.replace("%project_name%", obj.project_name);
+            document.querySelector(DOMstrings.projectMenu).insertAdjacentHTML("beforeend", newHtml);
+        });
     }
 
     static addCodingProgressSection() {
-        let DOMstrings = UIController.getDOMstrings();
-        let html = `<div class="container container-fluid table-responsive">
+        let DOMstrings = UIController.getDOMstrings(),
+            html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
                     <thead>
                         <tr class="table-heading">
@@ -40,67 +40,95 @@ class UIController {
                     <tbody id="coding-status-body"></tbody>
                 </table>
             <div id="last-update">Last updated: </div>
-        </div> `
+        </div> `;
         // Insert the HTML into the DOM
-        document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', html);
+        document
+            .querySelector(DOMstrings.codingProgressContainer)
+            .insertAdjacentHTML("beforeend", html);
     }
 
     static updateProgressUI(data) {
         console.log("update_ui: " + JSON.stringify(data));
-        let statusBody = document.getElementById('coding-status-body');
+        let statusBody = document.getElementById("coding-status-body");
         if (statusBody) {
             while (statusBody.firstChild) {
                 statusBody.removeChild(statusBody.firstChild);
             }
-            let lastUpdate = data['last_update']
-            document.getElementById('last-update').innerText = `Last updated: ${lastUpdate}` 
+            let lastUpdate = data["last_update"];
+            document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
             for (let datasetID in data["coding_progress"]) {
-                let messagesCount = data["coding_progress"][datasetID]["messages_count"]
-                let messagesWithLabel = data["coding_progress"][datasetID]["messages_with_label"]
-                let wrongSchemeMessages = data['coding_progress'][datasetID]['wrong_scheme_messages']
-                let notCodedMessages = data['coding_progress'][datasetID]['not_coded_messages']
-                let datasetLink = document.createElement('a')
-                    datasetLink.setAttribute('href', `https://web-coda.firebaseapp.com/?dataset=${datasetID}`)
-                    datasetLink.setAttribute('target', '_blank')
-                    datasetLink.innerText = datasetID
-                let rw = statusBody.insertRow()
-                rw.insertCell().appendChild(datasetLink)
-                rw.insertCell().innerText = messagesCount
-                rw.insertCell().innerText = messagesWithLabel
-                rw.insertCell().innerText = (100 * messagesWithLabel / messagesCount).toFixed(2) + '%'
-                rw.insertCell().innerText = wrongSchemeMessages != null ? wrongSchemeMessages : "-"
-                rw.insertCell().innerText = wrongSchemeMessages != null ? (100 * wrongSchemeMessages / messagesCount).toFixed(2) + '%' : "-"
-                rw.insertCell().innerText = notCodedMessages != null ? notCodedMessages : "-"
-                rw.insertCell().innerText = notCodedMessages != null ?(100 * notCodedMessages / messagesCount).toFixed(2) + '%' : "-"
-                console.log(datasetID, messagesCount, messagesWithLabel, wrongSchemeMessages, notCodedMessages);
-                //Table sorting using tablesorter plugin based on fraction of message labelling complete   
+                let messagesCount = data["coding_progress"][datasetID]["messages_count"],
+                    messagesWithLabel = data["coding_progress"][datasetID]["messages_with_label"],
+                    wrongSchemeMessages =
+                        data["coding_progress"][datasetID]["wrong_scheme_messages"],
+                    notCodedMessages = data["coding_progress"][datasetID]["not_coded_messages"],
+                    datasetLink = document.createElement("a");
+                datasetLink.setAttribute(
+                    "href",
+                    `https://web-coda.firebaseapp.com/?dataset=${datasetID}`
+                );
+                datasetLink.setAttribute("target", "_blank");
+                datasetLink.innerText = datasetID;
+                let rw = statusBody.insertRow();
+                rw.insertCell().appendChild(datasetLink);
+                rw.insertCell().innerText = messagesCount;
+                rw.insertCell().innerText = messagesWithLabel;
+                rw.insertCell().innerText =
+                    ((100 * messagesWithLabel) / messagesCount).toFixed(2) + "%";
+                rw.insertCell().innerText = wrongSchemeMessages != null ? wrongSchemeMessages : "-";
+                rw.insertCell().innerText =
+                    wrongSchemeMessages != null
+                        ? ((100 * wrongSchemeMessages) / messagesCount).toFixed(2) + "%"
+                        : "-";
+                rw.insertCell().innerText = notCodedMessages != null ? notCodedMessages : "-";
+                rw.insertCell().innerText =
+                    notCodedMessages != null
+                        ? ((100 * notCodedMessages) / messagesCount).toFixed(2) + "%"
+                        : "-";
+                console.log(
+                    datasetID,
+                    messagesCount,
+                    messagesWithLabel,
+                    wrongSchemeMessages,
+                    notCodedMessages
+                );
+                //Table sorting using tablesorter plugin based on fraction of message labelling complete
                 $("#codingtable").tablesorter({
                     //sorting on page load, column four in descending order i.e from least coded to most coded.
                     sortList: [[3, 0]]
                 });
                 //Trigger sorting on table data update
-                $('#codingtable').tablesorter().trigger('update');
+                $("#codingtable")
+                    .tablesorter()
+                    .trigger("update");
                 //Formating rows based on cell value
-                $('#codingtable td:nth-child(4)').each(function () {
+                $("#codingtable td:nth-child(4)").each(function() {
                     let Done = $(this).text();
                     //Style the entire row conditionally based on the cell value
-                    if ((parseFloat(Done) === 0)) {
-                        $(this).parent().addClass('coding-notstarted');
-                    }
-                    else if ((parseFloat(Done) > 0) && (parseFloat(Done) <= 25)) {
-                        $(this).parent().addClass('coding-below25');
-                    }
-                    else if ((parseFloat(Done) > 25) && (parseFloat(Done) <= 50)) {
-                        $(this).parent().addClass('coding-above25');
-                    }
-                    else if ((parseFloat(Done) > 50) && (parseFloat(Done) <= 75)) {
-                        $(this).parent().addClass('coding-above50');
-                    }
-                    else if ((parseFloat(Done) > 75) && (parseFloat(Done) < 100)) {
-                        $(this).parent().addClass('coding-above75');
-                    }
-                    else {
-                        $(this).parent().addClass('coding-complete');
+                    if (parseFloat(Done) === 0) {
+                        $(this)
+                            .parent()
+                            .addClass("coding-notstarted");
+                    } else if (parseFloat(Done) > 0 && parseFloat(Done) <= 25) {
+                        $(this)
+                            .parent()
+                            .addClass("coding-below25");
+                    } else if (parseFloat(Done) > 25 && parseFloat(Done) <= 50) {
+                        $(this)
+                            .parent()
+                            .addClass("coding-above25");
+                    } else if (parseFloat(Done) > 50 && parseFloat(Done) <= 75) {
+                        $(this)
+                            .parent()
+                            .addClass("coding-above50");
+                    } else if (parseFloat(Done) > 75 && parseFloat(Done) < 100) {
+                        $(this)
+                            .parent()
+                            .addClass("coding-above75");
+                    } else {
+                        $(this)
+                            .parent()
+                            .addClass("coding-complete");
                     }
                 });
             }
@@ -108,8 +136,8 @@ class UIController {
     }
 
     static addGraphs(title) {
-        let DOMstrings = UIController.getDOMstrings();
-        let html = `<div class="container"> 
+        let DOMstrings = UIController.getDOMstrings(),
+            html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
                 <div>
                     <span class="txt-brown my-auto title"><b>%collection%</b></span>
@@ -139,10 +167,11 @@ class UIController {
                 <div class="card shadow total_sent_sms_graph"></div>
             </section> 
             <div class="card shadow total_failed_sms_graph my-4"></div> 
-        </div> `
+        </div> `,
         // Insert the HTML into the DOM
-        let newHtml = html.replace('%collection%', title);
-        document.querySelector(DOMstrings.codingProgressContainer).insertAdjacentHTML('beforeend', newHtml);
+            newHtml = html.replace("%collection%", title);
+        document
+            .querySelector(DOMstrings.codingProgressContainer)
+            .insertAdjacentHTML("beforeend", newHtml);
     }
 }
-
