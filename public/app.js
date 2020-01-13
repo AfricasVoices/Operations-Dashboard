@@ -19,46 +19,29 @@ class Controller {
         document.querySelector(DOMstrings.graphContainer).innerHTML = "";
     }
 
-    static detachSnapshotListener() {
-        let DOMstrings = UIController.getDOMstrings(),
-            hasListener = false,
-            nodeList = document.querySelectorAll(DOMstrings.dropdownItem);
-        if (nodeList) {
-            // Makes sure all the snapshot listeners of the projects' traffic data are detached
-            Array.prototype.forEach.call(nodeList, obj => {
-                let project = obj.innerText;
-                DataController.watchProjectTrafficData(
-                    project,
-                    GraphController.updateGraphs,
-                    hasListener
-                );
-            });
-        }
-        // detach coda snapshot listener
-        DataController.watchCodingProgress(UIController.updateProgressUI, hasListener);
-    }
-
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
-            Controller.detachSnapshotListener();
             Controller.resetUI();
+            DataController.detachSnapshotListener()
             // Add the coding progress section to the UI
             UIController.addCodingProgressSection();
             // Get data for coding progress table
-            DataController.watchCodingProgress(UIController.updateProgressUI);
+            let snapshot = DataController.watchCodingProgress(UIController.updateProgressUI);
+            DataController.registerSnapshotListener(snapshot)
         }
     }
 
     static navigateToSelectedProject(e) {
         if (e.target && e.target.nodeName == "A") {
-            Controller.detachSnapshotListener();
             Controller.resetUI();
+            DataController.detachSnapshotListener()
             console.log(e.target.innerText);
             let project = e.target.innerText;
             // Add the graphs container to the UI
             UIController.addGraphs(project);
             // Update and show the Graphs
-            DataController.watchProjectTrafficData(project, GraphController.updateGraphs);
+            let snapshot = DataController.watchProjectTrafficData(project, GraphController.updateGraphs);
+            DataController.registerSnapshotListener(snapshot)
         }
     }
 
@@ -73,7 +56,8 @@ class Controller {
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
         // Get data for coding progress table
-        DataController.watchCodingProgress(UIController.updateProgressUI);
+        let snapshot = DataController.watchCodingProgress(UIController.updateProgressUI);
+        DataController.registerSnapshotListener(snapshot)
     }
 }
 
