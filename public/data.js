@@ -54,22 +54,22 @@ class DataController {
             });
     }
 
-    static registerSnapshotListener(snapshot) {
-        if (snapshot) {
-            DataController.snapshot = snapshot;
-            console.log(`subscribed to snapshot: ${snapshot.toString()}`);
+    static registerSnapshotListener(unsubscribeFunc) {
+        if (unsubscribeFunc) {
+            DataController.unsubscribeFunc = unsubscribeFunc;
+            console.log(`subscribed to listener: ${unsubscribeFunc.toString()}`);
         } else {
-            console.log("unable to subscribe to snapshot");
+            console.log("unable to subscribe to listener");
         }
     }
 
     static detachSnapshotListener() {
-        if (DataController.snapshot) {
-            let unsubscribe = DataController.snapshot;
+        if (DataController.unsubscribeFunc) {
+            let unsubscribe = DataController.unsubscribeFunc;
             unsubscribe();
-            console.log("unsubscribed from snapshot");
+            console.log("unsubscribed from listener");
         } else {
-            console.log("no snapshot subscribed");
+            console.log("no listener subscribed");
         }
     }
 }
