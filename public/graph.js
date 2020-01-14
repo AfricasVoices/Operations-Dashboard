@@ -12,14 +12,13 @@ class GraphController {
         let chartTimeUnit = "10min",
             isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
-            dayDateFormat = d3.timeFormat("%Y-%m-%d");
+            dayDateFormat = d3.timeFormat("%Y-%m-%d"),
+            operators = new Set();
+
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
         // format the data
-        // formatData(data)
-        let operators = new Set();
-
         data.forEach(function(d) {
             d.datetime = new Date(d.datetime);
             d.day = dayDateFormat(new Date(d.datetime));
