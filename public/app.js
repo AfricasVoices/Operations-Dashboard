@@ -22,26 +22,29 @@ class Controller {
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.resetUI();
-            DataController.detachSnapshotListener()
+            DataController.detachSnapshotListener();
             // Add the coding progress section to the UI
             UIController.addCodingProgressSection();
             // Get data for coding progress table
             let snapshot = DataController.watchCodingProgress(UIController.updateProgressUI);
-            DataController.registerSnapshotListener(snapshot)
+            DataController.registerSnapshotListener(snapshot);
         }
     }
 
     static navigateToSelectedProject(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.resetUI();
-            DataController.detachSnapshotListener()
+            DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
             // Add the graphs container to the UI
             UIController.addGraphs(project);
             // Update and show the Graphs
-            let snapshot = DataController.watchProjectTrafficData(project, GraphController.updateGraphs);
-            DataController.registerSnapshotListener(snapshot)
+            let unsubscribeFunc = DataController.watchProjectTrafficData(
+                project,
+                GraphController.updateGraphs
+            );
+            DataController.registerSnapshotListener(unsubscribeFunc);
         }
     }
 
@@ -56,8 +59,8 @@ class Controller {
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
         // Get data for coding progress table
-        let snapshot = DataController.watchCodingProgress(UIController.updateProgressUI);
-        DataController.registerSnapshotListener(snapshot)
+        let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
+        DataController.registerSnapshotListener(unsubscribeFunc);
     }
 }
 
