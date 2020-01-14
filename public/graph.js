@@ -130,7 +130,7 @@ class GraphController {
             sentKeys = [],
             receivedStr = "",
             sentStr = "";
-        
+
         operators = Array.from(operators);
 
         for (let i = 0; i < operators.length; i++) {
@@ -794,7 +794,7 @@ class GraphController {
             )
         );
         d3.select("#lastUpdated")
-            .classed("text-danger", false)
+            .classed("text-stale-info", false)
             .text(fullDateFormat(lastUpdateTimeStamp));
 
         function setLastUpdatedAlert() {
