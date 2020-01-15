@@ -26,8 +26,8 @@ class Controller {
             // Add the coding progress section to the UI
             UIController.addCodingProgressSection();
             // Get data for coding progress table
-            let snapshot = DataController.watchCodingProgress(UIController.updateProgressUI);
-            DataController.registerSnapshotListener(snapshot);
+            let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
+            DataController.registerSnapshotListener(unsubscribeFunc);
         }
     }
 
