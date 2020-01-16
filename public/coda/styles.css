@@ -4,7 +4,7 @@
 .navbar {
     box-shadow: 0 2px 2px -2px steelblue;
 }
-.navbar-brown{
+.navbar-brown {
     color: #8d3538;
 }
 .nav-link {
@@ -21,7 +21,7 @@
     background-color: #B6D4E7;
 
 }
-.btn-logout{
+.btn-logout {
     border-color: #8d3538;
     color: #8d3538;
 }
@@ -41,40 +41,40 @@ a {
     vertical-align: bottom;
     border-bottom: 2px solid #8e3436;
 }
-table > tbody > tr > td{
+table > tbody > tr > td {
     border-bottom: 1px solid rgb(0,0,0, 0.2);
 }
-.coding-notstarted{
+.coding-notstarted {
     background-color:#fc9f9f;
     font-size: 16;
     line-height: 0.7rem;
 }
-.coding-below25{
+.coding-below25 {
     background-color:#ffd1d1;
     font-size: 16;
     line-height: 0.7rem;
 }
-.coding-above25{
+.coding-above25 {
     background-color:#87cefa;
     font-size: 16;
     line-height: 0.7rem;
 }
-.coding-above50{
+.coding-above50 {
     background-color: #fff6d6;
     font-size: 16;
     line-height: 0.7rem;
 }
-.coding-above75{
+.coding-above75 {
     background-color:#d6ffd9;
     font-size: 16;
     line-height: 0.6rem;
 }
-.coding-complete{
+.coding-complete {
     background-color: white;
     font-size: 15;
     line-height: 0.5rem;
 }
-.login-body{
+.login-body {
     margin: 0;
     padding: 0;
     background:#ffff;
@@ -82,7 +82,7 @@ table > tbody > tr > td{
     background-position: center;
     font-family: sans-serif;
 }
-.login-box{
+.login-box {
     width: 320px;
     height: 220px;
     background:#8d3538;
@@ -94,7 +94,7 @@ table > tbody > tr > td{
     box-sizing: border-box;
     padding: 70px 30px;
 }
-.avatar{
+.avatar {
     width: 95px;
     height: 95px;
     border-radius: 50%;
@@ -102,7 +102,7 @@ table > tbody > tr > td{
     top: -50px;
     left: calc(50% - 50px);
 }
-.login-h1{
+.login-h1 {
     margin: 0;
     padding: 0 0 20px;
     text-align: center;
