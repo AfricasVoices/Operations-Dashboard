@@ -18,7 +18,7 @@ class GraphController {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-        if (project == "WUSC_KEEP_II_dadaab" || project == "WUSC_KEEP_II_kakuma") {
+        if (projectName == "WUSC_KEEP_II_dadaab" || projectName == "WUSC_KEEP_II_kakuma") {
             // format the data
             data.forEach(function(d) {
                 d.datetime = new Date(d.datetime);
@@ -41,7 +41,7 @@ class GraphController {
             });
         } 
 
-        if (project == "IMAQAL" || project == "WorldBank-PLR" || project == "IOM") {
+        if (projectName == "IMAQAL" || projectName == "WorldBank-PLR" || projectName == "IOM") {
             // format the data
             data.forEach(function(d) {
                 d.datetime = new Date(d.datetime);
