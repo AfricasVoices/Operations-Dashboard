@@ -6,7 +6,7 @@ class GraphController {
         return newDate;
     }
 
-    static updateGraphs(data) {
+    static updateGraphs(data, project) {
         const TIMEFRAME_WEEK = 7,
             TIMEFRAME_MONTH = 30;
         let chartTimeUnit = "10min",
@@ -18,38 +18,63 @@ class GraphController {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-        // format the data
-        data.forEach(function(d) {
-            d.datetime = new Date(d.datetime);
-            d.day = dayDateFormat(new Date(d.datetime));
-            d.total_received = +d.total_received;
-            d.total_sent = +d.total_sent;
-            d.total_pending = +d.total_pending;
-            d.total_errored = +d.total_errored;
-            d.NC_received = +d.operators["NC"]["received"];
-            d.telegram_received = +d.operators["telegram"]["received"];
-            d.golis_received = +d.operators["golis"]["received"];
-            d.hormud_received = +d.operators["hormud"]["received"];
-            d.nationlink_received = +d.operators["nationlink"]["received"];
-            d.somnet_received = +d.operators["somnet"]["received"];
-            d.somtel_received = +d.operators["somtel"]["received"];
-            d.telesom_received = +d.operators["telesom"]["received"];
-            d.golis_sent = +d.operators["golis"]["sent"];
-            d.hormud_sent = +d.operators["hormud"]["sent"];
-            d.nationlink_sent = +d.operators["nationlink"]["sent"];
-            d.somnet_sent = +d.operators["somnet"]["sent"];
-            d.somtel_sent = +d.operators["somtel"]["sent"];
-            d.telesom_sent = +d.operators["telesom"]["sent"];
-            d.telegram_sent = +d.operators["telegram"]["sent"];
-            d.NC_sent = +d.operators["NC"]["sent"];
-            Object.keys(d.operators)
-                .sort()
-                .forEach(key => {
-                    if (!(key in operators)) {
-                        operators.add(key);
-                    }
-                });
-        });
+        if (project == "WUSC_KEEP_II_dadaab" || project == "WUSC_KEEP_II_kakuma") {
+            // format the data
+            data.forEach(function(d) {
+                d.datetime = new Date(d.datetime);
+                d.day = dayDateFormat(new Date(d.datetime));
+                d.total_received = +d.total_received;
+                d.total_sent = +d.total_sent;
+                d.total_pending = +d.total_pending;
+                d.total_errored = +d.total_errored;
+                d.NC_received = +d.operators["NC"]["received"];
+                d.telegram_received = +d.operators["telegram"]["received"];
+                d.telegram_sent = +d.operators["telegram"]["sent"];
+                d.NC_sent = +d.operators["NC"]["sent"];
+                Object.keys(d.operators)
+                    .sort()
+                    .forEach(key => {
+                        if (!(key in operators)) {
+                            operators.add(key);
+                        }
+                    });
+            });
+        } 
+
+        if (project == "IMAQAL" || project == "WorldBank-PLR" || project == "IOM") {
+            // format the data
+            data.forEach(function(d) {
+                d.datetime = new Date(d.datetime);
+                d.day = dayDateFormat(new Date(d.datetime));
+                d.total_received = +d.total_received;
+                d.total_sent = +d.total_sent;
+                d.total_pending = +d.total_pending;
+                d.total_errored = +d.total_errored;
+                d.NC_received = +d.operators["NC"]["received"];
+                d.telegram_received = +d.operators["telegram"]["received"];
+                d.golis_received = +d.operators["golis"]["received"];
+                d.hormud_received = +d.operators["hormud"]["received"];
+                d.nationlink_received = +d.operators["nationlink"]["received"];
+                d.somnet_received = +d.operators["somnet"]["received"];
+                d.somtel_received = +d.operators["somtel"]["received"];
+                d.telesom_received = +d.operators["telesom"]["received"];
+                d.golis_sent = +d.operators["golis"]["sent"];
+                d.hormud_sent = +d.operators["hormud"]["sent"];
+                d.nationlink_sent = +d.operators["nationlink"]["sent"];
+                d.somnet_sent = +d.operators["somnet"]["sent"];
+                d.somtel_sent = +d.operators["somtel"]["sent"];
+                d.telesom_sent = +d.operators["telesom"]["sent"];
+                d.telegram_sent = +d.operators["telegram"]["sent"];
+                d.NC_sent = +d.operators["NC"]["sent"];
+                Object.keys(d.operators)
+                    .sort()
+                    .forEach(key => {
+                        if (!(key in operators)) {
+                            operators.add(key);
+                        }
+                    });
+            });
+        }
 
         // Sort data by date
         data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));

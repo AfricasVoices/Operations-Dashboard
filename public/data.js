@@ -50,7 +50,7 @@ class DataController {
             .onSnapshot(res => {
                 // Update data every time it changes in firestore
                 DataController.updateData(res, data);
-                onChange(data);
+                onChange(data, projectName);
             });
     }
 
