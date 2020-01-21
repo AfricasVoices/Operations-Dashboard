@@ -75,7 +75,6 @@ class GraphController {
             delete dailyReceivedTotal[entry]["key"];
         }
 
-        
         // Group sent data by day
         let dailySentTotal = d3
             .nest()
