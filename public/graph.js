@@ -57,7 +57,7 @@ class GraphController {
             .rollup(v => {
                 let receivedData = {};
                 operators.forEach(op => {
-                    receivedData[`${op}_received`] = d3.sum(v, d => d[`${op}_received`]);
+                    receivedData[`${operator}_received`] = d3.sum(v, d => d[`${operator}_received`]);
                 })
                 receivedData["total_received"] = d3.sum(v, d => d.total_received);
                 return receivedData
