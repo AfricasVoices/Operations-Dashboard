@@ -6,7 +6,7 @@ class GraphController {
         return newDate;
     }
 
-    static updateGraphs(data) {
+    static updateGraphs(data, projectName) {
         const TIMEFRAME_WEEK = 7,
             TIMEFRAME_MONTH = 30;
         let chartTimeUnit = "10min",
@@ -26,27 +26,13 @@ class GraphController {
             d.total_sent = +d.total_sent;
             d.total_pending = +d.total_pending;
             d.total_errored = +d.total_errored;
-            d.NC_received = +d.operators["NC"]["received"];
-            d.telegram_received = +d.operators["telegram"]["received"];
-            d.golis_received = +d.operators["golis"]["received"];
-            d.hormud_received = +d.operators["hormud"]["received"];
-            d.nationlink_received = +d.operators["nationlink"]["received"];
-            d.somnet_received = +d.operators["somnet"]["received"];
-            d.somtel_received = +d.operators["somtel"]["received"];
-            d.telesom_received = +d.operators["telesom"]["received"];
-            d.golis_sent = +d.operators["golis"]["sent"];
-            d.hormud_sent = +d.operators["hormud"]["sent"];
-            d.nationlink_sent = +d.operators["nationlink"]["sent"];
-            d.somnet_sent = +d.operators["somnet"]["sent"];
-            d.somtel_sent = +d.operators["somtel"]["sent"];
-            d.telesom_sent = +d.operators["telesom"]["sent"];
-            d.telegram_sent = +d.operators["telegram"]["sent"];
-            d.NC_sent = +d.operators["NC"]["sent"];
             Object.keys(d.operators)
                 .sort()
-                .forEach(key => {
-                    if (!(key in operators)) {
-                        operators.add(key);
+                .forEach(operator => {
+                    if (!(operator in operators)) {
+                        operators.add(operator);
+                        d[`${operator}_received`] = +d.operators[operator]["received"];
+                        d[`${operator}_sent`] = +d.operators[operator]["sent"];
                     }
                 });
         });
@@ -69,17 +55,12 @@ class GraphController {
             .nest()
             .key(d => d.day)
             .rollup(v => {
-                return {
-                    NC_received: d3.sum(v, d => d.NC_received),
-                    telegram_received: d3.sum(v, d => d.telegram_received),
-                    hormud_received: d3.sum(v, d => d.hormud_received),
-                    nationlink_received: d3.sum(v, d => d.nationlink_received),
-                    somnet_received: d3.sum(v, d => d.somnet_received),
-                    somtel_received: d3.sum(v, d => d.somtel_received),
-                    telesom_received: d3.sum(v, d => d.telesom_received),
-                    golis_received: d3.sum(v, d => d.golis_received),
-                    total_received: d3.sum(v, d => d.total_received)
-                };
+                let receivedData = {};
+                operators.forEach(operator => {
+                    receivedData[`${operator}_received`] = d3.sum(v, d => d[`${operator}_received`]);
+                })
+                receivedData["total_received"] = d3.sum(v, d => d.total_received);
+                return receivedData
             })
             .entries(dataFilteredMonth);
 
@@ -99,17 +80,12 @@ class GraphController {
             .nest()
             .key(d => d.day)
             .rollup(v => {
-                return {
-                    NC_sent: d3.sum(v, d => d.NC_sent),
-                    telegram_sent: d3.sum(v, d => d.telegram_sent),
-                    hormud_sent: d3.sum(v, d => d.hormud_sent),
-                    nationlink_sent: d3.sum(v, d => d.nationlink_sent),
-                    somnet_sent: d3.sum(v, d => d.somnet_sent),
-                    somtel_sent: d3.sum(v, d => d.somtel_sent),
-                    telesom_sent: d3.sum(v, d => d.telesom_sent),
-                    golis_sent: d3.sum(v, d => d.golis_sent),
-                    total_sent: d3.sum(v, d => d.total_sent)
-                };
+                let sentData = {};
+                operators.forEach(operator => {
+                    sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
+                })
+                sentData["total_sent"] = d3.sum(v, d => d.total_sent);
+                return sentData
             })
             .entries(dataFilteredMonth);
 
