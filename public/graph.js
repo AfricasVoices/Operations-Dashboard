@@ -28,11 +28,11 @@ class GraphController {
             d.total_errored = +d.total_errored;
             Object.keys(d.operators)
                 .sort()
-                .forEach(key => {
-                    if (!(key in operators)) {
-                        operators.add(key);
-                        d[`${key}_received`] = +d.operators[key]["received"];
-                        d[`${key}_sent`] = +d.operators[key]["sent"];
+                .forEach(operator => {
+                    if (!(operator in operators)) {
+                        operators.add(operator);
+                        d[`${operator}_received`] = +d.operators[operator]["received"];
+                        d[`${operator}_sent`] = +d.operators[operator]["sent"];
                     }
                 });
         });
@@ -56,7 +56,7 @@ class GraphController {
             .key(d => d.day)
             .rollup(v => {
                 let receivedData = {};
-                operators.forEach(op => {
+                operators.forEach(operator => {
                     receivedData[`${operator}_received`] = d3.sum(v, d => d[`${operator}_received`]);
                 })
                 receivedData["total_received"] = d3.sum(v, d => d.total_received);
@@ -81,7 +81,7 @@ class GraphController {
             .key(d => d.day)
             .rollup(v => {
                 let sentData = {};
-                operators.forEach(op => {
+                operators.forEach(operator => {
                     sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
                 })
                 sentData["total_sent"] = d3.sum(v, d => d.total_sent);
