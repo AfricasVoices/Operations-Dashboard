@@ -27,7 +27,7 @@ class Controller {
         DataController.registerSnapshotListener(unsubscribeFunc);
     }
 
-    static displaySelectedProject(project) {
+    static displayProject(project) {
         // Add the graphs container to the UI
         UIController.addGraphs(project);
         // Update and show the Graphs
