@@ -53,7 +53,7 @@ class Controller {
             DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
-            location.hash = project;
+            location.hash = `traffic-${project}`;
             Controller.displaySelectedProject(project);
         }
     }
