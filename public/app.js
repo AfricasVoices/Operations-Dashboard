@@ -58,7 +58,7 @@ class Controller {
         }
     }
 
-    static deepLinktopage(activeProjectsData) {
+    static deepLinktoPage(activeProjectsData) {
         let activeProjects = [];
         activeProjectsData.forEach(project => {
             activeProjects.push(project.project_name);
@@ -87,7 +87,7 @@ class Controller {
             if (Controller.hash == "coding_progress") {
                 Controller.displayCodingProgress();
             }
-            DataController.watchActiveProjects(Controller.deepLinktopage);
+            DataController.watchActiveProjects(Controller.deepLinktoPage);
         } else {
             Controller.displayCodingProgress();
         }
