@@ -19,15 +19,31 @@ class Controller {
         document.querySelector(DOMstrings.graphContainer).innerHTML = "";
     }
 
+    static displayCodingProgress() {
+        // Add the coding progress section to the UI
+        UIController.addCodingProgressSection();
+        // Get data for coding progress table
+        let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
+        DataController.registerSnapshotListener(unsubscribeFunc);
+    }
+
+    static displaySelectedProject(project) {
+        // Add the graphs container to the UI
+        UIController.addGraphs(project);
+        // Update and show the Graphs
+        let unsubscribeFunc = DataController.watchProjectTrafficData(
+            project,
+            GraphController.updateGraphs
+        );
+        DataController.registerSnapshotListener(unsubscribeFunc);
+    }
+
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.resetUI();
             DataController.detachSnapshotListener();
-            // Add the coding progress section to the UI
-            UIController.addCodingProgressSection();
-            // Get data for coding progress table
-            let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
-            DataController.registerSnapshotListener(unsubscribeFunc);
+            location.hash = "coding_progress";
+            Controller.displayCodingProgress();
         }
     }
 
@@ -37,14 +53,22 @@ class Controller {
             DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
-            // Add the graphs container to the UI
-            UIController.addGraphs(project);
-            // Update and show the Graphs
-            let unsubscribeFunc = DataController.watchProjectTrafficData(
-                project,
-                GraphController.updateGraphs
-            );
-            DataController.registerSnapshotListener(unsubscribeFunc);
+            location.hash = project;
+            Controller.displaySelectedProject(project);
+        }
+    }
+
+    static deepLinktopage(activeProjectsData) {
+        let activeProjects = [];
+        activeProjectsData.forEach(project => {
+            activeProjects.push(project.project_name);
+        });
+        if (activeProjects.includes(Controller.hash)) {
+            let project = Controller.hash;
+            Controller.displaySelectedProject(project);
+        } else {
+            history.replaceState(null, null, " ");
+            Controller.displayCodingProgress();
         }
     }
 
@@ -56,11 +80,17 @@ class Controller {
         Controller.setupEventListeners();
         // Add the dropdown menu to the UI
         DataController.watchActiveProjects(UIController.addDropdownMenu);
-        // Add the coding progress section to the UI
-        UIController.addCodingProgressSection();
-        // Get data for coding progress table
-        let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
-        DataController.registerSnapshotListener(unsubscribeFunc);
+        // Get hash value
+        Controller.hash = window.location.hash.substring(1);
+        // Navigate appropriately according to the hash value
+        if (Controller.hash) {
+            if (Controller.hash == "coding_progress") {
+                Controller.displayCodingProgress();
+            }
+            DataController.watchActiveProjects(Controller.deepLinktopage);
+        } else {
+            Controller.displayCodingProgress();
+        }
     }
 }
 
