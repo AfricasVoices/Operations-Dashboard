@@ -54,19 +54,22 @@ class Controller {
             console.log(e.target.innerText);
             let project = e.target.innerText;
             location.hash = `traffic-${project}`;
-            Controller.displaySelectedProject(project);
+            Controller.displayProject(project);
         }
     }
 
-    static deepLinktoPage(activeProjectsData) {
-        let activeProjects = [];
+    static displayDeepLinkedTrafficPage(activeProjectsData) {
+        let activeProjects = [],
+            page_route = window.location.hash.substring(1);
         activeProjectsData.forEach(project => {
             activeProjects.push(project.project_name);
         });
-        if (activeProjects.includes(Controller.hash)) {
-            let project = Controller.hash;
-            Controller.displaySelectedProject(project);
+        if (activeProjects.includes(page_route)) {
+            let project = page_route;
+            Controller.displayProject(project);
         } else {
+            // update the URL and replace the item in the browser history 
+            // without reloading the page
             history.replaceState(null, null, " ");
             Controller.displayCodingProgress();
         }
@@ -81,13 +84,13 @@ class Controller {
         // Add the dropdown menu to the UI
         DataController.watchActiveProjects(UIController.addDropdownMenu);
         // Get hash value
-        Controller.hash = window.location.hash.substring(1);
+        let page_route = window.location.hash.substring(1);
         // Navigate appropriately according to the hash value
-        if (Controller.hash) {
-            if (Controller.hash == "coding_progress") {
+        if (page_route) {
+            if (page_route == "coding_progress") {
                 Controller.displayCodingProgress();
             }
-            DataController.watchActiveProjects(Controller.deepLinktoPage);
+            DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
         } else {
             Controller.displayCodingProgress();
         }
