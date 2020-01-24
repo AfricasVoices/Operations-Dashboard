@@ -42,7 +42,7 @@ class Controller {
         if (e.target && e.target.nodeName == "A") {
             Controller.resetUI();
             DataController.detachSnapshotListener();
-            location.hash = "coding_progress";
+            window.location.hash = "coding_progress";
             Controller.displayCodingProgress();
         }
     }
@@ -53,7 +53,7 @@ class Controller {
             DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
-            location.hash = `traffic-${project}`;
+            window.location.hash = `traffic-${project}`;
             Controller.displayProject(project);
         }
     }
@@ -64,11 +64,11 @@ class Controller {
         activeProjectsData.forEach(project => {
             activeProjects.push(project.project_name);
         });
-        if (activeProjects.includes(page_route)) {
-            let project = page_route;
+        let project = page_route.split("-")[1];
+        if (activeProjects.includes(project)) {
             Controller.displayProject(project);
         } else {
-            // update the URL and replace the item in the browser history 
+            // update the URL and replace the item in the browser history
             // without reloading the page
             history.replaceState(null, null, " ");
             Controller.displayCodingProgress();
@@ -89,8 +89,14 @@ class Controller {
         if (page_route) {
             if (page_route == "coding_progress") {
                 Controller.displayCodingProgress();
+            } else if (page_route.startsWith("traffic-")) {
+                DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
+            } else {
+                // update the URL and replace the item in the browser history
+                // without reloading the page
+                history.replaceState(null, null, " ");
+                Controller.displayCodingProgress();
             }
-            DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
         } else {
             Controller.displayCodingProgress();
         }
