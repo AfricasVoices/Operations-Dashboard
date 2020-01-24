@@ -64,7 +64,7 @@ class Controller {
         activeProjectsData.forEach(project => {
             activeProjects.push(project.project_name);
         });
-        let project = page_route.split("-")[1];
+        let project = page_route.split("traffic-")[1];
         if (activeProjects.includes(project)) {
             Controller.displayProject(project);
         } else {
