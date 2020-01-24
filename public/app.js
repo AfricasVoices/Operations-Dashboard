@@ -19,15 +19,31 @@ class Controller {
         document.querySelector(DOMstrings.graphContainer).innerHTML = "";
     }
 
+    static displayCodingProgress() {
+        // Add the coding progress section to the UI
+        UIController.addCodingProgressSection();
+        // Get data for coding progress table
+        let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
+        DataController.registerSnapshotListener(unsubscribeFunc);
+    }
+
+    static displayProject(project) {
+        // Add the graphs container to the UI
+        UIController.addGraphs(project);
+        // Update and show the Graphs
+        let unsubscribeFunc = DataController.watchProjectTrafficData(
+            project,
+            GraphController.updateGraphs
+        );
+        DataController.registerSnapshotListener(unsubscribeFunc);
+    }
+
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.resetUI();
             DataController.detachSnapshotListener();
-            // Add the coding progress section to the UI
-            UIController.addCodingProgressSection();
-            // Get data for coding progress table
-            let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
-            DataController.registerSnapshotListener(unsubscribeFunc);
+            window.location.hash = "coding_progress";
+            Controller.displayCodingProgress();
         }
     }
 
@@ -37,14 +53,25 @@ class Controller {
             DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
-            // Add the graphs container to the UI
-            UIController.addGraphs(project);
-            // Update and show the Graphs
-            let unsubscribeFunc = DataController.watchProjectTrafficData(
-                project,
-                GraphController.updateGraphs
-            );
-            DataController.registerSnapshotListener(unsubscribeFunc);
+            window.location.hash = `traffic-${project}`;
+            Controller.displayProject(project);
+        }
+    }
+
+    static displayDeepLinkedTrafficPage(activeProjectsData) {
+        let activeProjects = [],
+            page_route = window.location.hash.substring(1);
+        activeProjectsData.forEach(project => {
+            activeProjects.push(project.project_name);
+        });
+        let project = page_route.split("traffic-")[1];
+        if (activeProjects.includes(project)) {
+            Controller.displayProject(project);
+        } else {
+            // update the URL and replace the item in the browser history
+            // without reloading the page
+            history.replaceState(null, null, " ");
+            Controller.displayCodingProgress();
         }
     }
 
@@ -56,11 +83,23 @@ class Controller {
         Controller.setupEventListeners();
         // Add the dropdown menu to the UI
         DataController.watchActiveProjects(UIController.addDropdownMenu);
-        // Add the coding progress section to the UI
-        UIController.addCodingProgressSection();
-        // Get data for coding progress table
-        let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
-        DataController.registerSnapshotListener(unsubscribeFunc);
+        // Get hash value
+        let page_route = window.location.hash.substring(1);
+        // Navigate appropriately according to the hash value
+        if (page_route) {
+            if (page_route == "coding_progress") {
+                Controller.displayCodingProgress();
+            } else if (page_route.startsWith("traffic-")) {
+                DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
+            } else {
+                // update the URL and replace the item in the browser history
+                // without reloading the page
+                history.replaceState(null, null, " ");
+                Controller.displayCodingProgress();
+            }
+        } else {
+            Controller.displayCodingProgress();
+        }
     }
 }
 
