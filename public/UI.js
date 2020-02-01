@@ -28,8 +28,8 @@ class UIController {
                     <thead>
                         <tr class="table-heading">
                             <th scope="col">Dataset</th>
-                            <th scope="col">Messages</th>
-                            <th scope="col">Messages with a label</th>
+                            <th scope="col">Unique Texts</th>
+                            <th scope="col">Unique Texts with a label</th>
                             <th scope="col">Done</th>
                             <th scope="col">Wrong Scheme messages</th>
                             <th scope="col">WS %</th>
