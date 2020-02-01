@@ -53,7 +53,12 @@ class Controller {
             DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
-            window.location.hash = `traffic-${project}`;
+            // use push state here
+            let stateObj = { project: project.toString() };
+            let pageTitle = `Traffic-${project}`;
+            // history.pushState(stateObj, this.href.replace(window.location.pathname, ''), this.href);
+            history.replaceState(stateObj, pageTitle, `?traffic=${project}`);
+            // window.location.hash = `traffic-${project}`;
             Controller.displayProject(project);
         }
     }
