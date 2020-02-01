@@ -160,7 +160,7 @@ class GraphController {
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
             // Format TimeStamp
-            timeFormat = d3.timeFormat("%H %d %m %Y");
+            timeFormat = d3.timeFormat("%Y-%m-%d");
 
         // Define line paths for total failed sms(s)
         const total_failed_line = d3
