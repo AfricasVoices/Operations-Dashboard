@@ -10,7 +10,7 @@ class GraphController {
         const TIMEFRAME_WEEK = 7,
             TIMEFRAME_MONTH = 30;
         if (!GraphController.chartTimeUnit) {
-            GraphController.chartTimeUnit = "10min"
+            GraphController.chartTimeUnit = "10min";
         }
         // let chartTimeUnit = "10min",
         let isYLimitReceivedManuallySet = false,
@@ -60,10 +60,13 @@ class GraphController {
             .rollup(v => {
                 let receivedData = {};
                 operators.forEach(operator => {
-                    receivedData[`${operator}_received`] = d3.sum(v, d => d[`${operator}_received`]);
-                })
+                    receivedData[`${operator}_received`] = d3.sum(
+                        v,
+                        d => d[`${operator}_received`]
+                    );
+                });
                 receivedData["total_received"] = d3.sum(v, d => d.total_received);
-                return receivedData
+                return receivedData;
             })
             .entries(dataFilteredMonth);
 
@@ -86,9 +89,9 @@ class GraphController {
                 let sentData = {};
                 operators.forEach(operator => {
                     sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
-                })
+                });
                 sentData["total_sent"] = d3.sum(v, d => d.total_sent);
-                return sentData
+                return sentData;
             })
             .entries(dataFilteredMonth);
 
@@ -763,7 +766,7 @@ class GraphController {
             }
         });
 
-        let fullDateFormat = d3.timeFormat("%c");
+        let fullDateFormat = d3.timeFormat("%d %b %Y %H:%M:%S %p");
         // Update timestamp of update and reset formatting
         const lastUpdateTimeStamp = new Date(
             Math.max.apply(
