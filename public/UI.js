@@ -45,7 +45,7 @@ class UIController {
                         <div class="card-heade" id="headingOne">
                             <h2 class="mb-0">
                                 <button class="btn btn-brown" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Message Coding table headers Definitions
+                                Message Coding Table Header Definitions
                                 </button>
                             </h2>
                         </div>
