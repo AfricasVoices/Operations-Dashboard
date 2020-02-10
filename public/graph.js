@@ -10,7 +10,7 @@ class GraphController {
         const TIMEFRAME_WEEK = 7,
             TIMEFRAME_MONTH = 30;
         if (!GraphController.chartTimeUnit) {
-            GraphController.chartTimeUnit = "10min"
+            GraphController.chartTimeUnit = "10min";
         }
         // let chartTimeUnit = "10min",
         let isYLimitReceivedManuallySet = false,
@@ -60,10 +60,13 @@ class GraphController {
             .rollup(v => {
                 let receivedData = {};
                 operators.forEach(operator => {
-                    receivedData[`${operator}_received`] = d3.sum(v, d => d[`${operator}_received`]);
-                })
+                    receivedData[`${operator}_received`] = d3.sum(
+                        v,
+                        d => d[`${operator}_received`]
+                    );
+                });
                 receivedData["total_received"] = d3.sum(v, d => d.total_received);
-                return receivedData
+                return receivedData;
             })
             .entries(dataFilteredMonth);
 
@@ -86,9 +89,9 @@ class GraphController {
                 let sentData = {};
                 operators.forEach(operator => {
                     sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
-                })
+                });
                 sentData["total_sent"] = d3.sum(v, d => d.total_sent);
-                return sentData
+                return sentData;
             })
             .entries(dataFilteredMonth);
 
@@ -160,7 +163,7 @@ class GraphController {
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
             // Format TimeStamp
-            timeFormat = d3.timeFormat("%H %d %m %Y");
+            timeFormat = d3.timeFormat("%Y-%m-%d");
 
         // Define line paths for total failed sms(s)
         const total_failed_line = d3
@@ -454,7 +457,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (H-D-M-Y)");
+                .text("Date (D-M-Y)");
 
             // Total Sms(s) graph title
             total_received_sms_graph
@@ -628,7 +631,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (H-D-M-Y)");
+                .text("Date (D-M-Y)");
 
             // Total Sms(s) graph title
             total_sent_sms_graph
