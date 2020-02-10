@@ -85,7 +85,7 @@ class UIController {
                                     </tr>
                                     <tr>
                                         <th scope="row">Not Coded messages</th>
-                                        <td>shows the number of messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
+                                        <td>Shows the number of messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">NC %</th>
