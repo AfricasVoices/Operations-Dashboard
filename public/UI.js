@@ -69,7 +69,7 @@ class UIController {
                                     </tr>
                                     <tr>
                                         <th scope="row">Unique Texts with a label</th>
-                                        <td>shows the number of unique texts which contain a checked (i.e. manually verified) label in at least one code scheme</td>
+                                        <td>Shows the number of unique texts which contain a checked (i.e. manually verified) label in at least one code scheme</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Done</th>
