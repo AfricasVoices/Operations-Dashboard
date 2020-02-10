@@ -65,7 +65,7 @@ class UIController {
                                     </tr>
                                     <tr>
                                         <th scope="row">Unique Texts</th>
-                                        <td>  shows the total number of unique texts in the dataset. Note that to reduce labelling load, Coda only displays each unique message text once, so this is not the total number of messages received.</td>
+                                        <td>Shows the total number of unique texts in the dataset. Note that to reduce labelling load, Coda only displays each unique message text once, so this is not the total number of messages received.</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Unique Texts with a label</th>
