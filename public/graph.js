@@ -163,7 +163,7 @@ class GraphController {
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
             // Format TimeStamp
-            timeFormat = d3.timeFormat("%H %d %m %Y");
+            timeFormat = d3.timeFormat("%Y-%m-%d");
 
         // Define line paths for total failed sms(s)
         const total_failed_line = d3
@@ -457,7 +457,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (H-D-M-Y)");
+                .text("Date (D-M-Y)");
 
             // Total Sms(s) graph title
             total_received_sms_graph
@@ -631,7 +631,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (H-D-M-Y)");
+                .text("Date (D-M-Y)");
 
             // Total Sms(s) graph title
             total_sent_sms_graph
@@ -766,7 +766,7 @@ class GraphController {
             }
         });
 
-        let fullDateFormat = d3.timeFormat("%d %b %Y %H:%M:%S %p");
+        let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
         const lastUpdateTimeStamp = new Date(
             Math.max.apply(
