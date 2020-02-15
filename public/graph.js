@@ -174,8 +174,12 @@ class GraphController {
             // Create line path element for failed line graph
             total_failed_path = total_failed_sms_graph.append("path");
 
-        // custom color scheme
-        let color_scheme = [
+        let operators_identity = {
+                NC: "#31cece",
+                telegram: "#f032e6",
+                "kenyan telephone": "#3cb44b"
+            },
+            list_of_unique_colors = [
                 "#31cece",
                 "#f58231",
                 "#3cb44b",
@@ -186,9 +190,31 @@ class GraphController {
                 "#911eb4",
                 "#e6194B"
             ],
-            color = d3.scaleOrdinal(color_scheme),
-            colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys),
-            colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
+            color_scheme = [],
+            operators_with_color_identity = Object.keys(operators_identity);
+
+        // Generate color scheme based on operators identity
+        operators.forEach((operator, index) => {
+            if (operators_with_color_identity.includes(operator)) {
+                color_scheme[index] = operators_identity[operator];
+            }
+        });
+
+        // If operator doesn't have a color identity assign a unique color
+        list_of_unique_colors.forEach((color, index) => {
+            if (!color_scheme.includes(color)) {
+                if (color_scheme[index] == undefined) {
+                    color_scheme[index] = color;
+                } else {
+                    color_scheme.push(color);
+                }
+            }
+        });
+
+        let color, colorReceived, colorSent;
+        (color = d3.scaleOrdinal(color_scheme)),
+            (colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys)),
+            (colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys));
 
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
