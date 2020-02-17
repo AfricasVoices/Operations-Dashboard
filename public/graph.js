@@ -142,7 +142,7 @@ class GraphController {
         let total_received_sms_graph = d3
                 .select(".total_received_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
@@ -150,7 +150,7 @@ class GraphController {
             total_sent_sms_graph = d3
                 .select(".total_sent_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
@@ -158,7 +158,7 @@ class GraphController {
             total_failed_sms_graph = d3
                 .select(".total_failed_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
