@@ -129,7 +129,7 @@ class GraphController {
             sentDataStackedDaily = stackSentDaily(dailySentTotal);
 
         //Create margins for the three graphs
-        const Margin = { top: 40, right: 100, bottom: 90, left: 70 },
+        const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
             Width = 1110 - Margin.right - Margin.left,
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
@@ -543,7 +543,7 @@ class GraphController {
                 .attr("class", "redrawElementReceived")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
@@ -715,7 +715,7 @@ class GraphController {
                 .attr("class", "redrawElementSent")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
