@@ -73,7 +73,7 @@ class UIController {
                                     </tr>
                                     <tr>
                                         <th scope="row">Done</th>
-                                        <td></td>
+                                        <td>Shows the % of labeled unique texts over total unique texts.</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Wrong Scheme messages</th>
