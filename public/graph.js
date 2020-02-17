@@ -16,6 +16,7 @@ class GraphController {
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
+            dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
         // Clear previous graphs before redrawing
@@ -526,8 +527,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(4))
-                        .tickFormat(dayDateFormat)
+                        .ticks(d3.timeDay.every(1))
+                        .tickFormat(dayDateFormatWithWeekdayName)
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -698,8 +699,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(4))
-                        .tickFormat(dayDateFormat)
+                        .ticks(d3.timeDay.every(1))
+                        .tickFormat(dayDateFormatWithWeekdayName)
                 )
                 // Rotate axis labels
                 .selectAll("text")
