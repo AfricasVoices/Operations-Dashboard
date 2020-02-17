@@ -42,7 +42,7 @@ class UIController {
                 <div id="last-update">Last updated: </div>
                 <div class="accordion" id="accordionExample">
                     <div class="card">
-                        <div class="card-heade" id="headingOne">
+                        <div id="headingOne">
                             <h2 class="mb-0">
                                 <button class="btn btn-brown" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 Message Coding Table Header Definitions
