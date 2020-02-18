@@ -785,8 +785,21 @@ class GraphController {
                 difference_minutes = Math.floor(difference_ms % 60);
             if (difference_minutes > 30) {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
+            } else {
+                d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
             }
         }
-        setInterval(setLastUpdatedAlert, 1000);
+        
+        if (GraphController.lastUpdateTimer) {
+            clearInterval(GraphController.lastUpdateTimer);
+        }
+        GraphController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
+    }
+    
+    static clearTimers() {
+        if (GraphController.lastUpdateTimer) {
+            clearInterval(GraphController.lastUpdateTimer);
+            GraphController.lastUpdateTimer = null;
+        }
     }
 }
