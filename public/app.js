@@ -20,17 +20,35 @@ class Controller {
         GraphController.clearTimers();
     }
 
+    static resetActiveLink() {
+        let DOMstrings = UIController.getDOMstrings();
+        let elements = document.querySelectorAll(DOMstrings.activeLinks);
+        elements.forEach(element => {
+            element.classList.remove(DOMstrings.activeLinkClassName);
+        });
+    }
+
     static displayCodingProgress() {
+        let DOMstrings = UIController.getDOMstrings();
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
+        Controller.resetActiveLink();
+        document
+            .querySelector(DOMstrings.codingProgressLinkSelector)
+            .classList.add(DOMstrings.activeLinkClassName);
         // Get data for coding progress table
         let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
         DataController.registerSnapshotListener(unsubscribeFunc);
     }
 
     static displayProject(project) {
+        let DOMstrings = UIController.getDOMstrings();
         // Add the graphs container to the UI
         UIController.addGraphs(project);
+        Controller.resetActiveLink();
+        document
+            .querySelector(DOMstrings.trafficsLinkSelector)
+            .classList.add(DOMstrings.activeLinkClassName);
         // Update and show the Graphs
         let unsubscribeFunc = DataController.watchProjectTrafficData(
             project,
