@@ -795,7 +795,6 @@ class GraphController {
         }
         GraphController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
     }
-
     static clearTimers() {
         if (GraphController.lastUpdateTimer) {
             clearInterval(GraphController.lastUpdateTimer);
