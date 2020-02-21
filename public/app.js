@@ -17,6 +17,7 @@ class Controller {
         let DOMstrings = UIController.getDOMstrings();
         document.querySelector(DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(DOMstrings.graphContainer).innerHTML = "";
+        GraphController.clearTimers();
     }
 
     static displayCodingProgress() {
