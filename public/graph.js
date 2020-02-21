@@ -790,7 +790,6 @@ class GraphController {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
             }
         }
-
         if (GraphController.lastUpdateTimer) {
             clearInterval(GraphController.lastUpdateTimer);
         }
