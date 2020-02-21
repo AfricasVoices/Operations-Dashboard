@@ -16,6 +16,7 @@ class GraphController {
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
+            dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
         // Clear previous graphs before redrawing
@@ -526,8 +527,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(4))
-                        .tickFormat(dayDateFormat)
+                        .ticks(d3.timeDay.every(1))
+                        .tickFormat(dayDateFormatWithWeekdayName)
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -542,7 +543,7 @@ class GraphController {
                 .attr("class", "redrawElementReceived")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
@@ -698,8 +699,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(4))
-                        .tickFormat(dayDateFormat)
+                        .ticks(d3.timeDay.every(1))
+                        .tickFormat(dayDateFormatWithWeekdayName)
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -714,7 +715,7 @@ class GraphController {
                 .attr("class", "redrawElementSent")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
@@ -789,13 +790,11 @@ class GraphController {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
             }
         }
-        
         if (GraphController.lastUpdateTimer) {
             clearInterval(GraphController.lastUpdateTimer);
         }
         GraphController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
     }
-    
     static clearTimers() {
         if (GraphController.lastUpdateTimer) {
             clearInterval(GraphController.lastUpdateTimer);
