@@ -1,54 +1,50 @@
 // GLOBAL APP CONTROLLER
 class Controller {
     static setupEventListeners() {
-        let DOMstrings = UIController.getDOMstrings();
+        Controller.DOMstrings = UIController.getDOMstrings();
         document
-            .querySelector(DOMstrings.logoutBtn)
+            .querySelector(Controller.DOMstrings.logoutBtn)
             .addEventListener("click", AuthController.logout);
         document
-            .querySelector(DOMstrings.codingProgressLinkSelector)
+            .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .addEventListener("click", Controller.navigateToCodingProgress);
         document
-            .querySelector(DOMstrings.projectMenu)
+            .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
     }
 
     static resetUI() {
-        let DOMstrings = UIController.getDOMstrings();
-        document.querySelector(DOMstrings.codingProgressContainer).innerHTML = "";
-        document.querySelector(DOMstrings.graphContainer).innerHTML = "";
+        document.querySelector(Controller.DOMstrings.codingProgressContainer).innerHTML = "";
+        document.querySelector(Controller.DOMstrings.graphContainer).innerHTML = "";
         GraphController.clearTimers();
     }
 
     static resetActiveLink() {
-        let DOMstrings = UIController.getDOMstrings();
-        let elements = document.querySelectorAll(DOMstrings.activeLinks);
+        let elements = document.querySelectorAll(Controller.DOMstrings.activeLinks);
         elements.forEach(element => {
-            element.classList.remove(DOMstrings.activeLinkClassName);
+            element.classList.remove(Controller.DOMstrings.activeLinkClassName);
         });
     }
 
     static displayCodingProgress() {
-        let DOMstrings = UIController.getDOMstrings();
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
         Controller.resetActiveLink();
         document
-            .querySelector(DOMstrings.codingProgressLinkSelector)
-            .classList.add(DOMstrings.activeLinkClassName);
+            .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Get data for coding progress table
         let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
         DataController.registerSnapshotListener(unsubscribeFunc);
     }
 
     static displayProject(project) {
-        let DOMstrings = UIController.getDOMstrings();
         // Add the graphs container to the UI
         UIController.addGraphs(project);
         Controller.resetActiveLink();
         document
-            .querySelector(DOMstrings.trafficsLinkSelector)
-            .classList.add(DOMstrings.activeLinkClassName);
+            .querySelector(Controller.DOMstrings.trafficsLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
         let unsubscribeFunc = DataController.watchProjectTrafficData(
             project,
