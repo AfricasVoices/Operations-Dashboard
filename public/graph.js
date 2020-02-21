@@ -129,11 +129,11 @@ class GraphController {
 
         //Create margins for the three graphs
         const Margin = { top: 40, right: 100, bottom: 90, left: 70 },
-            Width = 1110 - Margin.right - Margin.left,
+            Width = 960 - Margin.right - Margin.left,
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
-            x = d3.scaleTime().range([0, Width - Margin.right]),
-            failed_messages_x_axis_range = d3.scaleTime().range([0, Width - Margin.right]),
+            x = d3.scaleTime().range([0, Width]),
+            failed_messages_x_axis_range = d3.scaleTime().range([0, Width]),
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
             y_total_sent_sms = d3.scaleLinear().range([Height, 0]),
             y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
@@ -142,7 +142,7 @@ class GraphController {
         let total_received_sms_graph = d3
                 .select(".total_received_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
@@ -150,7 +150,7 @@ class GraphController {
             total_sent_sms_graph = d3
                 .select(".total_sent_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
@@ -158,7 +158,7 @@ class GraphController {
             total_failed_sms_graph = d3
                 .select(".total_failed_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
@@ -289,7 +289,7 @@ class GraphController {
         total_received_sms_graph
             .append("g")
             .attr("class", "receivedLegend")
-            .attr("transform", `translate(${Width - Margin.right + 10},${Margin.top - 30})`);
+            .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
 
         let receivedLegend = d3
             .legendColor()
@@ -304,7 +304,7 @@ class GraphController {
         total_sent_sms_graph
             .append("g")
             .attr("class", "sentLegend")
-            .attr("transform", `translate(${Width - Margin.right + 10},${Margin.top - 30})`);
+            .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
 
         let sentLegend = d3
             .legendColor()
@@ -785,8 +785,21 @@ class GraphController {
                 difference_minutes = Math.floor(difference_ms % 60);
             if (difference_minutes > 30) {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
+            } else {
+                d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
             }
         }
-        setInterval(setLastUpdatedAlert, 1000);
+        
+        if (GraphController.lastUpdateTimer) {
+            clearInterval(GraphController.lastUpdateTimer);
+        }
+        GraphController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
+    }
+    
+    static clearTimers() {
+        if (GraphController.lastUpdateTimer) {
+            clearInterval(GraphController.lastUpdateTimer);
+            GraphController.lastUpdateTimer = null;
+        }
     }
 }
