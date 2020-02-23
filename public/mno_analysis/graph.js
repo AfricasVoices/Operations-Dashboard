@@ -31,8 +31,17 @@ const margin = { top: 20, right: 20, bottom: 30, left: 50 },
         .y(function(d) {
             return y(d.DownTimeDurationSeconds);
         }),
+    line2 = d3
+        .line()
+        .x(function(d) {
+            return x(new Date(d.periodEnd));
+        })
+        .y(function(d) {
+            return y(d.NumberOfMessages);
+        }),
     // d3 line path generator
     path = graph.append("path");
+path1 = graph.append("path");
 
 Promise.all([d3.json("down.json"), d3.json("msgs.json")])
     .then(function(data) {
@@ -44,17 +53,28 @@ Promise.all([d3.json("down.json"), d3.json("msgs.json")])
         );
         data[1].sort((a, b) => new Date(a.periodEnd) - new Date(b.periodEnd));
         // Set scale domains
-        x.domain(d3.extent(data[0], d => new Date(d.NextMessageTimeTimestamp)));
-        y.domain([0, d3.max(data[0], d => d.DownTimeDurationSeconds)]);
+        // x.domain(d3.extent(data[0], d => new Date(d.NextMessageTimeTimestamp)));
+        // y.domain([0, d3.max(data[0], d => d.DownTimeDurationSeconds)]);
+        x.domain(d3.extent(data[1], d => new Date(d.periodEnd)));
+        y.domain([0, d3.max(data[1], d => d.NumberOfMessages)]);
 
-        // Update path data
+        // Update path data line 1
         path.data([data[0]])
             .attr("fill", "none")
             .attr("stroke", "#00BFA5")
             .attr("stroke-width", 2)
             .attr("d", line);
 
+        // Update path data line 2
+        path1
+            .data([data[1]])
+            .attr("fill", "none")
+            .attr("stroke", "#00BFA5")
+            .attr("stroke-width", 2)
+            .attr("d", line2);
+
         const circles = graph.selectAll("circle").data(data[0]);
+        const circles2 = graph.selectAll("circle2").data(data[1]);
 
         // Remove unwanted points
         // circles.exit().remove()
@@ -70,6 +90,15 @@ Promise.all([d3.json("down.json"), d3.json("msgs.json")])
             .attr("r", 4)
             .attr("cx", d => x(new Date(d.NextMessageTimeTimestamp)))
             .attr("cy", d => y(d.DownTimeDurationSeconds))
+            .attr("fill", "#CCC");
+
+        // Add new points
+        circles2
+            .enter()
+            .append("circle")
+            .attr("r", 4)
+            .attr("cx", d => x(new Date(d.periodEnd)))
+            .attr("cy", d => y(d.NumberOfMessages))
             .attr("fill", "#CCC");
 
         graph
