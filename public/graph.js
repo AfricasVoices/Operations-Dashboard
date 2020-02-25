@@ -767,7 +767,7 @@ class GraphController {
             }
         });
 
-        let fullDateFormat = d3.timeFormat("%c");
+        let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
         const lastUpdateTimeStamp = new Date(
             Math.max.apply(
