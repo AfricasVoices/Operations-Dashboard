@@ -769,12 +769,15 @@ class GraphController {
 
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
-        const lastUpdateTimeStamp = new Date(
+        let lastUpdateTimeStamp = new Date(
             Math.max.apply(
                 null,
                 data.map(d => new Date(d.datetime))
             )
         );
+        lastUpdateTimeStamp.setMinutes(lastUpdateTimeStamp.getMinutes() + 10);
+        lastUpdateTimeStamp = new Date(lastUpdateTimeStamp);
+
         d3.select("#lastUpdated")
             .classed("text-stale-info", false)
             .text(fullDateFormat(lastUpdateTimeStamp));
