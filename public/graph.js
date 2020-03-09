@@ -787,7 +787,7 @@ class GraphController {
             let currentTime = new Date(),
                 difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000,
                 difference_minutes = Math.floor(difference_ms % 60);
-            if (difference_minutes > 30) {
+            if (difference_minutes > 20) {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
             } else {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
