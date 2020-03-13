@@ -31,7 +31,7 @@
 }
 .active-link {
     border-bottom: 2px #8d3538 solid;
-    line-height: 22px;
+    padding-bottom: 6px;
 }
 .active-item {
     color: #8d3538;
