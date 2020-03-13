@@ -10,12 +10,13 @@ class GraphController {
         const TIMEFRAME_WEEK = 7,
             TIMEFRAME_MONTH = 30;
         if (!GraphController.chartTimeUnit) {
-            GraphController.chartTimeUnit = "10min"
+            GraphController.chartTimeUnit = "10min";
         }
         // let chartTimeUnit = "10min",
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
+            dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
         // Clear previous graphs before redrawing
@@ -60,10 +61,13 @@ class GraphController {
             .rollup(v => {
                 let receivedData = {};
                 operators.forEach(operator => {
-                    receivedData[`${operator}_received`] = d3.sum(v, d => d[`${operator}_received`]);
-                })
+                    receivedData[`${operator}_received`] = d3.sum(
+                        v,
+                        d => d[`${operator}_received`]
+                    );
+                });
                 receivedData["total_received"] = d3.sum(v, d => d.total_received);
-                return receivedData
+                return receivedData;
             })
             .entries(dataFilteredMonth);
 
@@ -86,9 +90,9 @@ class GraphController {
                 let sentData = {};
                 operators.forEach(operator => {
                     sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
-                })
+                });
                 sentData["total_sent"] = d3.sum(v, d => d.total_sent);
-                return sentData
+                return sentData;
             })
             .entries(dataFilteredMonth);
 
@@ -126,11 +130,11 @@ class GraphController {
 
         //Create margins for the three graphs
         const Margin = { top: 40, right: 100, bottom: 90, left: 70 },
-            Width = 1110 - Margin.right - Margin.left,
+            Width = 960 - Margin.right - Margin.left,
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
-            x = d3.scaleTime().range([0, Width - Margin.right]),
-            failed_messages_x_axis_range = d3.scaleTime().range([0, Width - Margin.right]),
+            x = d3.scaleTime().range([0, Width]),
+            failed_messages_x_axis_range = d3.scaleTime().range([0, Width]),
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
             y_total_sent_sms = d3.scaleLinear().range([Height, 0]),
             y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
@@ -139,7 +143,7 @@ class GraphController {
         let total_received_sms_graph = d3
                 .select(".total_received_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
@@ -147,7 +151,7 @@ class GraphController {
             total_sent_sms_graph = d3
                 .select(".total_sent_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
@@ -155,12 +159,12 @@ class GraphController {
             total_failed_sms_graph = d3
                 .select(".total_failed_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right)
+                .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
             // Format TimeStamp
-            timeFormat = d3.timeFormat("%H %d %m %Y");
+            timeFormat = d3.timeFormat("%Y-%m-%d");
 
         // Define line paths for total failed sms(s)
         const total_failed_line = d3
@@ -286,7 +290,7 @@ class GraphController {
         total_received_sms_graph
             .append("g")
             .attr("class", "receivedLegend")
-            .attr("transform", `translate(${Width - Margin.right + 10},${Margin.top - 30})`);
+            .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
 
         let receivedLegend = d3
             .legendColor()
@@ -301,7 +305,7 @@ class GraphController {
         total_sent_sms_graph
             .append("g")
             .attr("class", "sentLegend")
-            .attr("transform", `translate(${Width - Margin.right + 10},${Margin.top - 30})`);
+            .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
 
         let sentLegend = d3
             .legendColor()
@@ -454,7 +458,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (H-D-M-Y)");
+                .text("Date (D-M-Y)");
 
             // Total Sms(s) graph title
             total_received_sms_graph
@@ -523,8 +527,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(4))
-                        .tickFormat(dayDateFormat)
+                        .ticks(d3.timeDay.every(1))
+                        .tickFormat(dayDateFormatWithWeekdayName)
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -539,7 +543,7 @@ class GraphController {
                 .attr("class", "redrawElementReceived")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
@@ -628,7 +632,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (H-D-M-Y)");
+                .text("Date (D-M-Y)");
 
             // Total Sms(s) graph title
             total_sent_sms_graph
@@ -695,8 +699,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(4))
-                        .tickFormat(dayDateFormat)
+                        .ticks(d3.timeDay.every(1))
+                        .tickFormat(dayDateFormatWithWeekdayName)
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -711,7 +715,7 @@ class GraphController {
                 .attr("class", "redrawElementSent")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
@@ -763,14 +767,17 @@ class GraphController {
             }
         });
 
-        let fullDateFormat = d3.timeFormat("%c");
+        let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
-        const lastUpdateTimeStamp = new Date(
+        let lastUpdateTimeStamp = new Date(
             Math.max.apply(
                 null,
                 data.map(d => new Date(d.datetime))
             )
         );
+        lastUpdateTimeStamp.setMinutes(lastUpdateTimeStamp.getMinutes() + 10);
+        lastUpdateTimeStamp = new Date(lastUpdateTimeStamp);
+
         d3.select("#lastUpdated")
             .classed("text-stale-info", false)
             .text(fullDateFormat(lastUpdateTimeStamp));
@@ -780,10 +787,21 @@ class GraphController {
             let currentTime = new Date(),
                 difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000,
                 difference_minutes = Math.floor(difference_ms % 60);
-            if (difference_minutes > 30) {
+            if (difference_minutes > 20) {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
+            } else {
+                d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
             }
         }
-        setInterval(setLastUpdatedAlert, 1000);
+        if (GraphController.lastUpdateTimer) {
+            clearInterval(GraphController.lastUpdateTimer);
+        }
+        GraphController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
+    }
+    static clearTimers() {
+        if (GraphController.lastUpdateTimer) {
+            clearInterval(GraphController.lastUpdateTimer);
+            GraphController.lastUpdateTimer = null;
+        }
     }
 }
