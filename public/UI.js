@@ -167,6 +167,10 @@ class UIController {
                 <div class="card shadow total_sent_sms_graph"></div>
             </section> 
             <div class="card shadow total_failed_sms_graph my-4"></div> 
+            <div class="card m-2">
+                <b>Threats to Validity</b></br>
+                <p class="card-text"></p>
+            </div>
         </div> `,
         // Insert the HTML into the DOM
             newHtml = html.replace("%collection%", title);
