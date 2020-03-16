@@ -6,19 +6,23 @@ class GC {
         return newDate;
     }
 
-    static updateGraphs(data, projectName) {
+    static setProperties() {
         GC.TIMEFRAME_WEEK = 7;
         GC.TIMEFRAME_MONTH = 30;
-        if (!GC.chartTimeUnit) {
-            GC.chartTimeUnit = "10min";
-        }
-        
         GC.isYLimitReceivedManuallySet = false;
         GC.isYLimitSentManuallySet = false;
         GC.dayDateFormat = d3.timeFormat("%Y-%m-%d");
         GC.dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a");
         GC.operators = new Set();
+    }
 
+    static updateGraphs(data, projectName) {
+        GC.setProperties()
+        
+        if (!GC.chartTimeUnit) {
+            GC.chartTimeUnit = "10min";
+        }
+        
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
