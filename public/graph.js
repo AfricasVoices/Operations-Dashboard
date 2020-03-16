@@ -13,11 +13,11 @@ class GC {
             GC.chartTimeUnit = "10min";
         }
         
-        let isYLimitReceivedManuallySet = false,
-            isYLimitSentManuallySet = false,
-            dayDateFormat = d3.timeFormat("%Y-%m-%d"),
-            dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
-            operators = new Set();
+        GC.isYLimitReceivedManuallySet = false;
+        GC.isYLimitSentManuallySet = false;
+        GC.dayDateFormat = d3.timeFormat("%Y-%m-%d");
+        GC.dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a");
+        GC.operators = new Set();
 
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
@@ -25,7 +25,7 @@ class GC {
         // format the data
         data.forEach(function(d) {
             d.datetime = new Date(d.datetime);
-            d.day = dayDateFormat(new Date(d.datetime));
+            d.day = GC.dayDateFormat(new Date(d.datetime));
             d.total_received = +d.total_received;
             d.total_sent = +d.total_sent;
             d.total_pending = +d.total_pending;
@@ -33,8 +33,8 @@ class GC {
             Object.keys(d.operators)
                 .sort()
                 .forEach(operator => {
-                    if (!(operator in operators)) {
-                        operators.add(operator);
+                    if (!(operator in GC.operators)) {
+                        GC.operators.add(operator);
                         d[`${operator}_received`] = +d.operators[operator]["received"];
                         d[`${operator}_sent`] = +d.operators[operator]["sent"];
                     }
@@ -60,7 +60,7 @@ class GC {
             .key(d => d.day)
             .rollup(v => {
                 let receivedData = {};
-                operators.forEach(operator => {
+                GC.operators.forEach(operator => {
                     receivedData[`${operator}_received`] = d3.sum(
                         v,
                         d => d[`${operator}_received`]
@@ -88,7 +88,7 @@ class GC {
             .key(d => d.day)
             .rollup(v => {
                 let sentData = {};
-                operators.forEach(operator => {
+                GC.operators.forEach(operator => {
                     sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
                 });
                 sentData["total_sent"] = d3.sum(v, d => d.total_sent);
@@ -113,7 +113,7 @@ class GC {
             receivedStr = "",
             sentStr = "";
 
-        operators = Array.from(operators);
+        let operators = Array.from(GC.operators);
 
         for (let i = 0; i < operators.length; i++) {
             receivedStr = operators[i] + "_received";
@@ -387,7 +387,7 @@ class GC {
 
         function draw10MinReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            if (isYLimitReceivedManuallySet == false) {
+            if (GC.isYLimitReceivedManuallySet == false) {
                 yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
             }
 
@@ -476,7 +476,7 @@ class GC {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             let yLimitReceivedTotal = d3.max(dailyReceivedTotal, d => d.total_received);
 
-            if (isYLimitReceivedManuallySet == false) {
+            if (GC.isYLimitReceivedManuallySet == false) {
                 yLimitReceived = yLimitReceivedTotal;
             }
 
@@ -528,7 +528,7 @@ class GC {
                     d3
                         .axisBottom(x)
                         .ticks(d3.timeDay.every(1))
-                        .tickFormat(dayDateFormatWithWeekdayName)
+                        .tickFormat(GC.dayDateFormatWithWeekdayName)
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -562,7 +562,7 @@ class GC {
 
         function draw10MinSentGraph(yLimitSent) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            if (isYLimitSentManuallySet == false) {
+            if (GC.isYLimitSentManuallySet == false) {
                 yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
             }
 
@@ -650,7 +650,7 @@ class GC {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             let yLimitSentTotal = d3.max(dailySentTotal, d => d.total_sent);
 
-            if (isYLimitSentManuallySet != true) {
+            if (GC.isYLimitSentManuallySet != true) {
                 yLimitSent = yLimitSentTotal;
             }
 
@@ -700,7 +700,7 @@ class GC {
                     d3
                         .axisBottom(x)
                         .ticks(d3.timeDay.every(1))
-                        .tickFormat(dayDateFormatWithWeekdayName)
+                        .tickFormat(GC.dayDateFormatWithWeekdayName)
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -745,7 +745,7 @@ class GC {
 
         // Draw received graph with user-selected y-axis limit
         d3.select("#buttonYLimitReceived").on("input", function() {
-            isYLimitReceivedManuallySet = true;
+            GC.isYLimitReceivedManuallySet = true;
             if (GC.chartTimeUnit == "1day") {
                 yLimitReceived = this.value;
                 drawOneDayReceivedGraph(yLimitReceived);
@@ -757,7 +757,7 @@ class GC {
 
         // Draw sent graph with user-selected y-axis limit
         d3.select("#buttonYLimitSent").on("input", function() {
-            isYLimitSentManuallySet = true;
+            GC.isYLimitSentManuallySet = true;
             if (GC.chartTimeUnit == "1day") {
                 yLimitSent = this.value;
                 drawOneDaySentGraph(yLimitSent);
