@@ -36,6 +36,59 @@ class GC {
         });
     }
 
+    static GroupDataByDay(dataFilteredMonth, messageDirection){
+        let groupedDataTotal = d3
+            .nest()
+            .key(d => d.day)
+            .rollup(v => {
+                let groupedData = {};
+                GC.operators.forEach(operator => {
+                    groupedData[`${operator}_${messageDirection}`] = d3.sum(
+                        v,
+                        d => d[`${operator}_${messageDirection}`]
+                    );
+                });
+                groupedData[`total_${messageDirection}`] = d3.sum(v, d => d[`total_${messageDirection}`]);
+                return groupedData;
+            })
+            .entries(dataFilteredMonth);
+            if (messageDirection == "sent") {
+                GC.dailySentTotal = groupedDataTotal
+            }
+            else if (messageDirection == "received") {
+                GC.dailyReceivedTotal = groupedDataTotal
+            }
+    }
+
+    static FlattenNestedDataforStacking(messageDirection) {
+        let nestedData;
+        if (messageDirection == "received") {
+            nestedData = GC.dailyReceivedTotal
+        }
+        else if (messageDirection == "sent") {
+            nestedData = GC.dailySentTotal
+        }
+        for (let entry in nestedData) {
+            let valueList = nestedData[entry].value;
+            for (let key in valueList) {
+                nestedData[entry][key] = valueList[key];
+            }
+            nestedData[entry]["day"] = nestedData[entry].key;
+            delete nestedData[entry]["value"];
+            delete nestedData[entry]["key"];
+        }
+        if (messageDirection == "received") {
+            GC.dailyReceivedTotal = nestedData
+        }
+        else if (messageDirection == "sent") {
+            nestedData = GC.dailySentTotal = nestedData
+        }
+    }
+
+
+
+
+
     static updateGraphs(data, projectName) {
         GC.setProperties()
         
@@ -61,58 +114,10 @@ class GC {
         let dataFilteredWeek = data.filter(a => a.datetime > offsetWeek),
             dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
 
-        // Group received data by day
-        let dailyReceivedTotal = d3
-            .nest()
-            .key(d => d.day)
-            .rollup(v => {
-                let receivedData = {};
-                GC.operators.forEach(operator => {
-                    receivedData[`${operator}_received`] = d3.sum(
-                        v,
-                        d => d[`${operator}_received`]
-                    );
-                });
-                receivedData["total_received"] = d3.sum(v, d => d.total_received);
-                return receivedData;
-            })
-            .entries(dataFilteredMonth);
-
-        // Flatten nested data for stacking
-        for (let entry in dailyReceivedTotal) {
-            let valueList = dailyReceivedTotal[entry].value;
-            for (let key in valueList) {
-                dailyReceivedTotal[entry][key] = valueList[key];
-            }
-            dailyReceivedTotal[entry]["day"] = dailyReceivedTotal[entry].key;
-            delete dailyReceivedTotal[entry]["value"];
-            delete dailyReceivedTotal[entry]["key"];
-        }
-
-        // Group sent data by day
-        let dailySentTotal = d3
-            .nest()
-            .key(d => d.day)
-            .rollup(v => {
-                let sentData = {};
-                GC.operators.forEach(operator => {
-                    sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
-                });
-                sentData["total_sent"] = d3.sum(v, d => d.total_sent);
-                return sentData;
-            })
-            .entries(dataFilteredMonth);
-
-        // Flatten nested data for stacking
-        for (let entry in dailySentTotal) {
-            let valueList = dailySentTotal[entry].value;
-            for (let key in valueList) {
-                dailySentTotal[entry][key] = valueList[key];
-            }
-            dailySentTotal[entry]["day"] = dailySentTotal[entry].key;
-            delete dailySentTotal[entry]["value"];
-            delete dailySentTotal[entry]["key"];
-        }
+        GC.GroupDataByDay(dataFilteredMonth, "received")
+        GC.FlattenNestedDataforStacking("received")
+        GC.GroupDataByDay(dataFilteredMonth, "sent")
+        GC.FlattenNestedDataforStacking("sent")
 
         // Create keys to stack by based on operator and direction
         let receivedKeys = [],
@@ -131,9 +136,9 @@ class GC {
 
         // Stack data by keys created above
         let stackReceivedDaily = d3.stack().keys(receivedKeys),
-            receivedDataStackedDaily = stackReceivedDaily(dailyReceivedTotal),
+            receivedDataStackedDaily = stackReceivedDaily(GC.dailyReceivedTotal),
             stackSentDaily = d3.stack().keys(sentKeys),
-            sentDataStackedDaily = stackSentDaily(dailySentTotal);
+            sentDataStackedDaily = stackSentDaily(GC.dailySentTotal);
 
         //Create margins for the three graphs
         const Margin = { top: 40, right: 100, bottom: 90, left: 70 },
@@ -204,9 +209,9 @@ class GC {
             xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
         failed_messages_x_axis_range.domain([xMin, xMax]);
 
-        let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
+        let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
-            yLimitSent = d3.max(dailySentTotal, d => d.total_sent),
+            yLimitSent = d3.max(GC.dailySentTotal, d => d.total_sent),
             yLimitSentFiltered = d3.max(dataFilteredWeek, d => d.total_sent);
 
         // Draw graphs according to selected time unit
@@ -481,7 +486,7 @@ class GC {
 
         function drawOneDayReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            let yLimitReceivedTotal = d3.max(dailyReceivedTotal, d => d.total_received);
+            let yLimitReceivedTotal = d3.max(GC.dailyReceivedTotal, d => d.total_received);
 
             if (GC.isYLimitReceivedManuallySet == false) {
                 yLimitReceived = yLimitReceivedTotal;
@@ -524,7 +529,7 @@ class GC {
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(dailyReceivedTotal).length);
+                .attr("width", Width / Object.keys(GC.dailyReceivedTotal).length);
 
             //Add the X Axis for the total received sms graph
             total_received_sms_graph
@@ -655,7 +660,7 @@ class GC {
 
         function drawOneDaySentGraph(yLimitSent) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            let yLimitSentTotal = d3.max(dailySentTotal, d => d.total_sent);
+            let yLimitSentTotal = d3.max(GC.dailySentTotal, d => d.total_sent);
 
             if (GC.isYLimitSentManuallySet != true) {
                 yLimitSent = yLimitSentTotal;
@@ -696,7 +701,7 @@ class GC {
                 .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_sent_sms(d[1]))
                 .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
-                .attr("width", Width / Object.keys(dailySentTotal).length);
+                .attr("width", Width / Object.keys(GC.dailySentTotal).length);
 
             //Add the X Axis for the total sent sms graph
             total_sent_sms_graph
