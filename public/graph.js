@@ -16,17 +16,7 @@ class GC {
         GC.operators = new Set();
     }
 
-    static updateGraphs(data, projectName) {
-        GC.setProperties()
-        
-        if (!GC.chartTimeUnit) {
-            GC.chartTimeUnit = "10min";
-        }
-        
-        // Clear previous graphs before redrawing
-        d3.selectAll("svg").remove();
-
-        // format the data
+    static formatData(data) {
         data.forEach(function(d) {
             d.datetime = new Date(d.datetime);
             d.day = GC.dayDateFormat(new Date(d.datetime));
@@ -44,6 +34,19 @@ class GC {
                     }
                 });
         });
+    }
+
+    static updateGraphs(data, projectName) {
+        GC.setProperties()
+        
+        if (!GC.chartTimeUnit) {
+            GC.chartTimeUnit = "10min";
+        }
+        
+        // Clear previous graphs before redrawing
+        d3.selectAll("svg").remove();
+
+        GC.formatData(data)
 
         // Sort data by date
         data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
