@@ -85,9 +85,28 @@ class GC {
         }
     }
 
+    static stackDataBasedOnOperatorAndDirection() {
+        // Create keys to stack by based on operator and direction
+        GC.receivedKeys = [];
+        GC.sentKeys = [];
+        let receivedStr = "",
+            sentStr = "";
 
+        GC.operators = Array.from(GC.operators);
 
+        for (let i = 0; i < GC.operators.length; i++) {
+            receivedStr = GC.operators[i] + "_received";
+            GC.receivedKeys.push(receivedStr);
+            sentStr = GC.operators[i] + "_sent";
+            GC.sentKeys.push(sentStr);
+        }
 
+        // Stack data by keys created above
+        let stackReceivedDaily = d3.stack().keys(GC.receivedKeys);
+        GC.receivedDataStackedDaily = stackReceivedDaily(GC.dailyReceivedTotal);
+        let stackSentDaily = d3.stack().keys(GC.sentKeys);
+        GC.sentDataStackedDaily = stackSentDaily(GC.dailySentTotal);
+    }
 
     static updateGraphs(data, projectName) {
         GC.setProperties()
@@ -118,27 +137,7 @@ class GC {
         GC.FlattenNestedDataforStacking("received")
         GC.GroupDataByDay(dataFilteredMonth, "sent")
         GC.FlattenNestedDataforStacking("sent")
-
-        // Create keys to stack by based on operator and direction
-        let receivedKeys = [],
-            sentKeys = [],
-            receivedStr = "",
-            sentStr = "";
-
-        let operators = Array.from(GC.operators);
-
-        for (let i = 0; i < operators.length; i++) {
-            receivedStr = operators[i] + "_received";
-            receivedKeys.push(receivedStr);
-            sentStr = operators[i] + "_sent";
-            sentKeys.push(sentStr);
-        }
-
-        // Stack data by keys created above
-        let stackReceivedDaily = d3.stack().keys(receivedKeys),
-            receivedDataStackedDaily = stackReceivedDaily(GC.dailyReceivedTotal),
-            stackSentDaily = d3.stack().keys(sentKeys),
-            sentDataStackedDaily = stackSentDaily(GC.dailySentTotal);
+        GC.stackDataBasedOnOperatorAndDirection()
 
         //Create margins for the three graphs
         const Margin = { top: 40, right: 100, bottom: 90, left: 70 },
@@ -200,8 +199,8 @@ class GC {
                 "#e6194B"
             ],
             color = d3.scaleOrdinal(color_scheme),
-            colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys),
-            colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
+            colorReceived = d3.scaleOrdinal(color_scheme).domain(GC.receivedKeys),
+            colorSent = d3.scaleOrdinal(color_scheme).domain(GC.sentKeys);
 
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
@@ -309,7 +308,7 @@ class GC {
             .shapeWidth(12)
             .orient("vertical")
             .scale(colorReceived)
-            .labels(operators);
+            .labels(GC.operators);
 
         d3.select(".receivedLegend").call(receivedLegend);
 
@@ -324,7 +323,7 @@ class GC {
             .shapeWidth(12)
             .orient("vertical")
             .scale(colorSent)
-            .labels(operators);
+            .labels(GC.operators);
 
         d3.select(".sentLegend").call(sentLegend);
 
@@ -403,7 +402,7 @@ class GC {
                 yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
             }
 
-            let stackReceived = d3.stack().keys(receivedKeys),
+            let stackReceived = d3.stack().keys(GC.receivedKeys),
                 receivedDataStacked = stackReceived(dataFilteredWeek);
 
             // set scale domains
@@ -427,7 +426,7 @@ class GC {
                 .enter()
                 .append("g")
                 .attr("id", "receivedStack10min")
-                .attr("class", (d, i) => receivedKeys[i])
+                .attr("class", (d, i) => GC.receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
             receivedLayer10min
@@ -511,11 +510,11 @@ class GC {
 
             let receivedLayer = total_received_sms_graph
                 .selectAll("#receivedStack")
-                .data(receivedDataStackedDaily)
+                .data(GC.receivedDataStackedDaily)
                 .enter()
                 .append("g")
                 .attr("id", "receivedStack")
-                .attr("class", (d, i) => receivedKeys[i])
+                .attr("class", (d, i) => GC.receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
             receivedLayer
@@ -578,7 +577,7 @@ class GC {
                 yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
             }
 
-            let stackSent = d3.stack().keys(sentKeys),
+            let stackSent = d3.stack().keys(GC.sentKeys),
                 sentDataStacked = stackSent(dataFilteredWeek);
 
             // set scale domains
@@ -604,7 +603,7 @@ class GC {
                 .enter()
                 .append("g")
                 .attr("id", "sentStack10min")
-                .attr("class", (d, i) => sentKeys[i])
+                .attr("class", (d, i) => GC.sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
             sentLayer10min
@@ -686,11 +685,11 @@ class GC {
             // Create stacks
             let sentLayer = total_sent_sms_graph
                 .selectAll("#sentStack1day")
-                .data(sentDataStackedDaily)
+                .data(GC.sentDataStackedDaily)
                 .enter()
                 .append("g")
                 .attr("id", "sentStack1day")
-                .attr("class", (d, i) => sentKeys[i])
+                .attr("class", (d, i) => GC.sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
             sentLayer
