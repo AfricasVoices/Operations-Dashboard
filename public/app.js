@@ -17,7 +17,7 @@ class Controller {
         let DOMstrings = UIController.getDOMstrings();
         document.querySelector(DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(DOMstrings.graphContainer).innerHTML = "";
-        GraphController.clearTimers();
+        GC.clearTimers();
     }
 
     static displayCodingProgress() {
@@ -34,7 +34,7 @@ class Controller {
         // Update and show the Graphs
         let unsubscribeFunc = DataController.watchProjectTrafficData(
             project,
-            GraphController.updateGraphs
+            GC.updateGraphs
         );
         DataController.registerSnapshotListener(unsubscribeFunc);
     }

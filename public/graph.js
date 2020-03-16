@@ -1,5 +1,5 @@
 // GRAPH CONTROLLER
-class GraphController {
+class GC {
     static addOneDayToDate(date) {
         let newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
@@ -7,10 +7,10 @@ class GraphController {
     }
 
     static updateGraphs(data, projectName) {
-        const TIMEFRAME_WEEK = 7,
-            TIMEFRAME_MONTH = 30;
-        if (!GraphController.chartTimeUnit) {
-            GraphController.chartTimeUnit = "10min";
+        GC.TIMEFRAME_WEEK = 7;
+        GC.TIMEFRAME_MONTH = 30;
+        if (!GC.chartTimeUnit) {
+            GC.chartTimeUnit = "10min";
         }
         
         let isYLimitReceivedManuallySet = false,
@@ -47,8 +47,8 @@ class GraphController {
         let offsetWeek = new Date(),
             offsetMonth = new Date();
 
-        offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK);
-        offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH);
+        offsetWeek.setDate(offsetWeek.getDate() - GC.TIMEFRAME_WEEK);
+        offsetMonth.setDate(offsetMonth.getDate() - GC.TIMEFRAME_MONTH);
 
         // Set default y-axis limits
         let dataFilteredWeek = data.filter(a => a.datetime > offsetWeek),
@@ -194,7 +194,7 @@ class GraphController {
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
         let xMin = d3.min(data, d => new Date(d.day)),
-            xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
         failed_messages_x_axis_range.domain([xMin, xMax]);
 
         let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
@@ -203,9 +203,9 @@ class GraphController {
             yLimitSentFiltered = d3.max(dataFilteredWeek, d => d.total_sent);
 
         // Draw graphs according to selected time unit
-        if (GraphController.chartTimeUnit == "1day") {
+        if (GC.chartTimeUnit == "1day") {
             updateViewOneDay(yLimitReceived, yLimitSent);
-        } else if (GraphController.chartTimeUnit == "10min") {
+        } else if (GC.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
 
@@ -481,7 +481,7 @@ class GraphController {
             }
 
             xMin = d3.min(data, d => new Date(d.day));
-            xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             y_total_received_sms_range.domain([0, yLimitReceived]);
@@ -655,7 +655,7 @@ class GraphController {
             }
 
             xMin = d3.min(data, d => new Date(d.day));
-            xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             y_total_sent_sms.domain([0, yLimitSent]);
@@ -734,22 +734,22 @@ class GraphController {
 
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
-            GraphController.chartTimeUnit = "10min";
+            GC.chartTimeUnit = "10min";
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
-            GraphController.chartTimeUnit = "1day";
+            GC.chartTimeUnit = "1day";
             updateViewOneDay(yLimitReceived, yLimitSent);
         });
 
         // Draw received graph with user-selected y-axis limit
         d3.select("#buttonYLimitReceived").on("input", function() {
             isYLimitReceivedManuallySet = true;
-            if (GraphController.chartTimeUnit == "1day") {
+            if (GC.chartTimeUnit == "1day") {
                 yLimitReceived = this.value;
                 drawOneDayReceivedGraph(yLimitReceived);
-            } else if (GraphController.chartTimeUnit == "10min") {
+            } else if (GC.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = this.value;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
             }
@@ -758,10 +758,10 @@ class GraphController {
         // Draw sent graph with user-selected y-axis limit
         d3.select("#buttonYLimitSent").on("input", function() {
             isYLimitSentManuallySet = true;
-            if (GraphController.chartTimeUnit == "1day") {
+            if (GC.chartTimeUnit == "1day") {
                 yLimitSent = this.value;
                 drawOneDaySentGraph(yLimitSent);
-            } else if (GraphController.chartTimeUnit == "10min") {
+            } else if (GC.chartTimeUnit == "10min") {
                 yLimitSentFiltered = this.value;
                 draw10MinSentGraph(yLimitSentFiltered);
             }
@@ -793,15 +793,15 @@ class GraphController {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
             }
         }
-        if (GraphController.lastUpdateTimer) {
-            clearInterval(GraphController.lastUpdateTimer);
+        if (GC.lastUpdateTimer) {
+            clearInterval(GC.lastUpdateTimer);
         }
-        GraphController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
+        GC.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
     }
     static clearTimers() {
-        if (GraphController.lastUpdateTimer) {
-            clearInterval(GraphController.lastUpdateTimer);
-            GraphController.lastUpdateTimer = null;
+        if (GC.lastUpdateTimer) {
+            clearInterval(GC.lastUpdateTimer);
+            GC.lastUpdateTimer = null;
         }
     }
 }
