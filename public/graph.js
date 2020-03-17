@@ -304,9 +304,9 @@ class GC {
 
         // set scale domain for failed graph
         GC.y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
-        let xMin = d3.min(data, d => new Date(d.day)),
-            xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
-        GC.failed_messages_x_axis_range.domain([xMin, xMax]);
+        GC.xMin = d3.min(data, d => new Date(d.day));
+        GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
+        GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
 
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
@@ -401,96 +401,8 @@ class GC {
         function updateViewOneDay(yLimitReceived, yLimitSent) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
-            drawOneDayReceivedGraph(yLimitReceived);
+            GC.drawOneDayReceivedGraph(data, yLimitReceived);
             drawOneDaySentGraph(yLimitSent);
-        }
-
-        function drawOneDayReceivedGraph(yLimitReceived) {
-            // Set Y axis limit to max of daily values or to the value inputted by the user
-            let yLimitReceivedTotal = d3.max(GC.dailyReceivedTotal, d => d.total_received);
-
-            if (GC.isYLimitReceivedManuallySet == false) {
-                yLimitReceived = yLimitReceivedTotal;
-            }
-
-            xMin = d3.min(data, d => new Date(d.day));
-            xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
-            // set scale domains
-            GC.x.domain([xMin, xMax]);
-            GC.y_total_received_sms_range.domain([0, yLimitReceived]);
-
-            d3.selectAll(".redrawElementReceived").remove();
-            d3.selectAll("#receivedStack10min").remove();
-            d3.selectAll("#receivedStack").remove();
-
-            // Add the Y Axis for the total received sms graph
-            GC.total_received_sms_graph
-                .append("g")
-                .attr("class", "axisSteelBlue")
-                .attr("class", "redrawElementReceived")
-                .call(d3.axisLeft(GC.y_total_received_sms_range));
-
-            GC.receivedLayer = GC.total_received_sms_graph
-                .selectAll("#receivedStack")
-                .data(GC.receivedDataStackedDaily)
-                .enter()
-                .append("g")
-                .attr("id", "receivedStack")
-                .attr("class", (d, i) => GC.receivedKeys[i])
-                .style("fill", (d, i) => GC.color(i));
-
-            GC.receivedLayer
-                .selectAll("rect")
-                .data(d => d)
-                .enter()
-                .append("rect")
-                .attr("x", d => GC.x(new Date(d.data.day)))
-                .attr("y", d => GC.y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
-                )
-                .attr("width", GC.Width / Object.keys(GC.dailyReceivedTotal).length);
-
-            //Add the X Axis for the total received sms graph
-            GC.total_received_sms_graph
-                .append("g")
-                .attr("class", "redrawElementReceived")
-                .attr("transform", "translate(0," + GC.Height + ")")
-                .call(
-                    d3
-                        .axisBottom(GC.x)
-                        .ticks(d3.timeDay.every(1))
-                        .tickFormat(GC.dayDateFormatWithWeekdayName)
-                )
-                // Rotate axis labels
-                .selectAll("text")
-                .style("text-anchor", "end")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)");
-
-            // Add X axis label for the total received sms graph
-            GC.total_received_sms_graph
-                .append("text")
-                .attr("class", "redrawElementReceived")
-                .attr(
-                    "transform",
-                    "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 65) + ")"
-                )
-                .style("text-anchor", "middle")
-                .text("Date (Y-M-D)");
-
-            // Total Sms(s) graph title
-            GC.total_received_sms_graph
-                .append("text")
-                .attr("class", "redrawElementReceived")
-                .attr("x", GC.Width / 2)
-                .attr("y", 0 - GC.Margin.top / 2)
-                .attr("text-anchor", "middle")
-                .style("font-size", "20px")
-                .style("text-decoration", "bold")
-                .text("Total Incoming Message(s) / day");
         }
 
         function drawOneDaySentGraph(yLimitSent) {
@@ -501,10 +413,10 @@ class GC {
                 yLimitSent = yLimitSentTotal;
             }
 
-            xMin = d3.min(data, d => new Date(d.day));
-            xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
+            GC.xMin = d3.min(data, d => new Date(d.day));
+            GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
             // set scale domains
-            GC.x.domain([xMin, xMax]);
+            GC.x.domain([GC.xMin, GC.xMax]);
             GC.y_total_sent_sms.domain([0, yLimitSent]);
 
             d3.selectAll(".redrawElementSent").remove();
@@ -595,7 +507,7 @@ class GC {
             GC.isYLimitReceivedManuallySet = true;
             if (GC.chartTimeUnit == "1day") {
                 yLimitReceived = this.value;
-                drawOneDayReceivedGraph(yLimitReceived);
+                GC.drawOneDayReceivedGraph(data, yLimitReceived);
             } else if (GC.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = this.value;
                 GC.draw10MinReceivedGraph(yLimitReceivedFiltered);
@@ -827,5 +739,93 @@ class GC {
             .style("font-size", "20px")
             .style("text-decoration", "bold")
             .text("Total Outgoing Message(s) / 10 minutes");
+    }
+
+    static drawOneDayReceivedGraph(data, yLimitReceived) {
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        let yLimitReceivedTotal = d3.max(GC.dailyReceivedTotal, d => d.total_received);
+
+        if (GC.isYLimitReceivedManuallySet == false) {
+            yLimitReceived = yLimitReceivedTotal;
+        }
+
+        GC.xMin = d3.min(data, d => new Date(d.day));
+        GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
+        // set scale domains
+        GC.x.domain([GC.xMin, GC.xMax]);
+        GC.y_total_received_sms_range.domain([0, yLimitReceived]);
+
+        d3.selectAll(".redrawElementReceived").remove();
+        d3.selectAll("#receivedStack10min").remove();
+        d3.selectAll("#receivedStack").remove();
+
+        // Add the Y Axis for the total received sms graph
+        GC.total_received_sms_graph
+            .append("g")
+            .attr("class", "axisSteelBlue")
+            .attr("class", "redrawElementReceived")
+            .call(d3.axisLeft(GC.y_total_received_sms_range));
+
+        GC.receivedLayer = GC.total_received_sms_graph
+            .selectAll("#receivedStack")
+            .data(GC.receivedDataStackedDaily)
+            .enter()
+            .append("g")
+            .attr("id", "receivedStack")
+            .attr("class", (d, i) => GC.receivedKeys[i])
+            .style("fill", (d, i) => GC.color(i));
+
+        GC.receivedLayer
+            .selectAll("rect")
+            .data(d => d)
+            .enter()
+            .append("rect")
+            .attr("x", d => GC.x(new Date(d.data.day)))
+            .attr("y", d => GC.y_total_received_sms_range(d[1]))
+            .attr(
+                "height",
+                d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
+            )
+            .attr("width", GC.Width / Object.keys(GC.dailyReceivedTotal).length);
+
+        //Add the X Axis for the total received sms graph
+        GC.total_received_sms_graph
+            .append("g")
+            .attr("class", "redrawElementReceived")
+            .attr("transform", "translate(0," + GC.Height + ")")
+            .call(
+                d3
+                    .axisBottom(GC.x)
+                    .ticks(d3.timeDay.every(1))
+                    .tickFormat(GC.dayDateFormatWithWeekdayName)
+            )
+            // Rotate axis labels
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
+        // Add X axis label for the total received sms graph
+        GC.total_received_sms_graph
+            .append("text")
+            .attr("class", "redrawElementReceived")
+            .attr(
+                "transform",
+                "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 65) + ")"
+            )
+            .style("text-anchor", "middle")
+            .text("Date (Y-M-D)");
+
+        // Total Sms(s) graph title
+        GC.total_received_sms_graph
+            .append("text")
+            .attr("class", "redrawElementReceived")
+            .attr("x", GC.Width / 2)
+            .attr("y", 0 - GC.Margin.top / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("text-decoration", "bold")
+            .text("Total Incoming Message(s) / day");
     }
 }
