@@ -108,6 +108,62 @@ class GC {
         GC.sentDataStackedDaily = stackSentDaily(GC.dailySentTotal);
     }
 
+    static setUpGraphLayout() {
+        //Create margins for the three graphs
+        GC.Margin = { top: 40, right: 100, bottom: 90, left: 70 };
+        GC.Width = 960 - GC.Margin.right - GC.Margin.left;
+        GC.Height = 500 - GC.Margin.top - GC.Margin.bottom;
+        // Set x and y scales
+        GC.x = d3.scaleTime().range([0, GC.Width]),
+        GC.failed_messages_x_axis_range = d3.scaleTime().range([0, GC.Width]),
+        GC.y_total_received_sms_range = d3.scaleLinear().range([GC.Height, 0]),
+        GC.y_total_sent_sms = d3.scaleLinear().range([GC.Height, 0]),
+        GC.y_total_failed_sms = d3.scaleLinear().range([GC.Height, 0]);
+
+        // Append total received sms graph to svg
+        GC.total_received_sms_graph = d3
+                .select(".total_received_sms_graph")
+                .append("svg")
+                .attr("width", GC.Width + GC.Margin.left + GC.Margin.right + 120)
+                .attr("height", GC.Height + GC.Margin.top + GC.Margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + GC.Margin.left + "," + GC.Margin.top + ")");
+        // Append total sent sms graph to svg
+        GC.total_sent_sms_graph = d3
+            .select(".total_sent_sms_graph")
+            .append("svg")
+            .attr("width", GC.Width + GC.Margin.left + GC.Margin.right + 120)
+            .attr("height", GC.Height + GC.Margin.top + GC.Margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + GC.Margin.left + "," + GC.Margin.top + ")");
+        // Append total failed sms graph to svg
+        GC.total_failed_sms_graph = d3
+            .select(".total_failed_sms_graph")
+            .append("svg")
+            .attr("width", GC.Width + GC.Margin.left + GC.Margin.right + 120)
+            .attr("height", GC.Height + GC.Margin.top + GC.Margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + GC.Margin.left + "," + GC.Margin.top + ")");
+        // Y axis Label for the total received sms graph
+        GC.total_received_sms_graph
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - GC.Margin.left)
+            .attr("x", 0 - GC.Height / 2)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("No. of Incoming Message (s)");
+        // Y axis Label for the total sent sms graph
+        GC.total_sent_sms_graph
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - GC.Margin.left)
+            .attr("x", 0 - GC.Height / 2)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("No. of Outgoing Message (s)");
+    }
+
     static updateGraphs(data, projectName) {
         GC.setProperties()
         
@@ -138,53 +194,20 @@ class GC {
         GC.GroupDataByDay(dataFilteredMonth, "sent")
         GC.FlattenNestedDataforStacking("sent")
         GC.stackDataBasedOnOperatorAndDirection()
+        GC.setUpGraphLayout()
 
-        //Create margins for the three graphs
-        const Margin = { top: 40, right: 100, bottom: 90, left: 70 },
-            Width = 960 - Margin.right - Margin.left,
-            Height = 500 - Margin.top - Margin.bottom,
-            // Set x and y scales
-            x = d3.scaleTime().range([0, Width]),
-            failed_messages_x_axis_range = d3.scaleTime().range([0, Width]),
-            y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
-            y_total_sent_sms = d3.scaleLinear().range([Height, 0]),
-            y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
 
-        // Append total received sms graph to svg
-        let total_received_sms_graph = d3
-                .select(".total_received_sms_graph")
-                .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Append total sent sms graph to svg
-            total_sent_sms_graph = d3
-                .select(".total_sent_sms_graph")
-                .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Append total sent sms graph to svg
-            total_failed_sms_graph = d3
-                .select(".total_failed_sms_graph")
-                .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Format TimeStamp
-            timeFormat = d3.timeFormat("%Y-%m-%d");
+        // Format TimeStamp
+        let timeFormat = d3.timeFormat("%Y-%m-%d");
 
         // Define line paths for total failed sms(s)
         const total_failed_line = d3
                 .line()
                 .curve(d3.curveLinear)
-                .x(d => failed_messages_x_axis_range(new Date(d.datetime)))
-                .y(d => y_total_failed_sms(d.total_errored)),
+                .x(d => GC.failed_messages_x_axis_range(new Date(d.datetime)))
+                .y(d => GC.y_total_failed_sms(d.total_errored)),
             // Create line path element for failed line graph
-            total_failed_path = total_failed_sms_graph.append("path");
+            total_failed_path = GC.total_failed_sms_graph.append("path");
 
         // custom color scheme
         let color_scheme = [
@@ -203,10 +226,10 @@ class GC {
             colorSent = d3.scaleOrdinal(color_scheme).domain(GC.sentKeys);
 
         // set scale domain for failed graph
-        y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
+        GC.y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
         let xMin = d3.min(data, d => new Date(d.day)),
             xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
-        failed_messages_x_axis_range.domain([xMin, xMax]);
+        GC.failed_messages_x_axis_range.domain([xMin, xMax]);
 
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
@@ -220,25 +243,9 @@ class GC {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
 
-        // Y axis Label for the total received sms graph
-        total_received_sms_graph
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - Margin.left)
-            .attr("x", 0 - Height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("No. of Incoming Message (s)");
+        
 
-        // Y axis Label for the total sent sms graph
-        total_sent_sms_graph
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - Margin.left)
-            .attr("x", 0 - Height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("No. of Outgoing Message (s)");
+        
 
         // update path data for total failed sms(s)
         total_failed_path
@@ -248,12 +255,12 @@ class GC {
             .attr("d", total_failed_line);
 
         //Add the X Axis for the total failed sms graph
-        total_failed_sms_graph
+        GC.total_failed_sms_graph
             .append("g")
-            .attr("transform", "translate(0," + Height + ")")
+            .attr("transform", "translate(0," + GC.Height + ")")
             .call(
                 d3
-                    .axisBottom(failed_messages_x_axis_range)
+                    .axisBottom(GC.failed_messages_x_axis_range)
                     .ticks(5)
                     .tickFormat(timeFormat)
             )
@@ -265,43 +272,43 @@ class GC {
             .attr("transform", "rotate(-65)");
 
         //Add X axis label for the total failed sms graph
-        total_failed_sms_graph
+        GC.total_failed_sms_graph
             .append("text")
-            .attr("transform", "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")")
+            .attr("transform", "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")")
             .style("text-anchor", "middle")
             .text("Time (D:H:M:S)");
 
         // Add the Y Axis for the total failed sms graph
-        total_failed_sms_graph
+        GC.total_failed_sms_graph
             .append("g")
             .attr("class", "axisSteelBlue")
-            .call(d3.axisLeft(y_total_failed_sms));
+            .call(d3.axisLeft(GC.y_total_failed_sms));
 
         // Y axis Label for the total failed sms graph
-        total_failed_sms_graph
+        GC.total_failed_sms_graph
             .append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - Margin.left)
-            .attr("x", 0 - Height / 2)
+            .attr("y", 0 - GC.Margin.left)
+            .attr("x", 0 - GC.Height / 2)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("No. of Failed Message (s)");
 
         // Total Failed Sms(s) graph title
-        total_failed_sms_graph
+        GC.total_failed_sms_graph
             .append("text")
-            .attr("x", Width / 2)
-            .attr("y", 0 - Margin.top / 2)
+            .attr("x", GC.Width / 2)
+            .attr("y", 0 - GC.Margin.top / 2)
             .attr("text-anchor", "middle")
             .style("font-size", "20px")
             .style("text-decoration", "bold")
             .text("Total Failed Messages(s) / hr");
 
         // Total received graph legend
-        total_received_sms_graph
+        GC.total_received_sms_graph
             .append("g")
             .attr("class", "receivedLegend")
-            .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
+            .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
 
         let receivedLegend = d3
             .legendColor()
@@ -313,10 +320,10 @@ class GC {
         d3.select(".receivedLegend").call(receivedLegend);
 
         // Total sent graph legend
-        total_sent_sms_graph
+        GC.total_sent_sms_graph
             .append("g")
             .attr("class", "sentLegend")
-            .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
+            .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
 
         let sentLegend = d3
             .legendColor()
@@ -328,7 +335,7 @@ class GC {
         d3.select(".sentLegend").call(sentLegend);
 
         // Label Lines for the total failed sms graph
-        total_failed_sms_graph.append("text");
+        GC.total_failed_sms_graph.append("text");
 
         function updateReceivedChartLimit() {
             // Get the value of the button
@@ -337,45 +344,45 @@ class GC {
             y_total_received_sms.domain([0, ylimit]);
 
             // Add the Y Axis for the total received sms graph
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .selectAll(".axisSteelBlue")
                 .call(d3.axisLeft(y_total_received_sms));
 
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_received_sms_range(d[1]))
+                .attr("x", d => GC.x(d.data.datetime))
+                .attr("y", d => GC.y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
+                    d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(data).length);
+                .attr("width", GC.Width / Object.keys(data).length);
         }
 
         function updateSentChartLimit() {
             // Get the value of the button
             let ylimit = this.value;
 
-            y_total_sent_sms.domain([0, ylimit]);
+            GC.y_total_sent_sms.domain([0, ylimit]);
 
             // Add the Y Axis for the total sent sms graph
-            total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(y_total_sent_sms));
+            GC.total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(GC.y_total_sent_sms));
 
             sentLayer
                 .selectAll("rect")
                 .data(d => d)
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
-                .attr("width", Width / Object.keys(data).length);
+                .attr("x", d => GC.x(d.data.datetime))
+                .attr("y", d => GC.y_total_sent_sms(d[1]))
+                .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
+                .attr("width", GC.Width / Object.keys(data).length);
         }
 
         // Add an event listener to the button created in the html part
         d3.select("#buttonYLimitReceived").on("input", updateReceivedChartLimit);
         d3.select("#buttonYLimitSent")
             .on("input", updateSentChartLimit)
-            .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top})`)
+            .attr("transform", `translate(${GC.Width - GC.Margin.right + 100},${GC.Margin.top})`)
             .attr("dy", ".35em")
             .attr("text-anchor", "start")
             .style("fill", "blue")
@@ -406,21 +413,21 @@ class GC {
                 receivedDataStacked = stackReceived(dataFilteredWeek);
 
             // set scale domains
-            x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-            y_total_received_sms_range.domain([0, yLimitReceived]);
+            GC.x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+            GC.y_total_received_sms_range.domain([0, yLimitReceived]);
 
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack").remove();
             d3.selectAll("#receivedStack10min").remove();
 
             // Add the Y Axis for the total received sms graph
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .append("g")
                 .attr("id", "axisSteelBlue")
                 .attr("class", "redrawElementReceived")
-                .call(d3.axisLeft(y_total_received_sms_range));
+                .call(d3.axisLeft(GC.y_total_received_sms_range));
 
-            let receivedLayer10min = total_received_sms_graph
+            let receivedLayer10min = GC.total_received_sms_graph
                 .selectAll("#receivedStack10min")
                 .data(receivedDataStacked)
                 .enter()
@@ -434,22 +441,22 @@ class GC {
                 .data(dataFilteredWeek => dataFilteredWeek)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_received_sms_range(d[1]))
+                .attr("x", d => GC.x(d.data.datetime))
+                .attr("y", d => GC.y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
+                    d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(dataFilteredWeek).length);
+                .attr("width", GC.Width / Object.keys(dataFilteredWeek).length);
 
             //Add the X Axis for the total received sms graph
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
-                .attr("transform", "translate(0," + Height + ")")
+                .attr("transform", "translate(0," + GC.Height + ")")
                 .call(
                     d3
-                        .axisBottom(x)
+                        .axisBottom(GC.x)
                         .ticks(d3.timeDay.every(1))
                         .tickFormat(timeFormat)
                 )
@@ -461,22 +468,22 @@ class GC {
                 .attr("transform", "rotate(-65)");
 
             // Add X axis label for the total received sms graph
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .append("text")
                 .attr("class", "redrawElementReceived")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                    "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (D-M-Y)");
 
             // Total Sms(s) graph title
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .append("text")
                 .attr("class", "redrawElementReceived")
-                .attr("x", Width / 2)
-                .attr("y", 0 - Margin.top / 2)
+                .attr("x", GC.Width / 2)
+                .attr("y", 0 - GC.Margin.top / 2)
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
@@ -494,21 +501,21 @@ class GC {
             xMin = d3.min(data, d => new Date(d.day));
             xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
             // set scale domains
-            x.domain([xMin, xMax]);
-            y_total_received_sms_range.domain([0, yLimitReceived]);
+            GC.x.domain([xMin, xMax]);
+            GC.y_total_received_sms_range.domain([0, yLimitReceived]);
 
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll("#receivedStack").remove();
 
             // Add the Y Axis for the total received sms graph
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .append("g")
                 .attr("class", "axisSteelBlue")
                 .attr("class", "redrawElementReceived")
-                .call(d3.axisLeft(y_total_received_sms_range));
+                .call(d3.axisLeft(GC.y_total_received_sms_range));
 
-            let receivedLayer = total_received_sms_graph
+            let receivedLayer = GC.total_received_sms_graph
                 .selectAll("#receivedStack")
                 .data(GC.receivedDataStackedDaily)
                 .enter()
@@ -522,22 +529,22 @@ class GC {
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
-                .attr("y", d => y_total_received_sms_range(d[1]))
+                .attr("x", d => GC.x(new Date(d.data.day)))
+                .attr("y", d => GC.y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
+                    d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(GC.dailyReceivedTotal).length);
+                .attr("width", GC.Width / Object.keys(GC.dailyReceivedTotal).length);
 
             //Add the X Axis for the total received sms graph
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
-                .attr("transform", "translate(0," + Height + ")")
+                .attr("transform", "translate(0," + GC.Height + ")")
                 .call(
                     d3
-                        .axisBottom(x)
+                        .axisBottom(GC.x)
                         .ticks(d3.timeDay.every(1))
                         .tickFormat(GC.dayDateFormatWithWeekdayName)
                 )
@@ -549,22 +556,22 @@ class GC {
                 .attr("transform", "rotate(-65)");
 
             // Add X axis label for the total received sms graph
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .append("text")
                 .attr("class", "redrawElementReceived")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
+                    "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 65) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
 
             // Total Sms(s) graph title
-            total_received_sms_graph
+            GC.total_received_sms_graph
                 .append("text")
                 .attr("class", "redrawElementReceived")
-                .attr("x", Width / 2)
-                .attr("y", 0 - Margin.top / 2)
+                .attr("x", GC.Width / 2)
+                .attr("y", 0 - GC.Margin.top / 2)
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
@@ -581,8 +588,8 @@ class GC {
                 sentDataStacked = stackSent(dataFilteredWeek);
 
             // set scale domains
-            x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-            y_total_sent_sms.domain([0, yLimitSent]);
+            GC.x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+            GC.y_total_sent_sms.domain([0, yLimitSent]);
 
             // Remove changing chart elements before redrawing
             d3.selectAll(".redrawElementSent").remove();
@@ -590,14 +597,14 @@ class GC {
             d3.selectAll("#sentStack10min").remove();
 
             // Add the Y Axis for the total sent sms graph
-            total_sent_sms_graph
+            GC.total_sent_sms_graph
                 .append("g")
                 .attr("class", "axisSteelBlue")
                 .attr("class", "redrawElementSent")
-                .call(d3.axisLeft(y_total_sent_sms));
+                .call(d3.axisLeft(GC.y_total_sent_sms));
 
             // Create stacks
-            let sentLayer10min = total_sent_sms_graph
+            let sentLayer10min = GC.total_sent_sms_graph
                 .selectAll("#sentStack10min")
                 .data(sentDataStacked)
                 .enter()
@@ -611,19 +618,19 @@ class GC {
                 .data(dataFilteredWeek => dataFilteredWeek)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
-                .attr("width", Width / Object.keys(dataFilteredWeek).length);
+                .attr("x", d => GC.x(d.data.datetime))
+                .attr("y", d => GC.y_total_sent_sms(d[1]))
+                .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
+                .attr("width", GC.Width / Object.keys(dataFilteredWeek).length);
 
             //Add the X Axis for the total sent sms graph
-            total_sent_sms_graph
+            GC.total_sent_sms_graph
                 .append("g")
                 .attr("class", "redrawElementSent")
-                .attr("transform", "translate(0," + Height + ")")
+                .attr("transform", "translate(0," + GC.Height + ")")
                 .call(
                     d3
-                        .axisBottom(x)
+                        .axisBottom(GC.x)
                         .ticks(d3.timeDay.every(1))
                         .tickFormat(timeFormat)
                 )
@@ -635,22 +642,22 @@ class GC {
                 .attr("transform", "rotate(-65)");
 
             // Add X axis label for the total sent sms graph
-            total_sent_sms_graph
+            GC.total_sent_sms_graph
                 .append("text")
                 .attr("class", "redrawElementSent")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                    "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (D-M-Y)");
 
             // Total Sms(s) graph title
-            total_sent_sms_graph
+            GC.total_sent_sms_graph
                 .append("text")
                 .attr("class", "redrawElementSent")
-                .attr("x", Width / 2)
-                .attr("y", 0 - Margin.top / 2)
+                .attr("x", GC.Width / 2)
+                .attr("y", 0 - GC.Margin.top / 2)
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
@@ -668,22 +675,22 @@ class GC {
             xMin = d3.min(data, d => new Date(d.day));
             xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
             // set scale domains
-            x.domain([xMin, xMax]);
-            y_total_sent_sms.domain([0, yLimitSent]);
+            GC.x.domain([xMin, xMax]);
+            GC.y_total_sent_sms.domain([0, yLimitSent]);
 
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack10min").remove();
             d3.selectAll("#sentStack1day").remove();
 
             // Add the Y Axis for the total sent sms graph
-            total_sent_sms_graph
+            GC.total_sent_sms_graph
                 .append("g")
                 .attr("class", "axisSteelBlue")
                 .attr("class", "redrawElementSent")
-                .call(d3.axisLeft(y_total_sent_sms));
+                .call(d3.axisLeft(GC.y_total_sent_sms));
 
             // Create stacks
-            let sentLayer = total_sent_sms_graph
+            let sentLayer = GC.total_sent_sms_graph
                 .selectAll("#sentStack1day")
                 .data(GC.sentDataStackedDaily)
                 .enter()
@@ -697,19 +704,19 @@ class GC {
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
-                .attr("width", Width / Object.keys(GC.dailySentTotal).length);
+                .attr("x", d => GC.x(new Date(d.data.day)))
+                .attr("y", d => GC.y_total_sent_sms(d[1]))
+                .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
+                .attr("width", GC.Width / Object.keys(GC.dailySentTotal).length);
 
             //Add the X Axis for the total sent sms graph
-            total_sent_sms_graph
+            GC.total_sent_sms_graph
                 .append("g")
                 .attr("class", "redrawElementSent")
-                .attr("transform", "translate(0," + Height + ")")
+                .attr("transform", "translate(0," + GC.Height + ")")
                 .call(
                     d3
-                        .axisBottom(x)
+                        .axisBottom(GC.x)
                         .ticks(d3.timeDay.every(1))
                         .tickFormat(GC.dayDateFormatWithWeekdayName)
                 )
@@ -721,22 +728,22 @@ class GC {
                 .attr("transform", "rotate(-65)");
 
             // Add X axis label for the total sent sms graph
-            total_sent_sms_graph
+            GC.total_sent_sms_graph
                 .append("text")
                 .attr("class", "redrawElementSent")
                 .attr(
                     "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
+                    "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 65) + ")"
                 )
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
 
             // Total Sms(s) graph title
-            total_sent_sms_graph
+            GC.total_sent_sms_graph
                 .append("text")
                 .attr("class", "redrawElementSent")
-                .attr("x", Width / 2)
-                .attr("y", 0 - Margin.top / 2)
+                .attr("x", GC.Width / 2)
+                .attr("y", 0 - GC.Margin.top / 2)
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
