@@ -258,23 +258,6 @@ class GC {
             // Create line path element for failed line graph
             total_failed_path = GC.total_failed_sms_graph.append("path");
 
-        // // custom color scheme
-        // GC.color_scheme = [
-        //         "#31cece",
-        //         "#f58231",
-        //         "#3cb44b",
-        //         "#CCCC00",
-        //         "#4363d8",
-        //         "#800000",
-        //         "#f032e6",
-        //         "#911eb4",
-        //         "#e6194B"
-        //     ];
-        //     // color = d3.scaleOrdinal(color_scheme),
-        //     GC.colorReceived = d3.scaleOrdinal(GC.color_scheme).domain(GC.receivedKeys);
-        //     GC.colorSent = d3.scaleOrdinal(GC.color_scheme).domain(GC.sentKeys);
-        //     GC.color = d3.scaleOrdinal(GC.color_scheme);
-
         // set scale domain for failed graph
         GC.y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
         let xMin = d3.min(data, d => new Date(d.day)),
@@ -292,10 +275,6 @@ class GC {
         } else if (GC.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
-
-        
-
-        
 
         // update path data for total failed sms(s)
         total_failed_path
@@ -353,36 +332,6 @@ class GC {
             .style("font-size", "20px")
             .style("text-decoration", "bold")
             .text("Total Failed Messages(s) / hr");
-
-        // // Total received graph legend
-        // GC.total_received_sms_graph
-        //     .append("g")
-        //     .attr("class", "receivedLegend")
-        //     .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
-
-        // let receivedLegend = d3
-        //     .legendColor()
-        //     .shapeWidth(12)
-        //     .orient("vertical")
-        //     .scale(GC.colorReceived)
-        //     .labels(GC.operators);
-
-        // d3.select(".receivedLegend").call(receivedLegend);
-
-        // // Total sent graph legend
-        // GC.total_sent_sms_graph
-        //     .append("g")
-        //     .attr("class", "sentLegend")
-        //     .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
-
-        // let sentLegend = d3
-        //     .legendColor()
-        //     .shapeWidth(12)
-        //     .orient("vertical")
-        //     .scale(GC.colorSent)
-        //     .labels(GC.operators);
-
-        // d3.select(".sentLegend").call(sentLegend);
 
         // Label Lines for the total failed sms graph
         GC.total_failed_sms_graph.append("text");
