@@ -395,7 +395,7 @@ class GC {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
             GC.draw10MinReceivedGraph(yLimitReceivedFiltered);
-            draw10MinSentGraph(yLimitSentFiltered);
+            GC.draw10MinSentGraph(yLimitSentFiltered);
         }
 
         function updateViewOneDay(yLimitReceived, yLimitSent) {
@@ -491,92 +491,6 @@ class GC {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Total Incoming Message(s) / day");
-        }
-
-        function draw10MinSentGraph(yLimitSent) {
-            // Set Y axis limit to max of daily values or to the value inputted by the user
-            if (GC.isYLimitSentManuallySet == false) {
-                yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
-            }
-
-            let stackSent = d3.stack().keys(GC.sentKeys),
-                sentDataStacked = stackSent(dataFilteredWeek);
-
-            // set scale domains
-            GC.x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-            GC.y_total_sent_sms.domain([0, yLimitSent]);
-
-            // Remove changing chart elements before redrawing
-            d3.selectAll(".redrawElementSent").remove();
-            d3.selectAll("#sentStack1day").remove();
-            d3.selectAll("#sentStack10min").remove();
-
-            // Add the Y Axis for the total sent sms graph
-            GC.total_sent_sms_graph
-                .append("g")
-                .attr("class", "axisSteelBlue")
-                .attr("class", "redrawElementSent")
-                .call(d3.axisLeft(GC.y_total_sent_sms));
-
-            // Create stacks
-            let sentLayer10min = GC.total_sent_sms_graph
-                .selectAll("#sentStack10min")
-                .data(sentDataStacked)
-                .enter()
-                .append("g")
-                .attr("id", "sentStack10min")
-                .attr("class", (d, i) => GC.sentKeys[i])
-                .style("fill", (d, i) => GC.color(i));
-
-            sentLayer10min
-                .selectAll("rect")
-                .data(dataFilteredWeek => dataFilteredWeek)
-                .enter()
-                .append("rect")
-                .attr("x", d => GC.x(d.data.datetime))
-                .attr("y", d => GC.y_total_sent_sms(d[1]))
-                .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
-                .attr("width", GC.Width / Object.keys(dataFilteredWeek).length);
-
-            //Add the X Axis for the total sent sms graph
-            GC.total_sent_sms_graph
-                .append("g")
-                .attr("class", "redrawElementSent")
-                .attr("transform", "translate(0," + GC.Height + ")")
-                .call(
-                    d3
-                        .axisBottom(GC.x)
-                        .ticks(d3.timeDay.every(1))
-                        .tickFormat(timeFormat)
-                )
-                // Rotate axis labels
-                .selectAll("text")
-                .style("text-anchor", "end")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)");
-
-            // Add X axis label for the total sent sms graph
-            GC.total_sent_sms_graph
-                .append("text")
-                .attr("class", "redrawElementSent")
-                .attr(
-                    "transform",
-                    "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")"
-                )
-                .style("text-anchor", "middle")
-                .text("Date (D-M-Y)");
-
-            // Total Sms(s) graph title
-            GC.total_sent_sms_graph
-                .append("text")
-                .attr("class", "redrawElementSent")
-                .attr("x", GC.Width / 2)
-                .attr("y", 0 - GC.Margin.top / 2)
-                .attr("text-anchor", "middle")
-                .style("font-size", "20px")
-                .style("text-decoration", "bold")
-                .text("Total Outgoing Message(s) / 10 minutes");
         }
 
         function drawOneDaySentGraph(yLimitSent) {
@@ -696,7 +610,7 @@ class GC {
                 drawOneDaySentGraph(yLimitSent);
             } else if (GC.chartTimeUnit == "10min") {
                 yLimitSentFiltered = this.value;
-                draw10MinSentGraph(yLimitSentFiltered);
+                GC.draw10MinSentGraph(yLimitSentFiltered);
             }
         });
 
@@ -825,5 +739,93 @@ class GC {
             .style("font-size", "20px")
             .style("text-decoration", "bold")
             .text("Total Incoming Message(s) / 10 minutes");
+    }
+
+    static draw10MinSentGraph(yLimitSent) {
+        let dataFilteredWeek = GC.dataFilteredWeek;
+        let timeFormat = GC.timeFormat;
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        if (GC.isYLimitSentManuallySet == false) {
+            yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
+        }
+
+        let stackSent = d3.stack().keys(GC.sentKeys),
+            sentDataStacked = stackSent(dataFilteredWeek);
+
+        // set scale domains
+        GC.x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+        GC.y_total_sent_sms.domain([0, yLimitSent]);
+
+        // Remove changing chart elements before redrawing
+        d3.selectAll(".redrawElementSent").remove();
+        d3.selectAll("#sentStack1day").remove();
+        d3.selectAll("#sentStack10min").remove();
+
+        // Add the Y Axis for the total sent sms graph
+        GC.total_sent_sms_graph
+            .append("g")
+            .attr("class", "axisSteelBlue")
+            .attr("class", "redrawElementSent")
+            .call(d3.axisLeft(GC.y_total_sent_sms));
+
+        // Create stacks
+        let sentLayer10min = GC.total_sent_sms_graph
+            .selectAll("#sentStack10min")
+            .data(sentDataStacked)
+            .enter()
+            .append("g")
+            .attr("id", "sentStack10min")
+            .attr("class", (d, i) => GC.sentKeys[i])
+            .style("fill", (d, i) => GC.color(i));
+
+        sentLayer10min
+            .selectAll("rect")
+            .data(dataFilteredWeek => dataFilteredWeek)
+            .enter()
+            .append("rect")
+            .attr("x", d => GC.x(d.data.datetime))
+            .attr("y", d => GC.y_total_sent_sms(d[1]))
+            .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
+            .attr("width", GC.Width / Object.keys(dataFilteredWeek).length);
+
+        //Add the X Axis for the total sent sms graph
+        GC.total_sent_sms_graph
+            .append("g")
+            .attr("class", "redrawElementSent")
+            .attr("transform", "translate(0," + GC.Height + ")")
+            .call(
+                d3
+                    .axisBottom(GC.x)
+                    .ticks(d3.timeDay.every(1))
+                    .tickFormat(timeFormat)
+            )
+            // Rotate axis labels
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
+        // Add X axis label for the total sent sms graph
+        GC.total_sent_sms_graph
+            .append("text")
+            .attr("class", "redrawElementSent")
+            .attr(
+                "transform",
+                "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")"
+            )
+            .style("text-anchor", "middle")
+            .text("Date (D-M-Y)");
+
+        // Total Sms(s) graph title
+        GC.total_sent_sms_graph
+            .append("text")
+            .attr("class", "redrawElementSent")
+            .attr("x", GC.Width / 2)
+            .attr("y", 0 - GC.Margin.top / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("text-decoration", "bold")
+            .text("Total Outgoing Message(s) / 10 minutes");
     }
 }
