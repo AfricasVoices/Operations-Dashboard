@@ -212,6 +212,47 @@ class GC {
         d3.select(".sentLegend").call(sentLegend);
     }
 
+    static updateReceivedChartLimit() {
+        // Get the value of the button
+        let ylimit = this.value;
+
+        GC.y_total_received_sms.domain([0, ylimit]);
+
+        // Add the Y Axis for the total received sms graph
+        GC.total_received_sms_graph
+            .selectAll(".axisSteelBlue")
+            .call(d3.axisLeft(y_total_received_sms));
+
+        GC.receivedLayer
+            .selectAll("rect")
+            .data(d => d)
+            .attr("x", d => GC.x(d.data.datetime))
+            .attr("y", d => GC.y_total_received_sms_range(d[1]))
+            .attr(
+                "height",
+                d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
+            )
+            .attr("width", GC.Width / Object.keys(data).length);
+    }
+
+    static updateSentChartLimit() {
+        // Get the value of the button
+        let ylimit = this.value;
+
+        GC.y_total_sent_sms.domain([0, ylimit]);
+
+        // Add the Y Axis for the total sent sms graph
+        GC.total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(GC.y_total_sent_sms));
+
+        GC.sentLayer
+            .selectAll("rect")
+            .data(d => d)
+            .attr("x", d => GC.x(d.data.datetime))
+            .attr("y", d => GC.y_total_sent_sms(d[1]))
+            .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
+            .attr("width", GC.Width / Object.keys(data).length);
+    }
+
     static updateGraphs(data, projectName) {
         GC.setProperties()
         
@@ -336,51 +377,10 @@ class GC {
         // Label Lines for the total failed sms graph
         GC.total_failed_sms_graph.append("text");
 
-        function updateReceivedChartLimit() {
-            // Get the value of the button
-            let ylimit = this.value;
-
-            y_total_received_sms.domain([0, ylimit]);
-
-            // Add the Y Axis for the total received sms graph
-            GC.total_received_sms_graph
-                .selectAll(".axisSteelBlue")
-                .call(d3.axisLeft(y_total_received_sms));
-
-            receivedLayer
-                .selectAll("rect")
-                .data(d => d)
-                .attr("x", d => GC.x(d.data.datetime))
-                .attr("y", d => GC.y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
-                )
-                .attr("width", GC.Width / Object.keys(data).length);
-        }
-
-        function updateSentChartLimit() {
-            // Get the value of the button
-            let ylimit = this.value;
-
-            GC.y_total_sent_sms.domain([0, ylimit]);
-
-            // Add the Y Axis for the total sent sms graph
-            GC.total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(GC.y_total_sent_sms));
-
-            sentLayer
-                .selectAll("rect")
-                .data(d => d)
-                .attr("x", d => GC.x(d.data.datetime))
-                .attr("y", d => GC.y_total_sent_sms(d[1]))
-                .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
-                .attr("width", GC.Width / Object.keys(data).length);
-        }
-
         // Add an event listener to the button created in the html part
-        d3.select("#buttonYLimitReceived").on("input", updateReceivedChartLimit);
+        d3.select("#buttonYLimitReceived").on("input", GC.updateReceivedChartLimit);
         d3.select("#buttonYLimitSent")
-            .on("input", updateSentChartLimit)
+            .on("input", GC.updateSentChartLimit)
             .attr("transform", `translate(${GC.Width - GC.Margin.right + 100},${GC.Margin.top})`)
             .attr("dy", ".35em")
             .attr("text-anchor", "start")
@@ -514,7 +514,7 @@ class GC {
                 .attr("class", "redrawElementReceived")
                 .call(d3.axisLeft(GC.y_total_received_sms_range));
 
-            let receivedLayer = GC.total_received_sms_graph
+            GC.receivedLayer = GC.total_received_sms_graph
                 .selectAll("#receivedStack")
                 .data(GC.receivedDataStackedDaily)
                 .enter()
@@ -523,7 +523,7 @@ class GC {
                 .attr("class", (d, i) => GC.receivedKeys[i])
                 .style("fill", (d, i) => GC.color(i));
 
-            receivedLayer
+            GC.receivedLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
@@ -689,7 +689,7 @@ class GC {
                 .call(d3.axisLeft(GC.y_total_sent_sms));
 
             // Create stacks
-            let sentLayer = GC.total_sent_sms_graph
+            GC.sentLayer = GC.total_sent_sms_graph
                 .selectAll("#sentStack1day")
                 .data(GC.sentDataStackedDaily)
                 .enter()
@@ -698,7 +698,7 @@ class GC {
                 .attr("class", (d, i) => GC.sentKeys[i])
                 .style("fill", (d, i) => GC.color(i));
 
-            sentLayer
+            GC.sentLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
