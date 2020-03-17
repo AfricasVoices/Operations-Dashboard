@@ -164,6 +164,54 @@ class GC {
             .text("No. of Outgoing Message (s)");
     }
 
+    static setUpGraphLegend() {
+        // custom color scheme
+        let color_scheme = [
+            "#31cece",
+            "#f58231",
+            "#3cb44b",
+            "#CCCC00",
+            "#4363d8",
+            "#800000",
+            "#f032e6",
+            "#911eb4",
+            "#e6194B"
+        ];
+        GC.color = d3.scaleOrdinal(color_scheme);
+        let colorReceived = d3.scaleOrdinal(color_scheme).domain(GC.receivedKeys),
+            colorSent = d3.scaleOrdinal(color_scheme).domain(GC.sentKeys);
+
+        // Total received graph legend
+        GC.total_received_sms_graph
+            .append("g")
+            .attr("class", "receivedLegend")
+            .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
+
+        let receivedLegend = d3
+            .legendColor()
+            .shapeWidth(12)
+            .orient("vertical")
+            .scale(colorReceived)
+            .labels(GC.operators);
+
+        d3.select(".receivedLegend").call(receivedLegend);
+
+        // Total sent graph legend
+        GC.total_sent_sms_graph
+            .append("g")
+            .attr("class", "sentLegend")
+            .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
+
+        let sentLegend = d3
+            .legendColor()
+            .shapeWidth(12)
+            .orient("vertical")
+            .scale(colorSent)
+            .labels(GC.operators);
+
+        d3.select(".sentLegend").call(sentLegend);
+    }
+
     static updateGraphs(data, projectName) {
         GC.setProperties()
         
@@ -195,6 +243,7 @@ class GC {
         GC.FlattenNestedDataforStacking("sent")
         GC.stackDataBasedOnOperatorAndDirection()
         GC.setUpGraphLayout()
+        GC.setUpGraphLegend()
 
 
         // Format TimeStamp
@@ -209,21 +258,22 @@ class GC {
             // Create line path element for failed line graph
             total_failed_path = GC.total_failed_sms_graph.append("path");
 
-        // custom color scheme
-        let color_scheme = [
-                "#31cece",
-                "#f58231",
-                "#3cb44b",
-                "#CCCC00",
-                "#4363d8",
-                "#800000",
-                "#f032e6",
-                "#911eb4",
-                "#e6194B"
-            ],
-            color = d3.scaleOrdinal(color_scheme),
-            colorReceived = d3.scaleOrdinal(color_scheme).domain(GC.receivedKeys),
-            colorSent = d3.scaleOrdinal(color_scheme).domain(GC.sentKeys);
+        // // custom color scheme
+        // GC.color_scheme = [
+        //         "#31cece",
+        //         "#f58231",
+        //         "#3cb44b",
+        //         "#CCCC00",
+        //         "#4363d8",
+        //         "#800000",
+        //         "#f032e6",
+        //         "#911eb4",
+        //         "#e6194B"
+        //     ];
+        //     // color = d3.scaleOrdinal(color_scheme),
+        //     GC.colorReceived = d3.scaleOrdinal(GC.color_scheme).domain(GC.receivedKeys);
+        //     GC.colorSent = d3.scaleOrdinal(GC.color_scheme).domain(GC.sentKeys);
+        //     GC.color = d3.scaleOrdinal(GC.color_scheme);
 
         // set scale domain for failed graph
         GC.y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
@@ -304,35 +354,35 @@ class GC {
             .style("text-decoration", "bold")
             .text("Total Failed Messages(s) / hr");
 
-        // Total received graph legend
-        GC.total_received_sms_graph
-            .append("g")
-            .attr("class", "receivedLegend")
-            .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
+        // // Total received graph legend
+        // GC.total_received_sms_graph
+        //     .append("g")
+        //     .attr("class", "receivedLegend")
+        //     .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
 
-        let receivedLegend = d3
-            .legendColor()
-            .shapeWidth(12)
-            .orient("vertical")
-            .scale(colorReceived)
-            .labels(GC.operators);
+        // let receivedLegend = d3
+        //     .legendColor()
+        //     .shapeWidth(12)
+        //     .orient("vertical")
+        //     .scale(GC.colorReceived)
+        //     .labels(GC.operators);
 
-        d3.select(".receivedLegend").call(receivedLegend);
+        // d3.select(".receivedLegend").call(receivedLegend);
 
-        // Total sent graph legend
-        GC.total_sent_sms_graph
-            .append("g")
-            .attr("class", "sentLegend")
-            .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
+        // // Total sent graph legend
+        // GC.total_sent_sms_graph
+        //     .append("g")
+        //     .attr("class", "sentLegend")
+        //     .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
 
-        let sentLegend = d3
-            .legendColor()
-            .shapeWidth(12)
-            .orient("vertical")
-            .scale(colorSent)
-            .labels(GC.operators);
+        // let sentLegend = d3
+        //     .legendColor()
+        //     .shapeWidth(12)
+        //     .orient("vertical")
+        //     .scale(GC.colorSent)
+        //     .labels(GC.operators);
 
-        d3.select(".sentLegend").call(sentLegend);
+        // d3.select(".sentLegend").call(sentLegend);
 
         // Label Lines for the total failed sms graph
         GC.total_failed_sms_graph.append("text");
@@ -434,7 +484,7 @@ class GC {
                 .append("g")
                 .attr("id", "receivedStack10min")
                 .attr("class", (d, i) => GC.receivedKeys[i])
-                .style("fill", (d, i) => color(i));
+                .style("fill", (d, i) => GC.color(i));
 
             receivedLayer10min
                 .selectAll("rect")
@@ -522,7 +572,7 @@ class GC {
                 .append("g")
                 .attr("id", "receivedStack")
                 .attr("class", (d, i) => GC.receivedKeys[i])
-                .style("fill", (d, i) => color(i));
+                .style("fill", (d, i) => GC.color(i));
 
             receivedLayer
                 .selectAll("rect")
@@ -611,7 +661,7 @@ class GC {
                 .append("g")
                 .attr("id", "sentStack10min")
                 .attr("class", (d, i) => GC.sentKeys[i])
-                .style("fill", (d, i) => color(i));
+                .style("fill", (d, i) => GC.color(i));
 
             sentLayer10min
                 .selectAll("rect")
@@ -697,7 +747,7 @@ class GC {
                 .append("g")
                 .attr("id", "sentStack1day")
                 .attr("class", (d, i) => GC.sentKeys[i])
-                .style("fill", (d, i) => color(i));
+                .style("fill", (d, i) => GC.color(i));
 
             sentLayer
                 .selectAll("rect")
