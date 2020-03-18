@@ -365,6 +365,7 @@ class GC {
         GC.stackDataBasedOnOperatorAndDirection()
         GC.setUpGraphLayout()
         GC.setUpGraphLegend()
+        GC.drawFailedMsgGraph(data)
         
 
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
