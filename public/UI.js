@@ -5,9 +5,12 @@ class UIController {
             projectMenu: ".project-menu",
             codingProgressLinkSelector: ".coding-progress-link",
             codingProgressContainer: ".coding-progress-container",
+            trafficsLinkSelector: ".traffics-link",
             graphContainer: ".graph-container",
             logoutBtn: ".logout-btn",
-            dropdownItem: ".dropdown-item"
+            dropdownItem: ".dropdown-item",
+            activeLinkClassName: "active-link",
+            activeLinks: "a.active-link"
         };
     }
 
@@ -168,7 +171,7 @@ class UIController {
             </section> 
             <div class="card shadow total_failed_sms_graph my-4"></div> 
         </div> `,
-        // Insert the HTML into the DOM
+            // Insert the HTML into the DOM
             newHtml = html.replace("%collection%", title);
         document
             .querySelector(DOMstrings.codingProgressContainer)
