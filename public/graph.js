@@ -216,12 +216,12 @@ class GC {
         // Get the value of the button
         let ylimit = this.value;
 
-        GC.y_total_received_sms.domain([0, ylimit]);
+        GC.y_total_received_sms_range.domain([0, ylimit]);
 
         // Add the Y Axis for the total received sms graph
         GC.total_received_sms_graph
             .selectAll(".axisSteelBlue")
-            .call(d3.axisLeft(y_total_received_sms));
+            .call(d3.axisLeft(GC.y_total_received_sms_range));
 
         GC.receivedLayer
             .selectAll("rect")
