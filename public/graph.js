@@ -13,6 +13,7 @@ class GC {
         GC.isYLimitSentManuallySet = false;
         GC.dayDateFormat = d3.timeFormat("%Y-%m-%d");
         GC.dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a");
+        GC.fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         GC.operators = new Set();
     }
 
@@ -288,11 +289,6 @@ class GC {
         GC.setUpGraphLayout()
         GC.setUpGraphLegend()
 
-
-        // Format TimeStamp
-        let timeFormat = d3.timeFormat("%Y-%m-%d");
-        GC.timeFormat = timeFormat;
-
         // Define line paths for total failed sms(s)
         const total_failed_line = d3
                 .line()
@@ -335,7 +331,7 @@ class GC {
                 d3
                     .axisBottom(GC.failed_messages_x_axis_range)
                     .ticks(5)
-                    .tickFormat(timeFormat)
+                    .tickFormat(GC.dayDateFormat)
             )
             // Rotate axis labels
             .selectAll("text")
@@ -440,7 +436,6 @@ class GC {
             }
         });
 
-        let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
         let lastUpdateTimeStamp = new Date(
             Math.max.apply(
@@ -453,7 +448,7 @@ class GC {
 
         d3.select("#lastUpdated")
             .classed("text-stale-info", false)
-            .text(fullDateFormat(lastUpdateTimeStamp));
+            .text(GC.fullDateFormat(lastUpdateTimeStamp));
 
         function setLastUpdatedAlert() {
             // Calculate time diff bw current and lastUpdateTimeStamp
@@ -481,7 +476,6 @@ class GC {
     static draw10MinReceivedGraph(yLimitReceived) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         let dataFilteredWeek = GC.dataFilteredWeek;
-        let timeFormat = GC.timeFormat;
         if (GC.isYLimitReceivedManuallySet == false) {
             yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
         }
@@ -535,7 +529,7 @@ class GC {
                 d3
                     .axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(timeFormat)
+                    .tickFormat(GC.dayDateFormat)
             )
             // Rotate axis labels
             .selectAll("text")
@@ -569,7 +563,6 @@ class GC {
 
     static draw10MinSentGraph(yLimitSent) {
         let dataFilteredWeek = GC.dataFilteredWeek;
-        let timeFormat = GC.timeFormat;
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (GC.isYLimitSentManuallySet == false) {
             yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
@@ -623,7 +616,7 @@ class GC {
                 d3
                     .axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(timeFormat)
+                    .tickFormat(GC.dayDateFormat)
             )
             // Rotate axis labels
             .selectAll("text")
