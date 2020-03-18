@@ -165,6 +165,83 @@ class GC {
             .text("No. of Outgoing Message (s)");
     }
 
+    static drawFailedMsgGraph(data) {
+        // set scale domain for failed graph
+        GC.y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
+        GC.xMin = d3.min(data, d => new Date(d.day));
+        GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
+        GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
+
+        //Add the X Axis for the total failed sms graph
+        GC.total_failed_sms_graph
+            .append("g")
+            .attr("transform", "translate(0," + GC.Height + ")")
+            .call(
+                d3
+                    .axisBottom(GC.failed_messages_x_axis_range)
+                    .ticks(5)
+                    .tickFormat(GC.dayDateFormat)
+            )
+            // Rotate axis labels
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
+        //Add X axis label for the total failed sms graph
+        GC.total_failed_sms_graph
+            .append("text")
+            .attr("transform", "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")")
+            .style("text-anchor", "middle")
+            .text("Time (D:H:M:S)");
+
+        // Add the Y Axis for the total failed sms graph
+        GC.total_failed_sms_graph
+            .append("g")
+            .attr("class", "axisSteelBlue")
+            .call(d3.axisLeft(GC.y_total_failed_sms));
+
+        // Y axis Label for the total failed sms graph
+        GC.total_failed_sms_graph
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - GC.Margin.left)
+            .attr("x", 0 - GC.Height / 2)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("No. of Failed Message (s)");
+
+        // Total Failed Sms(s) graph title
+        GC.total_failed_sms_graph
+            .append("text")
+            .attr("x", GC.Width / 2)
+            .attr("y", 0 - GC.Margin.top / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("text-decoration", "bold")
+            .text("Total Failed Messages(s) / hr");
+
+        // Label Lines for the total failed sms graph
+        GC.total_failed_sms_graph.append("text");
+
+        // Define line paths for total failed sms(s)
+        const total_failed_line = d3
+                .line()
+                .curve(d3.curveLinear)
+                .x(d => GC.failed_messages_x_axis_range(new Date(d.datetime)))
+                .y(d => GC.y_total_failed_sms(d.total_errored)),
+            // Create line path element for failed line graph
+            total_failed_path = GC.total_failed_sms_graph.append("path");
+
+        // update path data for total failed sms(s)
+        total_failed_path
+            .data([data])
+            .attr("class", "line")
+            .style("stroke", "blue")
+            .attr("d", total_failed_line);
+    }
+
     static setUpGraphLegend() {
         // custom color scheme
         let color_scheme = [
@@ -288,21 +365,7 @@ class GC {
         GC.stackDataBasedOnOperatorAndDirection()
         GC.setUpGraphLayout()
         GC.setUpGraphLegend()
-
-        // Define line paths for total failed sms(s)
-        const total_failed_line = d3
-                .line()
-                .curve(d3.curveLinear)
-                .x(d => GC.failed_messages_x_axis_range(new Date(d.datetime)))
-                .y(d => GC.y_total_failed_sms(d.total_errored)),
-            // Create line path element for failed line graph
-            total_failed_path = GC.total_failed_sms_graph.append("path");
-
-        // set scale domain for failed graph
-        GC.y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
-        GC.xMin = d3.min(data, d => new Date(d.day));
-        GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
-        GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
+        
 
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
@@ -315,66 +378,7 @@ class GC {
         } else if (GC.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
-
-        // update path data for total failed sms(s)
-        total_failed_path
-            .data([data])
-            .attr("class", "line")
-            .style("stroke", "blue")
-            .attr("d", total_failed_line);
-
-        //Add the X Axis for the total failed sms graph
-        GC.total_failed_sms_graph
-            .append("g")
-            .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.failed_messages_x_axis_range)
-                    .ticks(5)
-                    .tickFormat(GC.dayDateFormat)
-            )
-            // Rotate axis labels
-            .selectAll("text")
-            .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em")
-            .attr("transform", "rotate(-65)");
-
-        //Add X axis label for the total failed sms graph
-        GC.total_failed_sms_graph
-            .append("text")
-            .attr("transform", "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")")
-            .style("text-anchor", "middle")
-            .text("Time (D:H:M:S)");
-
-        // Add the Y Axis for the total failed sms graph
-        GC.total_failed_sms_graph
-            .append("g")
-            .attr("class", "axisSteelBlue")
-            .call(d3.axisLeft(GC.y_total_failed_sms));
-
-        // Y axis Label for the total failed sms graph
-        GC.total_failed_sms_graph
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - GC.Margin.left)
-            .attr("x", 0 - GC.Height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("No. of Failed Message (s)");
-
-        // Total Failed Sms(s) graph title
-        GC.total_failed_sms_graph
-            .append("text")
-            .attr("x", GC.Width / 2)
-            .attr("y", 0 - GC.Margin.top / 2)
-            .attr("text-anchor", "middle")
-            .style("font-size", "20px")
-            .style("text-decoration", "bold")
-            .text("Total Failed Messages(s) / hr");
-
-        // Label Lines for the total failed sms graph
-        GC.total_failed_sms_graph.append("text");
+        
 
         // Add an event listener to the button created in the html part
         d3.select("#buttonYLimitReceived").on("input", GC.updateReceivedChartLimit);
