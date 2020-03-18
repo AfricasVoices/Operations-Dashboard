@@ -442,34 +442,36 @@ class GC {
         });
 
         // Update timestamp of update and reset formatting
-        let lastUpdateTimeStamp = new Date(
+        GC.lastUpdateTimeStamp = new Date(
             Math.max.apply(
                 null,
                 data.map(d => new Date(d.datetime))
             )
         );
-        lastUpdateTimeStamp.setMinutes(lastUpdateTimeStamp.getMinutes() + 10);
-        lastUpdateTimeStamp = new Date(lastUpdateTimeStamp);
+        GC.lastUpdateTimeStamp.setMinutes(GC.lastUpdateTimeStamp.getMinutes() + 10);
+        GC.lastUpdateTimeStamp = new Date(GC.lastUpdateTimeStamp);
 
         d3.select("#lastUpdated")
             .classed("text-stale-info", false)
-            .text(GC.fullDateFormat(lastUpdateTimeStamp));
+            .text(GC.fullDateFormat(GC.lastUpdateTimeStamp));
+        
+        GC.setLastUpdatedAlert()
 
-        function setLastUpdatedAlert() {
-            // Calculate time diff bw current and lastUpdateTimeStamp
-            let currentTime = new Date(),
-                difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000,
-                difference_minutes = Math.floor(difference_ms % 60);
-            if (difference_minutes > 20) {
-                d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
-            } else {
-                d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
-            }
-        }
         if (GC.lastUpdateTimer) {
             clearInterval(GC.lastUpdateTimer);
         }
-        GC.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
+        GC.lastUpdateTimer = setInterval(GC.setLastUpdatedAlert, 1000);
+    }
+    static setLastUpdatedAlert() {
+        // Calculate time diff bw current and lastUpdateTimeStamp
+        let currentTime = new Date(),
+            difference_ms = (currentTime.getTime() - GC.lastUpdateTimeStamp.getTime()) / 60000,
+            difference_minutes = Math.floor(difference_ms % 60);
+        if (difference_minutes > 20) {
+            d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
+        } else {
+            d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
+        }
     }
     static clearTimers() {
         if (GC.lastUpdateTimer) {
