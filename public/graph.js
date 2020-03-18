@@ -37,7 +37,7 @@ class GC {
         });
     }
 
-    static GroupDataByDay(dataFilteredMonth, messageDirection){
+    static GroupDataByDay(dataFilteredMonth, messageDirection) {
         let groupedDataTotal = d3
             .nest()
             .key(d => d.day)
@@ -49,25 +49,26 @@ class GC {
                         d => d[`${operator}_${messageDirection}`]
                     );
                 });
-                groupedData[`total_${messageDirection}`] = d3.sum(v, d => d[`total_${messageDirection}`]);
+                groupedData[`total_${messageDirection}`] = d3.sum(
+                    v,
+                    d => d[`total_${messageDirection}`]
+                );
                 return groupedData;
             })
             .entries(dataFilteredMonth);
-            if (messageDirection == "sent") {
-                GC.dailySentTotal = groupedDataTotal
-            }
-            else if (messageDirection == "received") {
-                GC.dailyReceivedTotal = groupedDataTotal
-            }
+        if (messageDirection == "sent") {
+            GC.dailySentTotal = groupedDataTotal;
+        } else if (messageDirection == "received") {
+            GC.dailyReceivedTotal = groupedDataTotal;
+        }
     }
 
     static FlattenNestedDataforStacking(messageDirection) {
         let nestedData;
         if (messageDirection == "received") {
-            nestedData = GC.dailyReceivedTotal
-        }
-        else if (messageDirection == "sent") {
-            nestedData = GC.dailySentTotal
+            nestedData = GC.dailyReceivedTotal;
+        } else if (messageDirection == "sent") {
+            nestedData = GC.dailySentTotal;
         }
         for (let entry in nestedData) {
             let valueList = nestedData[entry].value;
@@ -79,10 +80,9 @@ class GC {
             delete nestedData[entry]["key"];
         }
         if (messageDirection == "received") {
-            GC.dailyReceivedTotal = nestedData
-        }
-        else if (messageDirection == "sent") {
-            nestedData = GC.dailySentTotal = nestedData
+            GC.dailyReceivedTotal = nestedData;
+        } else if (messageDirection == "sent") {
+            nestedData = GC.dailySentTotal = nestedData;
         }
     }
 
@@ -115,20 +115,20 @@ class GC {
         GC.Width = 960 - GC.Margin.right - GC.Margin.left;
         GC.Height = 500 - GC.Margin.top - GC.Margin.bottom;
         // Set x and y scales
-        GC.x = d3.scaleTime().range([0, GC.Width]),
-        GC.failed_messages_x_axis_range = d3.scaleTime().range([0, GC.Width]),
-        GC.y_total_received_sms_range = d3.scaleLinear().range([GC.Height, 0]),
-        GC.y_total_sent_sms_range = d3.scaleLinear().range([GC.Height, 0]),
+        GC.x = d3.scaleTime().range([0, GC.Width]);
+        GC.failed_messages_x_axis_range = d3.scaleTime().range([0, GC.Width]);
+        GC.y_total_received_sms_range = d3.scaleLinear().range([GC.Height, 0]);
+        GC.y_total_sent_sms_range = d3.scaleLinear().range([GC.Height, 0]);
         GC.y_total_failed_sms = d3.scaleLinear().range([GC.Height, 0]);
 
         // Append total received sms graph to svg
         GC.total_received_sms_graph = d3
-                .select(".total_received_sms_graph")
-                .append("svg")
-                .attr("width", GC.Width + GC.Margin.left + GC.Margin.right + 120)
-                .attr("height", GC.Height + GC.Margin.top + GC.Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + GC.Margin.left + "," + GC.Margin.top + ")");
+            .select(".total_received_sms_graph")
+            .append("svg")
+            .attr("width", GC.Width + GC.Margin.left + GC.Margin.right + 120)
+            .attr("height", GC.Height + GC.Margin.top + GC.Margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + GC.Margin.left + "," + GC.Margin.top + ")");
         // Append total sent sms graph to svg
         GC.total_sent_sms_graph = d3
             .select(".total_sent_sms_graph")
@@ -192,7 +192,10 @@ class GC {
         //Add X axis label for the total failed sms graph
         GC.total_failed_sms_graph
             .append("text")
-            .attr("transform", "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")")
+            .attr(
+                "transform",
+                "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")"
+            )
             .style("text-anchor", "middle")
             .text("Time (D:H:M:S)");
 
@@ -263,7 +266,10 @@ class GC {
         GC.total_received_sms_graph
             .append("g")
             .attr("class", "receivedLegend")
-            .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
+            .attr(
+                "transform",
+                `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`
+            );
 
         let receivedLegend = d3
             .legendColor()
@@ -278,7 +284,10 @@ class GC {
         GC.total_sent_sms_graph
             .append("g")
             .attr("class", "sentLegend")
-            .attr("transform", `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`);
+            .attr(
+                "transform",
+                `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`
+            );
 
         let sentLegend = d3
             .legendColor()
@@ -320,7 +329,9 @@ class GC {
         GC.y_total_sent_sms_range.domain([0, ylimit]);
 
         // Add the Y Axis for the total sent sms graph
-        GC.total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(GC.y_total_sent_sms_range));
+        GC.total_sent_sms_graph
+            .selectAll(".axisSteelBlue")
+            .call(d3.axisLeft(GC.y_total_sent_sms_range));
 
         GC.sentLayer
             .selectAll("rect")
@@ -332,16 +343,16 @@ class GC {
     }
 
     static updateGraphs(data, projectName) {
-        GC.setProperties()
-        
+        GC.setProperties();
+
         if (!GC.chartTimeUnit) {
             GC.chartTimeUnit = "10min";
         }
-        
+
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-        GC.formatData(data)
+        GC.formatData(data);
 
         // Sort data by date
         data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
@@ -358,15 +369,14 @@ class GC {
 
         GC.dataFilteredWeek = dataFilteredWeek;
 
-        GC.GroupDataByDay(dataFilteredMonth, "received")
-        GC.FlattenNestedDataforStacking("received")
-        GC.GroupDataByDay(dataFilteredMonth, "sent")
-        GC.FlattenNestedDataforStacking("sent")
-        GC.stackDataBasedOnOperatorAndDirection()
-        GC.setUpGraphLayout()
-        GC.setUpGraphLegend()
-        GC.drawFailedMsgGraph(data)
-        
+        GC.GroupDataByDay(dataFilteredMonth, "received");
+        GC.FlattenNestedDataforStacking("received");
+        GC.GroupDataByDay(dataFilteredMonth, "sent");
+        GC.FlattenNestedDataforStacking("sent");
+        GC.stackDataBasedOnOperatorAndDirection();
+        GC.setUpGraphLayout();
+        GC.setUpGraphLegend();
+        GC.drawFailedMsgGraph(data);
 
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
@@ -379,7 +389,6 @@ class GC {
         } else if (GC.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
-        
 
         // Add an event listener to the button created in the html part
         d3.select("#buttonYLimitReceived").on("input", GC.updateReceivedChartLimit);
@@ -454,8 +463,8 @@ class GC {
         d3.select("#lastUpdated")
             .classed("text-stale-info", false)
             .text(GC.fullDateFormat(GC.lastUpdateTimeStamp));
-        
-        GC.setLastUpdatedAlert()
+
+        GC.setLastUpdatedAlert();
 
         if (GC.lastUpdateTimer) {
             clearInterval(GC.lastUpdateTimer);
@@ -828,5 +837,4 @@ class GC {
             .style("text-decoration", "bold")
             .text("Total Outgoing Message(s) / day");
     }
-
 }
