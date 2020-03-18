@@ -117,7 +117,7 @@ class GC {
         GC.x = d3.scaleTime().range([0, GC.Width]),
         GC.failed_messages_x_axis_range = d3.scaleTime().range([0, GC.Width]),
         GC.y_total_received_sms_range = d3.scaleLinear().range([GC.Height, 0]),
-        GC.y_total_sent_sms = d3.scaleLinear().range([GC.Height, 0]),
+        GC.y_total_sent_sms_range = d3.scaleLinear().range([GC.Height, 0]),
         GC.y_total_failed_sms = d3.scaleLinear().range([GC.Height, 0]);
 
         // Append total received sms graph to svg
@@ -239,17 +239,17 @@ class GC {
         // Get the value of the button
         let ylimit = this.value;
 
-        GC.y_total_sent_sms.domain([0, ylimit]);
+        GC.y_total_sent_sms_range.domain([0, ylimit]);
 
         // Add the Y Axis for the total sent sms graph
-        GC.total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(GC.y_total_sent_sms));
+        GC.total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(GC.y_total_sent_sms_range));
 
         GC.sentLayer
             .selectAll("rect")
             .data(d => d)
             .attr("x", d => GC.x(d.data.datetime))
-            .attr("y", d => GC.y_total_sent_sms(d[1]))
-            .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
+            .attr("y", d => GC.y_total_sent_sms_range(d[1]))
+            .attr("height", d => GC.y_total_sent_sms_range(d[0]) - GC.y_total_sent_sms_range(d[1]))
             .attr("width", GC.Width / Object.keys(data).length);
     }
 
@@ -580,7 +580,7 @@ class GC {
 
         // set scale domains
         GC.x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-        GC.y_total_sent_sms.domain([0, yLimitSent]);
+        GC.y_total_sent_sms_range.domain([0, yLimitSent]);
 
         // Remove changing chart elements before redrawing
         d3.selectAll(".redrawElementSent").remove();
@@ -592,7 +592,7 @@ class GC {
             .append("g")
             .attr("class", "axisSteelBlue")
             .attr("class", "redrawElementSent")
-            .call(d3.axisLeft(GC.y_total_sent_sms));
+            .call(d3.axisLeft(GC.y_total_sent_sms_range));
 
         // Create stacks
         let sentLayer10min = GC.total_sent_sms_graph
@@ -610,8 +610,8 @@ class GC {
             .enter()
             .append("rect")
             .attr("x", d => GC.x(d.data.datetime))
-            .attr("y", d => GC.y_total_sent_sms(d[1]))
-            .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
+            .attr("y", d => GC.y_total_sent_sms_range(d[1]))
+            .attr("height", d => GC.y_total_sent_sms_range(d[0]) - GC.y_total_sent_sms_range(d[1]))
             .attr("width", GC.Width / Object.keys(dataFilteredWeek).length);
 
         //Add the X Axis for the total sent sms graph
@@ -755,7 +755,7 @@ class GC {
         GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
         // set scale domains
         GC.x.domain([GC.xMin, GC.xMax]);
-        GC.y_total_sent_sms.domain([0, yLimitSent]);
+        GC.y_total_sent_sms_range.domain([0, yLimitSent]);
 
         d3.selectAll(".redrawElementSent").remove();
         d3.selectAll("#sentStack10min").remove();
@@ -766,7 +766,7 @@ class GC {
             .append("g")
             .attr("class", "axisSteelBlue")
             .attr("class", "redrawElementSent")
-            .call(d3.axisLeft(GC.y_total_sent_sms));
+            .call(d3.axisLeft(GC.y_total_sent_sms_range));
 
         // Create stacks
         GC.sentLayer = GC.total_sent_sms_graph
@@ -784,8 +784,8 @@ class GC {
             .enter()
             .append("rect")
             .attr("x", d => GC.x(new Date(d.data.day)))
-            .attr("y", d => GC.y_total_sent_sms(d[1]))
-            .attr("height", d => GC.y_total_sent_sms(d[0]) - GC.y_total_sent_sms(d[1]))
+            .attr("y", d => GC.y_total_sent_sms_range(d[1]))
+            .attr("height", d => GC.y_total_sent_sms_range(d[0]) - GC.y_total_sent_sms_range(d[1]))
             .attr("width", GC.Width / Object.keys(GC.dailySentTotal).length);
 
         //Add the X Axis for the total sent sms graph
