@@ -14,6 +14,10 @@
     color: steelblue;
     cursor: pointer;
 }
+.traffics-link,
+.coding-progress-link {
+    margin-left: -1px;
+}
 .dropdown-menu {
     padding: 0px;
     border: 1px solid steelblue;
@@ -27,6 +31,7 @@
 }
 .active-link {
     border-bottom: 2px #8d3538 solid;
+    padding-bottom: 6px;
 }
 .active-item {
     color: #8d3538;

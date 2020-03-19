@@ -1,15 +1,15 @@
 // GLOBAL APP CONTROLLER
 class Controller {
     static setupEventListeners() {
-        let DOMstrings = UIController.getDOMstrings();
+        Controller.DOMstrings = UIController.getDOMstrings();
         document
-            .querySelector(DOMstrings.logoutBtn)
+            .querySelector(Controller.DOMstrings.logoutBtn)
             .addEventListener("click", AuthController.logout);
         document
-            .querySelector(DOMstrings.codingProgressLinkSelector)
+            .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .addEventListener("click", Controller.navigateToCodingProgress);
         document
-            .querySelector(DOMstrings.projectMenu)
+            .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
     }
 
@@ -20,9 +20,20 @@ class Controller {
         GC.clearTimers();
     }
 
+    static resetActiveLink() {
+        let elements = document.querySelectorAll(Controller.DOMstrings.activeLinks);
+        elements.forEach(element => {
+            element.classList.remove(Controller.DOMstrings.activeLinkClassName);
+        });
+    }
+
     static displayCodingProgress() {
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
+        Controller.resetActiveLink();
+        document
+            .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Get data for coding progress table
         let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
         DataController.registerSnapshotListener(unsubscribeFunc);
@@ -31,6 +42,10 @@ class Controller {
     static displayProject(project) {
         // Add the graphs container to the UI
         UIController.addGraphs(project);
+        Controller.resetActiveLink();
+        document
+            .querySelector(Controller.DOMstrings.trafficsLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
         let unsubscribeFunc = DataController.watchProjectTrafficData(
             project,
