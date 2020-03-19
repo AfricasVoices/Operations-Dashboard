@@ -165,11 +165,11 @@ class GC {
             .text("No. of Outgoing Message (s)");
     }
 
-    static drawFailedMsgGraph(data) {
+    static drawFailedMsgGraph() {
         // set scale domain for failed graph
-        GC.y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
-        GC.xMin = d3.min(data, d => new Date(d.day));
-        GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
+        GC.y_total_failed_sms.domain([0, d3.max(GC.data, d => d.total_errored)]);
+        GC.xMin = d3.min(GC.data, d => new Date(d.day));
+        GC.xMax = d3.max(GC.data, d => GC.addOneDayToDate(d.day));
         GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
 
         //Add the X Axis for the total failed sms graph
@@ -239,7 +239,7 @@ class GC {
 
         // update path data for total failed sms(s)
         total_failed_path
-            .data([data])
+            .data([GC.data])
             .attr("class", "line")
             .style("stroke", "blue")
             .attr("d", total_failed_line);
@@ -356,6 +356,8 @@ class GC {
 
         // Sort data by date
         data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+        // Assign formatted and sorted data to static variable
+        GC.data = data;
 
         let offsetWeek = new Date(),
             offsetMonth = new Date();
@@ -364,10 +366,8 @@ class GC {
         offsetMonth.setDate(offsetMonth.getDate() - GC.TIMEFRAME_MONTH);
 
         // Set default y-axis limits
-        let dataFilteredWeek = data.filter(a => a.datetime > offsetWeek),
-            dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
-
-        GC.dataFilteredWeek = dataFilteredWeek;
+        let dataFilteredWeek = GC.data.filter(a => a.datetime > offsetWeek),
+            dataFilteredMonth = GC.data.filter(a => a.datetime > offsetMonth);
 
         GC.GroupDataByDay(dataFilteredMonth, "received");
         GC.FlattenNestedDataforStacking("received");
@@ -376,7 +376,7 @@ class GC {
         GC.stackDataBasedOnOperatorAndDirection();
         GC.setUpGraphLayout();
         GC.setUpGraphLegend();
-        GC.drawFailedMsgGraph(data);
+        GC.drawFailedMsgGraph();
 
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
@@ -404,15 +404,15 @@ class GC {
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
-            GC.draw10MinReceivedGraph(yLimitReceivedFiltered);
-            GC.draw10MinSentGraph(yLimitSentFiltered);
+            GC.draw10MinReceivedGraph(dataFilteredWeek, yLimitReceivedFiltered);
+            GC.draw10MinSentGraph(dataFilteredWeek, yLimitSentFiltered);
         }
 
         function updateViewOneDay(yLimitReceived, yLimitSent) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
-            GC.drawOneDayReceivedGraph(data, yLimitReceived);
-            GC.drawOneDaySentGraph(data, yLimitSent);
+            GC.drawOneDayReceivedGraph(yLimitReceived);
+            GC.drawOneDaySentGraph(yLimitSent);
         }
 
         // Update chart time unit on user selection
@@ -431,10 +431,10 @@ class GC {
             GC.isYLimitReceivedManuallySet = true;
             if (GC.chartTimeUnit == "1day") {
                 yLimitReceived = this.value;
-                GC.drawOneDayReceivedGraph(data, yLimitReceived);
+                GC.drawOneDayReceivedGraph(yLimitReceived);
             } else if (GC.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = this.value;
-                GC.draw10MinReceivedGraph(yLimitReceivedFiltered);
+                GC.draw10MinReceivedGraph(dataFilteredWeek, yLimitReceivedFiltered);
             }
         });
 
@@ -443,10 +443,10 @@ class GC {
             GC.isYLimitSentManuallySet = true;
             if (GC.chartTimeUnit == "1day") {
                 yLimitSent = this.value;
-                GC.drawOneDaySentGraph(data, yLimitSent);
+                GC.drawOneDaySentGraph(yLimitSent);
             } else if (GC.chartTimeUnit == "10min") {
                 yLimitSentFiltered = this.value;
-                GC.draw10MinSentGraph(yLimitSentFiltered);
+                GC.draw10MinSentGraph(dataFilteredWeek, yLimitSentFiltered);
             }
         });
 
@@ -454,7 +454,7 @@ class GC {
         GC.lastUpdateTimeStamp = new Date(
             Math.max.apply(
                 null,
-                data.map(d => new Date(d.datetime))
+                GC.data.map(d => new Date(d.datetime))
             )
         );
         GC.lastUpdateTimeStamp.setMinutes(GC.lastUpdateTimeStamp.getMinutes() + 10);
@@ -489,9 +489,8 @@ class GC {
         }
     }
 
-    static draw10MinReceivedGraph(yLimitReceived) {
+    static draw10MinReceivedGraph(dataFilteredWeek, yLimitReceived) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
-        let dataFilteredWeek = GC.dataFilteredWeek;
         if (GC.isYLimitReceivedManuallySet == false) {
             yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
         }
@@ -577,8 +576,7 @@ class GC {
             .text("Total Incoming Message(s) / 10 minutes");
     }
 
-    static draw10MinSentGraph(yLimitSent) {
-        let dataFilteredWeek = GC.dataFilteredWeek;
+    static draw10MinSentGraph(dataFilteredWeek, yLimitSent) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (GC.isYLimitSentManuallySet == false) {
             yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
@@ -664,7 +662,7 @@ class GC {
             .text("Total Outgoing Message(s) / 10 minutes");
     }
 
-    static drawOneDayReceivedGraph(data, yLimitReceived) {
+    static drawOneDayReceivedGraph(yLimitReceived) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         let yLimitReceivedTotal = d3.max(GC.dailyReceivedTotal, d => d.total_received);
 
@@ -672,8 +670,8 @@ class GC {
             yLimitReceived = yLimitReceivedTotal;
         }
 
-        GC.xMin = d3.min(data, d => new Date(d.day));
-        GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
+        GC.xMin = d3.min(GC.data, d => new Date(d.day));
+        GC.xMax = d3.max(GC.data, d => GC.addOneDayToDate(d.day));
         // set scale domains
         GC.x.domain([GC.xMin, GC.xMax]);
         GC.y_total_received_sms_range.domain([0, yLimitReceived]);
@@ -752,7 +750,7 @@ class GC {
             .text("Total Incoming Message(s) / day");
     }
 
-    static drawOneDaySentGraph(data, yLimitSent) {
+    static drawOneDaySentGraph(yLimitSent) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         let yLimitSentTotal = d3.max(GC.dailySentTotal, d => d.total_sent);
 
@@ -760,8 +758,8 @@ class GC {
             yLimitSent = yLimitSentTotal;
         }
 
-        GC.xMin = d3.min(data, d => new Date(d.day));
-        GC.xMax = d3.max(data, d => GC.addOneDayToDate(d.day));
+        GC.xMin = d3.min(GC.data, d => new Date(d.day));
+        GC.xMax = d3.max(GC.data, d => GC.addOneDayToDate(d.day));
         // set scale domains
         GC.x.domain([GC.xMin, GC.xMax]);
         GC.y_total_sent_sms_range.domain([0, yLimitSent]);
