@@ -571,6 +571,36 @@ class GC {
             .attr("height", d => GC.y_total_sent_sms_range(d[0]) - GC.y_total_sent_sms_range(d[1]))
             .attr("width", GC.Width / Object.keys(dataFilteredWeek).length);
 
+        GC.setUpOperators()
+        const tip = d3.tip()
+            .attr("class", "tooltip2")
+            .attr("id", "tooltip2")
+            .html(d => {
+                let num = d.data[`${GC.op}_sent`],
+                    total = d.data.total_sent,
+                    content = `<div>${GC.op} ${num}</div><div>Total ${total}</div>`; 
+                return content;
+            })
+        
+        GC.total_sent_sms_graph.call(tip)
+
+        sentLayer10min
+            .selectAll("rect")
+            .on("mouseover", (d, i, n) => {
+                // Get color of hovered rect
+                let rgb = d3.select(n[i]).style("fill")
+                // Get color components from an rgb string
+                rgb = rgb.substring(4, rgb.length-1).replace(/ /g, '').split(',');
+                // Cast strings in array to int
+                rgb = rgb.map((x) =>parseInt(x));
+                let hex = GC.rgbToHex(...rgb)
+                GC.op = GC.legendColorToOperator(hex)
+                tip.show(d, n[i]).attr("id","here").style("color", hex)
+            })
+            .on("mouseout", (d, i, n) => {
+                tip.hide()
+            })
+
         //Add the X Axis for the total sent sms graph
         GC.total_sent_sms_graph
             .append("g")
