@@ -11,6 +11,7 @@ class GC {
         GC.TIMEFRAME_MONTH = 30;
         GC.isYLimitReceivedManuallySet = false;
         GC.isYLimitSentManuallySet = false;
+        GC.isYLimitFailedManuallySet = false;
         GC.dayDateFormat = d3.timeFormat("%Y-%m-%d");
         GC.dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a");
         GC.fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
@@ -163,8 +164,13 @@ class GC {
     }
 
     static drawFailedMsgGraph() {
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        if (GC.isYLimitFailedManuallySet == false) {
+            yLimitFailed = d3.max(dataFilteredWeek, d => d.total_errored);
+        }
+        console.log(`failed ${yLimitFailed}`)
         // set scale domain for failed graph
-        GC.y_total_failed_sms.domain([0, d3.max(GC.data, d => d.total_errored)]);
+        GC.y_total_failed_sms.domain([0, yLimitReceived]);
         GC.xMin = d3.min(GC.data, d => new Date(d.day));
         GC.xMax = d3.max(GC.data, d => GC.addOneDayToDate(d.day));
         GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
