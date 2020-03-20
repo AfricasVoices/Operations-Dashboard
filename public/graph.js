@@ -652,10 +652,7 @@ class GC {
             .attr("class", "card")
             .html(d => {
                 let num = d.data[`${GC.op}_received`]
-                let content = `<div class="card">
-                    <p>${GC.op}</p>
-                    <p>${num}</p>
-                </div>`
+                let content = `<div>${GC.op} ${num}</div>`  
                 return content;
             })
         
