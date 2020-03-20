@@ -165,6 +165,10 @@ class GC {
             .text("No. of Outgoing Message (s)");
     }
 
+    static setUpCalenderView() {
+
+    }
+    
     static drawFailedMsgGraph() {
         // set scale domain for failed graph
         GC.y_total_failed_sms.domain([0, d3.max(GC.data, d => d.total_errored)]);
