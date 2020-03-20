@@ -120,9 +120,6 @@ class GC {
         GC.y_total_received_sms_range = d3.scaleLinear().range([GC.Height, 0]);
         GC.y_total_sent_sms_range = d3.scaleLinear().range([GC.Height, 0]);
         GC.y_total_failed_sms = d3.scaleLinear().range([GC.Height, 0]);
-        // GC.tip = d3.tip()
-        // .attr("class", "card")
-        // .html(d => "<p>Hello there</p>")
 
         // GC.total_received_sms_graph.call(GC.tip)
 
@@ -366,6 +363,52 @@ class GC {
         }
     }
 
+    // Performs RGB to hex conversion and add any required zero padding
+    static componentToHex(c) {
+        var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+        
+    static rgbToHex(r, g, b) {
+        return "#" + GC.componentToHex(r) + GC.componentToHex(g) + GC.componentToHex(b);
+    }
+
+    static setUpOperators() {
+        GC.operators_identity = {
+            NC: "#31cece",
+            telegram: "#f032e6",
+            golis: "#f58231",
+            hormud: "#3cb44b",
+            nationlink: "#cccc00",
+            somnet: "#4363d8",
+            somtel:  "#800000",
+            telegram: "#f032e6",
+            telesom:  "#911eb4",
+            Other:  "#e6194b"
+        }
+    
+        GC.operators_identity2 = {
+            NC: "#31cece",
+            telegram: "#3cb44b",
+            "kenyan telephone": "#f58231",
+        }
+
+    }
+
+    static legendColorToOperator(color) {
+        let operators = [];
+        let key;
+        GC.receivedKeys.forEach(key => {
+            operators.push(key.split("_")[0])
+        })
+        if (GC.projectName == "IMAQAL" || GC.projectName == "IOM") {
+            key = Object.keys(GC.operators_identity).find(key => GC.operators_identity[key] === color);
+        } else {
+            key = Object.keys(GC.operators_identity2).find(key => GC.operators_identity2[key] === color);
+        }  
+        return key
+    }
+    
     static draw10MinReceivedGraph(dataFilteredWeek, yLimitReceived) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (GC.isYLimitReceivedManuallySet == false) {
@@ -586,73 +629,14 @@ class GC {
             )
             .attr("width", GC.Width / Object.keys(GC.dailyReceivedTotal).length);
 
-        // Performs RGB to hex conversion and add any required zero padding
-        function componentToHex(c) {
-            var hex = c.toString(16);
-                return hex.length == 1 ? "0" + hex : hex;
-            }
-            
-        function rgbToHex(r, g, b) {
-            return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-        }
-
-        let operators_identity = {
-            NC: "#31cece",
-            telegram: "#f032e6",
-            golis: "#f58231",
-            hormud: "#3cb44b",
-            nationlink: "#cccc00",
-            somnet: "#4363d8",
-            somtel:  "#800000",
-            telegram: "#f032e6",
-            telesom:  "#911eb4",
-            Other:  "#e6194b"
-        };
-
-        let operators_identity2 = {
-            NC: "#31cece",
-            telegram: "#3cb44b",
-            "kenyan telephone": "#f58231",
-        }
-
-        function legendColorToOperator(color) {
-            let operators = [];
-            let key;
-            GC.receivedKeys.forEach(key => {
-                operators.push(key.split("_")[0])
-            })
-            if (GC.projectName == "IMAQAL" || GC.projectName == "IOM") {
-                key = Object.keys(operators_identity).find(key => operators_identity[key] === color);
-            } else {
-                key = Object.keys(operators_identity2).find(key => operators_identity2[key] === color);
-            }  
-            return key
-        }
-
-        const handleMouseOver = (d, i, n) => {
-            // Get color of hovered rect
-            // let rgb = d3.select(n[i]).style("fill")
-            // Get color components from an rgb string
-            // rgb = rgb.substring(4, rgb.length-1).replace(/ /g, '').split(',');
-            // Cast strings in array to int
-            // rgb = rgb.map((x) =>parseInt(x));
-            // let hex = rgbToHex(...rgb)
-            // let op = legendColorToOperator(hex)
-            // console.log(op)
-            console.log(d)
-        }
-
-        const handleMouseOut = (d, i, n) => {
-            console.log(n)
-        }
-
-        // const tip = d3.tip().html(function(d) { console.log(d); return d; });
-
+        GC.setUpOperators()
         const tip = d3.tip()
-            .attr("class", "card")
+            .attr("class", "tooltip2")
+            .attr("id", "tooltip2")
             .html(d => {
-                let num = d.data[`${GC.op}_received`]
-                let content = `<div>${GC.op} ${num}</div>`  
+                let num = d.data[`${GC.op}_received`],
+                    total = d.data.total_received,
+                    content = `<div>${GC.op} ${num}</div><div>Total ${total}</div>`; 
                 return content;
             })
         
@@ -667,15 +651,12 @@ class GC {
                 rgb = rgb.substring(4, rgb.length-1).replace(/ /g, '').split(',');
                 // Cast strings in array to int
                 rgb = rgb.map((x) =>parseInt(x));
-                let hex = rgbToHex(...rgb)
-                GC.op = legendColorToOperator(hex)
-        
-                tip.show(d, n[i])
-                handleMouseOver(d, i, n)
+                let hex = GC.rgbToHex(...rgb)
+                GC.op = GC.legendColorToOperator(hex)
+                tip.show(d, n[i]).attr("id","here").style("color", hex)
             })
             .on("mouseout", (d, i, n) => {
                 tip.hide()
-                handleMouseOut(d, i, n)
             })
 
         //Add the X Axis for the total received sms graph
