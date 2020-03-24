@@ -44,14 +44,11 @@ class GC {
             .rollup(v => {
                 let groupedData = {};
                 GC.operators.forEach(operator => {
-                    groupedData[`${operator}_${messageDirection}`] = d3.sum(
-                        v,
+                    groupedData[`${operator}_${messageDirection}`] = d3.sum(v,
                         d => d[`${operator}_${messageDirection}`]
                     );
                 });
-                groupedData[`total_${messageDirection}`] = d3.sum(
-                    v,
-                    d => d[`total_${messageDirection}`]
+                groupedData[`total_${messageDirection}`] = d3.sum(v,d => d[`total_${messageDirection}`]
                 );
                 return groupedData;
             })
@@ -176,12 +173,9 @@ class GC {
         GC.total_failed_sms_graph
             .append("g")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.failed_messages_x_axis_range)
+            .call(d3.axisBottom(GC.failed_messages_x_axis_range)
                     .ticks(5)
-                    .tickFormat(GC.dayDateFormat)
-            )
+                    .tickFormat(GC.dayDateFormat))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -412,12 +406,9 @@ class GC {
             .append("g")
             .attr("class", "redrawElementReceived")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.x)
+            .call(d3.axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(GC.dayDateFormat)
-            )
+                    .tickFormat(GC.dayDateFormat))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -498,12 +489,9 @@ class GC {
             .append("g")
             .attr("class", "redrawElementSent")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.x)
+            .call(d3.axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(GC.dayDateFormat)
-            )
+                    .tickFormat(GC.dayDateFormat))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -586,12 +574,9 @@ class GC {
             .append("g")
             .attr("class", "redrawElementReceived")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.x)
+            .call(d3.axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(GC.dayDateFormatWithWeekdayName)
-            )
+                    .tickFormat(GC.dayDateFormatWithWeekdayName))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -672,12 +657,9 @@ class GC {
             .append("g")
             .attr("class", "redrawElementSent")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.x)
+            .call(d3.axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(GC.dayDateFormatWithWeekdayName)
-            )
+                    .tickFormat(GC.dayDateFormatWithWeekdayName))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
