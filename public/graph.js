@@ -713,7 +713,6 @@ class GC {
         offsetWeek.setDate(offsetWeek.getDate() - GC.TIMEFRAME_WEEK);
         offsetMonth.setDate(offsetMonth.getDate() - GC.TIMEFRAME_MONTH);
 
-        // Set default y-axis limits
         let dataFilteredWeek = GC.data.filter(a => a.datetime > offsetWeek),
             dataFilteredMonth = GC.data.filter(a => a.datetime > offsetMonth);
 
@@ -728,6 +727,7 @@ class GC {
         GC.setUpGraphLegend();
         GC.drawFailedMsgGraph();
 
+        // Set default y-axis limits
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
             yLimitSent = d3.max(GC.dailySentTotal, d => d.total_sent),
