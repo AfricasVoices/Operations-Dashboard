@@ -337,7 +337,7 @@ class GC {
     }
 
     static setLastUpdatedAlert() {
-        // Calculate time diff bw current and lastUpdateTimeStamp
+        // Calculate time diff between current and lastUpdateTimeStamp
         let currentTime = new Date(),
             difference_ms = (currentTime.getTime() - GC.lastUpdateTimeStamp.getTime()) / 60000,
             difference_minutes = Math.floor(difference_ms % 60);
