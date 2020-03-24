@@ -175,21 +175,18 @@ class GraphController {
             total_failed_path = total_failed_sms_graph.append("path");
 
         let operators_identity = {
-                NC: "#31cece",
-                telegram: "#f032e6",
-                "kenyan telephone": "#3cb44b"
+            NC: "#31CECE",
+            golis: "#F58231",
+            hormud: "#3CB44B",
+            "kenyan telephone": "#3CB44B",
+            nationlink: "#CCCC00",
+            other: "#E6194B",
+            somnet: "#4363D8",
+            somtel: "#800000",
+            telegram: "#F032E6",
+            telesom: "#911EB4"
+
             },
-            list_of_unique_colors = [
-                "#31cece",
-                "#f58231",
-                "#3cb44b",
-                "#CCCC00",
-                "#4363d8",
-                "#800000",
-                "#f032e6",
-                "#911eb4",
-                "#e6194B"
-            ],
             color_scheme = [],
             operators_with_color_identity = Object.keys(operators_identity);
 
@@ -197,17 +194,6 @@ class GraphController {
         operators.forEach((operator, index) => {
             if (operators_with_color_identity.includes(operator)) {
                 color_scheme[index] = operators_identity[operator];
-            }
-        });
-
-        // If operator doesn't have a color identity assign a unique color
-        list_of_unique_colors.forEach((color, index) => {
-            if (!color_scheme.includes(color)) {
-                if (color_scheme[index] == undefined) {
-                    color_scheme[index] = color;
-                } else {
-                    color_scheme.push(color);
-                }
             }
         });
 
