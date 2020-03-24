@@ -717,11 +717,13 @@ class GC {
         let dataFilteredWeek = GC.data.filter(a => a.datetime > offsetWeek),
             dataFilteredMonth = GC.data.filter(a => a.datetime > offsetMonth);
 
+        // Process Data
         GC.GroupDataByDay(dataFilteredMonth, "received");
         GC.FlattenNestedDataforStacking("received");
         GC.GroupDataByDay(dataFilteredMonth, "sent");
         GC.FlattenNestedDataforStacking("sent");
         GC.stackDataBasedOnOperatorAndDirection();
+
         GC.setUpGraphLayout();
         GC.setUpGraphLegend();
         GC.drawFailedMsgGraph();
