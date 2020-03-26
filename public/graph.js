@@ -761,7 +761,7 @@ class GC {
 
         // Draw graphs according to selected time unit
         if (GC.chartTimeUnit == "1day") {
-            updateViewOneDay(yLimitReceived, yLimitSent);
+            updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         } else if (GC.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
@@ -784,11 +784,12 @@ class GC {
             GC.draw10MinSentGraph(dataFilteredWeek, yLimitSentFiltered);
         }
 
-        function updateViewOneDay(yLimitReceived, yLimitSent) {
+        function updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
             GC.drawOneDayReceivedGraph(yLimitReceived);
             GC.drawOneDaySentGraph(yLimitSent);
+            GC.drawFailedMsgGraph(yLimitFailed)
         }
 
         // Update chart time unit on user selection
