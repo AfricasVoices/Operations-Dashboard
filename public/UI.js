@@ -169,7 +169,13 @@ class UIController {
                 </div>
                 <div class="card shadow total_sent_sms_graph"></div>
             </section> 
-            <div class="card shadow total_failed_sms_graph my-4"></div> 
+            <section>
+                <div class="d-md-flex justify-content-start mt-4 mb-3">
+                    <span class="font-weight-bold" type="text">Set the maximum number of failed messages you want to see</span> 
+                    <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitFailed" step="500" min="10"></div>
+                </div>
+                <div class="card shadow total_failed_sms_graph my-4"></div> 
+            </section>
         </div> `,
             // Insert the HTML into the DOM
             newHtml = html.replace("%collection%", title);
