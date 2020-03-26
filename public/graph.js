@@ -749,7 +749,6 @@ class GC {
 
         GC.setUpGraphLayout();
         GC.setUpGraphLegend();
-        // GC.drawFailedMsgGraph(); 
 
         // Set default y-axis limits
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
