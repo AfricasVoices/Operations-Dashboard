@@ -181,7 +181,7 @@ class GC {
             .text("No. of Outgoing Message (s)");
     }
 
-    static drawFailedMsgGraph(yLimitFailed) {
+    static drawOneDayFailedGraph(yLimitFailed) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (GC.isYLimitFailedManuallySet == false) {
             yLimitFailed = d3.max(GC.dailyFailedTotal, d => d.total_errored);
@@ -787,7 +787,7 @@ class GC {
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
             GC.drawOneDayReceivedGraph(yLimitReceived);
             GC.drawOneDaySentGraph(yLimitSent);
-            GC.drawFailedMsgGraph(yLimitFailed)
+            GC.drawOneDayFailedGraph(yLimitFailed)
         }
 
         // Update chart time unit on user selection
