@@ -91,6 +91,15 @@ class GC {
         } else if (messageDirection == "sent") {
             nestedData = GC.dailySentTotal = nestedData;
         }
+        for (let entry in GC.dailyFailedTotal) {
+            let valueList = GC.dailyFailedTotal[entry].value;
+            for (let key in valueList) {
+                GC.dailyFailedTotal[entry][key] = valueList[key];
+            }
+            GC.dailyFailedTotal[entry]["day"] = GC.dailyFailedTotal[entry].key;
+            delete GC.dailyFailedTotal[entry]["value"];
+            delete GC.dailyFailedTotal[entry]["key"];
+        }
     }
 
     static stackDataBasedOnOperatorAndDirection() {
