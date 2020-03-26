@@ -756,6 +756,7 @@ class GC {
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
             yLimitSent = d3.max(GC.dailySentTotal, d => d.total_sent),
             yLimitSentFiltered = d3.max(dataFilteredWeek, d => d.total_sent),
+            yLimitFailed = d3.max(GC.dailyFailedTotal, d => d.total_errored),
             yLimitFailedFiltered = d3.max(dataFilteredWeek, d => d.total_errored);
 
         // Draw graphs according to selected time unit
