@@ -181,10 +181,10 @@ class GC {
             .text("No. of Outgoing Message (s)");
     }
 
-    static drawFailedMsgGraph(dataFilteredWeek, yLimitFailed) {
+    static drawFailedMsgGraph(yLimitFailed) {
         // Set Y axis limit to max of daily values or to the value inputted by the user
         if (GC.isYLimitFailedManuallySet == false) {
-            yLimitFailed = d3.max(dataFilteredWeek, d => d.total_errored);
+            yLimitFailed = d3.max(GC.dailyFailedTotal, d => d.total_errored);
         }
         console.log(`failed ${yLimitFailed}`)
         // set scale domain for failed graph
