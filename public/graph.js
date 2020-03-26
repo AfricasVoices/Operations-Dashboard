@@ -186,7 +186,6 @@ class GC {
         if (GC.isYLimitFailedManuallySet == false) {
             yLimitFailed = d3.max(GC.dailyFailedTotal, d => d.total_errored);
         }
-        console.log(`failed ${yLimitFailed}`)
         // set scale domain for failed graph
         GC.y_total_failed_sms.domain([0, yLimitFailed]);
         GC.xMin = d3.min(GC.data, d => new Date(d.day));
