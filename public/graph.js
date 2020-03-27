@@ -215,7 +215,7 @@ class GC {
             .attr("r", 2)
             .attr("cx", d => GC.failed_messages_x_axis_range(new Date(d.datetime)))
             .attr("cy", d => GC.y_total_failed_sms(d.total_errored))
-            .attr("fill", "#000");
+            .attr("fill", "blue");
 
         GC.total_failed_sms_graph.selectAll("circle")
             .on("mouseover", (d, i, n) => {
@@ -242,7 +242,7 @@ class GC {
                 d3.select(n[i])
                     .transition().duration(100)
                     .attr("r", 2)
-                    .attr("fill", "#000")
+                    .attr("fill", "blue")
                 // Hide the dotted line group (style, opaccity)
                 dottedLines.style("opacity", 0);
             }) 
