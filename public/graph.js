@@ -1033,6 +1033,7 @@ class GC {
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
+            d3.select("#buttonYLimitFailed").property("value", yLimitFailedFiltered);
             GC.draw10MinReceivedGraph(dataFilteredWeek, yLimitReceivedFiltered);
             GC.draw10MinSentGraph(dataFilteredWeek, yLimitSentFiltered);
             GC.draw10MinFailedGraph(dataFilteredWeek, yLimitFailedFiltered);
