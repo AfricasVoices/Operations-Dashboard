@@ -195,7 +195,7 @@ class GC {
         GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
 
         d3.selectAll(".redrawElementFailed").remove();
-        d3.selectAll("#failedStack1day").remove();
+        d3.selectAll("#failedline1day").remove();
 
         // Create circles for objects
         const circles = GC.total_failed_sms_graph.selectAll("circle")
@@ -332,7 +332,7 @@ class GC {
         total_failed_path
             .data([GC.data])
             .attr("class", "line")
-            .attr("id", "failedStack1day")
+            .attr("id", "failedline1day")
             .attr("fill", "none")
             .style("stroke", "blue")
             .style("stroke-width", 1)
