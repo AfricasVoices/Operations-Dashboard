@@ -293,49 +293,6 @@ class GC {
         d3.select(".sentLegend").call(sentLegend);
     }
 
-    static updateReceivedChartLimit() {
-        // Get the value of the button
-        let ylimit = this.value;
-
-        GC.y_total_received_sms_range.domain([0, ylimit]);
-
-        // Add the Y Axis for the total received sms graph
-        GC.total_received_sms_graph
-            .selectAll(".axisSteelBlue")
-            .call(d3.axisLeft(GC.y_total_received_sms_range));
-
-        GC.receivedLayer
-            .selectAll("rect")
-            .data(d => d)
-            .attr("x", d => GC.x(d.data.datetime))
-            .attr("y", d => GC.y_total_received_sms_range(d[1]))
-            .attr(
-                "height",
-                d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
-            )
-            .attr("width", GC.Width / Object.keys(data).length);
-    }
-
-    static updateSentChartLimit() {
-        // Get the value of the button
-        let ylimit = this.value;
-
-        GC.y_total_sent_sms_range.domain([0, ylimit]);
-
-        // Add the Y Axis for the total sent sms graph
-        GC.total_sent_sms_graph
-            .selectAll(".axisSteelBlue")
-            .call(d3.axisLeft(GC.y_total_sent_sms_range));
-
-        GC.sentLayer
-            .selectAll("rect")
-            .data(d => d)
-            .attr("x", d => GC.x(d.data.datetime))
-            .attr("y", d => GC.y_total_sent_sms_range(d[1]))
-            .attr("height", d => GC.y_total_sent_sms_range(d[0]) - GC.y_total_sent_sms_range(d[1]))
-            .attr("width", GC.Width / Object.keys(data).length);
-    }
-
     static setLastUpdatedAlert() {
         // Calculate time diff between current and lastUpdateTimeStamp
         let currentTime = new Date(),
@@ -739,16 +696,6 @@ class GC {
         } else if (GC.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
-
-        // Add an event listener to the button created in the html part
-        d3.select("#buttonYLimitReceived").on("input", GC.updateReceivedChartLimit);
-        d3.select("#buttonYLimitSent")
-            .on("input", GC.updateSentChartLimit)
-            .attr("transform", `translate(${GC.Width - GC.Margin.right + 100},${GC.Margin.top})`)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "start")
-            .style("fill", "blue")
-            .text("Total Failed");
 
         // Set y-axis control button value and draw graphs
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered) {
