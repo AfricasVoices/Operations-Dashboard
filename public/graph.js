@@ -179,6 +179,15 @@ class GC {
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
+        // Y axis Label for the total failed sms graph
+        GC.total_failed_sms_graph
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - GC.Margin.left)
+            .attr("x", 0 - GC.Height / 2)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("No. of Failed Message (s)");
     }
 
     static drawOneDayFailedGraph(yLimitFailed) {
@@ -195,7 +204,8 @@ class GC {
         GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
 
         d3.selectAll(".redrawElementFailed").remove();
-        d3.selectAll("#failedline1day").remove();
+        d3.selectAll("#failedLine10min").remove();
+        d3.selectAll("#failedLine1day").remove();
 
         // Create circles for objects
         const circles = GC.total_failed_sms_graph.selectAll("circle")
@@ -250,6 +260,7 @@ class GC {
         //Add the X Axis for the total failed sms graph
         GC.total_failed_sms_graph
             .append("g")
+            .attr("class", "redrawElementFailed")
             .attr("transform", "translate(0," + GC.Height + ")")
             .call(d3.axisBottom(GC.failed_messages_x_axis_range)
                     .ticks(5)
@@ -264,6 +275,7 @@ class GC {
         //Add X axis label for the total failed sms graph
         GC.total_failed_sms_graph
             .append("text")
+            .attr("class", "redrawElementFailed")
             .attr(
                 "transform",
                 "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")"
@@ -278,25 +290,16 @@ class GC {
             .attr("class", "redrawElementFailed")
             .call(d3.axisLeft(GC.y_total_failed_sms));
 
-        // Y axis Label for the total failed sms graph
-        GC.total_failed_sms_graph
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - GC.Margin.left)
-            .attr("x", 0 - GC.Height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("No. of Failed Message (s)");
-
         // Total Failed Sms(s) graph title
         GC.total_failed_sms_graph
             .append("text")
+            .attr("class", "redrawElementFailed")
             .attr("x", GC.Width / 2)
             .attr("y", 0 - GC.Margin.top / 2)
             .attr("text-anchor", "middle")
             .style("font-size", "20px")
             .style("text-decoration", "bold")
-            .text("Total Failed Messages(s) / hr");
+            .text("Total Failed Messages(s) / day");
 
         // Label Lines for the total failed sms graph
         GC.total_failed_sms_graph.append("text");
@@ -332,7 +335,7 @@ class GC {
         total_failed_path
             .data([GC.data])
             .attr("class", "line")
-            .attr("id", "failedline1day")
+            .attr("id", "failedLine1day")
             .attr("fill", "none")
             .style("stroke", "blue")
             .style("stroke-width", 1)
@@ -358,11 +361,13 @@ class GC {
         GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
 
         d3.selectAll(".redrawElementFailed").remove();
-        d3.selectAll("#failedStack1day").remove();
+        d3.selectAll("#failedLine10min").remove();
+        d3.selectAll("#failedLine1day").remove();
 
         //Add the X Axis for the total failed sms graph
         GC.total_failed_sms_graph
             .append("g")
+            .attr("class", "redrawElementFailed")
             .attr("transform", "translate(0," + GC.Height + ")")
             .call(d3.axisBottom(GC.failed_messages_x_axis_range)
                     .ticks(5)
@@ -377,6 +382,7 @@ class GC {
         //Add X axis label for the total failed sms graph
         GC.total_failed_sms_graph
             .append("text")
+            .attr("class", "redrawElementFailed")
             .attr(
                 "transform",
                 "translate(" + GC.Width / 2 + " ," + (GC.Height + GC.Margin.top + 50) + ")"
@@ -391,25 +397,16 @@ class GC {
             .attr("class", "redrawElementFailed")
             .call(d3.axisLeft(GC.y_total_failed_sms));
 
-        // Y axis Label for the total failed sms graph
-        GC.total_failed_sms_graph
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - GC.Margin.left)
-            .attr("x", 0 - GC.Height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("No. of Failed Message (s)");
-
         // Total Failed Sms(s) graph title
         GC.total_failed_sms_graph
             .append("text")
+            .attr("class", "redrawElementFailed")
             .attr("x", GC.Width / 2)
             .attr("y", 0 - GC.Margin.top / 2)
             .attr("text-anchor", "middle")
             .style("font-size", "20px")
             .style("text-decoration", "bold")
-            .text("Total Failed Messages(s) / hr");
+            .text("Total Failed Messages(s) / 10 minutes");
 
         // Label Lines for the total failed sms graph
         GC.total_failed_sms_graph.append("text");
@@ -427,7 +424,7 @@ class GC {
         total_failed_path
             .data([dataFilteredWeek])
             .attr("class", "line")
-            .attr("id", "failedStack1day")
+            .attr("id", "failedLine10min")
             .style("stroke", "blue")
             .attr("d", GC.total_failed_line);
     }
