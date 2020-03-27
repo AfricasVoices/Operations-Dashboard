@@ -44,14 +44,11 @@ class GC {
             .rollup(v => {
                 let groupedData = {};
                 GC.operators.forEach(operator => {
-                    groupedData[`${operator}_${messageDirection}`] = d3.sum(
-                        v,
+                    groupedData[`${operator}_${messageDirection}`] = d3.sum(v,
                         d => d[`${operator}_${messageDirection}`]
                     );
                 });
-                groupedData[`total_${messageDirection}`] = d3.sum(
-                    v,
-                    d => d[`total_${messageDirection}`]
+                groupedData[`total_${messageDirection}`] = d3.sum(v,d => d[`total_${messageDirection}`]
                 );
                 return groupedData;
             })
@@ -178,12 +175,9 @@ class GC {
         GC.total_failed_sms_graph
             .append("g")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.failed_messages_x_axis_range)
+            .call(d3.axisBottom(GC.failed_messages_x_axis_range)
                     .ticks(5)
-                    .tickFormat(GC.dayDateFormat)
-            )
+                    .tickFormat(GC.dayDateFormat))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -345,7 +339,7 @@ class GC {
     }
 
     static setLastUpdatedAlert() {
-        // Calculate time diff bw current and lastUpdateTimeStamp
+        // Calculate time diff between current and lastUpdateTimeStamp
         let currentTime = new Date(),
             difference_ms = (currentTime.getTime() - GC.lastUpdateTimeStamp.getTime()) / 60000,
             difference_minutes = Math.floor(difference_ms % 60);
@@ -490,12 +484,9 @@ class GC {
             .append("g")
             .attr("class", "redrawElementReceived")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.x)
+            .call(d3.axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(GC.dayDateFormat)
-            )
+                    .tickFormat(GC.dayDateFormat))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -606,12 +597,9 @@ class GC {
             .append("g")
             .attr("class", "redrawElementSent")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.x)
+            .call(d3.axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(GC.dayDateFormat)
-            )
+                    .tickFormat(GC.dayDateFormat))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -724,12 +712,9 @@ class GC {
             .append("g")
             .attr("class", "redrawElementReceived")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.x)
+            .call(d3.axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(GC.dayDateFormatWithWeekdayName)
-            )
+                    .tickFormat(GC.dayDateFormatWithWeekdayName))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -841,12 +826,9 @@ class GC {
             .append("g")
             .attr("class", "redrawElementSent")
             .attr("transform", "translate(0," + GC.Height + ")")
-            .call(
-                d3
-                    .axisBottom(GC.x)
+            .call(d3.axisBottom(GC.x)
                     .ticks(d3.timeDay.every(1))
-                    .tickFormat(GC.dayDateFormatWithWeekdayName)
-            )
+                    .tickFormat(GC.dayDateFormatWithWeekdayName))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
@@ -901,19 +883,21 @@ class GC {
         offsetWeek.setDate(offsetWeek.getDate() - GC.TIMEFRAME_WEEK);
         offsetMonth.setDate(offsetMonth.getDate() - GC.TIMEFRAME_MONTH);
 
-        // Set default y-axis limits
         let dataFilteredWeek = GC.data.filter(a => a.datetime > offsetWeek),
             dataFilteredMonth = GC.data.filter(a => a.datetime > offsetMonth);
 
+        // Process Data
         GC.GroupDataByDay(dataFilteredMonth, "received");
         GC.FlattenNestedDataforStacking("received");
         GC.GroupDataByDay(dataFilteredMonth, "sent");
         GC.FlattenNestedDataforStacking("sent");
         GC.stackDataBasedOnOperatorAndDirection();
+
         GC.setUpGraphLayout();
         GC.setUpGraphLegend();
         GC.drawFailedMsgGraph();
 
+        // Set default y-axis limits
         let yLimitReceived = d3.max(GC.dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
             yLimitSent = d3.max(GC.dailySentTotal, d => d.total_sent),
