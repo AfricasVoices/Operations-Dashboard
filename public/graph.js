@@ -512,7 +512,8 @@ class GC {
         ];
         GC.color = d3.scaleOrdinal(color_scheme);
         let colorReceived = d3.scaleOrdinal(color_scheme).domain(GC.receivedKeys),
-            colorSent = d3.scaleOrdinal(color_scheme).domain(GC.sentKeys);
+            colorSent = d3.scaleOrdinal(color_scheme).domain(GC.sentKeys),
+            colorFailed = d3.scaleOrdinal(["blue"]).domain(["total_errored"])
 
         // Total received graph legend
         GC.total_received_sms_graph
@@ -549,69 +550,86 @@ class GC {
             .labels(GC.operators);
 
         d3.select(".sentLegend").call(sentLegend);
-    }
 
-    static updateReceivedChartLimit() {
-        // Get the value of the button
-        let ylimit = this.value;
-
-        GC.y_total_received_sms_range.domain([0, ylimit]);
-
-        // Add the Y Axis for the total received sms graph
-        GC.total_received_sms_graph
-            .selectAll(".axisSteelBlue")
-            .call(d3.axisLeft(GC.y_total_received_sms_range));
-
-        GC.receivedLayer
-            .selectAll("rect")
-            .data(d => d)
-            .attr("x", d => GC.x(d.data.datetime))
-            .attr("y", d => GC.y_total_received_sms_range(d[1]))
-            .attr(
-                "height",
-                d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
-            )
-            .attr("width", GC.Width / Object.keys(data).length);
-    }
-
-    static updateSentChartLimit() {
-        // Get the value of the button
-        let ylimit = this.value;
-
-        GC.y_total_sent_sms_range.domain([0, ylimit]);
-
-        // Add the Y Axis for the total sent sms graph
-        GC.total_sent_sms_graph
-            .selectAll(".axisSteelBlue")
-            .call(d3.axisLeft(GC.y_total_sent_sms_range));
-
-        GC.sentLayer
-            .selectAll("rect")
-            .data(d => d)
-            .attr("x", d => GC.x(d.data.datetime))
-            .attr("y", d => GC.y_total_sent_sms_range(d[1]))
-            .attr("height", d => GC.y_total_sent_sms_range(d[0]) - GC.y_total_sent_sms_range(d[1]))
-            .attr("width", GC.Width / Object.keys(data).length);
-    }
-
-    static updateFailedChartLimit() {
-        // Get the value of the button
-        let yLimit = this.value;
-
-        GC.y_total_failed_sms.domain([0, yLimit]);
-
-        // Add the Y Axis for the total failed sms graph
+        // Total failed graph legend
         GC.total_failed_sms_graph
-            .selectAll(".axisSteelBlue")
-            .call(d3.axisLeft(GC.y_total_failed_sms))
+            .append("g")
+            .attr("class", "failedLegend")
+            .attr(
+                "transform",
+                `translate(${GC.Width - GC.Margin.right + 110},${GC.Margin.top - 30})`
+            );
+        let failedLegend = d3
+            .legendColor()
+            .shapeWidth(12)
+            .orient("vertical")
+            .scale(colorFailed)
+            .labels(["total failed"]);
 
-        // Define line paths for total failed sms(s)
-        GC.total_failed_line = d3
-                .line()
-                .curve(d3.curveLinear)
-                .x(d => GC.failed_messages_x_axis_range(new Date(d.datetime)))
-                .y(d => GC.y_total_failed_sms(d.total_errored));
+        d3.select(".failedLegend").call(failedLegend);
     }
+
+    // static updateReceivedChartLimit() {
+    //     // Get the value of the button
+    //     let ylimit = this.value;
+
+    //     GC.y_total_received_sms_range.domain([0, ylimit]);
+
+    //     // Add the Y Axis for the total received sms graph
+    //     GC.total_received_sms_graph
+    //         .selectAll(".axisSteelBlue")
+    //         .call(d3.axisLeft(GC.y_total_received_sms_range));
+
+    //     GC.receivedLayer
+    //         .selectAll("rect")
+    //         .data(d => d)
+    //         .attr("x", d => GC.x(d.data.datetime))
+    //         .attr("y", d => GC.y_total_received_sms_range(d[1]))
+    //         .attr(
+    //             "height",
+    //             d => GC.y_total_received_sms_range(d[0]) - GC.y_total_received_sms_range(d[1])
+    //         )
+    //         .attr("width", GC.Width / Object.keys(data).length);
+    // }
+
+    // static updateSentChartLimit() {
+    //     // Get the value of the button
+    //     let ylimit = this.value;
+
+    //     GC.y_total_sent_sms_range.domain([0, ylimit]);
+
+    //     // Add the Y Axis for the total sent sms graph
+    //     GC.total_sent_sms_graph
+    //         .selectAll(".axisSteelBlue")
+    //         .call(d3.axisLeft(GC.y_total_sent_sms_range));
+
+    //     GC.sentLayer
+    //         .selectAll("rect")
+    //         .data(d => d)
+    //         .attr("x", d => GC.x(d.data.datetime))
+    //         .attr("y", d => GC.y_total_sent_sms_range(d[1]))
+    //         .attr("height", d => GC.y_total_sent_sms_range(d[0]) - GC.y_total_sent_sms_range(d[1]))
+    //         .attr("width", GC.Width / Object.keys(data).length);
+    // }
+
+    // static updateFailedChartLimit() {
+    //     // Get the value of the button
+    //     let yLimit = this.value;
+
+    //     GC.y_total_failed_sms.domain([0, yLimit]);
+
+    //     // Add the Y Axis for the total failed sms graph
+    //     GC.total_failed_sms_graph
+    //         .selectAll(".axisSteelBlue")
+    //         .call(d3.axisLeft(GC.y_total_failed_sms))
+
+    //     // Define line paths for total failed sms(s)
+    //     GC.total_failed_line = d3
+    //             .line()
+    //             .curve(d3.curveLinear)
+    //             .x(d => GC.failed_messages_x_axis_range(new Date(d.datetime)))
+    //             .y(d => GC.y_total_failed_sms(d.total_errored));
+    // }
 
     static setLastUpdatedAlert() {
         // Calculate time diff between current and lastUpdateTimeStamp
@@ -1019,15 +1037,9 @@ class GC {
         }
 
         // Add an event listener to the button created in the html part
-        d3.select("#buttonYLimitReceived").on("input", GC.updateReceivedChartLimit);
-        d3.select("#buttonYLimitSent")
-            .on("input", GC.updateSentChartLimit)
-            .attr("transform", `translate(${GC.Width - GC.Margin.right + 100},${GC.Margin.top})`)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "start")
-            .style("fill", "blue")
-            .text("Total Failed");
-        d3.select("#buttonYLimitFailed").on("input", GC.updateFailedChartLimit)
+        // d3.select("#buttonYLimitReceived").on("input", GC.updateReceivedChartLimit);
+        // d3.select("#buttonYLimitSent").on("input", GC.updateSentChartLimit)
+        // d3.select("#buttonYLimitFailed").on("input", GC.updateFailedChartLimit)
 
         // Set y-axis control button value and draw graphs
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
