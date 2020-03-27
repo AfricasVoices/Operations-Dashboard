@@ -1015,7 +1015,7 @@ class GC {
         if (GC.chartTimeUnit == "1day") {
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         } else if (GC.chartTimeUnit == "10min") {
-            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
+            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         }
 
         // Add an event listener to the button created in the html part
