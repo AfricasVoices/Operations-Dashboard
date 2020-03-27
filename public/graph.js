@@ -199,9 +199,7 @@ class GC {
         }
         // set scale domain for failed graph
         GC.y_total_failed_sms.domain([0, yLimitFailed]);
-        GC.xMin = d3.min(GC.data, d => new Date(d.day));
-        GC.xMax = d3.max(GC.data, d => GC.addOneDayToDate(d.day));
-        GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
+        GC.failed_messages_x_axis_range.domain(d3.extent(GC.data, d => new Date(d.datetime)));
 
         d3.selectAll(".redrawElementFailed").remove();
         d3.selectAll("#failedLine10min").remove();
@@ -357,9 +355,7 @@ class GC {
         }
         // set scale domain for failed graph
         GC.y_total_failed_sms.domain([0, yLimitFailed]);
-        GC.xMin = d3.min(dataFilteredWeek, d => new Date(d.day));
-        GC.xMax = d3.max(dataFilteredWeek, d => GC.addOneDayToDate(d.day));
-        GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
+        GC.failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
 
         d3.selectAll(".redrawElementFailed").remove();
         d3.selectAll("#failedLine10min").remove();
