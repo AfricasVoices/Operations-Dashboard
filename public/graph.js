@@ -339,7 +339,12 @@ class GC {
             .attr("d", GC.total_failed_line);
     }
 
-    static draw10minFailedGraph(yLimitFailed) {
+    static draw10MinFailedGraph(dataFilteredWeek, yLimitFailed) {
+        // Set Y axis limit to max of daily values or to the value inputted by the user
+        if (GC.isYLimitFailedManuallySet == false) {
+            yLimitFailed = d3.max(dataFilteredWeek, d => d.total_sent);
+        }
+
         // Set Y axis limit to max of daily values or to the value inputted by the user
         let yLimitFailedTotal = d3.max(GC.dailyFailedTotal, d => d.total_errored);
 
@@ -348,8 +353,8 @@ class GC {
         }
         // set scale domain for failed graph
         GC.y_total_failed_sms.domain([0, yLimitFailed]);
-        GC.xMin = d3.min(GC.data, d => new Date(d.day));
-        GC.xMax = d3.max(GC.data, d => GC.addOneDayToDate(d.day));
+        GC.xMin = d3.min(dataFilteredWeek, d => new Date(d.day));
+        GC.xMax = d3.max(dataFilteredWeek, d => GC.addOneDayToDate(d.day));
         GC.failed_messages_x_axis_range.domain([GC.xMin, GC.xMax]);
 
         d3.selectAll(".redrawElementFailed").remove();
@@ -420,7 +425,7 @@ class GC {
 
         // update path data for total failed sms(s)
         total_failed_path
-            .data([GC.data])
+            .data([dataFilteredWeek])
             .attr("class", "line")
             .attr("id", "failedStack1day")
             .style("stroke", "blue")
@@ -960,11 +965,12 @@ class GC {
         d3.select("#buttonYLimitFailed").on("input", GC.updateFailedChartLimit)
 
         // Set y-axis control button value and draw graphs
-        function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered) {
+        function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
             GC.draw10MinReceivedGraph(dataFilteredWeek, yLimitReceivedFiltered);
             GC.draw10MinSentGraph(dataFilteredWeek, yLimitSentFiltered);
+            GC.draw10MinFailedGraph(dataFilteredWeek, yLimitFailedFiltered);
         }
 
         function updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed) {
@@ -979,7 +985,7 @@ class GC {
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             GC.chartTimeUnit = "10min";
-            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
+            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
@@ -1017,7 +1023,10 @@ class GC {
             if (GC.chartTimeUnit == "1day") {
                 yLimitFailed = this.value;
                 GC.drawOneDayFailedGraph(yLimitFailed);
-            } 
+            } else if (GC.chartTimeUnit == "10min") {
+                yLimitFailedFiltered = this.value;
+                GC.draw10MinFailedGraph(dataFilteredWeek, yLimitFailedFiltered);
+            }
         });
 
         // Update timestamp of update and reset formatting
