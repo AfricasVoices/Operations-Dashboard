@@ -262,8 +262,8 @@ class GC {
             .attr("class", "redrawElementFailed")
             .attr("transform", "translate(0," + GC.Height + ")")
             .call(d3.axisBottom(GC.failed_messages_x_axis_range)
-                    .ticks(5)
-                    .tickFormat(GC.dayDateFormat))
+                .ticks(d3.timeDay.every(1))
+                .tickFormat(GC.dayDateFormatWithWeekdayName))
             // Rotate axis labels
             .selectAll("text")
             .style("text-anchor", "end")
