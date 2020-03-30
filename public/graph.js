@@ -859,6 +859,156 @@ class GraphController {
                 .attr("d", total_failed_line);
         }
 
+        function draw10MinFailedGraph(yLimitFailed) {
+            // Set Y axis limit to max of daily values or to the value inputted by the user
+            if (isYLimitFailedManuallySet == false) {
+                yLimitFailed = d3.max(dataFilteredWeek, d => d.total_errored);
+            }
+    
+            // set scale domain for failed graph
+            y_total_failed_sms.domain([0, yLimitFailed]);
+            failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+    
+            d3.selectAll(".redrawElementFailed").remove();
+            d3.selectAll("#failedLine10min").remove();
+            d3.selectAll("#failedLine1day").remove();
+    
+            // Create circles for objects
+            const circles = total_failed_sms_graph.selectAll("circle")
+                .data(dataFilteredWeek);
+    
+            // Remove unwanted points
+            circles.exit().remove()
+    
+            // Update current Points
+            circles
+                .attr("cx", d => failed_messages_x_axis_range(new Date(d.datetime)))
+                .attr("cy", d => y_total_failed_sms(d.total_errored))
+    
+            // Add new points
+            circles.enter()
+                .append("circle")
+                .attr("class", "redrawElementFailed")
+                .attr("r", 2)
+                .attr("cx", d => failed_messages_x_axis_range(new Date(d.datetime)))
+                .attr("cy", d => y_total_failed_sms(d.total_errored))
+                .attr("fill", "blue");
+    
+            total_failed_sms_graph.selectAll("circle")
+                .on("mouseover", (d, i, n) => {
+                    d3.select(n[i])
+                        .transition().duration(100)
+                        .attr("r", 8)
+                        .attr("fill", "blue")
+                    // Set x dotted line coords (x1,x2,y1,y2)
+                    xDottedLine
+                        .attr("x1", failed_messages_x_axis_range(new Date(d.datetime)))
+                        .attr("x2", failed_messages_x_axis_range(new Date(d.datetime)))
+                        .attr("y1", Height)
+                        .attr("y2", y_total_failed_sms(d.total_errored))
+                    // Set y dotted line coords (x1,x2,y1,y2)
+                    yDottedLine
+                        .attr("x1", 0)
+                        .attr("x2", failed_messages_x_axis_range(new Date(d.datetime)))
+                        .attr("y1", y_total_failed_sms(d.total_errored))
+                        .attr("y2", y_total_failed_sms(d.total_errored))
+                    // Show the dotted line group (style, opaccity)
+                    dottedLines.style("opacity", 1);
+                })
+                .on("mouseleave", (d, i, n) => {
+                    d3.select(n[i])
+                        .transition().duration(100)
+                        .attr("r", 2)
+                        .attr("fill", "blue")
+                    // Hide the dotted line group (style, opaccity)
+                    dottedLines.style("opacity", 0);
+                }) 
+    
+            //Add the X Axis for the total failed sms graph
+            total_failed_sms_graph
+                .append("g")
+                .attr("class", "redrawElementFailed")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(failed_messages_x_axis_range)
+                    .ticks(d3.timeDay.every(1))
+                    .tickFormat(dayDateFormat))
+                // Rotate axis labels
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-65)");
+    
+            //Add X axis label for the total failed sms graph
+            total_failed_sms_graph
+                .append("text")
+                .attr("class", "redrawElementFailed")
+                .attr(
+                    "transform",
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                )
+                .style("text-anchor", "middle")
+                .text("Time (D:H:M:S)");
+    
+            // Add the Y Axis for the total failed sms graph
+            total_failed_sms_graph
+                .append("g")
+                .attr("class", "axisSteelBlue")
+                .attr("class", "redrawElementFailed")
+                .call(d3.axisLeft(y_total_failed_sms));
+    
+            // Total Failed Sms(s) graph title
+            total_failed_sms_graph
+                .append("text")
+                .attr("class", "redrawElementFailed")
+                .attr("x", Width / 2)
+                .attr("y", 0 - Margin.top / 2)
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("text-decoration", "bold")
+                .text("Total Failed Messages(s) / 10 minutes");
+    
+            // Label Lines for the total failed sms graph
+            total_failed_sms_graph.append("text");
+    
+            // Define line paths for total failed sms(s)
+            let total_failed_line2 = d3
+                    .line()
+                    .curve(d3.curveLinear)
+                    .x(d => failed_messages_x_axis_range(new Date(d.datetime)))
+                    .y(d => y_total_failed_sms(d.total_errored));
+    
+            // Create line path element for failed line graph
+            let total_failed_path = total_failed_sms_graph.append("path");
+    
+            // Create dotted line group and append to graph
+            const dottedLines = total_failed_sms_graph.append("g")
+                .attr("class", "lines")
+                .attr("opacity", 0)
+    
+            // Create x dotted line and append to dotted line group
+            const xDottedLine = dottedLines.append("line")
+                .attr("stroke", "#aaa")
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", 4);
+    
+            // Create y dotted line and append to dotted line group
+            const yDottedLine = dottedLines.append("line")
+                .attr("stroke", "#aaa")
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", 4);
+    
+            // update path data for total failed sms(s)
+            total_failed_path
+                .data([dataFilteredWeek])
+                .attr("class", "line")
+                .attr("id", "failedLine10min")
+                .attr("fill", "none")
+                .style("stroke", "blue")
+                .style("stroke-width", 1)
+                .attr("d", total_failed_line2);
+        }
+
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             GraphController.chartTimeUnit = "10min";
