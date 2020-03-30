@@ -203,7 +203,8 @@ class GraphController {
             ],
             color = d3.scaleOrdinal(color_scheme),
             colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys),
-            colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys);
+            colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys),
+            colorFailed = d3.scaleOrdinal(["blue"]).domain(["total_errored"]);
 
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
@@ -274,6 +275,23 @@ class GraphController {
             .labels(operators);
 
         d3.select(".sentLegend").call(sentLegend);
+
+        // Total failed graph legend
+        total_failed_sms_graph
+            .append("g")
+            .attr("class", "failedLegend")
+            .attr(
+                "transform",
+                `translate(${Width - Margin.right + 110},${Margin.top - 30})`
+            );
+        let failedLegend = d3
+            .legendColor()
+            .shapeWidth(12)
+            .orient("vertical")
+            .scale(colorFailed)
+            .labels(["total failed"]);
+
+        d3.select(".failedLegend").call(failedLegend);
 
         function updateReceivedChartLimit() {
             // Get the value of the button
