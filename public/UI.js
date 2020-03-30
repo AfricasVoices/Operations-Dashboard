@@ -140,7 +140,10 @@ class UIController {
 
     static addGraphs(title) {
         let DOMstrings = UIController.getDOMstrings(),
-            html = `<div class="container"> 
+            script = document.createElement('script');
+        script.setAttribute('src','scroll.js');
+        document.head.appendChild(script);
+        let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
                 <div>
                     <span class="txt-brown my-auto title"><b>%collection%</b></span>
@@ -198,7 +201,7 @@ class UIController {
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div> `,
             // Insert the HTML into the DOM
             newHtml = html.replace("%collection%", title);
