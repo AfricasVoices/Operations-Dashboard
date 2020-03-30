@@ -4,4 +4,4 @@ $('.accordion').on('shown.bs.collapse', function () {
         scrollTop: 10000
     }, 600); 
         
-}); 
+});
