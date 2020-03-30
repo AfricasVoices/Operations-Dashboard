@@ -87,7 +87,7 @@ class UIController {
                                     </tr>
                                     <tr>
                                         <th scope="row">WS %</th>
-                                        <td></td>
+                                        <td>Percentage of Wrong Scheme messages</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Not Coded messages</th>
@@ -95,7 +95,7 @@ class UIController {
                                     </tr>
                                     <tr>
                                         <th scope="row">NC %</th>
-                                        <td></td>
+                                        <td>Percentage of Not Coded messages</td>
                                     </tr>
                                 </tbody>
                             </table>
