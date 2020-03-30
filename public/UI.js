@@ -63,7 +63,7 @@ class UIController {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <th scope="row">Dataset</th>
+                                        <th scope="row">The collection of messages for a given radio episode or survey</th>
                                         <td></td>
                                     </tr>
                                     <tr>
