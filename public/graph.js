@@ -221,7 +221,7 @@ class GraphController {
 
         // Draw graphs according to selected time unit
         if (GraphController.chartTimeUnit == "1day") {
-            updateViewOneDay(yLimitReceived, yLimitSent);
+            updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         } else if (GraphController.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
@@ -355,8 +355,10 @@ class GraphController {
         function updateViewOneDay(yLimitReceived, yLimitSent) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
+            d3.select("#buttonYLimitFailed").property("value", yLimitFailed);
             drawOneDayReceivedGraph(yLimitReceived);
             drawOneDaySentGraph(yLimitSent);
+            drawOneDayFailedGraph(yLimitFailed);
         }
 
         function draw10MinReceivedGraph(yLimitReceived) {
@@ -890,6 +892,15 @@ class GraphController {
                 yLimitSentFiltered = this.value;
                 draw10MinSentGraph(yLimitSentFiltered);
             }
+        });
+
+        // Draw failed graph with user-selected y-axis limit
+        d3.select("#buttonYLimitFailed").on("input", function() {
+            isYLimitFailedManuallySet = true;
+            if (GraphController.chartTimeUnit == "1day") {
+                yLimitFailed = this.value;
+                drawOneDayFailedGraph(yLimitFailed);
+            } 
         });
 
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
