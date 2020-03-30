@@ -87,7 +87,7 @@ class UIController {
                                     </tr>
                                     <tr>
                                         <th scope="row">WS %</th>
-                                        <td>Percentage of Wrong Scheme messages</td>
+                                        <td>Shows the percentage of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Not Coded messages</th>
