@@ -108,6 +108,17 @@ class GraphController {
             delete dailySentTotal[entry]["key"];
         }
 
+        // Group failed data by day
+        let dailyFailedTotal = d3
+            .nest()
+            .key(d => d.day)
+            .rollup(v => {
+                let failedData = {};
+                failedData["total_errored"] = d3.sum(v,d => d.total_errored);
+                return failedData;
+            })
+            .entries(dataFilteredMonth);
+
         // Create keys to stack by based on operator and direction
         let receivedKeys = [],
             sentKeys = [],
