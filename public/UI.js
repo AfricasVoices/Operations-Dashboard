@@ -170,24 +170,35 @@ class UIController {
                 <div class="card shadow total_sent_sms_graph"></div>
             </section> 
             <div class="card shadow total_failed_sms_graph my-4"></div> 
-            <div class="card m-2">
-                <p class="h5 text-center card-title text-uppercase"><u>Threats to Validity</u></p>
-                <div class="card-text">
-                    <p><strong>The outbound and failed messages graphs may show underestimates when TextIt is under outbound load</strong><br>
-                    This is has two causes:
-                    <ol>
-                        <li>TextIt has to rate-limit outbound messages to avoid problems with the MNOs being unable to handle a large number of requests over a short period.</li>
-                        <li>We can only query messages in TextIt by created_on date, not modified_on date.</li>
-                    </ol>
-                    Combined, this means it’s too expensive for us to get the status of all the queued messages, because we’d have to pull 10s of thousands of messages from the past few hours every 10 minutes, which TextIt can’t deliver. As a result, TextIt will only show the first few minutes of a burst. We mitigate this by running an expensive recount of the previous day nightly, so that previous days should always be unaffected by this issue.</p>
-                    
-                    <p><strong>There is a lag between when a message is sent/received by TextIt and when it shows up on the dashboards, typically by up to 10-15 minutes.</strong><br>
-                    This is because messages are counted in 10 minute blocks, and at the end of each 10 minute block only.</p>
-                
-                    <p><strong>Total failures are reported based only on the response received by the aggregator. </strong><br>
-                    Therefore the failures graph may underestimate if the aggregator reports a success but the MNO fails to deliver the message to the receipient, or show an overestimate if the aggregator delivers messages but fails to respond with a success status. Vice versa for total outbound messages.</p>
+            <div class="accordion" id="accordionExample">
+                <div id="headingOne">
+                    <h2 class="mb-2">
+                        <button class="btn btn-brown" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Threats to Validity
+                        </button>
+                    </h2>
                 </div>
-            </div>
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card">
+                        <p class="h5 text-center card-title text-uppercase"><u>Threats to Validity</u></p>
+                        <div class="card-text">
+                            <p><strong>The outbound and failed messages graphs may show underestimates when TextIt is under outbound load</strong><br>
+                            This is has two causes:
+                            <ol>
+                                <li>TextIt has to rate-limit outbound messages to avoid problems with the MNOs being unable to handle a large number of requests over a short period.</li>
+                                <li>We can only query messages in TextIt by created_on date, not modified_on date.</li>
+                            </ol>
+                            Combined, this means it’s too expensive for us to get the status of all the queued messages, because we’d have to pull 10s of thousands of messages from the past few hours every 10 minutes, which TextIt can’t deliver. As a result, TextIt will only show the first few minutes of a burst. We mitigate this by running an expensive recount of the previous day nightly, so that previous days should always be unaffected by this issue.</p>
+                            
+                            <p><strong>There is a lag between when a message is sent/received by TextIt and when it shows up on the dashboards, typically by up to 10-15 minutes.</strong><br>
+                            This is because messages are counted in 10 minute blocks, and at the end of each 10 minute block only.</p>
+                        
+                            <p><strong>Total failures are reported based only on the response received by the aggregator. </strong><br>
+                            Therefore the failures graph may underestimate if the aggregator reports a success but the MNO fails to deliver the message to the receipient, or show an overestimate if the aggregator delivers messages but fails to respond with a success status. Vice versa for total outbound messages.</p>
+                        </div>
+                    </div>
+                </div>
+            </div> 
         </div> `,
             // Insert the HTML into the DOM
             newHtml = html.replace("%collection%", title);
