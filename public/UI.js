@@ -26,7 +26,10 @@ class UIController {
 
     static addCodingProgressSection() {
         let DOMstrings = UIController.getDOMstrings(),
-            html = `<div class="container container-fluid table-responsive">
+            script = document.createElement('script');
+        script.setAttribute('src','scroll.js');
+        document.head.appendChild(script);
+        let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
                     <thead>
                         <tr class="table-heading">
@@ -47,7 +50,7 @@ class UIController {
                     <div class="card">
                         <div id="headingOne">
                             <h2 class="mb-0">
-                                <button onclick="window.scrollBy(0, 1000)" class="btn btn-brown" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <button class="btn btn-brown" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 Message Coding Table Header Definitions
                                 </button>
                             </h2>
