@@ -193,9 +193,7 @@ class GraphController {
 
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
-        let xMin = d3.min(data, d => new Date(d.day)),
-            xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
-        failed_messages_x_axis_range.domain([xMin, xMax]);
+        failed_messages_x_axis_range.domain(d3.extent(data, d => new Date(d.datetime)));
 
         let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
