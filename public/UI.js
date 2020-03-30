@@ -63,8 +63,8 @@ class UIController {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <th scope="row">The collection of messages for a given radio episode or survey</th>
-                                        <td></td>
+                                        <th scope="row">Dataset</th>
+                                        <td>The collection of messages for a given radio episode or survey</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Unique Texts</th>
