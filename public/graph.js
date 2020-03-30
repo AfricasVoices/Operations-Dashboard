@@ -166,15 +166,6 @@ class GraphController {
             // Format TimeStamp
             timeFormat = d3.timeFormat("%Y-%m-%d");
 
-        // Define line paths for total failed sms(s)
-        const total_failed_line = d3
-                .line()
-                .curve(d3.curveLinear)
-                .x(d => failed_messages_x_axis_range(new Date(d.datetime)))
-                .y(d => y_total_failed_sms(d.total_errored)),
-            // Create line path element for failed line graph
-            total_failed_path = total_failed_sms_graph.append("path");
-
         // custom color scheme
         let color_scheme = [
                 "#31cece",
@@ -229,63 +220,6 @@ class GraphController {
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
 
-        // update path data for total failed sms(s)
-        total_failed_path
-            .data([data])
-            .attr("class", "line")
-            .style("stroke", "blue")
-            .attr("d", total_failed_line);
-
-        //Add the X Axis for the total failed sms graph
-        total_failed_sms_graph
-            .append("g")
-            .attr("transform", "translate(0," + Height + ")")
-            .call(
-                d3
-                    .axisBottom(failed_messages_x_axis_range)
-                    .ticks(5)
-                    .tickFormat(timeFormat)
-            )
-            // Rotate axis labels
-            .selectAll("text")
-            .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em")
-            .attr("transform", "rotate(-65)");
-
-        //Add X axis label for the total failed sms graph
-        total_failed_sms_graph
-            .append("text")
-            .attr("transform", "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")")
-            .style("text-anchor", "middle")
-            .text("Time (D:H:M:S)");
-
-        // Add the Y Axis for the total failed sms graph
-        total_failed_sms_graph
-            .append("g")
-            .attr("class", "axisSteelBlue")
-            .call(d3.axisLeft(y_total_failed_sms));
-
-        // Y axis Label for the total failed sms graph
-        total_failed_sms_graph
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - Margin.left)
-            .attr("x", 0 - Height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("No. of Failed Message (s)");
-
-        // Total Failed Sms(s) graph title
-        total_failed_sms_graph
-            .append("text")
-            .attr("x", Width / 2)
-            .attr("y", 0 - Margin.top / 2)
-            .attr("text-anchor", "middle")
-            .style("font-size", "20px")
-            .style("text-decoration", "bold")
-            .text("Total Failed Messages(s) / hr");
-
         // Total received graph legend
         total_received_sms_graph
             .append("g")
@@ -315,9 +249,6 @@ class GraphController {
             .labels(operators);
 
         d3.select(".sentLegend").call(sentLegend);
-
-        // Label Lines for the total failed sms graph
-        total_failed_sms_graph.append("text");
 
         function updateReceivedChartLimit() {
             // Get the value of the button
