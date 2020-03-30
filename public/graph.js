@@ -223,7 +223,7 @@ class GraphController {
         if (GraphController.chartTimeUnit == "1day") {
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         } else if (GraphController.chartTimeUnit == "10min") {
-            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
+            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         }
 
         // Y axis Label for the total received sms graph
@@ -345,14 +345,16 @@ class GraphController {
             .text("Total Failed");
 
         // Set y-axis control button value and draw graphs
-        function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered) {
+        function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
+            d3.select("#buttonYLimitFailed").property("value", yLimitFailedFiltered);
             draw10MinReceivedGraph(yLimitReceivedFiltered);
             draw10MinSentGraph(yLimitSentFiltered);
+            draw10MinFailedGraph(yLimitFailedFiltered);
         }
 
-        function updateViewOneDay(yLimitReceived, yLimitSent) {
+        function updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
             d3.select("#buttonYLimitFailed").property("value", yLimitFailed);
@@ -1012,12 +1014,12 @@ class GraphController {
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             GraphController.chartTimeUnit = "10min";
-            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
+            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
             GraphController.chartTimeUnit = "1day";
-            updateViewOneDay(yLimitReceived, yLimitSent);
+            updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         });
 
         // Draw received graph with user-selected y-axis limit
@@ -1050,7 +1052,10 @@ class GraphController {
             if (GraphController.chartTimeUnit == "1day") {
                 yLimitFailed = this.value;
                 drawOneDayFailedGraph(yLimitFailed);
-            } 
+            } else if (GraphController.chartTimeUnit == "10min") {
+                yLimitFailedFiltered = this.value;
+                draw10MinFailedGraph(yLimitFailedFiltered);
+            }
         });
 
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
