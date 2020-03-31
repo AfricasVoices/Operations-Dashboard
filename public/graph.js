@@ -383,6 +383,25 @@ class GraphController {
             drawOneDaySentGraph(yLimitSent);
         }
 
+        let operators_identity = {
+            NC: "#31cece",
+            telegram: "#f032e6",
+            golis: "#f58231",
+            hormud: "#3cb44b",
+            nationlink: "#cccc00",
+            somnet: "#4363d8",
+            somtel:  "#800000",
+            telegram: "#f032e6",
+            telesom:  "#911eb4",
+            Other:  "#e6194b"
+        };
+
+        let operators_identity2 = {
+            NC: "#31cece",
+            telegram: "#3cb44b",
+            "kenyan telephone": "#f58231",
+        }
+
         function draw10MinReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitReceivedManuallySet == false) {
