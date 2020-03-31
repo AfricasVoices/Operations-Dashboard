@@ -218,16 +218,6 @@ class GraphController {
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
 
-        // Y axis Label for the total failed sms graph
-        total_failed_sms_graph
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - Margin.left)
-            .attr("x", 0 - Height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("No. of Failed Message (s)");
-
         // Total Failed Sms(s) graph title
         total_failed_sms_graph
             .append("text")
