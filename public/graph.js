@@ -218,23 +218,6 @@ class GraphController {
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
 
-        //Add the X Axis for the total failed sms graph
-        total_failed_sms_graph
-            .append("g")
-            .attr("transform", "translate(0," + Height + ")")
-            .call(
-                d3
-                    .axisBottom(failed_messages_x_axis_range)
-                    .ticks(5)
-                    .tickFormat(timeFormat)
-            )
-            // Rotate axis labels
-            .selectAll("text")
-            .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em")
-            .attr("transform", "rotate(-65)");
-
         //Add X axis label for the total failed sms graph
         total_failed_sms_graph
             .append("text")
