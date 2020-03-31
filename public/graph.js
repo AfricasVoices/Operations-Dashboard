@@ -743,6 +743,18 @@ class GraphController {
             }
         });
 
+        // Draw failed graph with user-selected y-axis limit
+        d3.select("#buttonYLimitFailed").on("input", function() {
+            isYLimitFailedManuallySet = true;
+            if (GraphController.chartTimeUnit == "1day") {
+                yLimitFailed = this.value;
+                drawOneDayFailedGraph(yLimitFailed);
+            }  else if (GraphController.chartTimeUnit == "10min") {
+                yLimitFailedFiltered = this.value;
+                draw10MinFailedGraph(yLimitFailedFiltered);
+            }
+        });
+
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
         let lastUpdateTimeStamp = new Date(
