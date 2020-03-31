@@ -780,6 +780,16 @@ class GraphController {
 
             // Create line path element for failed line graph
             let total_failed_path = total_failed_sms_graph.append("path");
+
+            // Update path data for total failed sms(s)
+            total_failed_path
+                .data([data])
+                .attr("class", "line")
+                .attr("id", "failedLine1day")
+                .attr("fill", "none")
+                .style("stroke", "blue")
+                .style("stroke-width", 1)
+                .attr("d", total_failed_line);
         }
 
         function draw10MinFailedGraph(yLimitFailed) {}
