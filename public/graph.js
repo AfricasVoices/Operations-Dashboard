@@ -767,6 +767,9 @@ class GraphController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Total Failed Messages(s) / day");
+
+            // Label Lines for the total failed sms graph
+            total_failed_sms_graph.append("text");
         }
 
         function draw10MinFailedGraph(yLimitFailed) {}
