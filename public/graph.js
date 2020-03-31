@@ -801,6 +801,10 @@ class GraphController {
             // Set scale domain for failed graph
             y_total_failed_sms.domain([0, yLimitFailed]);
             failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+
+            d3.selectAll(".redrawElementFailed").remove();
+            d3.selectAll("#failedLine10min").remove();
+            d3.selectAll("#failedLine1day").remove();
         }
 
         // Update chart time unit on user selection
