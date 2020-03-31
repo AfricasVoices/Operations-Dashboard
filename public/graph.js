@@ -849,6 +849,9 @@ class GraphController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Total Failed Messages(s) / 10 minutes");
+
+            // Label Lines for the total failed sms graph
+            total_failed_sms_graph.append("text");
         }
 
         // Update chart time unit on user selection
