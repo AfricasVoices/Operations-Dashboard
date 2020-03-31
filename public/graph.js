@@ -792,7 +792,12 @@ class GraphController {
                 .attr("d", total_failed_line);
         }
 
-        function draw10MinFailedGraph(yLimitFailed) {}
+        function draw10MinFailedGraph(yLimitFailed) {
+            // Set Y axis limit to max of daily values or to the value inputted by the user
+            if (isYLimitFailedManuallySet == false) {
+                yLimitFailed = d3.max(dataFilteredWeek, d => d.total_errored);
+            }
+        }
 
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
