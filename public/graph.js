@@ -15,6 +15,7 @@ class GraphController {
         // let chartTimeUnit = "10min",
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
+            isYLimitFailedManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
             dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
