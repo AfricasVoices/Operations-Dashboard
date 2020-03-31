@@ -863,6 +863,15 @@ class GraphController {
             // Create line path element for failed line graph
             let total_failed_path = total_failed_sms_graph.append("path");
 
+            // update path data for total failed sms(s)
+            total_failed_path
+                .data([dataFilteredWeek])
+                .attr("class", "line")
+                .attr("id", "failedLine10min")
+                .attr("fill", "none")
+                .style("stroke", "blue")
+                .style("stroke-width", 1)
+                .attr("d", total_failed_line2);
         }
 
         // Update chart time unit on user selection
