@@ -349,6 +349,7 @@ class GraphController {
             d3.select("#buttonYLimitFailed").property("value", yLimitFailedFiltered);
             draw10MinReceivedGraph(yLimitReceivedFiltered);
             draw10MinSentGraph(yLimitSentFiltered);
+            draw10MinFailedGraph(yLimitFailedFiltered);
         }
 
         function updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed) {
@@ -357,6 +358,7 @@ class GraphController {
             d3.select("#buttonYLimitFailed").property("value", yLimitFailed);
             drawOneDayReceivedGraph(yLimitReceived);
             drawOneDaySentGraph(yLimitSent);
+            drawOneDayFailedGraph(yLimitFailed);
         }
 
         function draw10MinReceivedGraph(yLimitReceived) {
@@ -713,12 +715,12 @@ class GraphController {
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             GraphController.chartTimeUnit = "10min";
-            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
+            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
             GraphController.chartTimeUnit = "1day";
-            updateViewOneDay(yLimitReceived, yLimitSent);
+            updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         });
 
         // Draw received graph with user-selected y-axis limit
