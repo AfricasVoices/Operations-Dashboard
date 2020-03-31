@@ -704,6 +704,10 @@ class GraphController {
                 .text("Total Outgoing Message(s) / day");
         }
 
+        function drawOneDayFailedGraph(yLimitFailed) {}
+
+        function draw10MinFailedGraph(yLimitFailed) {}
+
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             GraphController.chartTimeUnit = "10min";
