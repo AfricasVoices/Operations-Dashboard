@@ -218,12 +218,6 @@ class GraphController {
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
 
-        // Add the Y Axis for the total failed sms graph
-        total_failed_sms_graph
-            .append("g")
-            .attr("class", "axisSteelBlue")
-            .call(d3.axisLeft(y_total_failed_sms));
-
         // Y axis Label for the total failed sms graph
         total_failed_sms_graph
             .append("text")
