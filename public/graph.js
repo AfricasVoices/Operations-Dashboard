@@ -218,13 +218,6 @@ class GraphController {
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
 
-        // update path data for total failed sms(s)
-        total_failed_path
-            .data([data])
-            .attr("class", "line")
-            .style("stroke", "blue")
-            .attr("d", total_failed_line);
-
         //Add the X Axis for the total failed sms graph
         total_failed_sms_graph
             .append("g")
