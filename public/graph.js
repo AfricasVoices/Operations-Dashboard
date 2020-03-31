@@ -805,6 +805,21 @@ class GraphController {
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedLine10min").remove();
             d3.selectAll("#failedLine1day").remove();
+
+            // Add the X Axis for the total failed sms graph
+            total_failed_sms_graph
+                .append("g")
+                .attr("class", "redrawElementFailed")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(failed_messages_x_axis_range)
+                    .ticks(d3.timeDay.every(1))
+                    .tickFormat(dayDateFormat))
+                // Rotate axis labels
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-65)");
         }
 
         // Update chart time unit on user selection
