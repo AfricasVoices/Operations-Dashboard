@@ -218,16 +218,6 @@ class GraphController {
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
 
-        // Total Failed Sms(s) graph title
-        total_failed_sms_graph
-            .append("text")
-            .attr("x", Width / 2)
-            .attr("y", 0 - Margin.top / 2)
-            .attr("text-anchor", "middle")
-            .style("font-size", "20px")
-            .style("text-decoration", "bold")
-            .text("Total Failed Messages(s) / hr");
-
         // Total received graph legend
         total_received_sms_graph
             .append("g")
