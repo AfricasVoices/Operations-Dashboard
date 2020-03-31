@@ -859,6 +859,10 @@ class GraphController {
                 .curve(d3.curveLinear)
                 .x(d => failed_messages_x_axis_range(new Date(d.datetime)))
                 .y(d => y_total_failed_sms(d.total_errored));
+            
+            // Create line path element for failed line graph
+            let total_failed_path = total_failed_sms_graph.append("path");
+
         }
 
         // Update chart time unit on user selection
