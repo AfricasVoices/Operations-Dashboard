@@ -166,15 +166,6 @@ class GraphController {
             // Format TimeStamp
             timeFormat = d3.timeFormat("%Y-%m-%d");
 
-        // Define line paths for total failed sms(s)
-        const total_failed_line = d3
-                .line()
-                .curve(d3.curveLinear)
-                .x(d => failed_messages_x_axis_range(new Date(d.datetime)))
-                .y(d => y_total_failed_sms(d.total_errored)),
-            // Create line path element for failed line graph
-            total_failed_path = total_failed_sms_graph.append("path");
-
         // custom color scheme
         let color_scheme = [
                 "#31cece",
