@@ -708,7 +708,14 @@ class GraphController {
                 .text("Total Outgoing Message(s) / day");
         }
 
-        function drawOneDayFailedGraph(yLimitFailed) {}
+        function drawOneDayFailedGraph(yLimitFailed) {
+            // Set Y axis limit to max of daily values or to the value inputted by the user
+            let yLimitFailedTotal = d3.max(dailyFailedTotal, d => d.total_errored);
+
+            if (isYLimitFailedManuallySet != true) {
+                yLimitFailed = yLimitFailedTotal;
+            }
+        }
 
         function draw10MinFailedGraph(yLimitFailed) {}
 
