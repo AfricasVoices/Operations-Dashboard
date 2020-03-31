@@ -219,7 +219,7 @@ class GraphController {
 
         // Draw graphs according to selected time unit
         if (GraphController.chartTimeUnit == "1day") {
-            updateViewOneDay(yLimitReceived, yLimitSent);
+            updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         } else if (GraphController.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
         }
