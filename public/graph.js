@@ -221,7 +221,7 @@ class GraphController {
         if (GraphController.chartTimeUnit == "1day") {
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         } else if (GraphController.chartTimeUnit == "10min") {
-            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered);
+            updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         }
 
         // Y axis Label for the total received sms graph
