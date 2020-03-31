@@ -343,14 +343,14 @@ class GraphController {
             .text("Total Failed");
 
         // Set y-axis control button value and draw graphs
-        function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered) {
+        function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
             draw10MinReceivedGraph(yLimitReceivedFiltered);
             draw10MinSentGraph(yLimitSentFiltered);
         }
 
-        function updateViewOneDay(yLimitReceived, yLimitSent) {
+        function updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
             drawOneDayReceivedGraph(yLimitReceived);
