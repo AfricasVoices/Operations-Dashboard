@@ -797,6 +797,10 @@ class GraphController {
             if (isYLimitFailedManuallySet == false) {
                 yLimitFailed = d3.max(dataFilteredWeek, d => d.total_errored);
             }
+
+            // Set scale domain for failed graph
+            y_total_failed_sms.domain([0, yLimitFailed]);
+            failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
         }
 
         // Update chart time unit on user selection
