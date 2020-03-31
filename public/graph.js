@@ -346,6 +346,7 @@ class GraphController {
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
+            d3.select("#buttonYLimitFailed").property("value", yLimitFailedFiltered);
             draw10MinReceivedGraph(yLimitReceivedFiltered);
             draw10MinSentGraph(yLimitSentFiltered);
         }
@@ -353,6 +354,7 @@ class GraphController {
         function updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
+            d3.select("#buttonYLimitFailed").property("value", yLimitFailed);
             drawOneDayReceivedGraph(yLimitReceived);
             drawOneDaySentGraph(yLimitSent);
         }
