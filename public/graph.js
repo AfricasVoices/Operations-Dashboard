@@ -118,7 +118,18 @@ class GraphController {
                 return failedData;
             })
             .entries(dataFilteredMonth);
-            
+
+        // Flatten nested data
+        for (let entry in dailyFailedTotal) {
+            let valueList = dailyFailedTotal[entry].value;
+            for (let key in valueList) {
+                dailyFailedTotal[entry][key] = valueList[key];
+            }
+            dailyFailedTotal[entry]["day"] = dailyFailedTotal[entry].key;
+            delete dailyFailedTotal[entry]["value"];
+            delete dailyFailedTotal[entry]["key"];
+        }
+
         // Create keys to stack by based on operator and direction
         let receivedKeys = [],
             sentKeys = [],
