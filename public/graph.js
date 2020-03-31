@@ -852,6 +852,13 @@ class GraphController {
 
             // Label Lines for the total failed sms graph
             total_failed_sms_graph.append("text");
+
+            // Define line paths for total failed sms(s)
+            let total_failed_line2 = d3
+                .line()
+                .curve(d3.curveLinear)
+                .x(d => failed_messages_x_axis_range(new Date(d.datetime)))
+                .y(d => y_total_failed_sms(d.total_errored));
         }
 
         // Update chart time unit on user selection
