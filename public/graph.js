@@ -248,9 +248,6 @@ class GraphController {
 
         d3.select(".sentLegend").call(sentLegend);
 
-        // Label Lines for the total failed sms graph
-        total_failed_sms_graph.append("text");
-
         function updateReceivedChartLimit() {
             // Get the value of the button
             let ylimit = this.value;
