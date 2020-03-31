@@ -749,6 +749,13 @@ class GraphController {
                 )
                 .style("text-anchor", "middle")
                 .text("Time (D:H:M:S)");
+            
+            // Add the Y Axis for the total failed sms graph
+            total_failed_sms_graph
+                .append("g")
+                .attr("class", "axisSteelBlue")
+                .attr("class", "redrawElementFailed")
+                .call(d3.axisLeft(y_total_failed_sms));
         }
 
         function draw10MinFailedGraph(yLimitFailed) {}
