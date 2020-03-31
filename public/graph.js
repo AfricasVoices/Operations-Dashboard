@@ -820,6 +820,17 @@ class GraphController {
                 .attr("dx", "-.8em")
                 .attr("dy", ".15em")
                 .attr("transform", "rotate(-65)");
+
+            // Add X axis label for the total failed sms graph
+            total_failed_sms_graph
+                .append("text")
+                .attr("class", "redrawElementFailed")
+                .attr(
+                    "transform",
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                )
+                .style("text-anchor", "middle")
+                .text("Time (D:H:M:S)");
         }
 
         // Update chart time unit on user selection
