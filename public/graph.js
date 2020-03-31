@@ -189,6 +189,16 @@ class GraphController {
             // Format TimeStamp
             timeFormat = d3.timeFormat("%Y-%m-%d");
 
+            // Y axis Label for the total failed sms graph
+            total_failed_sms_graph
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - Margin.left)
+                .attr("x", 0 - Height / 2)
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("No. of Failed Message (s)");
+
         // custom color scheme
         let color_scheme = [
                 "#31cece",
