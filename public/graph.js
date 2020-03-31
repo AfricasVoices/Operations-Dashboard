@@ -218,13 +218,6 @@ class GraphController {
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
 
-        //Add X axis label for the total failed sms graph
-        total_failed_sms_graph
-            .append("text")
-            .attr("transform", "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")")
-            .style("text-anchor", "middle")
-            .text("Time (D:H:M:S)");
-
         // Add the Y Axis for the total failed sms graph
         total_failed_sms_graph
             .append("g")
