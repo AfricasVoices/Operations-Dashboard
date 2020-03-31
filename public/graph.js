@@ -274,6 +274,23 @@ class GraphController {
 
         d3.select(".sentLegend").call(sentLegend);
 
+        // Total failed graph legend
+        total_failed_sms_graph
+            .append("g")
+            .attr("class", "failedLegend")
+            .attr(
+                "transform",
+                `translate(${Width - Margin.right + 110},${Margin.top - 30})`
+            );
+        let failedLegend = d3
+            .legendColor()
+            .shapeWidth(12)
+            .orient("vertical")
+            .scale(colorFailed)
+            .labels(["total failed"]);
+
+        d3.select(".failedLegend").call(failedLegend);
+
         function updateReceivedChartLimit() {
             // Get the value of the button
             let ylimit = this.value;
