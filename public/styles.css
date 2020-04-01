@@ -197,3 +197,12 @@ table > tbody > tr > td {
 .alert-stale-info {
     background-color: #f08080;
 }
+.tooltip2 {	
+    position: absolute;		
+    text-align: center;			
+    padding: 4px;				
+    font: 12px sans-serif;		
+    background: whitesmoke;	
+    border-radius: 8px;			
+    pointer-events: none;			
+}

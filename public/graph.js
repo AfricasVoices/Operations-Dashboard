@@ -561,6 +561,36 @@ class GraphController {
                 )
                 .attr("width", Width / Object.keys(dailyReceivedTotal).length);
 
+            let tip;
+            receivedLayer
+                .selectAll("rect")
+                .on("mouseover", (d, i, n) => {
+                    // Get color of hovered rect
+                    let rgb = d3.select(n[i]).style("fill")
+                    // Get color components from an rgb string
+                    rgb = rgb.substring(4, rgb.length-1).replace(/ /g, '').split(',');
+                    // Cast strings in array to int
+                    rgb = rgb.map((x) =>parseInt(x));
+                    let hex = rgbToHex(...rgb)
+                    let op = legendColorToOperator(hex)
+                
+                    tip = d3.tip()
+                        .attr("class", "tooltip2")
+                        .attr("id", "tooltip2")
+                        .html(d => {
+                            let num = d.data[`${op}_received`]
+                            let content = `<div>${op} ${num}</div>` 
+                            return content;
+                    })
+
+                    total_received_sms_graph.call(tip)
+    
+                    tip.show(d, n[i]).attr("id","here").style("color", hex)
+                })
+                .on("mouseout", (d, i, n) => {
+                    tip.hide()
+                })
+
             //Add the X Axis for the total received sms graph
             total_received_sms_graph
                 .append("g")
