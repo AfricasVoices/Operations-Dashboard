@@ -415,7 +415,7 @@ class GraphController {
             })
 
             const operatorsFiltered = Object.keys(operators_identity)
-                .filter(key => perators.includes(key))
+                .filter(key => received_operators.includes(key))
                 .reduce((obj, key) => {
                     return {
                         ...obj,
