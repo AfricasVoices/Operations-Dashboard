@@ -412,6 +412,26 @@ class GraphController {
             "kenyan telephone": "#f58231",
         }
 
+        // Assign legend color for a given operator
+        function legendColorToOperator(color) {
+            let key, received_operators = [];
+            receivedKeys.forEach(key => {
+                received_operators.push(key.split("_")[0])
+            })
+
+            const operatorsFiltered = Object.keys(operators_identity)
+                .filter(key => perators.includes(key))
+                .reduce((obj, key) => {
+                    return {
+                        ...obj,
+                        [key]: operators_identity[key]
+                        };
+                }, {})
+
+            key = Object.keys(operatorsFiltered).find(key => operatorsFiltered[key] === color);
+            return key
+        }
+
         function draw10MinReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitReceivedManuallySet == false) {
