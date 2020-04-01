@@ -478,8 +478,8 @@ class GraphController {
                 yLimitReceived = yLimitReceivedTotal;
             }
 
-            xMin = d3.min(data, d => new Date(d.day));
-            xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            let xMin = d3.min(data, d => new Date(d.day)),
+                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             y_total_received_sms_range.domain([0, yLimitReceived]);
@@ -652,8 +652,8 @@ class GraphController {
                 yLimitSent = yLimitSentTotal;
             }
 
-            xMin = d3.min(data, d => new Date(d.day));
-            xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            let xMin = d3.min(data, d => new Date(d.day)),
+                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             y_total_sent_sms.domain([0, yLimitSent]);
