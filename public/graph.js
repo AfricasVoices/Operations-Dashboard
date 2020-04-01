@@ -403,14 +403,9 @@ class GraphController {
             somtel:  "#800000",
             telegram: "#f032e6",
             telesom:  "#911eb4",
-            Other:  "#e6194b"
-        };
-
-        let operators_identity2 = {
-            NC: "#31cece",
-            telegram: "#3cb44b",
+            Other:  "#e6194b",
             "kenyan telephone": "#f58231",
-        }
+        };
 
         // Assign legend color for a given operator
         function legendColorToOperator(color) {
