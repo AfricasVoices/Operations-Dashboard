@@ -851,6 +851,17 @@ class GraphController {
                 )
                 .style("text-anchor", "middle")
                 .text("Date (D-M-Y)");
+
+            // Total Sms(s) graph title
+            total_failed_sms_graph
+                .append("text")
+                .attr("class", "redrawElementFailed")
+                .attr("x", Width / 2)
+                .attr("y", 0 - Margin.top / 2)
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("text-decoration", "bold")
+                .text("Total Failed Message(s) / 10 minutes");
         }
 
         // Update chart time unit on user selection
