@@ -802,6 +802,13 @@ class GraphController {
             // Set scale domain for failed graph
             failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
             y_total_failed_sms.domain([0, yLimitFailed]);
+
+            // Add the Y Axis for the total failed sms graph
+            total_failed_sms_graph
+                .append("g")
+                .attr("id", "axisSteelBlue")
+                .attr("class", "redrawElementFailed")
+                .call(d3.axisLeft(y_total_failed_sms));
         }
 
         // Update chart time unit on user selection
