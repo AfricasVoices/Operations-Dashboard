@@ -732,7 +732,7 @@ class GraphController {
 
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedLine10Min").remove();
-            d3.selectAll("#failedLine1day").remove();
+            d3.selectAll("#failedLine1Day").remove();
 
             // Add the X Axis for the total failed sms graph
             total_failed_sms_graph
