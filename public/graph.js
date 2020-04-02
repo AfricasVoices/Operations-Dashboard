@@ -822,6 +822,24 @@ class GraphController {
                 .attr("height", d => Height - y_total_failed_sms(d.total_errored))
                 .attr("fill", "blue")
                 .attr("width", Width / Object.keys(dataFilteredWeek).length)
+
+            // Add the X Axis for the total failed sms graph
+            total_failed_sms_graph
+                .append("g")
+                .attr("class", "redrawElementFailed")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(
+                    d3
+                        .axisBottom(x)
+                        .ticks(d3.timeDay.every(1))
+                        .tickFormat(timeFormat)
+                )
+                // Rotate axis labels
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-65)");
         }
 
         // Update chart time unit on user selection
