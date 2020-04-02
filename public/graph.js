@@ -738,6 +738,19 @@ class GraphController {
                 .attr("class", "axisSteelBlue")
                 .attr("class", "redrawElementFailed")
                 .call(d3.axisLeft(y_total_failed_sms));
+
+            // Create bars
+            total_failed_sms_graph
+                .selectAll("rect")
+                .data(dailyFailedTotal)
+                .enter()
+                .append("rect")
+                .attr("id", "failedBarChart")
+                .attr("x", d => failed_messages_x_axis_range(new Date(d.day)))
+                .attr("y", d => y_total_failed_sms(d.total_errored))
+                .attr("height", d => Height - y_total_failed_sms(d.total_errored))
+                .attr("fill", "blue")
+                .attr("width", Width / Object.keys(dailyFailedTotal).length)
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
