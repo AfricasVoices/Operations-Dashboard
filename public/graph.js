@@ -731,6 +731,13 @@ class GraphController {
                 xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
             failed_messages_x_axis_range.domain([xMin, xMax]);
             y_total_failed_sms.domain([0, yLimitFailed]);
+
+            // Add the Y Axis for the total failed sms graph
+            total_failed_sms_graph
+                .append("g")
+                .attr("class", "axisSteelBlue")
+                .attr("class", "redrawElementFailed")
+                .call(d3.axisLeft(y_total_failed_sms));
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
