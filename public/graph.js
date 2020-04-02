@@ -769,6 +769,17 @@ class GraphController {
                 .attr("dx", "-.8em")
                 .attr("dy", ".15em")
                 .attr("transform", "rotate(-65)");
+
+            // Add X axis label for the total failed sms graph
+            total_failed_sms_graph
+                .append("text")
+                .attr("class", "redrawElementFailed")
+                .attr(
+                    "transform",
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
+                )
+                .style("text-anchor", "middle")
+                .text("Date (Y-M-D)");
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
