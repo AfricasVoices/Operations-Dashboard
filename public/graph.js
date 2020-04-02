@@ -727,8 +727,10 @@ class GraphController {
             }
 
             // set scale domain for failed graph
+            let xMin = d3.min(data, d => new Date(d.day)),
+                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            failed_messages_x_axis_range.domain([xMin, xMax]);
             y_total_failed_sms.domain([0, yLimitFailed]);
-            failed_messages_x_axis_range.domain(d3.extent(data, d => new Date(d.datetime)));
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
