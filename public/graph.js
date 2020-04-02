@@ -840,7 +840,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Time (D:H:M:S)");
+                .text("Time (D-M-Y)");
 
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
