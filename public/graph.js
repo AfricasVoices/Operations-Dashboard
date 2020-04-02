@@ -740,8 +740,8 @@ class GraphController {
             }
 
             // Set scale domain for failed graph
-            y_total_failed_sms.domain([0, yLimitFailed]);
             failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+            y_total_failed_sms.domain([0, yLimitFailed]);
         }
 
         // Update chart time unit on user selection
