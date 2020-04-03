@@ -48,7 +48,7 @@ class GC {
                         d => d[`${operator}_${messageDirection}`]
                     );
                 });
-                groupedData[`total_${messageDirection}`] = d3.sum(v,d => d[`total_${messageDirection}`]
+                groupedData[`total_${messageDirection}`] = d3.sum(v, d => d[`total_${messageDirection}`]
                 );
                 return groupedData;
             })
