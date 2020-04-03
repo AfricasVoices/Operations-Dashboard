@@ -60,7 +60,7 @@ class GC {
         }
     }
 
-    static FlattenNestedDataforStacking(messageDirection) {
+    static flattenNestedDataforStacking(messageDirection) {
         let nestedData;
         if (messageDirection == "received") {
             nestedData = GC.dailyReceivedTotal;
