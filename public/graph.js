@@ -37,7 +37,7 @@ class GC {
         });
     }
 
-    static GroupDataByDay(dataFilteredMonth, messageDirection) {
+    static groupDataByDay(dataFilteredMonth, messageDirection) {
         let groupedDataTotal = d3
             .nest()
             .key(d => d.day)
