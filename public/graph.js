@@ -152,7 +152,7 @@ class GraphController {
             sentDataStackedDaily = stackSentDaily(dailySentTotal);
 
         //Create margins for the three graphs
-        const Margin = { top: 40, right: 100, bottom: 90, left: 70 },
+        const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
             Width = 960 - Margin.right - Margin.left,
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
