@@ -214,7 +214,7 @@ class GraphController {
             color = d3.scaleOrdinal(color_scheme),
             colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys),
             colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys),
-            colorFailed = d3.scaleOrdinal(["blue"]).domain(["total_errored"]);
+            colorFailed = d3.scaleOrdinal(["#a82e2e"]).domain(["total_errored"]);
 
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
@@ -739,7 +739,7 @@ class GraphController {
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
                 .append("g")
-                .attr("class", "axisSteelBlue")
+                .attr("class", "axisSteelBrown")
                 .attr("class", "redrawElementFailed")
                 .call(d3.axisLeft(y_total_failed_sms));
 
@@ -753,7 +753,7 @@ class GraphController {
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.day)))
                 .attr("y", d => y_total_failed_sms(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms(d.total_errored))
-                .attr("fill", "blue")
+                .attr("fill", "#a82e2e")
                 .attr("width", Width / Object.keys(dailyFailedTotal).length)
 
             // Add the X Axis for the total failed sms graph
@@ -814,7 +814,7 @@ class GraphController {
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
                 .append("g")
-                .attr("id", "axisSteelBlue")
+                .attr("id", "axisSteelBrown")
                 .attr("class", "redrawElementFailed")
                 .call(d3.axisLeft(y_total_failed_sms));
 
@@ -828,7 +828,7 @@ class GraphController {
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.datetime)))
                 .attr("y", d => y_total_failed_sms(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms(d.total_errored))
-                .attr("fill", "blue")
+                .attr("fill", "#a82e2e")
                 .attr("width", Width / Object.keys(dataFilteredWeek).length)
 
             // Add the X Axis for the total failed sms graph
