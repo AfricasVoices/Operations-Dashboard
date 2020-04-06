@@ -444,7 +444,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (D-M-Y)");
+                .text("Date (Y-M-D)");
 
             // Total Sms(s) graph title
             total_received_sms_graph
@@ -618,7 +618,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (D-M-Y)");
+                .text("Date (Y-M-D)");
 
             // Total Sms(s) graph title
             total_sent_sms_graph
@@ -858,7 +858,7 @@ class GraphController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (D-M-Y)");
+                .text("Date (Y-M-D)");
 
             // Total Sms(s) graph title
             total_failed_sms_graph
