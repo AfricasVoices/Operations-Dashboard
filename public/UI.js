@@ -208,10 +208,18 @@ class UIController {
                 <div>
                     <span class="txt-brown my-auto title"><b>%collection%</b></span>
                 </div>
-                <div>
+                <div class="d-md-flex">
                     <span class="align-content-end font-weight-bold">Timescale</span>
                     <input class="mr-2 btn btn-sm btn-brown" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
                     <input class="btn btn-sm btn-brown" type="button" id="buttonUpdateViewOneDay" value="1 day"> 
+                    <span class="align-content-end font-weight-bold ml-3">TimeFrame</span>
+                    <select class="btn-brown form-control col-3" id="timeFrame">
+                        <option value="24">24 hours</option>
+                        <option value="48">48 hours</option>
+                        <option value="7">7 days</option>
+                        <option value="14">14 days</option>
+                        <option value="31">31 days</option>
+                    </select>
                 </div>
                 <div class="d-flex">
                     <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
