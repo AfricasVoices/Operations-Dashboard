@@ -6,7 +6,7 @@ class GraphController {
         return newDate;
     }
 
-    static updateGraphs(data, projectName) {
+    static updateGraphs(data, projectName, MNOColors) {
         const TIMEFRAME_WEEK = 7,
             TIMEFRAME_MONTH = 30;
         if (!GraphController.chartTimeUnit) {
@@ -199,22 +199,20 @@ class GraphController {
                 .style("text-anchor", "middle")
                 .text("No. of Failed Message (s)");
 
-        // custom color scheme
-        let color_scheme = [
-                "#31cece",
-                "#f58231",
-                "#3cb44b",
-                "#CCCC00",
-                "#4363d8",
-                "#800000",
-                "#f032e6",
-                "#911eb4",
-                "#e6194B"
-            ],
-            color = d3.scaleOrdinal(color_scheme),
-            colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys),
-            colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys),
-            colorFailed = d3.scaleOrdinal(["#a82e2e"]).domain(["total_errored"]);
+        let mno_color_scheme = [],
+            operators_with_color_identity = Object.keys(MNOColors);
+
+        // Generate color scheme based on operators identity
+        operators.forEach((operator, index) => {
+            if (operators_with_color_identity.includes(operator)) {
+                mno_color_scheme[index] = MNOColors[operator];
+            }
+        });
+
+        let color = d3.scaleOrdinal(mno_color_scheme),
+            colorReceived = d3.scaleOrdinal(mno_color_scheme).domain(receivedKeys),
+            colorSent = d3.scaleOrdinal(mno_color_scheme).domain(sentKeys),
+            colorFailed = d3.scaleOrdinal(["#ff0000"]).domain(["total_errored"]);
 
         let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
@@ -750,7 +748,7 @@ class GraphController {
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.day)))
                 .attr("y", d => y_total_failed_sms(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms(d.total_errored))
-                .attr("fill", "#a82e2e")
+                .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dailyFailedTotal).length)
 
             // Add the X Axis for the total failed sms graph
@@ -826,7 +824,7 @@ class GraphController {
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.datetime)))
                 .attr("y", d => y_total_failed_sms(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms(d.total_errored))
-                .attr("fill", "#a82e2e")
+                .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dataFilteredWeek).length)
 
             // Add the X Axis for the total failed sms graph
