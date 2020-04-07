@@ -726,7 +726,8 @@ class GraphController {
             let xMin = d3.min(data, d => new Date(d.day)),
                 xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
             failed_messages_x_axis_range.domain([xMin, xMax]);
-            y_total_failed_sms.domain([0, yLimitFailed]);
+            if (yLimitFailed > 0)
+                y_total_failed_sms.domain([0, yLimitFailed]);
 
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
@@ -801,7 +802,8 @@ class GraphController {
 
             // Set scale domain for failed graph
             failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-            y_total_failed_sms.domain([0, yLimitFailed]);
+            if (yLimitFailed > 0)
+                y_total_failed_sms.domain([0, yLimitFailed]);
 
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
