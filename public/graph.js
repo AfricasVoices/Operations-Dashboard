@@ -216,10 +216,6 @@ class GraphController {
             colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys),
             colorFailed = d3.scaleOrdinal(["#a82e2e"]).domain(["total_errored"]);
 
-        // set scale domain for failed graph
-        y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
-        failed_messages_x_axis_range.domain(d3.extent(data, d => new Date(d.datetime)));
-
         let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
             yLimitSent = d3.max(dailySentTotal, d => d.total_sent),
