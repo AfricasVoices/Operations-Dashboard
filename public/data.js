@@ -36,6 +36,12 @@ class DataController {
         });
     }
 
+    static watchMNOColors() {
+        return mediadb.doc("mno_properties/mno_colors").onSnapshot(res => {
+            DataController.mno_colors = res.data();
+        });
+    }
+
     static watchProjectTrafficData(projectName, onChange) {
         const TIMERANGE = 30;
         let offset = new Date();
