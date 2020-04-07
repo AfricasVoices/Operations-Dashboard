@@ -216,10 +216,6 @@ class GraphController {
             colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys),
             colorFailed = d3.scaleOrdinal(["#a82e2e"]).domain(["total_errored"]);
 
-        // set scale domain for failed graph
-        y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
-        failed_messages_x_axis_range.domain(d3.extent(data, d => new Date(d.datetime)));
-
         let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
             yLimitSent = d3.max(dailySentTotal, d => d.total_sent),
@@ -730,7 +726,8 @@ class GraphController {
             let xMin = d3.min(data, d => new Date(d.day)),
                 xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
             failed_messages_x_axis_range.domain([xMin, xMax]);
-            y_total_failed_sms.domain([0, yLimitFailed]);
+            if (yLimitFailed > 0)
+                y_total_failed_sms.domain([0, yLimitFailed]);
 
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
@@ -805,7 +802,8 @@ class GraphController {
 
             // Set scale domain for failed graph
             failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-            y_total_failed_sms.domain([0, yLimitFailed]);
+            if (yLimitFailed > 0)
+                y_total_failed_sms.domain([0, yLimitFailed]);
 
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
