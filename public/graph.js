@@ -199,26 +199,13 @@ class GraphController {
                 .style("text-anchor", "middle")
                 .text("No. of Failed Message (s)");
 
-        let operators_identity = {
-            NC: "#31CECE",
-            golis: "#F58231",
-            hormud: "#3CB44B",
-            "kenyan telephone": "#3CB44B",
-            nationlink: "#CCCC00",
-            other: "#E6194B",
-            somnet: "#4363D8",
-            somtel: "#800000",
-            telegram: "#F032E6",
-            telesom: "#911EB4"
-
-            },
-            color_scheme = [],
-            operators_with_color_identity = Object.keys(operators_identity);
+        let color_scheme = [],
+            operators_with_color_identity = Object.keys(MNOColors);
 
         // Generate color scheme based on operators identity
         operators.forEach((operator, index) => {
             if (operators_with_color_identity.includes(operator)) {
-                color_scheme[index] = operators_identity[operator];
+                color_scheme[index] = MNOColors[operator];
             }
         });
 
