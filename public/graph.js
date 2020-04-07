@@ -209,7 +209,7 @@ class GraphController {
             }
         });
 
-        let color = d3.scaleOrdinal(color_scheme),
+        let color = d3.scaleOrdinal(mno_color_scheme),
             colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys),
             colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys),
             colorFailed = d3.scaleOrdinal(["#a82e2e"]).domain(["total_errored"]);
