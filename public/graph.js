@@ -212,7 +212,7 @@ class GraphController {
         let color = d3.scaleOrdinal(mno_color_scheme),
             colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys),
             colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys),
-            colorFailed = d3.scaleOrdinal(["#a82e2e"]).domain(["total_errored"]);
+            colorFailed = d3.scaleOrdinal(["#ff0000"]).domain(["total_errored"]);
 
         // set scale domain for failed graph
         y_total_failed_sms.domain([0, d3.max(data, d => d.total_errored)]);
