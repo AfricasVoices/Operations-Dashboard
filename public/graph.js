@@ -199,19 +199,19 @@ class GraphController {
                 .style("text-anchor", "middle")
                 .text("No. of Failed Message (s)");
 
-        let color_scheme = [],
+        let mno_color_scheme = [],
             operators_with_color_identity = Object.keys(MNOColors);
 
         // Generate color scheme based on operators identity
         operators.forEach((operator, index) => {
             if (operators_with_color_identity.includes(operator)) {
-                color_scheme[index] = MNOColors[operator];
+                mno_color_scheme[index] = MNOColors[operator];
             }
         });
 
         let color = d3.scaleOrdinal(mno_color_scheme),
-            colorReceived = d3.scaleOrdinal(color_scheme).domain(receivedKeys),
-            colorSent = d3.scaleOrdinal(color_scheme).domain(sentKeys),
+            colorReceived = d3.scaleOrdinal(mno_color_scheme).domain(receivedKeys),
+            colorSent = d3.scaleOrdinal(mno_color_scheme).domain(sentKeys),
             colorFailed = d3.scaleOrdinal(["#ff0000"]).domain(["total_errored"]);
 
         // set scale domain for failed graph
@@ -751,7 +751,7 @@ class GraphController {
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.day)))
                 .attr("y", d => y_total_failed_sms(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms(d.total_errored))
-                .attr("fill", "#a82e2e")
+                .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dailyFailedTotal).length)
 
             // Add the X Axis for the total failed sms graph
@@ -826,7 +826,7 @@ class GraphController {
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.datetime)))
                 .attr("y", d => y_total_failed_sms(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms(d.total_errored))
-                .attr("fill", "#a82e2e")
+                .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dataFilteredWeek).length)
 
             // Add the X Axis for the total failed sms graph
