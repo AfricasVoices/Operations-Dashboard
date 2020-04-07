@@ -50,13 +50,14 @@ class DataController {
             iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L"),
             offsetString = iso(offset),
             projectCollection = projectName;
+        DataController.watchMNOColors() 
         return mediadb
             .collection(`/metrics/rapid_pro/${projectCollection}/`)
             .where("datetime", ">", offsetString)
             .onSnapshot(res => {
                 // Update data every time it changes in firestore
                 DataController.updateData(res, data);
-                onChange(data, projectName);
+                onChange(data, projectName, DataController.mno_colors);
             });
     }
 

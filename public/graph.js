@@ -6,7 +6,7 @@ class GraphController {
         return newDate;
     }
 
-    static updateGraphs(data, projectName) {
+    static updateGraphs(data, projectName, MNOColors) {
         const TIMEFRAME_WEEK = 7,
             TIMEFRAME_MONTH = 30;
         if (!GraphController.chartTimeUnit) {
