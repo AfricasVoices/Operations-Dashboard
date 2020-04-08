@@ -543,14 +543,14 @@ class GraphController {
                     // Cast strings in array to int
                     rgb = rgb.map((x) =>parseInt(x));
                     let hex = rgbToHex(...rgb)
-                    let op = legendColorToOperator(hex)
+                    let operatorOnHover = legendColorToOperator(hex)
                     tip = d3.tip()
                         .attr("class", "tooltip")
                         .attr("id", "tooltip")
                         .html(d => {
-                            let total_receved_no = d.data[`${op}_received`]
-                            let tooltip_content = `<div>${op} ${num}</div>`  
-                            return content;
+                            let total_receved_no = d.data[`${operatorOnHover}_received`]
+                            let tooltip_content = `<div>${operatorOnHover} ${total_receved_no}</div>`  
+                            return tooltip_content;
                     })
                     total_received_sms_graph.call(tip)
                     tip.show(d, n[i]).attr("id","here").style("color", hex)
