@@ -7,7 +7,9 @@ class GraphController {
     }
 
     static updateGraphs(data, projectName, MNOColors) {
+        // GraphController.timeFrame
         const TIMEFRAME_WEEK = 7,
+            TIMEFRAME_FORTNIGHT = 14, 
             TIMEFRAME_MONTH = 30;
         if (!GraphController.chartTimeUnit) {
             GraphController.chartTimeUnit = "10min";
@@ -46,14 +48,17 @@ class GraphController {
         data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
         let offsetWeek = new Date(),
-            offsetMonth = new Date();
+            offsetMonth = new Date(),
+            offsetFortnight = new Date();
 
         offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK);
         offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH);
+        offsetFortnight.setDate(offsetFortnight.getDate() - TIMEFRAME_FORTNIGHT);
 
         // Set default y-axis limits
         let dataFilteredWeek = data.filter(a => a.datetime > offsetWeek),
-            dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
+            dataFilteredMonth = data.filter(a => a.datetime > offsetMonth),
+            dataFilteredFortnight = data.filter(a => a.datetime > offsetFortnight);
 
         // Group received data by day
         let dailyReceivedTotal = d3
@@ -369,7 +374,7 @@ class GraphController {
             drawOneDayFailedGraph(yLimitFailed);
         }
 
-        function draw10MinReceivedGraph(yLimitReceived) {
+        function draw10MinReceivedGraph(yLimitReceived, dataWithTimeFrame) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitReceivedManuallySet == false) {
                 yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
@@ -456,7 +461,7 @@ class GraphController {
                 .text("Total Incoming Message(s) / 10 minutes");
         }
 
-        function drawOneDayReceivedGraph(yLimitReceived) {
+        function drawOneDayReceivedGraph(yLimitReceived, dataWithTimeFrame) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             let yLimitReceivedTotal = d3.max(dailyReceivedTotal, d => d.total_received);
 
@@ -544,7 +549,7 @@ class GraphController {
                 .text("Total Incoming Message(s) / day");
         }
 
-        function draw10MinSentGraph(yLimitSent) {
+        function draw10MinSentGraph(yLimitSent, dataWithTimeFrame) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitSentManuallySet == false) {
                 yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
@@ -630,7 +635,7 @@ class GraphController {
                 .text("Total Outgoing Message(s) / 10 minutes");
         }
 
-        function drawOneDaySentGraph(yLimitSent) {
+        function drawOneDaySentGraph(yLimitSent, dataWithTimeFrame) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             let yLimitSentTotal = d3.max(dailySentTotal, d => d.total_sent);
 
@@ -716,7 +721,7 @@ class GraphController {
                 .text("Total Outgoing Message(s) / day");
         }
 
-        function drawOneDayFailedGraph(yLimitFailed) {
+        function drawOneDayFailedGraph(yLimitFailed, dataWithTimeFrame) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             let yLimitFailedTotal = d3.max(dailyFailedTotal, d => d.total_errored);
 
@@ -795,7 +800,7 @@ class GraphController {
                 .text("Total Failed Message(s) / day");
         }
 
-        function draw10MinFailedGraph(yLimitFailed) {
+        function draw10MinFailedGraph(yLimitFailed, dataWithTimeFrame) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitFailedManuallySet == false) {
                 yLimitFailed = d3.max(dataFilteredWeek, d => d.total_errored);
@@ -882,6 +887,7 @@ class GraphController {
         });
 
         d3.select("#timeFrame").on("change", function() {
+            GraphController.timeFrame = this.options[this.selectedIndex].value;
             let x_range = this.options[this.selectedIndex].value;
         })
 
