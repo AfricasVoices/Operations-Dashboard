@@ -550,7 +550,7 @@ class GraphController {
                         .attr("id", "tooltip2")
                         .html(d => {
                             let num = d.data[`${op}_received`]
-                            let content = `<div>${op} ${num}</div>` 
+                            let tooltip_content = `<div>${op} ${num}</div>`  
                             return content;
                     })
                     total_received_sms_graph.call(tip)
