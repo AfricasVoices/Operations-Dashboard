@@ -374,21 +374,7 @@ class GraphController {
         function rgbToHex(r, g, b) {
             return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
         }
-
-        let operators_identity = {
-            NC: "#31cece",
-            telegram: "#f032e6",
-            golis: "#f58231",
-            hormud: "#3cb44b",
-            nationlink: "#cccc00",
-            somnet: "#4363d8",
-            somtel:  "#800000",
-            telegram: "#f032e6",
-            telesom:  "#911eb4",
-            Other:  "#e6194b",
-            "kenyan telephone": "#f58231",
-        };
-
+        
         // Assign legend color for a given operator
         function legendColorToOperator(color) {
             let key, received_operators = [];
@@ -396,16 +382,17 @@ class GraphController {
                 received_operators.push(key.split("_")[0])
             })
 
-            const operatorsFiltered = Object.keys(operators_identity)
+            const operatorsFiltered = Object.keys(MNOColors)
                 .filter(key => received_operators.includes(key))
                 .reduce((obj, key) => {
                     return {
                         ...obj,
-                        [key]: operators_identity[key]
+                        [key]: MNOColors[key]
                         };
                 }, {})
 
-            key = Object.keys(operatorsFiltered).find(key => operatorsFiltered[key] === color);
+            key = Object.keys(operatorsFiltered).find(
+                key => operatorsFiltered[key].toLowerCase() === color.toLowerCase());
             return key
         }
 
