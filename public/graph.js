@@ -549,7 +549,7 @@ class GraphController {
                         .attr("class", "tooltip2")
                         .attr("id", "tooltip2")
                         .html(d => {
-                            let num = d.data[`${op}_received`]
+                            let total_receved_no = d.data[`${op}_received`]
                             let tooltip_content = `<div>${op} ${num}</div>`  
                             return content;
                     })
