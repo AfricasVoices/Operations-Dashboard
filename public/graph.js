@@ -551,7 +551,6 @@ class GraphController {
                             let content = `<div>${op} ${num}</div>` 
                             return content;
                     })
-
                     total_received_sms_graph.call(tip)
     
                     tip.show(d, n[i]).attr("id","here").style("color", hex)
