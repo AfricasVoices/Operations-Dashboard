@@ -18,6 +18,7 @@ class GraphController {
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
+            isXLimitManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
             dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
@@ -635,7 +636,7 @@ class GraphController {
                 .text("Total Outgoing Message(s) / 10 minutes");
         }
 
-        function drawOneDaySentGraph(yLimitSent, dataWithTimeFrame) {
+        function drawOneDaySentGraph(yLimitSent, timeframe) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             let yLimitSentTotal = d3.max(dailySentTotal, d => d.total_sent);
 
@@ -643,8 +644,21 @@ class GraphController {
                 yLimitSent = yLimitSentTotal;
             }
 
-            let xMin = d3.min(data, d => new Date(d.day)),
-                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            // let dataWithTimeFrame;
+            if (isXLimitManuallySet == false) {
+                dataWithTimeFrame = data
+            } else {
+                if (timeframe == "7") {
+                    dataWithTimeFrame = dataFilteredWeek
+                } else if (timeframe == "14") {
+                    dataWithTimeFrame = dataFilteredFortnight
+                } else if (timeframe == "30") {
+                    dataWithTimeFrame = dataFilteredMonth
+                }
+            }
+
+            let xMin = d3.min(dataWithTimeFrame, d => new Date(d.day)),
+                xMax = d3.max(dataWithTimeFrame, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             y_total_sent_sms.domain([0, yLimitSent]);
@@ -721,7 +735,7 @@ class GraphController {
                 .text("Total Outgoing Message(s) / day");
         }
 
-        function drawOneDayFailedGraph(yLimitFailed, dataWithTimeFrame) {
+        function drawOneDayFailedGraph(yLimitFailed, timeFrame) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             let yLimitFailedTotal = d3.max(dailyFailedTotal, d => d.total_errored);
 
@@ -729,9 +743,22 @@ class GraphController {
                 yLimitFailed = yLimitFailedTotal;
             }
 
+            // let dataWithTimeFrame;
+            if (isXLimitManuallySet == false) {
+                dataWithTimeFrame = data
+            } else {
+                if (timeframe == "7") {
+                    dataWithTimeFrame = dataFilteredWeek
+                } else if (timeframe == "14") {
+                    dataWithTimeFrame = dataFilteredFortnight
+                } else if (timeframe == "30") {
+                    dataWithTimeFrame = dataFilteredMonth
+                }
+            }
+
             // set scale domain for failed graph
-            let xMin = d3.min(data, d => new Date(d.day)),
-                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            let xMin = d3.min(dataWithTimeFrame, d => new Date(d.day)),
+                xMax = d3.max(dataWithTimeFrame, d => GraphController.addOneDayToDate(d.day));
             failed_messages_x_axis_range.domain([xMin, xMax]);
             y_total_failed_sms.domain([0, yLimitFailed]);
 
@@ -800,14 +827,28 @@ class GraphController {
                 .text("Total Failed Message(s) / day");
         }
 
-        function draw10MinFailedGraph(yLimitFailed, dataWithTimeFrame) {
+        function draw10MinFailedGraph(yLimitFailed, timeframe) {
+            let dataWithTimeFrame;
+            if (isXLimitManuallySet == false) {
+                dataWithTimeFrame = dataFilteredWeek
+            } else {
+                if (timeframe == "7") {
+                    dataWithTimeFrame = dataFilteredWeek
+                } else if (timeframe == "14") {
+                    dataWithTimeFrame = dataFilteredFortnight
+                } else if (timeframe == "30") {
+                    dataWithTimeFrame = dataFilteredMonth
+                }
+            }
+
+            dataWithTimeFrame = dataFilteredWeek
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitFailedManuallySet == false) {
-                yLimitFailed = d3.max(dataFilteredWeek, d => d.total_errored);
+                yLimitFailed = d3.max(dataWithTimeFrame, d => d.total_errored);
             }
 
             // Set scale domain for failed graph
-            failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+            failed_messages_x_axis_range.domain(d3.extent(dataWithTimeFrame, d => new Date(d.datetime)));
             y_total_failed_sms.domain([0, yLimitFailed]);
 
             d3.selectAll(".redrawElementFailed").remove();
@@ -824,7 +865,7 @@ class GraphController {
             // Create bars
             total_failed_sms_graph
                 .selectAll("rect")
-                .data(dataFilteredWeek)
+                .data(dataWithTimeFrame)
                 .enter()
                 .append("rect")
                 .attr("id", "failedBarChart10min")
@@ -832,7 +873,7 @@ class GraphController {
                 .attr("y", d => y_total_failed_sms(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms(d.total_errored))
                 .attr("fill", "#a82e2e")
-                .attr("width", Width / Object.keys(dataFilteredWeek).length)
+                .attr("width", Width / Object.keys(dataWithTimeFrame).length)
 
             // Add the X Axis for the total failed sms graph
             total_failed_sms_graph
