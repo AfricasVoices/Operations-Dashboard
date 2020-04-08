@@ -553,8 +553,7 @@ class GraphController {
 
             // set scale domains
             x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-
-          if (yLimitSent > 0)
+            if (yLimitSent > 0)
                 y_total_sent_sms_range.domain([0, yLimitSent]);
 
             // Remove changing chart elements before redrawing
@@ -642,10 +641,9 @@ class GraphController {
                 xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
-
-          if (yLimitSent > 0)
+            if (yLimitSent > 0)
                 y_total_sent_sms_range.domain([0, yLimitSent]);
-     
+
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack10min").remove();
             d3.selectAll("#sentStack1day").remove();
