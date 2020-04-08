@@ -544,7 +544,6 @@ class GraphController {
                     rgb = rgb.map((x) =>parseInt(x));
                     let hex = rgbToHex(...rgb)
                     let op = legendColorToOperator(hex)
-                
                     tip = d3.tip()
                         .attr("class", "tooltip2")
                         .attr("id", "tooltip2")
@@ -554,7 +553,6 @@ class GraphController {
                             return content;
                     })
                     total_received_sms_graph.call(tip)
-    
                     tip.show(d, n[i]).attr("id","here").style("color", hex)
                 })
                 .on("mouseout", (d, i, n) => {
