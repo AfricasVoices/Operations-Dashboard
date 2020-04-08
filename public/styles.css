@@ -197,7 +197,7 @@ table > tbody > tr > td {
 .alert-stale-info {
     background-color: #f08080;
 }
-.tooltip2 {	
+.tooltip{	
     position: absolute;		
     text-align: center;			
     padding: 4px;				
