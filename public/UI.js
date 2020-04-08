@@ -213,7 +213,7 @@ class UIController {
                     <input class="mr-2 btn btn-sm btn-brown" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
                     <input class="btn btn-sm btn-brown" type="button" id="buttonUpdateViewOneDay" value="1 day"> 
                     <span class="align-content-end font-weight-bold ml-3">TimeFrame</span>
-                    <select class="btn-brown form-control col-3" id="timeFrame">
+                    <select class="btn-brown btn-sm form-control col-3" id="timeFrame">
                         <option value="7">7 days</option>
                         <option value="14">14 days</option>
                         <option value="31">31 days</option>
