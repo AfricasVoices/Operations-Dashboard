@@ -545,8 +545,8 @@ class GraphController {
                     let hex = rgbToHex(...rgb)
                     let op = legendColorToOperator(hex)
                     tip = d3.tip()
-                        .attr("class", "tooltip2")
-                        .attr("id", "tooltip2")
+                        .attr("class", "tooltip")
+                        .attr("id", "tooltip")
                         .html(d => {
                             let total_receved_no = d.data[`${op}_received`]
                             let tooltip_content = `<div>${op} ${num}</div>`  
