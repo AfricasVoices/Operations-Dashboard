@@ -159,7 +159,7 @@ class GraphController {
             x = d3.scaleTime().range([0, Width]),
             failed_messages_x_axis_range = d3.scaleTime().range([0, Width]),
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
-            y_total_sent_sms = d3.scaleLinear().range([Height, 0]),
+            y_total_sent_sms_range = d3.scaleLinear().range([Height, 0]),
             y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
 
         // Append total received sms graph to svg
@@ -322,17 +322,17 @@ class GraphController {
             // Get the value of the button
             let ylimit = this.value;
 
-            y_total_sent_sms.domain([0, ylimit]);
+            y_total_sent_sms_range.domain([0, ylimit]);
 
             // Add the Y Axis for the total sent sms graph
-            total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(y_total_sent_sms));
+            total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(y_total_sent_sms_range));
 
             sentLayer
                 .selectAll("rect")
                 .data(d => d)
                 .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
+                .attr("y", d => y_total_sent_sms_range(d[1]))
+                .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
                 .attr("width", Width / Object.keys(data).length);
         }
 
@@ -551,7 +551,7 @@ class GraphController {
 
             // set scale domains
             x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-            y_total_sent_sms.domain([0, yLimitSent]);
+            y_total_sent_sms_range.domain([0, yLimitSent]);
 
             // Remove changing chart elements before redrawing
             d3.selectAll(".redrawElementSent").remove();
@@ -563,7 +563,7 @@ class GraphController {
                 .append("g")
                 .attr("class", "axisSteelBlue")
                 .attr("class", "redrawElementSent")
-                .call(d3.axisLeft(y_total_sent_sms));
+                .call(d3.axisLeft(y_total_sent_sms_range));
 
             // Create stacks
             let sentLayer10min = total_sent_sms_graph
@@ -581,8 +581,8 @@ class GraphController {
                 .enter()
                 .append("rect")
                 .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
+                .attr("y", d => y_total_sent_sms_range(d[1]))
+                .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
                 .attr("width", Width / Object.keys(dataFilteredWeek).length);
 
             //Add the X Axis for the total sent sms graph
@@ -638,7 +638,7 @@ class GraphController {
                 xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
-            y_total_sent_sms.domain([0, yLimitSent]);
+            y_total_sent_sms_range.domain([0, yLimitSent]);
 
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack10min").remove();
@@ -649,7 +649,7 @@ class GraphController {
                 .append("g")
                 .attr("class", "axisSteelBlue")
                 .attr("class", "redrawElementSent")
-                .call(d3.axisLeft(y_total_sent_sms));
+                .call(d3.axisLeft(y_total_sent_sms_range));
 
             // Create stacks
             let sentLayer = total_sent_sms_graph
@@ -667,8 +667,8 @@ class GraphController {
                 .enter()
                 .append("rect")
                 .attr("x", d => x(new Date(d.data.day)))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
+                .attr("y", d => y_total_sent_sms_range(d[1]))
+                .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
                 .attr("width", Width / Object.keys(dailySentTotal).length);
 
             //Add the X Axis for the total sent sms graph
