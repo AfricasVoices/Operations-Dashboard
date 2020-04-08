@@ -295,57 +295,6 @@ class GraphController {
 
         d3.select(".failedLegend").call(failedLegend);
 
-        function updateReceivedChartLimit() {
-            // Get the value of the button
-            let ylimit = this.value;
-
-            y_total_received_sms.domain([0, ylimit]);
-
-            // Add the Y Axis for the total received sms graph
-            total_received_sms_graph
-                .selectAll(".axisSteelBlue")
-                .call(d3.axisLeft(y_total_received_sms));
-
-            receivedLayer
-                .selectAll("rect")
-                .data(d => d)
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
-                )
-                .attr("width", Width / Object.keys(data).length);
-        }
-
-        function updateSentChartLimit() {
-            // Get the value of the button
-            let ylimit = this.value;
-
-            y_total_sent_sms.domain([0, ylimit]);
-
-            // Add the Y Axis for the total sent sms graph
-            total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(y_total_sent_sms));
-
-            sentLayer
-                .selectAll("rect")
-                .data(d => d)
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
-                .attr("width", Width / Object.keys(data).length);
-        }
-
-        // Add an event listener to the button created in the html part
-        d3.select("#buttonYLimitReceived").on("input", updateReceivedChartLimit);
-        d3.select("#buttonYLimitSent")
-            .on("input", updateSentChartLimit)
-            .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top})`)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "start")
-            .style("fill", "blue")
-            .text("Total Failed");
-
         // Set y-axis control button value and draw graphs
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
