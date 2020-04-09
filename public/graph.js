@@ -214,6 +214,7 @@ class GraphController {
                 mno_color_scheme[index] = MNOColors[operator];
             }
         });
+        mno_color_scheme.push(MNOColors["other"])
 
         let color = d3.scaleOrdinal(mno_color_scheme),
             colorReceived = d3.scaleOrdinal(mno_color_scheme).domain(receivedKeys),
@@ -414,7 +415,7 @@ class GraphController {
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
+                    d => +(y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1]))
                 )
                 .attr("width", Width / Object.keys(dataFilteredWeek).length);
 

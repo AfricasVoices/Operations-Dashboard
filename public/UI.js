@@ -156,44 +156,44 @@ class UIController {
                     notCodedMessages
                 );
                 //Table sorting using tablesorter plugin based on fraction of message labelling complete
-                $("#codingtable").tablesorter({
-                    //sorting on page load, column four in descending order i.e from least coded to most coded.
-                    sortList: [[3, 0]]
-                });
-                //Trigger sorting on table data update
-                $("#codingtable")
-                    .tablesorter()
-                    .trigger("update");
-                //Formating rows based on cell value
-                $("#codingtable td:nth-child(4)").each(function() {
-                    let Done = $(this).text();
-                    //Style the entire row conditionally based on the cell value
-                    if (parseFloat(Done) === 0) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-notstarted");
-                    } else if (parseFloat(Done) > 0 && parseFloat(Done) <= 25) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-below25");
-                    } else if (parseFloat(Done) > 25 && parseFloat(Done) <= 50) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-above25");
-                    } else if (parseFloat(Done) > 50 && parseFloat(Done) <= 75) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-above50");
-                    } else if (parseFloat(Done) > 75 && parseFloat(Done) < 100) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-above75");
-                    } else {
-                        $(this)
-                            .parent()
-                            .addClass("coding-complete");
-                    }
-                });
+                // $("#codingtable").tablesorter({
+                //     //sorting on page load, column four in descending order i.e from least coded to most coded.
+                //     sortList: [[3, 0]]
+                // });
+                // //Trigger sorting on table data update
+                // $("#codingtable")
+                //     .tablesorter()
+                //     .trigger("update");
+                // //Formating rows based on cell value
+                // $("#codingtable td:nth-child(4)").each(function() {
+                //     let Done = $(this).text();
+                //     //Style the entire row conditionally based on the cell value
+                //     if (parseFloat(Done) === 0) {
+                //         $(this)
+                //             .parent()
+                //             .addClass("coding-notstarted");
+                //     } else if (parseFloat(Done) > 0 && parseFloat(Done) <= 25) {
+                //         $(this)
+                //             .parent()
+                //             .addClass("coding-below25");
+                //     } else if (parseFloat(Done) > 25 && parseFloat(Done) <= 50) {
+                //         $(this)
+                //             .parent()
+                //             .addClass("coding-above25");
+                //     } else if (parseFloat(Done) > 50 && parseFloat(Done) <= 75) {
+                //         $(this)
+                //             .parent()
+                //             .addClass("coding-above50");
+                //     } else if (parseFloat(Done) > 75 && parseFloat(Done) < 100) {
+                //         $(this)
+                //             .parent()
+                //             .addClass("coding-above75");
+                //     } else {
+                //         $(this)
+                //             .parent()
+                //             .addClass("coding-complete");
+                //     }
+                // });
             }
         }
     }

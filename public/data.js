@@ -27,18 +27,24 @@ class DataController {
             // Update data every time it changes in firestore
             DataController.updateData(res, activeProjects);
             onChange(activeProjects);
+        }, function(error) {
+            console.log(error)
         });
     }
 
     static watchCodingProgress(onChange) {
         return mediadb.doc("metrics/coda").onSnapshot(res => {
             onChange(res.data());
+        }, function(error) {
+            console.log(error)
         });
     }
 
     static watchMNOColors() {
         return mediadb.doc("mno_properties/mno_colors").onSnapshot(res => {
             DataController.mno_colors = res.data();
+        }, function(error) {
+            console.log(error)
         });
     }
 
@@ -58,6 +64,8 @@ class DataController {
                 // Update data every time it changes in firestore
                 DataController.updateData(res, data);
                 onChange(data, projectName, DataController.mno_colors);
+            }, function(error) {
+                console.log(error)
             });
     }
 
