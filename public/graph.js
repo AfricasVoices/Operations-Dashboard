@@ -17,6 +17,7 @@ class GraphController {
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
+            dayDateFormatWithoutYear = d3.timeFormat("%a %b %d"),
             dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
@@ -537,23 +538,22 @@ class GraphController {
                 .selectAll("rect")
                 .on("mouseover", (d, i, n) => {
                     // Get color of hovered rect
-                    let rgb = d3.select(n[i]).style("fill")
-                    // Get color components from an rgb string
-                    rgb = rgb.substring(4, rgb.length-1).replace(/ /g, '').split(',');
-                    // Cast strings in array to int
-                    rgb = rgb.map((x) =>parseInt(x));
-                    let hex = rgbToHex(...rgb)
-                    let operatorOnHover = legendColorToOperator(hex)
+                    let operatorReceived = d3.select(n[i].parentNode).datum().key,
+                        operatorName = operatorReceived.replace('_received',''),
+                        operatorColor = d3.select(n[i]).style("fill");
                     tip = d3.tip()
                         .attr("class", "tooltip")
                         .attr("id", "tooltip")
                         .html(d => {
-                            let total_receved_no = d.data[`${operatorOnHover}_received`]
-                            let tooltip_content = `<div>${operatorOnHover} ${total_receved_no}</div>`  
-                            return tooltip_content;
+                            let receivedMessages = d.data[operatorReceived],
+                                totalReceivedMessages = d.data.total_received,
+                                receivedDay = d.data.day,
+                                tooltipContent = `<div>${operatorName} ${dayDateFormatWithoutYear(new Date(receivedDay))}</div>`;
+                            return tooltipContent += `<div>${receivedMessages} Message${receivedMessages !== 1 ? 's': ''} 
+                            (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)</div>`;
                     })
                     total_received_sms_graph.call(tip)
-                    tip.show(d, n[i]).attr("id","here").style("color", hex)
+                    tip.show(d, n[i]).style("color", operatorColor)
                 })
                 .on("mouseout", (d, i, n) => {
                     tip.hide()
