@@ -537,17 +537,20 @@ class GraphController {
             receivedLayer
                 .selectAll("rect")
                 .on("mouseover", (d, i, n) => {
-                    // Get color of hovered rect
+                    // Get key of stacked data from the selection
                     let operatorReceived = d3.select(n[i].parentNode).datum().key,
+                        // Get operator name from the key
                         operatorName = operatorReceived.replace('_received',''),
+                        // Get color of hovered rect
                         operatorColor = d3.select(n[i]).style("fill");
                     tip = d3.tip()
                         .attr("class", "tooltip")
                         .attr("id", "tooltip")
-                        .html(d => {
+                        .html(d => { 
                             let receivedMessages = d.data[operatorReceived],
                                 totalReceivedMessages = d.data.total_received,
                                 receivedDay = d.data.day,
+                                // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
                                 tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
                                 ${dayDateFormatWithoutYear(new Date(receivedDay))}</div>`;
                             return tooltipContent += `<div>${receivedMessages} Message${receivedMessages !== 1 ? 's': ''} 
