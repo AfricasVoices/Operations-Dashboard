@@ -366,37 +366,6 @@ class GraphController {
             drawOneDayFailedGraph(yLimitFailed);
         }
 
-        // Performs RGB to hex conversion and add any required zero padding
-        function componentToHex(c) {
-            var hex = c.toString(16);
-                return hex.length == 1 ? "0" + hex : hex;
-            }
-
-        function rgbToHex(r, g, b) {
-            return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-        }
-        
-        // Assign legend color for a given operator
-        function legendColorToOperator(color) {
-            let key, received_operators = [];
-            receivedKeys.forEach(key => {
-                received_operators.push(key.split("_")[0])
-            })
-
-            const operatorsFiltered = Object.keys(MNOColors)
-                .filter(key => received_operators.includes(key))
-                .reduce((obj, key) => {
-                    return {
-                        ...obj,
-                        [key]: MNOColors[key]
-                        };
-                }, {})
-
-            key = Object.keys(operatorsFiltered).find(
-                key => operatorsFiltered[key].toLowerCase() === color.toLowerCase());
-            return key
-        }
-
         function draw10MinReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitReceivedManuallySet == false) {
