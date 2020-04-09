@@ -548,7 +548,8 @@ class GraphController {
                             let receivedMessages = d.data[operatorReceived],
                                 totalReceivedMessages = d.data.total_received,
                                 receivedDay = d.data.day,
-                                tooltipContent = `<div>${operatorName} ${dayDateFormatWithoutYear(new Date(receivedDay))}</div>`;
+                                tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
+                                ${dayDateFormatWithoutYear(new Date(receivedDay))}</div>`;
                             return tooltipContent += `<div>${receivedMessages} Message${receivedMessages !== 1 ? 's': ''} 
                             (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)</div>`;
                     })
