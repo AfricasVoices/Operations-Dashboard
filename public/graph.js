@@ -533,6 +533,7 @@ class GraphController {
                 )
                 .attr("width", Width / Object.keys(dailyReceivedTotal).length);
 
+            // Add tooltip for the total received sms graph
             let tip;
             receivedLayer
                 .selectAll("rect")
@@ -563,7 +564,7 @@ class GraphController {
                     tip.hide()
                 })
 
-            //Add the X Axis for the total received sms graph
+            // "Add the X Axis for the total received sms graph
             total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
