@@ -456,8 +456,10 @@ class GraphController {
         function drawOneDayReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             let yLimitReceivedTotal = d3.max(dailyReceivedTotal, d => d.total_received);
+            let lim = 0;
 
             if (isYLimitReceivedManuallySet == false) {
+                lim = 500;
                 yLimitReceived = yLimitReceivedTotal;
             }
 
@@ -494,6 +496,9 @@ class GraphController {
                 .enter()
                 .append("rect")
                 .attr("x", d => x(new Date(d.data.day)))
+                .attr("height", 0)
+                .attr("y", Height)
+                .transition().duration(lim)
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
@@ -750,8 +755,11 @@ class GraphController {
                 .append("rect")
                 .attr("id", "failedBarChart")
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.day)))
-                .attr("y", d => y_total_failed_sms_range(d.total_errored))
-                .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
+                .attr("height", 0)
+                .attr("y", Height)
+                .transition().duration(500)
+                    .attr("y", d => y_total_failed_sms_range(d.total_errored))
+                    .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dailyFailedTotal).length)
 
