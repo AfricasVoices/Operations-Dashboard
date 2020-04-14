@@ -6,7 +6,7 @@ class UIController {
             codingProgressLinkSelector: ".coding-progress-link",
             codingProgressContainer: ".coding-progress-container",
             trafficsLinkSelector: ".traffics-link",
-            graphContainer: ".graph-container",
+            graphContainer: "#graph-container",
             logoutBtn: ".logout-btn",
             dropdownItem: ".dropdown-item",
             activeLinkClassName: "active-link",
@@ -199,14 +199,16 @@ class UIController {
     }
 
     static addGraphs(title) {
-        let DOMstrings = UIController.getDOMstrings(),
+        const divRoot = document.getElementById("graph-container"),
+            newGraphElement = document.createElement("div"),
             script = document.createElement('script');
         script.setAttribute('src','scroll.js');
         document.head.appendChild(script);
-        let html = `<div class="container"> 
-            <div class="d-md-flex justify-content-between p-1">
+        newGraphElement.className = "container";
+        newGraphElement.innerHTML = 
+            `<div class="d-md-flex justify-content-between p-1">
                 <div>
-                    <span class="txt-brown my-auto title"><b>%collection%</b></span>
+                    <span class="txt-brown my-auto title"><b>${title}</b></span>
                 </div>
                 <div>
                     <span class="align-content-end font-weight-bold">Timescale</span>
@@ -267,12 +269,8 @@ class UIController {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div> `,
+            </div>`;
             // Insert the HTML into the DOM
-            newHtml = html.replace("%collection%", title);
-        document
-            .querySelector(DOMstrings.codingProgressContainer)
-            .insertAdjacentHTML("beforeend", newHtml);
+            divRoot.append(newGraphElement);
     }
 }
