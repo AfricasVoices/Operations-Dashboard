@@ -160,8 +160,8 @@ class GraphController {
             x = d3.scaleTime().range([0, Width]),
             failed_messages_x_axis_range = d3.scaleTime().range([0, Width]),
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
-            y_total_sent_sms = d3.scaleLinear().range([Height, 0]),
-            y_total_failed_sms = d3.scaleLinear().range([Height, 0]);
+            y_total_sent_sms_range = d3.scaleLinear().range([Height, 0]),
+            y_total_failed_sms_range = d3.scaleLinear().range([Height, 0]);
 
         // Append total received sms graph to svg
         let total_received_sms_graph = d3
@@ -295,57 +295,6 @@ class GraphController {
             .labels(["total failed"]);
 
         d3.select(".failedLegend").call(failedLegend);
-
-        function updateReceivedChartLimit() {
-            // Get the value of the button
-            let ylimit = this.value;
-
-            y_total_received_sms.domain([0, ylimit]);
-
-            // Add the Y Axis for the total received sms graph
-            total_received_sms_graph
-                .selectAll(".axisSteelBlue")
-                .call(d3.axisLeft(y_total_received_sms));
-
-            receivedLayer
-                .selectAll("rect")
-                .data(d => d)
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
-                )
-                .attr("width", Width / Object.keys(data).length);
-        }
-
-        function updateSentChartLimit() {
-            // Get the value of the button
-            let ylimit = this.value;
-
-            y_total_sent_sms.domain([0, ylimit]);
-
-            // Add the Y Axis for the total sent sms graph
-            total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(y_total_sent_sms));
-
-            sentLayer
-                .selectAll("rect")
-                .data(d => d)
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
-                .attr("width", Width / Object.keys(data).length);
-        }
-
-        // Add an event listener to the button created in the html part
-        d3.select("#buttonYLimitReceived").on("input", updateReceivedChartLimit);
-        d3.select("#buttonYLimitSent")
-            .on("input", updateSentChartLimit)
-            .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top})`)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "start")
-            .style("fill", "blue")
-            .text("Total Failed");
 
         // Set y-axis control button value and draw graphs
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
@@ -586,7 +535,7 @@ class GraphController {
             // set scale domains
             x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
             if (yLimitSent > 0)
-                y_total_sent_sms.domain([0, yLimitSent]);
+                y_total_sent_sms_range.domain([0, yLimitSent]);
 
             // Remove changing chart elements before redrawing
             d3.selectAll(".redrawElementSent").remove();
@@ -598,7 +547,7 @@ class GraphController {
                 .append("g")
                 .attr("class", "axisSteelBlue")
                 .attr("class", "redrawElementSent")
-                .call(d3.axisLeft(y_total_sent_sms));
+                .call(d3.axisLeft(y_total_sent_sms_range));
 
             // Create stacks
             let sentLayer10min = total_sent_sms_graph
@@ -616,8 +565,8 @@ class GraphController {
                 .enter()
                 .append("rect")
                 .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
+                .attr("y", d => y_total_sent_sms_range(d[1]))
+                .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
                 .attr("width", Width / Object.keys(dataFilteredWeek).length);
 
             //Add the X Axis for the total sent sms graph
@@ -674,7 +623,7 @@ class GraphController {
             // set scale domains
             x.domain([xMin, xMax]);
             if (yLimitSent > 0)
-                y_total_sent_sms.domain([0, yLimitSent]);
+                y_total_sent_sms_range.domain([0, yLimitSent]);
 
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack10min").remove();
@@ -685,7 +634,7 @@ class GraphController {
                 .append("g")
                 .attr("class", "axisSteelBlue")
                 .attr("class", "redrawElementSent")
-                .call(d3.axisLeft(y_total_sent_sms));
+                .call(d3.axisLeft(y_total_sent_sms_range));
 
             // Create stacks
             let sentLayer = total_sent_sms_graph
@@ -703,8 +652,8 @@ class GraphController {
                 .enter()
                 .append("rect")
                 .attr("x", d => x(new Date(d.data.day)))
-                .attr("y", d => y_total_sent_sms(d[1]))
-                .attr("height", d => y_total_sent_sms(d[0]) - y_total_sent_sms(d[1]))
+                .attr("y", d => y_total_sent_sms_range(d[1]))
+                .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
                 .attr("width", Width / Object.keys(dailySentTotal).length);
 
             //Add the X Axis for the total sent sms graph
@@ -761,7 +710,7 @@ class GraphController {
                 xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
             failed_messages_x_axis_range.domain([xMin, xMax]);
             if (yLimitFailed > 0)
-                y_total_failed_sms.domain([0, yLimitFailed]);
+                y_total_failed_sms_range.domain([0, yLimitFailed]);
 
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
@@ -772,7 +721,7 @@ class GraphController {
                 .append("g")
                 .attr("class", "axisSteelBrown")
                 .attr("class", "redrawElementFailed")
-                .call(d3.axisLeft(y_total_failed_sms));
+                .call(d3.axisLeft(y_total_failed_sms_range));
 
             // Create bars
             total_failed_sms_graph
@@ -782,8 +731,8 @@ class GraphController {
                 .append("rect")
                 .attr("id", "failedBarChart")
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.day)))
-                .attr("y", d => y_total_failed_sms(d.total_errored))
-                .attr("height", d => Height - y_total_failed_sms(d.total_errored))
+                .attr("y", d => y_total_failed_sms_range(d.total_errored))
+                .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dailyFailedTotal).length)
 
@@ -837,7 +786,7 @@ class GraphController {
             // Set scale domain for failed graph
             failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
             if (yLimitFailed > 0)
-                y_total_failed_sms.domain([0, yLimitFailed]);
+                y_total_failed_sms_range.domain([0, yLimitFailed]);
 
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
@@ -848,7 +797,7 @@ class GraphController {
                 .append("g")
                 .attr("id", "axisSteelBrown")
                 .attr("class", "redrawElementFailed")
-                .call(d3.axisLeft(y_total_failed_sms));
+                .call(d3.axisLeft(y_total_failed_sms_range));
 
             // Create bars
             total_failed_sms_graph
@@ -858,8 +807,8 @@ class GraphController {
                 .append("rect")
                 .attr("id", "failedBarChart10min")
                 .attr("x", d => failed_messages_x_axis_range(new Date(d.datetime)))
-                .attr("y", d => y_total_failed_sms(d.total_errored))
-                .attr("height", d => Height - y_total_failed_sms(d.total_errored))
+                .attr("y", d => y_total_failed_sms_range(d.total_errored))
+                .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dataFilteredWeek).length)
 
