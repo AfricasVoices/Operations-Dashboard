@@ -607,7 +607,7 @@ class GraphController {
                     // Get key of stacked data from the selection
                     let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
                         // Get operator name from the key
-                        operatorName = operatorNameWithMessageDirection.replace('_received',''),
+                        operatorName = operatorNameWithMessageDirection.replace('_sent',''),
                         // Get color of hovered rect
                         operatorColor = d3.select(n[i]).style("fill");
                     tip = d3.tip()
