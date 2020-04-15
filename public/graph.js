@@ -467,7 +467,6 @@ class GraphController {
                         .html(d => { 
                             let receivedMessages = d.data[operatorReceived],
                                 totalReceivedMessages = d.data.total_received,
-                                receivedDay = d.data.day,
                                 // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
                                 tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
                             return tooltipContent += `<div>${receivedMessages} Message${receivedMessages !== 1 ? 's': ''} 
