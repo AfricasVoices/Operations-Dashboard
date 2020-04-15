@@ -467,10 +467,12 @@ class GraphController {
                         .html(d => { 
                             let receivedMessages = d.data[operatorNameWithMessageDirection],
                                 totalReceivedMessages = d.data.total_received,
-                                // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
-                                tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
-                            return tooltipContent += `<div>${receivedMessages} Message${receivedMessages !== 1 ? 's': ''} 
-                            (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)</div>`;
+                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+                                tooltipContent = `<div>${receivedMessages} 
+                                (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
+                                ${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
+                                Message${receivedMessages !== 1 ? 's': ''} </div>`;
+                            return tooltipContent;
                     })
                     total_received_sms_graph.call(tip)
                     tip.show(d, n[i]).style("color", operatorColor)
