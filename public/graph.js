@@ -17,7 +17,6 @@ class GraphController {
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
-            dayDateFormatWithoutYear = d3.timeFormat("%a %b %d"),
             dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
@@ -470,8 +469,7 @@ class GraphController {
                                 totalReceivedMessages = d.data.total_received,
                                 receivedDay = d.data.day,
                                 // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
-                                tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
-                                ${dayDateFormatWithoutYear(new Date(receivedDay))}</div>`;
+                                tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
                             return tooltipContent += `<div>${receivedMessages} Message${receivedMessages !== 1 ? 's': ''} 
                             (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)</div>`;
                     })
