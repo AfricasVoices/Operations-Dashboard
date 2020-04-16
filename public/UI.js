@@ -216,7 +216,7 @@ class UIController {
                     <select class="btn-brown btn-sm form-control col-3" id="timeFrame">
                         <option value="7">7 days</option>
                         <option value="14">14 days</option>
-                        <option value="31">31 days</option>
+                        <option value="30">30 days</option>
                     </select> 
                 </div>
                 <div class="d-flex">
