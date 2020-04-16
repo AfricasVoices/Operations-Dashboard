@@ -834,29 +834,6 @@ class GraphController {
                 .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dataFilteredWeek).length)
 
-            // Add tooltip for the total failed sms graph
-            let tip;
-            total_failed_sms_graph
-                .selectAll("rect")
-                .on("mouseover", (d, i, n) => {
-                    let barColor = d3.select(n[i]).style("fill");
-                    tip = d3.tip()
-                        .attr("class", "tooltip")
-                        .attr("id", "tooltip")
-                        .html(d => {
-                            let totalFiledMessages = d.total_errored,
-                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
-                                tooltipContent = `<div>${totalFiledMessages} Failed
-                                Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
-                            return tooltipContent;
-                        })
-                    total_failed_sms_graph.call(tip)
-                    tip.show(d, n[i]).style("color", barColor)
-                })
-                .on("mouseout", (d, i, n) => {
-                    tip.hide()
-                })
-
             // Add the X Axis for the total failed sms graph
             total_failed_sms_graph
                 .append("g")
