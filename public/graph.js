@@ -411,8 +411,8 @@ class GraphController {
                 yLimitReceived = yLimitReceivedTotal;
             }
 
-            let xMin = d3.min(data, d => new Date(d.day)),
-                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            let xMin = d3.min(dailyReceivedTotal, d => new Date(d.day)),
+                xMax = d3.max(dailyReceivedTotal, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             if (yLimitReceived > 0)
