@@ -5,6 +5,11 @@ class GraphController {
         newDate.setDate(newDate.getDate() + 1);
         return newDate;
     }
+    static rmOneDayToDate(date) {
+        let newDate = new Date(date);
+        newDate.setDate(newDate.getDate() - 1);
+        return newDate;
+    }
 
     static updateGraphs(data, projectName, MNOColors, week=7, month=30) {
         console.log(projectName)
@@ -411,8 +416,9 @@ class GraphController {
                 yLimitReceived = yLimitReceivedTotal;
             }
 
-            let xMin = d3.min(dailyReceivedTotal, d => new Date(d.day)),
+            let xMin = d3.min(dailyReceivedTotal, d => GraphController.rmOneDayToDate(d.day)),
                 xMax = d3.max(dailyReceivedTotal, d => GraphController.addOneDayToDate(d.day));
+                
             // set scale domains
             x.domain([xMin, xMax]);
             if (yLimitReceived > 0)
@@ -443,13 +449,13 @@ class GraphController {
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
+                .attr("x", d => x(new Date(d.data.day)) - (Width/Object.keys(dailyReceivedTotal).length)/2)
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(dailyReceivedTotal).length);
+                .attr("width", Width / (Object.keys(dailyReceivedTotal).length)/1.4);
 
             // Add tooltip for the total received sms graph
             let tip;
