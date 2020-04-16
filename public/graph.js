@@ -6,9 +6,10 @@ class GraphController {
         return newDate;
     }
 
-    static updateGraphs(data, projectName, MNOColors) {
-        const TIMEFRAME_WEEK = 7,
-            TIMEFRAME_MONTH = 30;
+    static updateGraphs(data, projectName, MNOColors, week=7, month=30) {
+        console.log(projectName)
+        const TIMEFRAME_WEEK = week,
+            TIMEFRAME_MONTH = month;
         if (!GraphController.chartTimeUnit) {
             GraphController.chartTimeUnit = "10min";
         }
