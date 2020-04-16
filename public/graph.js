@@ -864,6 +864,16 @@ class GraphController {
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         });
 
+        d3.select("#timeFrame").on("change", function() {
+            let timeFrame = this.options[this.selectedIndex].value,
+                week = 7, month = 30;
+            if (timeFrame == "default") {
+                GraphController.updateGraphs(data, projectName, MNOColors, week, month)
+            } else {
+                GraphController.updateGraphs(data, projectName, MNOColors, timeFrame, timeFrame)
+            }
+        })
+
         // Draw received graph with user-selected y-axis limit
         d3.select("#buttonYLimitReceived").on("input", function() {
             isYLimitReceivedManuallySet = true;
