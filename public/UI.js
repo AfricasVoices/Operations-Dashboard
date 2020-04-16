@@ -215,7 +215,7 @@ class UIController {
                     <span class="align-content-end font-weight-bold ml-3">TimeFrame</span>
                     <select class="btn-brown btn-sm form-control col-3" id="timeFrame">
                         <option value="default">Default</option>
-                        <option value="1">48 Hours</option>
+                        <option value="2">48 Hours</option>
                         <option value="7">7 days</option>
                         <option value="14">14 days</option>
                         <option value="30">30 days</option>
