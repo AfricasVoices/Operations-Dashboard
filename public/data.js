@@ -29,7 +29,8 @@ class DataController {
             onChange(activeProjects);
         }, error => {
             if (error.code == "permission-denied") {
-                // This error is only handled here because this is the first listener to be invoked 
+                // This error is only handled here because this is the second listener to be invoked 
+                // after Authentication state listener
                 alert(error.message) // Alert Missing or insufficient permissions.
                 window.location.replace("auth.html")
             } else {
