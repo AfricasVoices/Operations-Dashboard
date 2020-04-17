@@ -295,57 +295,6 @@ class GraphController {
 
         d3.select(".failedLegend").call(failedLegend);
 
-        function updateReceivedChartLimit() {
-            // Get the value of the button
-            let ylimit = this.value;
-
-            y_total_received_sms.domain([0, ylimit]);
-
-            // Add the Y Axis for the total received sms graph
-            total_received_sms_graph
-                .selectAll(".axisSteelBlue")
-                .call(d3.axisLeft(y_total_received_sms));
-
-            receivedLayer
-                .selectAll("rect")
-                .data(d => d)
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
-                )
-                .attr("width", Width / Object.keys(data).length);
-        }
-
-        function updateSentChartLimit() {
-            // Get the value of the button
-            let ylimit = this.value;
-
-            y_total_sent_sms_range.domain([0, ylimit]);
-
-            // Add the Y Axis for the total sent sms graph
-            total_sent_sms_graph.selectAll(".axisSteelBlue").call(d3.axisLeft(y_total_sent_sms_range));
-
-            sentLayer
-                .selectAll("rect")
-                .data(d => d)
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms_range(d[1]))
-                .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", Width / Object.keys(data).length);
-        }
-
-        // Add an event listener to the button created in the html part
-        d3.select("#buttonYLimitReceived").on("input", updateReceivedChartLimit);
-        d3.select("#buttonYLimitSent")
-            .on("input", updateSentChartLimit)
-            .attr("transform", `translate(${Width - Margin.right + 100},${Margin.top})`)
-            .attr("dy", ".35em")
-            .attr("text-anchor", "start")
-            .style("fill", "blue")
-            .text("Total Failed");
-
         // Set y-axis control button value and draw graphs
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
@@ -501,7 +450,38 @@ class GraphController {
                 )
                 .attr("width", Width / Object.keys(dailyReceivedTotal).length);
 
-            //Add the X Axis for the total received sms graph
+            // Add tooltip for the total received sms graph
+            let tip;
+            receivedLayer
+                .selectAll("rect")
+                .on("mouseover", (d, i, n) => {
+                    // Get key of stacked data from the selection
+                    let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
+                        // Get operator name from the key
+                        operatorName = operatorNameWithMessageDirection.replace('_received',''),
+                        // Get color of hovered rect
+                        operatorColor = d3.select(n[i]).style("fill");
+                    tip = d3.tip()
+                        .attr("class", "tooltip")
+                        .attr("id", "tooltip")
+                        .html(d => { 
+                            let receivedMessages = d.data[operatorNameWithMessageDirection],
+                                totalReceivedMessages = d.data.total_received,
+                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+                                tooltipContent = `<div>${receivedMessages} 
+                                (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
+                                ${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
+                                Message${receivedMessages !== 1 ? 's': ''} </div>`;
+                            return tooltipContent;
+                    })
+                    total_received_sms_graph.call(tip)
+                    tip.show(d, n[i]).style("color", operatorColor)
+                })
+                .on("mouseout", (d, i, n) => {
+                    tip.hide()
+                })
+
+            // "Add the X Axis for the total received sms graph
             total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
@@ -675,6 +655,37 @@ class GraphController {
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
                 .attr("width", Width / Object.keys(dailySentTotal).length);
 
+            // Add tooltip for the total sent sms graph
+            let tip;
+            sentLayer
+                .selectAll("rect")
+                .on("mouseover", (d, i, n) => {
+                    // Get key of stacked data from the selection
+                    let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
+                        // Get operator name from the key
+                        operatorName = operatorNameWithMessageDirection.replace('_sent',''),
+                        // Get color of hovered rect
+                        operatorColor = d3.select(n[i]).style("fill");
+                    tip = d3.tip()
+                        .attr("class", "tooltip")
+                        .attr("id", "tooltip")
+                        .html(d => { 
+                            let sentMessages = d.data[operatorNameWithMessageDirection],
+                                totalSentMessages = d.data.total_sent,
+                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+                                tooltipContent = `<div>${sentMessages} 
+                                (${Math.round((sentMessages/totalSentMessages)*100)}%)
+                                ${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
+                                Message${sentMessages !== 1 ? 's': ''} </div>`;
+                            return tooltipContent;
+                    })
+                    total_sent_sms_graph.call(tip)
+                    tip.show(d, n[i]).style("color", operatorColor)
+                })
+                .on("mouseout", (d, i, n) => {
+                    tip.hide()
+                })
+
             //Add the X Axis for the total sent sms graph
             total_sent_sms_graph
                 .append("g")
@@ -754,6 +765,29 @@ class GraphController {
                 .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dailyFailedTotal).length)
+
+            // Add tooltip for the total failed sms graph
+            let tip;
+            total_failed_sms_graph
+                .selectAll("rect")
+                .on("mouseover", (d, i, n) => {
+                    let barColor = d3.select(n[i]).style("fill");
+                    tip = d3.tip()
+                        .attr("class", "tooltip")
+                        .attr("id", "tooltip")
+                        .html(d => {
+                            let totalFiledMessages = d.total_errored,
+                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+                                tooltipContent = `<div>${totalFiledMessages} Failed
+                                Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
+                            return tooltipContent;
+                        })
+                    total_failed_sms_graph.call(tip)
+                    tip.show(d, n[i]).style("color", barColor)
+                })
+                .on("mouseout", (d, i, n) => {
+                    tip.hide()
+                })
 
             // Add the X Axis for the total failed sms graph
             total_failed_sms_graph
