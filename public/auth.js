@@ -2,7 +2,7 @@ class AuthController {
     // Authentication state listener
     static getUser() {
         firebase.auth().onAuthStateChanged(user => {
-            if (user) {
+            if (user && user.email.match(".*@africasvoices.org$")){
                 console.log("User Authorized");
             } else {
                 window.location.replace("auth.html")
