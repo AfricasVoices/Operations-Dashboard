@@ -539,24 +539,6 @@ class GraphController {
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
 
-            // Add the X gridlines
-            total_received_sms_graph.append("g")			
-                .attr("class", "grid")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .ticks(d3.timeDay.every(1))
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
-
-            // Add the Y gridlines
-            total_received_sms_graph.append("g")			
-                .attr("class", "grid")
-                .call(d3.axisLeft(y_total_received_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
-
             // Total Sms(s) graph title
             total_received_sms_graph
                 .append("text")
