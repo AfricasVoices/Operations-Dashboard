@@ -6,6 +6,12 @@ class GraphController {
         return newDate;
     }
 
+    static rmOneDayToDate(date) {
+        let newDate = new Date(date);
+        newDate.setDate(newDate.getDate() - 1);
+        return newDate;
+    }
+
     static updateGraphs(data, projectName, MNOColors, week=7, month=30) {
         const TIMEFRAME_WEEK = week,
             TIMEFRAME_MONTH = month;
