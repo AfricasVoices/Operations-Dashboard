@@ -27,7 +27,15 @@ class DataController {
             // Update data every time it changes in firestore
             DataController.updateData(res, activeProjects);
             onChange(activeProjects);
-        }, error => console.log(error));
+        }, error => {
+            if (error.code == "permission-denied") {
+                // This error is only handled here because this is the first listener to be invoked 
+                alert(error.message) // Alert Missing or insufficient permissions.
+                window.location.replace("auth.html")
+            } else {
+                console.log(error);
+            }     
+        });
     }
 
     static watchCodingProgress(onChange) {
