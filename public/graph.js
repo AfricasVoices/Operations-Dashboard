@@ -621,7 +621,7 @@ class GraphController {
                 yLimitSent = yLimitSentTotal;
             }
 
-            let xMin = d3.min(dailySentTotal, d => new Date(d.day)),
+            let xMin = d3.min(dailySentTotal, d => GraphController.rmOneDayToDate(d.day)),
                 xMax = d3.max(dailySentTotal, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
@@ -654,10 +654,10 @@ class GraphController {
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
+                .attr("x", d => x(new Date(d.data.day)) - (Width/Object.keys(dailySentTotal).length)/2)
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", Width / Object.keys(dailySentTotal).length);
+                .attr("width", Width / (Object.keys(dailySentTotal).length)/1.4);
 
             // Add tooltip for the total sent sms graph
             let tip;
