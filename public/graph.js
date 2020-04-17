@@ -410,7 +410,7 @@ class GraphController {
                 yLimitReceived = yLimitReceivedTotal;
             }
 
-            let xMin = d3.min(dailyReceivedTotal, d => new Date(d.day)),
+            let xMin = d3.min(dailyReceivedTotal, d => GraphController.rmOneDayToDate(d.day)),
                 xMax = d3.max(dailyReceivedTotal, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
@@ -437,18 +437,22 @@ class GraphController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
+            // Use data to calculate the bar's width attribute & x attribute shift value to enable 
+            // their dynamic adjustements when the timeframe to view the graph is changed
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
+                // Subtract a small amount from the x axis to shift it to the right
+                .attr("x", d => x(new Date(d.data.day)) - (Width/Object.keys(dailyReceivedTotal).length)/2)
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(dailyReceivedTotal).length);
+                // Dividing by (1.4) reduces the width of a bar slightly thus space in between bars
+                .attr("width", Width / (Object.keys(dailyReceivedTotal).length) / 1.4);
 
             // Add tooltip for the total received sms graph
             let tip;
