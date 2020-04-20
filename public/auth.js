@@ -17,4 +17,5 @@ class AuthController {
                 console.log(err);
             })
     }
+
 }
