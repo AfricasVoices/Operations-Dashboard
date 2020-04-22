@@ -873,6 +873,7 @@ class GraphController {
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
             d3.selectAll("#failedBarChart10min").remove();
+            d3.selectAll(".failedGrid").remove();
 
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
