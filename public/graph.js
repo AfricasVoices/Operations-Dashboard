@@ -6,9 +6,9 @@ class GraphController {
         return newDate;
     }
 
-    static updateGraphs(data, projectName, MNOColors) {
-        const TIMEFRAME_WEEK = 7,
-            TIMEFRAME_MONTH = 30;
+    static updateGraphs(data, projectName, MNOColors, week=7, month=30) {
+        const TIMEFRAME_WEEK = week,
+            TIMEFRAME_MONTH = month;
         if (!GraphController.chartTimeUnit) {
             GraphController.chartTimeUnit = "10min";
         }
@@ -410,8 +410,8 @@ class GraphController {
                 yLimitReceived = yLimitReceivedTotal;
             }
 
-            let xMin = d3.min(data, d => new Date(d.day)),
-                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            let xMin = d3.min(dailyReceivedTotal, d => new Date(d.day)),
+                xMax = d3.max(dailyReceivedTotal, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             if (yLimitReceived > 0)
@@ -437,6 +437,7 @@ class GraphController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
+            let innerPadding = 5
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
@@ -448,7 +449,7 @@ class GraphController {
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(dailyReceivedTotal).length);
+                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) - innerPadding);
 
             // Add tooltip for the total received sms graph
             let tip;
@@ -482,6 +483,7 @@ class GraphController {
                 })
 
             // "Add the X Axis for the total received sms graph
+            const tickValuesForAxis = dailyReceivedTotal.map(d => new Date(d.day));
             total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
@@ -489,8 +491,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(1))
-                        .tickFormat(dayDateFormatWithWeekdayName)
+                        .tickValues(tickValuesForAxis)
+                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -617,8 +619,8 @@ class GraphController {
                 yLimitSent = yLimitSentTotal;
             }
 
-            let xMin = d3.min(data, d => new Date(d.day)),
-                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            let xMin = d3.min(dailySentTotal, d => new Date(d.day)),
+                xMax = d3.max(dailySentTotal, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             if (yLimitSent > 0)
@@ -645,6 +647,7 @@ class GraphController {
                 .attr("class", (d, i) => sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
+            let innerPadding = 5;
             sentLayer
                 .selectAll("rect")
                 .data(d => d)
@@ -653,7 +656,7 @@ class GraphController {
                 .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", Width / Object.keys(dailySentTotal).length);
+                .attr("width", (Width / Object.keys(dailySentTotal).length) - innerPadding);
 
             // Add tooltip for the total sent sms graph
             let tip;
@@ -687,6 +690,7 @@ class GraphController {
                 })
 
             //Add the X Axis for the total sent sms graph
+            const tickValuesForAxis = dailySentTotal.map(d => new Date(d.day));
             total_sent_sms_graph
                 .append("g")
                 .attr("class", "redrawElementSent")
@@ -694,8 +698,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(1))
-                        .tickFormat(dayDateFormatWithWeekdayName)
+                        .tickValues(tickValuesForAxis)
+                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -736,8 +740,8 @@ class GraphController {
             }
 
             // set scale domain for failed graph
-            let xMin = d3.min(data, d => new Date(d.day)),
-                xMax = d3.max(data, d => GraphController.addOneDayToDate(d.day));
+            let xMin = d3.min(dailyFailedTotal, d => new Date(d.day)),
+                xMax = d3.max(dailyFailedTotal, d => GraphController.addOneDayToDate(d.day));
             failed_messages_x_axis_range.domain([xMin, xMax]);
             if (yLimitFailed > 0)
                 y_total_failed_sms_range.domain([0, yLimitFailed]);
@@ -754,17 +758,18 @@ class GraphController {
                 .call(d3.axisLeft(y_total_failed_sms_range));
 
             // Create bars
+            let innerPadding = 5;
             total_failed_sms_graph
                 .selectAll("rect")
                 .data(dailyFailedTotal)
                 .enter()
                 .append("rect")
                 .attr("id", "failedBarChart")
-                .attr("x", d => failed_messages_x_axis_range(new Date(d.day)))
+                .attr("x", d => x(new Date(d.day)))
                 .attr("y", d => y_total_failed_sms_range(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
-                .attr("width", Width / Object.keys(dailyFailedTotal).length)
+                .attr("width", (Width / Object.keys(dailyFailedTotal).length) - innerPadding);
 
             // Add tooltip for the total failed sms graph
             let tip;
@@ -790,6 +795,7 @@ class GraphController {
                 })
 
             // Add the X Axis for the total failed sms graph
+            const tickValuesForAxis = dailyFailedTotal.map(d => new Date(d.day));
             total_failed_sms_graph
                 .append("g")
                 .attr("class", "redrawElementFailed")
@@ -797,8 +803,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(failed_messages_x_axis_range)
-                        .ticks(d3.timeDay.every(1))
-                        .tickFormat(dayDateFormatWithWeekdayName)
+                        .tickValues(tickValuesForAxis)
+                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -916,6 +922,16 @@ class GraphController {
             GraphController.chartTimeUnit = "1day";
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         });
+
+        d3.select("#timeFrame").on("change", function() {
+            let timeFrame = this.options[this.selectedIndex].value,
+                week = 7, month = 30;
+            if (timeFrame == "default") {
+                GraphController.updateGraphs(data, projectName, MNOColors, week, month)
+            } else {
+                GraphController.updateGraphs(data, projectName, MNOColors, timeFrame, timeFrame)
+            }
+        })
 
         // Draw received graph with user-selected y-axis limit
         d3.select("#buttonYLimitReceived").on("input", function() {
