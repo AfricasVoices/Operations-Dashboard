@@ -420,25 +420,6 @@ class GraphController {
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll("#receivedStack").remove();
-            d3.selectAll(".grid").remove();
-
-            // Add the X gridlines
-            total_received_sms_graph.append("g")			
-                .attr("class", "grid")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .ticks(d3.timeDay.every(1))
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
-
-            // Add the Y gridlines
-            total_received_sms_graph.append("g")			
-                .attr("class", "grid")
-                .call(d3.axisLeft(y_total_received_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
 
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
