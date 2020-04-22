@@ -709,6 +709,7 @@ class GraphController {
                 })
 
             //Add the X Axis for the total sent sms graph
+            const tickValuesForAxis = dailySentTotal.map(d => new Date(d.day));
             total_sent_sms_graph
                 .append("g")
                 .attr("class", "redrawElementSent")
@@ -716,8 +717,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(1))
-                        .tickFormat(dayDateFormatWithWeekdayName)
+                        .tickValues(tickValuesForAxis)
+                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -813,6 +814,7 @@ class GraphController {
                 })
 
             // Add the X Axis for the total failed sms graph
+            const tickValuesForAxis = dailyFailedTotal.map(d => new Date(d.day));
             total_failed_sms_graph
                 .append("g")
                 .attr("class", "redrawElementFailed")
@@ -820,8 +822,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(failed_messages_x_axis_range)
-                        .ticks(d3.timeDay.every(1))
-                        .tickFormat(dayDateFormatWithWeekdayName)
+                        .tickValues(tickValuesForAxis)
+                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
                 .selectAll("text")
