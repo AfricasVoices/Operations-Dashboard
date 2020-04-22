@@ -833,6 +833,26 @@ class GraphController {
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
             d3.selectAll("#failedBarChart10min").remove();
+            d3.selectAll(".failedGrid").remove();
+
+            // Add the X gridlines
+            const tickValuesForXAxis = dailyFailedTotal.map(d => new Date(d.day));
+            total_failed_sms_graph.append("g")			
+                .attr("class", "failedGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add the Y gridlines
+            total_failed_sms_graph.append("g")			
+                .attr("class", "failedGrid")
+                .call(d3.axisLeft(y_total_failed_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
 
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
