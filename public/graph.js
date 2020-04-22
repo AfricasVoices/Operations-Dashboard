@@ -624,7 +624,7 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(1))
+                        .tickValues(tickValuesForXAxis)
                         .tickFormat(timeFormat)
                 )
                 // Rotate axis labels
