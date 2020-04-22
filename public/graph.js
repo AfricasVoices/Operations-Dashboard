@@ -906,7 +906,7 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(failed_messages_x_axis_range)
-                        .tickValues(tickValuesForAxis)
+                        .tickValues(tickValuesForXAxis)
                         .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
