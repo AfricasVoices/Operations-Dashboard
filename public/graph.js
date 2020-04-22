@@ -775,7 +775,6 @@ class GraphController {
                 })
 
             //Add the X Axis for the total sent sms graph
-            const tickValuesForAxis = dailySentTotal.map(d => new Date(d.day));
             total_sent_sms_graph
                 .append("g")
                 .attr("class", "redrawElementSent")
