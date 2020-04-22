@@ -696,6 +696,25 @@ class GraphController {
             d3.selectAll("#sentStack1day").remove();
             d3.selectAll(".sentGrid").remove();
 
+            // Add the X gridlines
+            const tickValuesForXAxis = dailySentTotal.map(d => new Date(d.day));
+            total_sent_sms_graph.append("g")			
+                .attr("class", "sentGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add the Y gridlines
+            total_sent_sms_graph.append("g")			
+                .attr("class", "sentGrid")
+                .call(d3.axisLeft(y_total_sent_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
                 .append("g")
