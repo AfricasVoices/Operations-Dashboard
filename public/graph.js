@@ -567,6 +567,28 @@ class GraphController {
             d3.selectAll("#sentStack10min").remove();
             d3.selectAll(".sentGrid").remove();
 
+            // Group data filtered by week daily and generate tick values for x axis
+            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day).entries(dataFilteredWeek);
+            let tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => new Date(d.key)).slice(1)
+           
+            // Add the X gridlines
+            total_sent_sms_graph.append("g")			
+                .attr("class", "sentGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add the Y gridlines
+            total_sent_sms_graph.append("g")			
+                .attr("class", "sentGrid")
+                .call(d3.axisLeft(y_total_sent_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
                 .append("g")
