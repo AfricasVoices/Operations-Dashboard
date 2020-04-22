@@ -666,6 +666,7 @@ class GraphController {
                 .attr("class", (d, i) => sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
+            let innerPadding = 5;
             sentLayer
                 .selectAll("rect")
                 .data(d => d)
@@ -674,7 +675,7 @@ class GraphController {
                 .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", Width / (Object.keys(dailySentTotal).length)/1.4);
+                .attr("width", (Width / Object.keys(dailySentTotal).length) - innerPadding);
 
             // Add tooltip for the total sent sms graph
             let tip;
@@ -775,6 +776,7 @@ class GraphController {
                 .call(d3.axisLeft(y_total_failed_sms_range));
 
             // Create bars
+            let innerPadding = 5;
             total_failed_sms_graph
                 .selectAll("rect")
                 .data(dailyFailedTotal)
@@ -785,7 +787,7 @@ class GraphController {
                 .attr("y", d => y_total_failed_sms_range(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
-                .attr("width", Width / (Object.keys(dailyFailedTotal).length)/1.4);
+                .attr("width", (Width / Object.keys(dailyFailedTotal).length) - innerPadding);
 
             // Add tooltip for the total failed sms graph
             let tip;
