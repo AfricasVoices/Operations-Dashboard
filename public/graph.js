@@ -508,6 +508,7 @@ class GraphController {
                 })
 
             // "Add the X Axis for the total received sms graph
+            const tickValuesForAxis = dailyReceivedTotal.map(d => new Date(d.day));
             total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
@@ -515,8 +516,8 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(1))
-                        .tickFormat(dayDateFormatWithWeekdayName)
+                        .tickValues(tickValuesForAxis)
+                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
                 .selectAll("text")
