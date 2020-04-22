@@ -467,8 +467,7 @@ class GraphController {
                 .data(d => d)
                 .enter()
                 .append("rect")
-                // Subtract a small amount from the x axis to shift it to the right
-                .attr("x", d => x(new Date(d.data.day)) - (Width/Object.keys(dailyReceivedTotal).length)/2)
+                .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
