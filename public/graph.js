@@ -462,8 +462,6 @@ class GraphController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            // Use data to calculate the bar's width attribute & x attribute shift value to enable 
-            // their dynamic adjustements when the timeframe to view the graph is changed
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
