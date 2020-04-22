@@ -6,12 +6,6 @@ class GraphController {
         return newDate;
     }
 
-    static rmOneDayToDate(date) {
-        let newDate = new Date(date);
-        newDate.setDate(newDate.getDate() - 1);
-        return newDate;
-    }
-
     static updateGraphs(data, projectName, MNOColors, week=7, month=30) {
         const TIMEFRAME_WEEK = week,
             TIMEFRAME_MONTH = month;
@@ -644,7 +638,7 @@ class GraphController {
                 yLimitSent = yLimitSentTotal;
             }
 
-            let xMin = d3.min(dailySentTotal, d => GraphController.rmOneDayToDate(d.day)),
+            let xMin = d3.min(dailySentTotal, d => new Date(d.day)),
                 xMax = d3.max(dailySentTotal, d => GraphController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
@@ -763,7 +757,7 @@ class GraphController {
             }
 
             // set scale domain for failed graph
-            let xMin = d3.min(dailyFailedTotal, d => GraphController.rmOneDayToDate(d.day)),
+            let xMin = d3.min(dailyFailedTotal, d => new Date(d.day)),
                 xMax = d3.max(dailyFailedTotal, d => GraphController.addOneDayToDate(d.day));
             failed_messages_x_axis_range.domain([xMin, xMax]);
             if (yLimitFailed > 0)
