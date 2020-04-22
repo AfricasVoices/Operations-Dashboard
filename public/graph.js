@@ -50,6 +50,9 @@ class GraphController {
 
         offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK);
         offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH);
+        // Set date offsets to nearest midnight in the past
+        offsetWeek.setHours(0,0,0,0)
+        offsetMonth.setHours(0,0,0,0)
 
         // Set default y-axis limits
         let dataFilteredWeek = data.filter(a => a.datetime > offsetWeek),
