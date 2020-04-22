@@ -671,7 +671,7 @@ class GraphController {
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)) - (Width/Object.keys(dailySentTotal).length)/2)
+                .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
                 .attr("width", Width / (Object.keys(dailySentTotal).length)/1.4);
@@ -781,7 +781,7 @@ class GraphController {
                 .enter()
                 .append("rect")
                 .attr("id", "failedBarChart")
-                .attr("x", d => x(new Date(d.day)) - (Width/Object.keys(dailyFailedTotal).length)/2)
+                .attr("x", d => x(new Date(d.day)))
                 .attr("y", d => y_total_failed_sms_range(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
