@@ -333,6 +333,28 @@ class GraphController {
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll(".receivedGrid").remove();
 
+            // Group data filtered by week daily and generate tick values for x axis
+            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day).entries(dataFilteredWeek);
+            let tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => new Date(d.key)).slice(1)
+           
+            // Add the X gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add the Y gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedGrid")
+                .call(d3.axisLeft(y_total_received_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
                 .append("g")
