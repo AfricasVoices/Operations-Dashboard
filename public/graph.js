@@ -462,6 +462,7 @@ class GraphController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
+            let innerPadding = 5
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
@@ -473,8 +474,7 @@ class GraphController {
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                // Dividing by (1.4) reduces the width of a bar slightly thus space in between bars
-                .attr("width", Width / (Object.keys(dailyReceivedTotal).length) / 1.4);
+                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) - innerPadding);
 
             // Add tooltip for the total received sms graph
             let tip;
