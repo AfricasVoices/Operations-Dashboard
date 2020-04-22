@@ -899,7 +899,6 @@ class GraphController {
                 })
 
             // Add the X Axis for the total failed sms graph
-            const tickValuesForAxis = dailyFailedTotal.map(d => new Date(d.day));
             total_failed_sms_graph
                 .append("g")
                 .attr("class", "redrawElementFailed")
