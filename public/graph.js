@@ -694,6 +694,7 @@ class GraphController {
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack10min").remove();
             d3.selectAll("#sentStack1day").remove();
+            d3.selectAll(".sentGrid").remove();
 
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
