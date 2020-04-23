@@ -29,9 +29,18 @@ class DataController {
             onChange(activeProjects);
         }, error => {
             if (error.code == "permission-denied") {
-                // This error is only handled here because this is the second listener to be invoked 
-                // after Authentication state listener
-                alert(error.message) // Alert Missing or insufficient permissions.
+                firebase.auth().onAuthStateChanged(user => { 
+                    if (user) {
+                        name = user.displayName.split(" ").slice(0,-1)
+                        // Error message - Alert Missing or insufficient permissions.
+                        alert(`${error.message} 
+                        \r Please ${name} use AVF email or liaise with Africa's Voices Foundation (AVF) to give you AVF email`) 
+                        if (user.email.match(".*@africasvoices.org$")) {
+                            alert(`${error.message} 
+                            \r Please ${name} liaise with Africa's Voices Foundation (AVF) to activate your email`) 
+                        }
+                    }
+                })
                 window.location.replace("auth.html")
             } else {
                 console.log(error);
