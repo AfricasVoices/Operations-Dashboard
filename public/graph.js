@@ -440,19 +440,20 @@ class GraphController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            let innerPadding = 5
+            // Values to adjust x and width attributes
+            let rightPadding = -2, shiftBarsToRight = 1;
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
+                .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) - innerPadding);
+                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) + rightPadding);
 
             // Add tooltip for the total received sms graph
             let tip;
