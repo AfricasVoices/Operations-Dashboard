@@ -762,19 +762,20 @@ class GraphController {
                 .attr("class", "redrawElementFailed")
                 .call(d3.axisLeft(y_total_failed_sms_range));
 
+            // Values to adjust x and width attributes
+            let rightPadding = -2, shiftBarsToRight = 1;
             // Create bars
-            let innerPadding = 5;
             total_failed_sms_graph
                 .selectAll("rect")
                 .data(dailyFailedTotal)
                 .enter()
                 .append("rect")
                 .attr("id", "failedBarChart")
-                .attr("x", d => x(new Date(d.day)))
+                .attr("x", d => x(new Date(d.day)) + shiftBarsToRight)
                 .attr("y", d => y_total_failed_sms_range(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
-                .attr("width", (Width / Object.keys(dailyFailedTotal).length) - innerPadding);
+                .attr("width", (Width / Object.keys(dailyFailedTotal).length) + rightPadding);
 
             // Add tooltip for the total failed sms graph
             let tip;
