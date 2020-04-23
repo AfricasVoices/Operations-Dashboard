@@ -337,8 +337,24 @@ class GraphController {
             d3.selectAll(".receivedGrid").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
-            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day).entries(dataFilteredWeek);
-            let tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => new Date(d.key)).slice(1)
+            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
+            .rollup(v => {
+                let firstTimestampOfDay = {}
+                firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
+                return firstTimestampOfDay
+            })
+            .entries(dataFilteredWeek);
+
+            // Flatten nested data
+            for (let entry in dataFilteredWeekGroupedDaily) {
+                let valueList = dataFilteredWeekGroupedDaily[entry].value;
+                for (let key in valueList) {
+                    dataFilteredWeekGroupedDaily[entry][key] = valueList[key];
+                }
+                delete dataFilteredWeekGroupedDaily[entry]["value"];
+                delete dataFilteredWeekGroupedDaily[entry]["key"];
+            }
+            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
            
             // Add the X gridlines
             total_received_sms_graph.append("g")			
