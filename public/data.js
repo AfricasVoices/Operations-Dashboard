@@ -61,7 +61,7 @@ class DataController {
     }
 
     static watchProjectTrafficData(projectName, onChange) {
-        const TIMERANGE = 30;
+        const TIMERANGE = 31;
         let offset = new Date();
         offset.setDate(offset.getDate() - TIMERANGE);
         let data = [],
