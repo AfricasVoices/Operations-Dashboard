@@ -50,7 +50,10 @@ class GraphController {
 
         offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK);
         offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH);
-        // Set date offsets to nearest midnight in the past
+        // Set date offsets to nearest midnight in the past 
+        /* The offset dates sometime don't begin at the start of the day; thus they leave 
+            the rest of the day messages not to be included in the first bar of graph when
+            plotting one day view graphs */
         offsetWeek.setHours(0,0,0,0)
         offsetMonth.setHours(0,0,0,0)
 
