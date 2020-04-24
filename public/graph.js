@@ -447,12 +447,16 @@ class GraphController {
                 .data(d => d)
                 .enter()
                 .append("rect")
+                /* Shift bars to the right 
+                 - prevents first bar of graph from overlapping y axis path */
                 .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
+                /* Reduce the right padding of bars 
+                 - Accomodates the shift of the bars to the right so that they don't overlap */
                 .attr("width", (Width / Object.keys(dailyReceivedTotal).length) + rightPadding);
 
             // Add tooltip for the total received sms graph
@@ -658,9 +662,13 @@ class GraphController {
                 .data(d => d)
                 .enter()
                 .append("rect")
+                /* Shift bars to the right 
+                 - prevents first bar of graph from overlapping y axis path */
                 .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
+                /* Reduce the right padding of bars 
+                 - Accomodates the shift of the bars to the right so that they don't overlap */
                 .attr("width", (Width / Object.keys(dailySentTotal).length) + rightPadding);
 
             // Add tooltip for the total sent sms graph
@@ -771,10 +779,14 @@ class GraphController {
                 .enter()
                 .append("rect")
                 .attr("id", "failedBarChart")
+                /* Shift bars to the right 
+                 - prevents first bar of graph from overlapping y axis path */
                 .attr("x", d => x(new Date(d.day)) + shiftBarsToRight)
                 .attr("y", d => y_total_failed_sms_range(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
+                /* Reduce the right padding of bars 
+                 - Accomodates the shift of the bars to the right so that they don't overlap */
                 .attr("width", (Width / Object.keys(dailyFailedTotal).length) + rightPadding);
 
             // Add tooltip for the total failed sms graph
