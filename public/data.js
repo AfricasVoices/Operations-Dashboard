@@ -31,13 +31,12 @@ class DataController {
             if (error.code == "permission-denied") {
                 firebase.auth().onAuthStateChanged(user => { 
                     if (user) {
-                        name = user.displayName.split(" ").slice(0,-1)
                         // Error message - Alert Missing or insufficient permissions.
                         alert(`${error.message} 
-                        \r Please ${name} use AVF email or liaise with Africa's Voices Foundation (AVF) to give you AVF email`) 
+                        \r Please use AVF email or liaise with Africa's Voices Foundation (AVF) to give you AVF email`) 
                         if (user.email.match(".*@africasvoices.org$")) {
                             alert(`${error.message} 
-                            \r Please ${name} liaise with Africa's Voices Foundation (AVF) to activate your email`) 
+                            \r Please liaise with Africa's Voices Foundation (AVF) to activate your email`) 
                         }
                     }
                 })
