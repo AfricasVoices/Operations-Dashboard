@@ -12,7 +12,7 @@ class GraphController {
         if (!GraphController.chartTimeUnit) {
             GraphController.chartTimeUnit = "10min";
         }
-        // let chartTimeUnit = "10min",
+       
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
