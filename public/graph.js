@@ -12,7 +12,7 @@ class GraphController {
         if (!GraphController.chartTimeUnit) {
             GraphController.chartTimeUnit = "10min";
         }
-        // let chartTimeUnit = "10min",
+       
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
@@ -50,7 +50,10 @@ class GraphController {
 
         offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK);
         offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH);
-        // Set date offsets to nearest midnight in the past
+        // Set date offsets to nearest midnight in the past 
+        /* The offset dates sometime don't begin at the start of the day; thus they leave 
+            the rest of the day messages not to be included in the first bar of graph when
+            plotting one day view graphs */
         offsetWeek.setHours(0,0,0,0)
         offsetMonth.setHours(0,0,0,0)
 
@@ -499,19 +502,24 @@ class GraphController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            let innerPadding = 5
+            // Values to adjust x and width attributes
+            let rightPadding = -2, shiftBarsToRight = 1;
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
+                /* Shift bars to the right 
+                 - prevents first bar of graph from overlapping y axis path */
+                .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) - innerPadding);
+                /* Reduce the right padding of bars 
+                 - Accomodates the shift of the bars to the right so that they don't overlap */
+                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) + rightPadding);
 
             // Add tooltip for the total received sms graph
             let tip;
@@ -751,16 +759,21 @@ class GraphController {
                 .attr("class", (d, i) => sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            let innerPadding = 5;
+            // Values to adjust x and width attributes
+            let rightPadding = -2, shiftBarsToRight = 1;
             sentLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
+                /* Shift bars to the right 
+                 - prevents first bar of graph from overlapping y axis path */
+                .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", (Width / Object.keys(dailySentTotal).length) - innerPadding);
+                /* Reduce the right padding of bars 
+                 - Accomodates the shift of the bars to the right so that they don't overlap */
+                .attr("width", (Width / Object.keys(dailySentTotal).length) + rightPadding);
 
             // Add tooltip for the total sent sms graph
             let tip;
@@ -880,19 +893,24 @@ class GraphController {
                 .attr("class", "redrawElementFailed")
                 .call(d3.axisLeft(y_total_failed_sms_range));
 
+            // Values to adjust x and width attributes
+            let rightPadding = -2, shiftBarsToRight = 1;
             // Create bars
-            let innerPadding = 5;
             total_failed_sms_graph
                 .selectAll("rect")
                 .data(dailyFailedTotal)
                 .enter()
                 .append("rect")
                 .attr("id", "failedBarChart")
-                .attr("x", d => x(new Date(d.day)))
+                /* Shift bars to the right 
+                 - prevents first bar of graph from overlapping y axis path */
+                .attr("x", d => x(new Date(d.day)) + shiftBarsToRight)
                 .attr("y", d => y_total_failed_sms_range(d.total_errored))
                 .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
-                .attr("width", (Width / Object.keys(dailyFailedTotal).length) - innerPadding);
+                /* Reduce the right padding of bars 
+                 - Accomodates the shift of the bars to the right so that they don't overlap */
+                .attr("width", (Width / Object.keys(dailyFailedTotal).length) + rightPadding);
 
             // Add tooltip for the total failed sms graph
             let tip;
