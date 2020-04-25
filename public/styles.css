@@ -206,3 +206,22 @@ table > tbody > tr > td {
     border-radius: 8px;			
     pointer-events: none;			
 }
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+}
+.receivedGrid line,
+.sentGrid line,
+.failedGrid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+}
+.receivedGrid path,
+.sentGrid path,
+.failedGrid path {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+}
