@@ -34,7 +34,7 @@ class Controller {
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Get data for coding progress table
-        let unsubscribeFunc = DataController.watchCodingProgress(UIController.updateProgressUI);
+        let unsubscribeFunc = DataController.watchCodingProgress(TableController.updateCodingProgressTable);
         DataController.registerSnapshotListener(unsubscribeFunc);
     }
 
