@@ -20,10 +20,10 @@ class TableController {
             let tr = d3.select("tbody").selectAll("tr")
                 .data(data)
                 .enter().append("tr")
-                .sort((a, b) => a == null || b == null ? 0 : 
-                    // d3.ascending(a[attrName], b[attrName]));
-                    TableController.sortNumber(a[attrName], b[attrName]));
-        
+                .sort((a, b) => a == null || b == null ? 0 : attrName == "Dataset" ? 
+                        TableController.stringCompare(a[attrName], b[attrName]) :
+                        TableController.sortNumber(a[attrName], b[attrName]));
+                
             // Cells
             let td = tr.selectAll("td")
                 .data(d => TableController.jsonToArray(d))
@@ -60,10 +60,8 @@ class TableController {
     }
 
     static stringCompare(a, b) {
-        a = a.toLowerCase();
-        b = b.toLowerCase();
-        return a > b ? 1 : a == b ? 0 : -1;
-    }
+        return a.localeCompare(b, 'en', { sensitivity: 'base' });
+    };
     
     static sortNumber(a,b) {
        return a-b || isNaN(a)-isNaN(b);
