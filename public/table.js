@@ -20,6 +20,14 @@ class TableController {
             else { sortInfo.order = "descending"; sortInfo.column = column }
 
             d3.select("tbody").selectAll("tr").remove();
+
+            // Table Header
+            let th = d3.select("thead").selectAll("th")
+                .data(TableController.jsonToArray(data[0]))
+                .enter().append("th")
+                .attr("class", "table-heading")
+                .on("click", (d, i, n) => transform(d[0]))
+                .text(d => d[0])
         };
     };
 
