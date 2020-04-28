@@ -91,7 +91,7 @@ class TableController {
         return b-a || isNaN(b)-isNaN(a);
     } 
 
-    static  jsonKeyValueToArray(k, v) {return [k, v];}
+    static jsonKeyValueToArray(k, v) {return [k, v];}
 
     static jsonToArray(json) {
         var arr = [];
