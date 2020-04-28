@@ -38,6 +38,12 @@ class TableController {
                         TableController.stringCompare(a[column], b[column], order) :
                         TableController.sortNumber(a[column], b[column], order)
                 );
+
+            // Table Cells
+            let td = tr.selectAll("td")
+                .data(d => TableController.jsonToArray(d))
+                .enter().append("td")
+                .on("click", (d, i, n) => transform(d[0]))
         };
     };
 
