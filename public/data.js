@@ -32,28 +32,27 @@ class DataController {
 
     static watchCodingProgress(onChange) {
         return mediadb.doc("metrics/coda").onSnapshot(res => {
-            let arr = []
-            let data = res.data();
-            for (let datasetID in data["coding_progress"]) {
-                let messagesCount = data["coding_progress"][datasetID]["messages_count"],
-                    messagesWithLabel = data["coding_progress"][datasetID]["messages_with_label"],
+            let data = []
+            let codaData = res.data();
+            for (let datasetID in codaData["coding_progress"]) {
+                let messagesCount = codaData["coding_progress"][datasetID]["messages_count"],
+                    messagesWithLabel = codaData["coding_progress"][datasetID]["messages_with_label"],
                     wrongSchemeMessages =
-                        data["coding_progress"][datasetID]["wrong_scheme_messages"],
-                    notCodedMessages = data["coding_progress"][datasetID]["not_coded_messages"]
-                let db = {}
-                db["Dataset"] = datasetID
-                db["Unique Texts"] = messagesCount
-                db["Unique Texts with a label"] = messagesWithLabel 
-                db["Done"] =  ((100 * messagesWithLabel) / messagesCount).toFixed(2);
-                db["Wrong Scheme messages"] = wrongSchemeMessages != null ? wrongSchemeMessages : "-";
-                db["WS %"] = wrongSchemeMessages != null ? ((100 * wrongSchemeMessages) / messagesCount).toFixed(2): "-";
-                db["Not Coded messages"] = notCodedMessages != null ? notCodedMessages : "-";
-                db["NC %"] = notCodedMessages != null ? ((100 * notCodedMessages) / messagesCount).toFixed(2) : "-";
-                arr.push(db)
+                        codaData["coding_progress"][datasetID]["wrong_scheme_messages"],
+                    notCodedMessages = codaData["coding_progress"][datasetID]["not_coded_messages"]
+                let codingProgress = {}
+                codingProgress["Dataset"] = datasetID
+                codingProgress["Unique Texts"] = messagesCount
+                codingProgress["Unique Texts with a label"] = messagesWithLabel 
+                codingProgress["Done"] =  ((100 * messagesWithLabel) / messagesCount).toFixed(2);
+                codingProgress["Wrong Scheme messages"] = wrongSchemeMessages != null ? wrongSchemeMessages : "-";
+                codingProgress["WS %"] = wrongSchemeMessages != null ? ((100 * wrongSchemeMessages) / messagesCount).toFixed(2): "-";
+                codingProgress["Not Coded messages"] = notCodedMessages != null ? notCodedMessages : "-";
+                codingProgress["NC %"] = notCodedMessages != null ? ((100 * notCodedMessages) / messagesCount).toFixed(2) : "-";
+                data.push(codingProgress)
             }
 
-            onChange({data2: arr, lastUpdate : data["last_update"]});  
-            // onChange(res.data());
+            onChange({data, lastUpdate : codaData["last_update"]});  
         });
     }
 
