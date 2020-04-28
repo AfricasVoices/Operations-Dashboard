@@ -5,11 +5,19 @@ class TableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
+        // Initial sorting state
+        let sortInfo = { key: "Done", order: "ascending" };
+
         // Invoke `transform` function with column to be sorted on page load
         transform("Done");  
 
         // Function used to generate coding progress table
         function transform(attrName) {
+            // Toggle sorting state
+            if (sortInfo.order === "descending" && attrName === sortInfo.key)
+                sortInfo.order = "ascending";
+            else { sortInfo.order = "descending"; sortInfo.key = attrName }
+
             d3.select("tbody").selectAll("tr").remove();
         
             // Table Header
@@ -18,15 +26,17 @@ class TableController {
                 .enter().append("th")
                 .attr("class", "table-heading")
                 .on("click", (d, i, n) => transform(d[0].toString()))
-                .text(d => d[0]);
-        
+                .text(d => d[0])
+                
             // Table Rows
             let tr = d3.select("tbody").selectAll("tr")
                 .data(data)
                 .enter().append("tr")
-                .sort((a, b) => a == null || b == null ? 0 : attrName == "Dataset" ? 
-                        TableController.stringCompare(a[attrName], b[attrName]) :
-                        TableController.sortNumber(a[attrName], b[attrName]));
+                .sort((a, b, order = sortInfo.order) => 
+                    a == null || b == null ? 0 : attrName == "Dataset" ? 
+                        TableController.stringCompare(a[attrName], b[attrName], order) :
+                        TableController.sortNumber(a[attrName], b[attrName], order)
+                );
                 
             // Table Cells
             let td = tr.selectAll("td")
@@ -68,12 +78,16 @@ class TableController {
         };  
     }
 
-    static stringCompare(a, b) {
-        return a.localeCompare(b, 'en', { sensitivity: 'base' });
+    static stringCompare(a, b, order) {
+        if (order === "descending") 
+            return a.localeCompare(b, 'en', { sensitivity: 'base' });
+        return b.localeCompare(a, 'en', { sensitivity: 'base' });
     };
     
-    static sortNumber(a,b) {
-       return a-b || isNaN(a)-isNaN(b);
+    static sortNumber(a,b, order) {
+        if (order === "descending") 
+            return a-b || isNaN(a)-isNaN(b);
+        return b-a || isNaN(b)-isNaN(a);
     } 
 
     static  jsonKeyValueToArray(k, v) {return [k, v];}
