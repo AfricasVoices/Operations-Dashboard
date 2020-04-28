@@ -6,7 +6,7 @@ class TableController {
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
         // Save sorting state
-        let sortInfo = { key: "", order: "" };
+        let sortInfo = { column: "", order: "" };
 
         // Invoke `transform` function with column to be sorted on page load
         transform("Done");  
@@ -14,9 +14,9 @@ class TableController {
         // Function used to generate coding progress table
         function transform(attrName) {
             // Toggle sorting state
-            if (sortInfo.order === "descending" && attrName === sortInfo.key)
+            if (sortInfo.order === "descending" && attrName === sortInfo.column)
                 sortInfo.order = "ascending";
-            else { sortInfo.order = "descending"; sortInfo.key = attrName }
+            else { sortInfo.order = "descending"; sortInfo.column = attrName }
 
             d3.select("tbody").selectAll("tr").remove();
         
