@@ -1,5 +1,8 @@
 class TableController {
-    static updateCodingProgressTable(codaData) {};
+    static updateCodingProgressTable(codaData) {
+        let data = codaData.data,
+            lastUpdate = codaData.lastUpdate; 
+    };
 
     static stringCompare(a, b, order) {
         if (order === "descending") 
