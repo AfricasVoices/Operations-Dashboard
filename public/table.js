@@ -2,6 +2,9 @@ class TableController {
     static updateCodingProgressTable(codaData) {
         let data = codaData.data,
             lastUpdate = codaData.lastUpdate; 
+
+        // Set last updated timestamp in UI
+        document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
     };
 
     static stringCompare(a, b, order) {
