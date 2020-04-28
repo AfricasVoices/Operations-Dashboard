@@ -13,7 +13,12 @@ class TableController {
         transform("Done");
         
         // Function used to generate coding progress table
-        function transform(column) {};
+        function transform(column) {
+            // Toggle sorting state
+            if (sortInfo.order === "descending" && column === sortInfo.column)
+                sortInfo.order = "ascending";
+            else { sortInfo.order = "descending"; sortInfo.column = column }
+        };
     };
 
     static stringCompare(a, b, order) {
