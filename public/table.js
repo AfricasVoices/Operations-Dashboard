@@ -2,13 +2,17 @@ class TableController {
     static updateCodingProgressTable(k) {
         let data = k.data2,
         lastUpdate = k.lastUpdate; 
+        // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
+
+        // Invoke `transform` function with column to be sorted on page load
         transform("Done");  
 
+        // Function used to generate coding progress table
         function transform(attrName) {
             d3.select("tbody").selectAll("tr").remove();
         
-            // Header
+            // Table Header
             let th = d3.select("thead").selectAll("th")
                 .data(TableController.jsonToArray(data[0]))
                 .enter().append("th")
@@ -16,7 +20,7 @@ class TableController {
                 .on("click", (d, i, n) => transform(d[0].toString()))
                 .text(d => d[0]);
         
-            // Rows
+            // Table Rows
             let tr = d3.select("tbody").selectAll("tr")
                 .data(data)
                 .enter().append("tr")
@@ -24,23 +28,28 @@ class TableController {
                         TableController.stringCompare(a[attrName], b[attrName]) :
                         TableController.sortNumber(a[attrName], b[attrName]));
                 
-            // Cells
+            // Table Cells
             let td = tr.selectAll("td")
                 .data(d => TableController.jsonToArray(d))
                 .enter().append("td")
                 .on("click", (d, i, n) => transform(d[0].toString()))
             
+            // Filter Dataset column from columns & append text to td
             td.filter((d, i, n) => d[0] !== "Dataset" && i !== 0).text(d => d[1])
 
+            // Select Dataset Column, create a link & append text to td
             td.filter((d, i, n) => d[0] === "Dataset" && i === 0)
                 .append("a")
                 .attr("href", d => `https://web-coda.firebaseapp.com/?dataset=${d[1]}`)
                 .attr("target", "_blank")
                 .text(d => d[1])
 
+            // Filter table data with column "Done"
             td.filter((d, i, n) => d[0] === "Done" && i === 3)
                 .each((d, i, n) => {
+                    // Select Table Row
                     let parentNode = d3.select(n[i].parentNode)
+                    // Select Table Data and access data bound to the node
                     let cellData = d3.select(n[i]).data()[0][1]
                     if (parseFloat(cellData) === 0) {
                         parentNode.attr('class', "coding-notstarted");
@@ -70,12 +79,12 @@ class TableController {
     static  jsonKeyValueToArray(k, v) {return [k, v];}
 
     static jsonToArray(json) {
-        var ret = new Array();
+        var arr = [];
         for (const key in json) {
             if (json.hasOwnProperty(key)) {
-                ret.push(TableController.jsonKeyValueToArray(key, json[key]));
+                arr.push(TableController.jsonKeyValueToArray(key, json[key]));
             }
         }
-        return ret;
+        return arr;
     };
 }
