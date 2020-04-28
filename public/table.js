@@ -28,6 +28,16 @@ class TableController {
                 .attr("class", "table-heading")
                 .on("click", (d, i, n) => transform(d[0]))
                 .text(d => d[0])
+
+            // Table Rows
+            let tr = d3.select("tbody").selectAll("tr")
+                .data(data)
+                .enter().append("tr")
+                .sort((a, b, order = sortInfo.order) => 
+                    a == null || b == null ? 0 : column == "Dataset" ? 
+                        TableController.stringCompare(a[column], b[column], order) :
+                        TableController.sortNumber(a[column], b[column], order)
+                );
         };
     };
 
