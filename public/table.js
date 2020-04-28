@@ -55,22 +55,22 @@ class TableController {
                 .attr("target", "_blank")
                 .text(d => d[1])
 
-            // Filter table data with column "Done"
+            // Filter table to remain with "Done" column
             td.filter((d, i, n) => d[0] === "Done" && i === 3)
                 .each((d, i, n) => {
                     // Select Table Row
                     let parentNode = d3.select(n[i].parentNode)
                     // Select Table Data and access data bound to the node
-                    let cellData = d3.select(n[i]).data()[0][1]
-                    if (parseFloat(cellData) === 0) {
+                    let tableData = d3.select(n[i]).data()[0][1]
+                    if (parseFloat(tableData) === 0) {
                         parentNode.attr('class', "coding-notstarted");
-                    } else if (parseFloat(cellData) > 0 && parseFloat(cellData) <= 25) {
+                    } else if (parseFloat(tableData) > 0 && parseFloat(tableData) <= 25) {
                         parentNode.attr('class', "coding-below25");
-                    } else if (parseFloat(cellData) > 25 && parseFloat(cellData) <= 50) {
+                    } else if (parseFloat(tableData) > 25 && parseFloat(tableData) <= 50) {
                         parentNode.attr('class', "coding-above25");
-                    } else if (parseFloat(cellData) > 50 && parseFloat(cellData) <= 75) {
+                    } else if (parseFloat(tableData) > 50 && parseFloat(tableData) <= 75) {
                         parentNode.attr('class', "coding-above50");   
-                    } else if (parseFloat(cellData) > 75 && parseFloat(cellData) < 100) {
+                    } else if (parseFloat(tableData) > 75 && parseFloat(tableData) < 100) {
                         parentNode.attr('class', "coding-above75");  
                     } else {
                         parentNode.attr('class', "coding-complete");
