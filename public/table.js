@@ -43,7 +43,11 @@ class TableController {
             let td = tr.selectAll("td")
                 .data(d => TableController.jsonToArray(d))
                 .enter().append("td")
-                .on("click", (d, i, n) => transform(d[0]))
+                .on("click", (d, i, n) => transform(d[0]));
+
+            // Filter Dataset column from columns & append text to td
+            td.filter((d, i, n) => d[0] !== "Dataset" && i !== 0)
+                .text(d => ["Done", "WS %", "NC %"].includes(d[0]) ? `${d[1]}%` : d[1])
         };
     };
 
