@@ -18,6 +18,8 @@ class TableController {
             if (sortInfo.order === "descending" && column === sortInfo.column)
                 sortInfo.order = "ascending";
             else { sortInfo.order = "descending"; sortInfo.column = column }
+
+            d3.select("tbody").selectAll("tr").remove();
         };
     };
 
