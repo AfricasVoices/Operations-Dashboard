@@ -45,7 +45,8 @@ class TableController {
                 .on("click", (d, i, n) => transform(d[0].toString()))
             
             // Filter Dataset column from columns & append text to td
-            td.filter((d, i, n) => d[0] !== "Dataset" && i !== 0).text(d => d[1])
+            td.filter((d, i, n) => d[0] !== "Dataset" && i !== 0)
+                .text(d => ["Done", "WS %", "NC %"].includes(d[0]) ? `${d[1]}%` : d[1])
 
             // Select Dataset Column, create a link & append text to td
             td.filter((d, i, n) => d[0] === "Dataset" && i === 0)
