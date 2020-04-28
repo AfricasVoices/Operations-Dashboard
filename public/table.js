@@ -25,7 +25,7 @@ class TableController {
                 .data(TableController.jsonToArray(data[0]))
                 .enter().append("th")
                 .attr("class", "table-heading")
-                .on("click", (d, i, n) => transform(d[0].toString()))
+                .on("click", (d, i, n) => transform(d[0]))
                 .text(d => d[0])
                 
             // Table Rows
@@ -42,7 +42,7 @@ class TableController {
             let td = tr.selectAll("td")
                 .data(d => TableController.jsonToArray(d))
                 .enter().append("td")
-                .on("click", (d, i, n) => transform(d[0].toString()))
+                .on("click", (d, i, n) => transform(d[0]))
             
             // Filter Dataset column from columns & append text to td
             td.filter((d, i, n) => d[0] !== "Dataset" && i !== 0)
