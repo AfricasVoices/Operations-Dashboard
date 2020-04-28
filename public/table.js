@@ -8,6 +8,12 @@ class TableController {
 
         // Save sorting state
         let sortInfo = { column: "", order: "" };
+
+        // Invoke `transform` function with column to be sorted on page load
+        transform("Done");
+        
+        // Function used to generate coding progress table
+        function transform(column) {};
     };
 
     static stringCompare(a, b, order) {
