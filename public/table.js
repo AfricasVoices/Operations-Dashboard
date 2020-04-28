@@ -5,8 +5,8 @@ class TableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
-        // Initial sorting state
-        let sortInfo = { key: "Done", order: "ascending" };
+        // Save sorting state
+        let sortInfo = { key: "", order: "" };
 
         // Invoke `transform` function with column to be sorted on page load
         transform("Done");  
