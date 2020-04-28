@@ -32,7 +32,28 @@ class DataController {
 
     static watchCodingProgress(onChange) {
         return mediadb.doc("metrics/coda").onSnapshot(res => {
-            onChange(res.data());
+            let arr = []
+            let data = res.data();
+            for (let datasetID in data["coding_progress"]) {
+                let messagesCount = data["coding_progress"][datasetID]["messages_count"],
+                    messagesWithLabel = data["coding_progress"][datasetID]["messages_with_label"],
+                    wrongSchemeMessages =
+                        data["coding_progress"][datasetID]["wrong_scheme_messages"],
+                    notCodedMessages = data["coding_progress"][datasetID]["not_coded_messages"]
+                let db = {}
+                db["Dataset"] = datasetID
+                db["Unique Texts"] = messagesCount
+                db["Unique Texts with a label"] = messagesWithLabel 
+                db["Done"] =  ((100 * messagesWithLabel) / messagesCount).toFixed(2);
+                db["Wrong Scheme messages"] = wrongSchemeMessages != null ? wrongSchemeMessages : "-";
+                db["WS %"] = wrongSchemeMessages != null ? ((100 * wrongSchemeMessages) / messagesCount).toFixed(2): "-";
+                db["Not Coded messages"] = notCodedMessages != null ? notCodedMessages : "-";
+                db["NC %"] = notCodedMessages != null ? ((100 * notCodedMessages) / messagesCount).toFixed(2) : "-";
+                arr.push(db)
+            }
+
+            onChange({data2: arr, lastUpdate : data["last_update"]});  
+            // onChange(res.data());
         });
     }
 
