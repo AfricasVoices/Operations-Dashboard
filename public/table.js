@@ -12,11 +12,11 @@ class TableController {
         transform("Done");  
 
         // Function used to generate coding progress table
-        function transform(attrName) {
+        function transform(column) {
             // Toggle sorting state
-            if (sortInfo.order === "descending" && attrName === sortInfo.column)
+            if (sortInfo.order === "descending" && column === sortInfo.column)
                 sortInfo.order = "ascending";
-            else { sortInfo.order = "descending"; sortInfo.column = attrName }
+            else { sortInfo.order = "descending"; sortInfo.column = column }
 
             d3.select("tbody").selectAll("tr").remove();
         
@@ -33,9 +33,9 @@ class TableController {
                 .data(data)
                 .enter().append("tr")
                 .sort((a, b, order = sortInfo.order) => 
-                    a == null || b == null ? 0 : attrName == "Dataset" ? 
-                        TableController.stringCompare(a[attrName], b[attrName], order) :
-                        TableController.sortNumber(a[attrName], b[attrName], order)
+                    a == null || b == null ? 0 : column == "Dataset" ? 
+                        TableController.stringCompare(a[column], b[column], order) :
+                        TableController.sortNumber(a[column], b[column], order)
                 );
                 
             // Table Cells
