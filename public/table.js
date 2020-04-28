@@ -1,1 +1,3 @@
-class TableController {}
+class TableController {
+    static updateCodingProgressTable(codaData) {};
+}
