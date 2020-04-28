@@ -206,21 +206,9 @@ table > tbody > tr > td {
     border-radius: 8px;			
     pointer-events: none;			
 }
-/* tr:hover td { color: blanchedalmond; background-color: black; } */
-.arrow-up {
-    width: 0; 
-    height: 0; 
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    
-    border-bottom: 20px solid black;
-  }
-  
-  .arrow-down {
-    width: 0; 
-    height: 0; 
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    
-    border-top: 20px solid #f00;
-  }
+tr:hover td { 
+    cursor: pointer;
+}
+th:hover {
+    cursor: grab;
+}
