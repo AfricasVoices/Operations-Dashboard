@@ -12,4 +12,6 @@ class TableController {
             return a-b || isNaN(a)-isNaN(b);
         return b-a || isNaN(b)-isNaN(a);
     } 
+
+    static jsonKeyValueToArray(k, v) {return [k, v];}
 }
