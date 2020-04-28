@@ -5,6 +5,9 @@ class TableController {
 
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
+
+        // Save sorting state
+        let sortInfo = { column: "", order: "" };
     };
 
     static stringCompare(a, b, order) {
