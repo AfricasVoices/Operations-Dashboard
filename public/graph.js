@@ -581,6 +581,37 @@ class GraphController {
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
                 .attr("width", Width / Object.keys(dataFilteredWeek).length);
 
+            // Add tooltip for the total received sms graph
+            let tip;
+            sentLayer10min
+                .selectAll("rect")
+                .on("mouseover", (d, i, n) => {
+                    // Get key of stacked data from the selection
+                    let operatorSent = d3.select(n[i].parentNode).datum().key,
+                        // Get operator name from the key
+                        operatorName = operatorSent.replace('_sent',''),
+                        // Get color of hovered rect
+                        operatorColor = d3.select(n[i]).style("fill");
+                    tip = d3.tip()
+                        .attr("class", "tooltip")
+                        .attr("id", "tooltip")
+                        .html(d => { 
+                            let sentMessages = d.data[operatorSent],
+                                totalSentMessages = d.data.total_sent,
+                                sentDay = d.data.datetime,
+                                // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
+                                tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
+                            return tooltipContent += `<div>${sentMessages} 
+                                (${Math.round((sentMessages/totalSentMessages)*100)}%)
+                                Message${sentMessages !== 1 ? 's': ''} at ${dayDateFormatWithoutYear(new Date(sentDay))}</div>`;
+                    })
+                    total_sent_sms_graph.call(tip)
+                    tip.show(d, n[i]).style("color", operatorColor)
+                })
+                .on("mouseout", (d, i, n) => {
+                    tip.hide()
+                })
+
             //Add the X Axis for the total sent sms graph
             total_sent_sms_graph
                 .append("g")
