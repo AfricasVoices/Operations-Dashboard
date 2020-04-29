@@ -2,7 +2,7 @@ class AuthController {
     // Authentication state listener
     static getUser() {
         firebase.auth().onAuthStateChanged(user => {
-            if (user) {
+            if (user){
                 console.log("User Authorized");
             } else {
                 window.location.replace("auth.html")
@@ -17,4 +17,5 @@ class AuthController {
                 console.log(err);
             })
     }
+
 }
