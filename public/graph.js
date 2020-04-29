@@ -891,6 +891,31 @@ class GraphController {
                 .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
                 .attr("fill", "#ff0000")
                 .attr("width", Width / Object.keys(dataFilteredWeek).length)
+            
+            // Add tooltip for the total failed sms graph
+            let tip;
+            total_failed_sms_graph
+                .selectAll("rect")
+                .on("mouseover", (d, i, n) => {
+                    let barColor = d3.select(n[i]).style("fill");
+                    tip = d3.tip()
+                        .attr("class", "tooltip")
+                        .attr("id", "tooltip")
+                        .html(d => {
+                            let totalFailedMessages = d.total_errored,
+                                failedDay = d.datetime,
+                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+                                tooltipContent = `<div>${totalFailedMessages} Failed
+                                Message${totalFailedMessages !== 1 ? 's': ''} at 
+                                ${dayDateFormatWithoutYear(new Date(failedDay))}</div>`;
+                            return tooltipContent;
+                        })
+                    total_failed_sms_graph.call(tip)
+                    tip.show(d, n[i]).style("color", barColor)
+                })
+                .on("mouseout", (d, i, n) => {
+                    tip.hide()
+                })
 
             // Add the X Axis for the total failed sms graph
             total_failed_sms_graph
