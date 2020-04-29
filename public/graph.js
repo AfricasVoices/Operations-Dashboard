@@ -367,6 +367,37 @@ class GraphController {
                 )
                 .attr("width", Width / Object.keys(dataFilteredWeek).length);
 
+            // Add tooltip for the total received sms graph
+            let tip;
+            receivedLayer10min
+                .selectAll("rect")
+                .on("mouseover", (d, i, n) => {
+                    // Get key of stacked data from the selection
+                    let operatorReceived = d3.select(n[i].parentNode).datum().key,
+                        // Get operator name from the key
+                        operatorName = operatorReceived.replace('_received',''),
+                        // Get color of hovered rect
+                        operatorColor = d3.select(n[i]).style("fill");
+                    tip = d3.tip()
+                        .attr("class", "tooltip")
+                        .attr("id", "tooltip")
+                        .html(d => { 
+                            let receivedMessages = d.data[operatorReceived],
+                                totalReceivedMessages = d.data.total_received,
+                                receivedDay = d.data.datetime,
+                                // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
+                                tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
+                            return tooltipContent += `<div>${receivedMessages} 
+                                (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
+                                Message${receivedMessages !== 1 ? 's': ''} at ${dayDateFormatWithoutYear(new Date(receivedDay))}</div>`;
+                    })
+                    total_received_sms_graph.call(tip)
+                    tip.show(d, n[i]).style("color", operatorColor)
+                })
+                .on("mouseout", (d, i, n) => {
+                    tip.hide()
+                })
+
             //Add the X Axis for the total received sms graph
             total_received_sms_graph
                 .append("g")
