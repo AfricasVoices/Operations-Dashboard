@@ -206,3 +206,9 @@ table > tbody > tr > td {
     border-radius: 8px;			
     pointer-events: none;			
 }
+tr:hover td { 
+    cursor: pointer;
+}
+th:hover {
+    cursor: grab;
+}
