@@ -33,7 +33,7 @@ class DataController {
                     if (user) {
                         // Error message - Alert Missing or insufficient permissions.
                         alert(`${error.message} 
-                        \r Please use AVF email or liaise with Africa's Voices Foundation (AVF) to give you AVF email`) 
+                        \r Please login using your AVF email`) 
                         if (user.email.match(".*@africasvoices.org$")) {
                             alert(`${error.message} 
                             \r Please liaise with Africa's Voices Foundation (AVF) to activate your email`) 
