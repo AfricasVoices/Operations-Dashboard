@@ -17,6 +17,7 @@ class GraphController {
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
+            dayDateFormatWithoutYear = d3.timeFormat("%H:%M %p"),
             dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
