@@ -17,7 +17,7 @@ class GraphController {
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
             dayDateFormat = d3.timeFormat("%Y-%m-%d"),
-            dayDateFormatWithoutYear = d3.timeFormat("%H:%M %p"),
+            dayTimeFormat = d3.timeFormat("%H:%M %p"),
             dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
@@ -390,7 +390,7 @@ class GraphController {
                                 tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
                             return tooltipContent += `<div>${receivedMessages} 
                                 (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
-                                Message${receivedMessages !== 1 ? 's': ''} at ${dayDateFormatWithoutYear(new Date(receivedDay))}</div>`;
+                                Message${receivedMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(receivedDay))}</div>`;
                     })
                     total_received_sms_graph.call(tip)
                     tip.show(d, n[i]).style("color", operatorColor)
@@ -635,7 +635,7 @@ class GraphController {
                                 tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
                             return tooltipContent += `<div>${sentMessages} 
                                 (${Math.round((sentMessages/totalSentMessages)*100)}%)
-                                Message${sentMessages !== 1 ? 's': ''} at ${dayDateFormatWithoutYear(new Date(sentDay))}</div>`;
+                                Message${sentMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(sentDay))}</div>`;
                     })
                     total_sent_sms_graph.call(tip)
                     tip.show(d, n[i]).style("color", operatorColor)
@@ -970,7 +970,7 @@ class GraphController {
                                 // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
                                 tooltipContent = `<div>${totalFailedMessages} Failed
                                 Message${totalFailedMessages !== 1 ? 's': ''} at 
-                                ${dayDateFormatWithoutYear(new Date(failedDay))}</div>`;
+                                ${dayTimeFormat(new Date(failedDay))}</div>`;
                             return tooltipContent;
                         })
                     total_failed_sms_graph.call(tip)
