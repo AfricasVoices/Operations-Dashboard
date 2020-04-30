@@ -374,16 +374,16 @@ class GraphController {
                 .selectAll("rect")
                 .on("mouseover", (d, i, n) => {
                     // Get key of stacked data from the selection
-                    let operatorReceived = d3.select(n[i].parentNode).datum().key,
+                    let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
                         // Get operator name from the key
-                        operatorName = operatorReceived.replace('_received',''),
+                        operatorName = operatorNameWithMessageDirection.replace('_received',''),
                         // Get color of hovered rect
                         operatorColor = d3.select(n[i]).style("fill");
                     tip = d3.tip()
                         .attr("class", "tooltip")
                         .attr("id", "tooltip")
                         .html(d => { 
-                            let receivedMessages = d.data[operatorReceived],
+                            let receivedMessages = d.data[operatorNameWithMessageDirection],
                                 totalReceivedMessages = d.data.total_received,
                                 receivedDay = d.data.datetime,
                                 // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
@@ -619,16 +619,16 @@ class GraphController {
                 .selectAll("rect")
                 .on("mouseover", (d, i, n) => {
                     // Get key of stacked data from the selection
-                    let operatorSent = d3.select(n[i].parentNode).datum().key,
+                    let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
                         // Get operator name from the key
-                        operatorName = operatorSent.replace('_sent',''),
+                        operatorName = operatorNameWithMessageDirection.replace('_sent',''),
                         // Get color of hovered rect
                         operatorColor = d3.select(n[i]).style("fill");
                     tip = d3.tip()
                         .attr("class", "tooltip")
                         .attr("id", "tooltip")
                         .html(d => { 
-                            let sentMessages = d.data[operatorSent],
+                            let sentMessages = d.data[operatorNameWithMessageDirection],
                                 totalSentMessages = d.data.total_sent,
                                 sentDay = d.data.datetime,
                                 // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
