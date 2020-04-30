@@ -86,7 +86,7 @@ class TableController {
         return b.localeCompare(a, 'en', { sensitivity: 'base' });
     };
 
-    static sortNumber(a,b, order) {
+    static sortNumber(a, b, order) {
         if (order === "descending") 
             return a-b || isNaN(a)-isNaN(b);
         return b-a || isNaN(b)-isNaN(a);
