@@ -490,7 +490,7 @@ class GraphController {
                     tip.show(d, n[i]).style("color", operatorColor)
                 })
                 .on("mouseout", (d, i, n) => {
-                    tip.hide()
+                    tip.hide(d, n[i])
                 })
 
             // "Add the X Axis for the total received sms graph
@@ -702,7 +702,7 @@ class GraphController {
                     tip.show(d, n[i]).style("color", operatorColor)
                 })
                 .on("mouseout", (d, i, n) => {
-                    tip.hide()
+                    tip.hide(d, n[i])
                 })
 
             //Add the X Axis for the total sent sms graph
@@ -812,7 +812,7 @@ class GraphController {
                     tip.show(d, n[i]).style("color", barColor)
                 })
                 .on("mouseout", (d, i, n) => {
-                    tip.hide()
+                    tip.hide(d, n[i])
                 })
 
             // Add the X Axis for the total failed sms graph
