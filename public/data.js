@@ -68,7 +68,6 @@ class DataController {
                 codingProgress["NC %"] = notCodedMessages != null ? ((100 * notCodedMessages) / messagesCount).toFixed(2) : "-";
                 data.push(codingProgress)
             }
-
             onChange({data, lastUpdate : codaData["last_update"]});  
         }, error => console.log(error));    
     }
