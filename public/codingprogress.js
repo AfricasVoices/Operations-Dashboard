@@ -102,7 +102,7 @@ class TableController {
     static jsonKeyValueToArray(k, v) {return [k, v];}
 
     static jsonToArray(json) {
-        var arr = [];
+        let arr = [];
         for (const key in json) {
             if (json.hasOwnProperty(key)) {
                 arr.push(TableController.jsonKeyValueToArray(key, json[key]));
