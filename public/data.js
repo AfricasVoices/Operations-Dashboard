@@ -27,23 +27,40 @@ class DataController {
             // Update data every time it changes in firestore
             DataController.updateData(res, activeProjects);
             onChange(activeProjects);
+        }, error => {
+            if (error.code == "permission-denied") {
+                firebase.auth().onAuthStateChanged(user => { 
+                    if (user) {
+                        // Error message - Alert Missing or insufficient permissions.
+                        alert(`${error.message} 
+                        \r Please login using your AVF email`) 
+                        if (user.email.match(".*@africasvoices.org$")) {
+                            alert(`${error.message} 
+                            \r Please liaise with Africa's Voices Foundation (AVF) to activate your email`) 
+                        }
+                    }
+                })
+                window.location.replace("auth.html")
+            } else {
+                console.log(error);
+            }     
         });
     }
 
     static watchCodingProgress(onChange) {
         return mediadb.doc("metrics/coda").onSnapshot(res => {
             onChange(res.data());
-        });
+        }, error => console.log(error));
     }
 
     static watchMNOColors() {
         return mediadb.doc("mno_properties/mno_colors").onSnapshot(res => {
             DataController.mno_colors = res.data();
-        });
+        }, error => console.log(error));
     }
 
     static watchProjectTrafficData(projectName, onChange) {
-        const TIMERANGE = 30;
+        const TIMERANGE = 31;
         let offset = new Date();
         offset.setDate(offset.getDate() - TIMERANGE);
         let data = [],
@@ -58,7 +75,7 @@ class DataController {
                 // Update data every time it changes in firestore
                 DataController.updateData(res, data);
                 onChange(data, projectName, DataController.mno_colors);
-            });
+            }, error => console.log(error));
     }
 
     static registerSnapshotListener(unsubscribeFunc) {
