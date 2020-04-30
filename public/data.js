@@ -50,7 +50,7 @@ class DataController {
     static watchCodingProgress(onChange) {
         return mediadb.doc("metrics/coda").onSnapshot(res => {
             let data = []
-            let codaData = res.data();
+            let codingProgressData = res.data();
             for (let datasetID in codaData["coding_progress"]) {
                 let messagesCount = codaData["coding_progress"][datasetID]["messages_count"],
                     messagesWithLabel = codaData["coding_progress"][datasetID]["messages_with_label"],
