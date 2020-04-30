@@ -6,11 +6,15 @@ class TableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
-        // Save sorting state
-        let sortInfo = { column: "", order: "" };
+        // Check the state of the column sorted 
+        if (!TableController.column) 
+            TableController.column = "Done";
+
+        // Save sorting information
+        let sortInfo = { column: TableController.column, order: "" };
 
         // Invoke `transform` function with column to be sorted on page load
-        transform("Done");
+        transform(sortInfo.column);
         
         // Function used to generate coding progress table
         function transform(column) {
@@ -18,6 +22,9 @@ class TableController {
             if (sortInfo.order === "descending" && column === sortInfo.column)
                 sortInfo.order = "ascending";
             else { sortInfo.order = "descending"; sortInfo.column = column }
+
+            // Keep the state of the column sorted to avoid its reset on update
+            TableController.column = sortInfo.column;
 
             d3.select("tbody").selectAll("tr").remove();
 
