@@ -29,7 +29,7 @@ class TableController {
             d3.select("tbody").selectAll("tr").remove();
 
             // Table Header
-            let th = d3.select("thead").selectAll("th")
+            d3.select("thead").selectAll("th")
                 .data(TableController.jsonToArray(data[0]))
                 .enter().append("th")
                 .attr("class", "table-heading")
