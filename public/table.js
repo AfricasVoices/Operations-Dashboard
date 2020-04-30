@@ -1,7 +1,7 @@
 class TableController {
-    static updateCodingProgressTable(codaData) {
-        let data = codaData.data,
-            lastUpdate = codaData.lastUpdate; 
+    static updateCodingProgressTable(codingProgressData) {
+        let data = codingProgressData.data,
+            lastUpdate = codingProgressData.lastUpdate; 
 
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;

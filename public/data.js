@@ -51,12 +51,12 @@ class DataController {
         return mediadb.doc("metrics/coda").onSnapshot(res => {
             let data = []
             let codingProgressData = res.data();
-            for (let datasetID in codaData["coding_progress"]) {
-                let messagesCount = codaData["coding_progress"][datasetID]["messages_count"],
-                    messagesWithLabel = codaData["coding_progress"][datasetID]["messages_with_label"],
+            for (let datasetID in codingProgressData["coding_progress"]) {
+                let messagesCount = codingProgressData["coding_progress"][datasetID]["messages_count"],
+                    messagesWithLabel = codingProgressData["coding_progress"][datasetID]["messages_with_label"],
                     wrongSchemeMessages =
-                        codaData["coding_progress"][datasetID]["wrong_scheme_messages"],
-                    notCodedMessages = codaData["coding_progress"][datasetID]["not_coded_messages"]
+                        codingProgressData["coding_progress"][datasetID]["wrong_scheme_messages"],
+                    notCodedMessages = codingProgressData["coding_progress"][datasetID]["not_coded_messages"]
                 let codingProgress = {}
                 codingProgress["Dataset"] = datasetID
                 codingProgress["Unique Texts"] = messagesCount
@@ -68,7 +68,7 @@ class DataController {
                 codingProgress["NC %"] = notCodedMessages != null ? ((100 * notCodedMessages) / messagesCount).toFixed(2) : "-";
                 data.push(codingProgress)
             }
-            onChange({data, lastUpdate : codaData["last_update"]});  
+            onChange({data, lastUpdate : codingProgressData["last_update"]});  
         }, error => console.log(error));    
     }
 
