@@ -223,7 +223,7 @@ class UIController {
                 </div>
                 <div class="d-flex">
                     <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
-                    <div class="font-weight-bold" id="lastUpdated"></div>
+                    <div class="font-weight-bold mb-0" id="lastUpdated"></div>
                 </div>
             </div> 
             <section>
