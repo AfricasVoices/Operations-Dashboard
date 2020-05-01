@@ -32,6 +32,7 @@ class TableController {
             // Table Header
             d3.select("thead").selectAll("th")
                 .data(TableController.jsonToArray(data[0]))
+                .data(TableController.jsonToArray(data[0]))
                 .enter().append("th")
                 .attr("class", "table-heading")
                 .on("click", (d, i, n) => transform(d[0]))
