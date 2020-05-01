@@ -27,6 +27,7 @@ class TableController {
             TableController.column = sortInfo.column;
 
             d3.select("tbody").selectAll("tr").remove();
+            // d3.select("thead").selectAll('tr').remove()
 
             // Table Header
             d3.select("thead").selectAll("th")
@@ -35,6 +36,15 @@ class TableController {
                 .attr("class", "table-heading")
                 .on("click", (d, i, n) => transform(d[0]))
                 .text(d => d[0])
+
+            // Table Header
+            // d3.select("thead").append('tr')
+            //     .attr("class", "table-heading")
+            //     .selectAll('th')
+            //     .data(TableController.jsonToArray(data[0])).enter() 
+            //     .append('th')
+            //     .on("click", (d, i, n) => transform(d[0]))
+            //     .text(d => d[0])
 
             // Table Rows
             let tr = d3.select("tbody").selectAll("tr")
