@@ -158,6 +158,13 @@ class GraphController {
             stackSentDaily = d3.stack().keys(sentKeys),
             sentDataStackedDaily = stackSentDaily(dailySentTotal);
 
+        let active_link = "0", //to control legend selections and hover
+            legendClicked, //to control legend selections
+            legendIdentityArray = [], //store legend classes to select bars in plotSingle()
+            y_orig, //to store original y-posn
+            receivedLayer,
+            class_keep, idx;
+
         //Create margins for the three graphs
         const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
             Width = 960 - Margin.right - Margin.left,
@@ -261,13 +268,6 @@ class GraphController {
             .attr("class", "receivedLegend")
             .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
 
-        
-        let active_link = "0", //to control legend selections and hover
-            legendClicked, //to control legend selections
-            legendIdentityArray = [], //store legend classes to select bars in plotSingle()
-            y_orig, //to store original y-posn
-            receivedLayer,
-            class_keep, idx;
         let receivedLegend = d3
             .legendColor()
             .shapeWidth(12)
