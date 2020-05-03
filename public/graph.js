@@ -21,12 +21,6 @@ class GraphController {
             dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
-        let active_link = "0"; //to control legend selections and hover
-        var legendClicked; //to control legend selections
-        // var legendClassArray = []; //store legend classes to select bars in plotSingle()
-        let y_orig; //to store original y-posn
-        let receivedLayer;
-
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
@@ -267,46 +261,51 @@ class GraphController {
             .attr("class", "receivedLegend")
             .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
 
-        let arr = []
+        
+        let active_link = "0", //to control legend selections and hover
+            legendClicked, //to control legend selections
+            legendIdentityArray = [], //store legend classes to select bars in plotSingle()
+            y_orig, //to store original y-posn
+            receivedLayer,
+            class_keep, idx;
         let receivedLegend = d3
             .legendColor()
             .shapeWidth(12)
             .orient("vertical")
             .scale(colorReceived)
             .labels(operators)
-            .on('cellclick', function(selectedLegend) {
+            .on('cellclick', function(d) {
+                legendClicked = d.replace(/\s/g, '')
                 if (active_link === "0") { //nothing selected, turn on this selection
-                    d3.select(this).style("stroke", "black").style("stroke-width", 2);
-                    active_link = selectedLegend
-                    let x4 =  d3.select(this.parentNode).selectAll("rect")
-                    // let arr = []
-                    x4.each(function(d) {
-                        let cell = d3.select(this).datum()
-                        cell = cell.replace(/\s/g, '')
-                        selectedLegend = selectedLegend.replace(/\s/g, '')
-                        arr.push(cell)
-                        if (cell !== selectedLegend) {
+                    active_link = legendClicked
+
+                    let operatorsLegend =  d3.select(this.parentNode).selectAll("rect")
+                    operatorsLegend.each(function(legend) {
+                        let cell = d3.select(this).datum().replace(/\s/g, '')
+                        legendIdentityArray.push(cell)
+                        if (cell !== legendClicked) {
                             d3.select(this).style("opacity", 0.5)
+                        } else if (cell == legendClicked) {
+                            d3.select(this).style("stroke", "black").style("stroke-width", 2);
                         }
                     })
-
-                      plotSingle(selectedLegend, arr);
+                    plotSingle(legendClicked, legendIdentityArray);
                 } else { //deactivate
-                    if (active_link === selectedLegend) {//active square selected; turn it OFF
-                        d3.select(this)           
-                            .style("stroke", "none");
-          
+                    if (active_link === legendClicked) {//active square selected; turn it OFF
                         active_link = "0"; //reset
 
-                        let x4 =  d3.select(this.parentNode).selectAll("rect")
-                        x4.each(function(d) {
-                            let cell = d3.select(this).datum()
-                            if (cell !== selectedLegend) {
+                        let operatorsLegend =  d3.select(this.parentNode).selectAll("rect")
+                        operatorsLegend.each(function(legend) {
+                            let cell = d3.select(this).datum().replace(/\s/g, '')
+                            if (cell !== legendClicked) {
                                 d3.select(this).style("opacity", 1)
+                            }
+                            if (cell == legendClicked) {
+                                d3.select(this).style("stroke", "none")
                             }
                         })
                         //restore plot to original
-                        restorePlot(selectedLegend, arr);
+                        restorePlot(legendIdentityArray);
                     }
                 } //end active_link check
             })
@@ -1070,30 +1069,27 @@ class GraphController {
                 .text("Total Failed Message(s) / 10 minutes");
         }
 
-        let class_keep, idx;
-        function plotSingle(d, legendClassArray) {
-        
-            // class_keep = d.id.split("id").pop();
-            class_keep = d;
-            idx = legendClassArray.indexOf(class_keep);    
+        function plotSingle(legendClicked, legendIdentityArray) {
+            class_keep = legendClicked;
+            idx = legendIdentityArray.indexOf(class_keep);    
            
-            //erase all but selected bars by setting opacity to 0
-            for (let i = 0; i < legendClassArray.length; i++) {
-              if (legendClassArray[i] != class_keep) {
-                d3.selectAll(`.${legendClassArray[i]}`)
+            // Erase all but selected bars by setting opacity to 0
+            for (let i = 0; i < legendIdentityArray.length; i++) {
+              if (legendIdentityArray[i] != class_keep) {
+                d3.selectAll(`.${legendIdentityArray[i]}`)
                   .transition()
                   .duration(1000)          
                   .style("opacity", 0);
               }
             }
         
-            //lower the bars to start on x-axis
+            // Lower the bars to start on x-axis
             y_orig = [];
             receivedLayer.selectAll("rect")._groups[idx].forEach(function (d, i, n) {      
-                // get height and y posn of base bar and selected bar
+                // Get height and y posn of base bar and selected bar
                 let h_keep = d3.select(d).attr("height");
                 let y_keep = d3.select(d).attr("y");
-                // store y_base in array to restore plot
+                // Store y_base in array to restore plot
                 y_orig.push(y_keep);
             
                 let h_base, y_base;
@@ -1104,9 +1100,8 @@ class GraphController {
         
                 let h_shift = h_keep - h_base;
                 let y_new = y_base - h_shift;
-                // console.log(h_shift, y_new)
             
-                //reposition selected bars
+                // Reposition selected bars
                 d3.select(d)
                     .transition()
                     .ease(d3.easeBounce)
@@ -1116,7 +1111,7 @@ class GraphController {
             })
         }
 
-        function restorePlot(m, legendClassArray) {
+        function restorePlot(legendIdentityArray) {
             receivedLayer.selectAll("rect")._groups[idx].forEach(function (d, i, n) {
                 d3.select(d)
                   .transition()
@@ -1125,9 +1120,9 @@ class GraphController {
             })
 
             //restore opacity of erased bars
-            for (let i = 0; i < legendClassArray.length; i++) {
-              if (legendClassArray[i] != class_keep) {
-                d3.selectAll(`.${legendClassArray[i]}`)
+            for (let i = 0; i < legendIdentityArray.length; i++) {
+              if (legendIdentityArray[i] != class_keep) {
+                d3.selectAll(`.${legendIdentityArray[i]}`)
                     .transition()
                     .duration(1000)
                     .delay(750)
