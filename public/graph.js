@@ -267,6 +267,7 @@ class GraphController {
             .attr("class", "receivedLegend")
             .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
 
+        let arr = []
         let receivedLegend = d3
             .legendColor()
             .shapeWidth(12)
@@ -278,7 +279,7 @@ class GraphController {
                     d3.select(this).style("stroke", "black").style("stroke-width", 2);
                     active_link = selectedLegend
                     let x4 =  d3.select(this.parentNode).selectAll("rect")
-                    let arr = []
+                    // let arr = []
                     x4.each(function(d) {
                         let cell = d3.select(this).datum()
                         cell = cell.replace(/\s/g, '')
@@ -305,7 +306,7 @@ class GraphController {
                             }
                         })
                         //restore plot to original
-                        // restorePlot(d);
+                        restorePlot(selectedLegend, arr);
                     }
                 } //end active_link check
             })
@@ -1069,11 +1070,11 @@ class GraphController {
                 .text("Total Failed Message(s) / 10 minutes");
         }
 
-        
+        let class_keep, idx;
         function plotSingle(d, legendClassArray) {
         
             // class_keep = d.id.split("id").pop();
-            let class_keep = d,
+            class_keep = d;
             idx = legendClassArray.indexOf(class_keep);    
            
             //erase all but selected bars by setting opacity to 0
@@ -1108,35 +1109,32 @@ class GraphController {
                 //reposition selected bars
                 d3.select(d)
                     .transition()
-                    // .ease("bounce")
+                    .ease(d3.easeBounce)
                     .duration(1000)
                     .delay(750)
                     .attr("y", y_new);
             })
         }
 
-        function restorePlot(d) {
-
-            state.selectAll("rect").forEach(function (d, i) {      
-              //restore shifted bars to original posn
-              d3.select(d[idx])
-                .transition()
-                .duration(1000)        
-                .attr("y", y_orig[i]);
-            })
-        
-            //restore opacity of erased bars
-            for (i = 0; i < legendClassArray.length; i++) {
-              if (legendClassArray[i] != class_keep) {
-                d3.selectAll(".class" + legendClassArray[i])
+        function restorePlot(m, legendClassArray) {
+            receivedLayer.selectAll("rect")._groups[idx].forEach(function (d, i, n) {
+                d3.select(d)
                   .transition()
-                  .duration(1000)
-                  .delay(750)
-                  .style("opacity", 1);
+                  .duration(1000)        
+                  .attr("y", y_orig[i]);
+            })
+
+            //restore opacity of erased bars
+            for (let i = 0; i < legendClassArray.length; i++) {
+              if (legendClassArray[i] != class_keep) {
+                d3.selectAll(`.${legendClassArray[i]}`)
+                    .transition()
+                    .duration(1000)
+                    .delay(750)
+                    .style("opacity", 1);
               }
-            }
-        
-          }
+            }        
+        }
 
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
