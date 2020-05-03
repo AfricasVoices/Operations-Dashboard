@@ -21,6 +21,12 @@ class GraphController {
             dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
             operators = new Set();
 
+        let active_link = "0"; //to control legend selections and hover
+        var legendClicked; //to control legend selections
+        // var legendClassArray = []; //store legend classes to select bars in plotSingle()
+        let y_orig; //to store original y-posn
+        let receivedLayer;
+
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
@@ -266,8 +272,45 @@ class GraphController {
             .shapeWidth(12)
             .orient("vertical")
             .scale(colorReceived)
-            .labels(operators);
+            .labels(operators)
+            .on('cellclick', function(selectedLegend) {
+                if (active_link === "0") { //nothing selected, turn on this selection
+                    d3.select(this).style("stroke", "black").style("stroke-width", 2);
+                    active_link = selectedLegend
+                    let x4 =  d3.select(this.parentNode).selectAll("rect")
+                    let arr = []
+                    x4.each(function(d) {
+                        let cell = d3.select(this).datum()
+                        cell = cell.replace(/\s/g, '')
+                        selectedLegend = selectedLegend.replace(/\s/g, '')
+                        arr.push(cell)
+                        if (cell !== selectedLegend) {
+                            d3.select(this).style("opacity", 0.5)
+                        }
+                    })
 
+                      plotSingle(selectedLegend, arr);
+                } else { //deactivate
+                    if (active_link === selectedLegend) {//active square selected; turn it OFF
+                        d3.select(this)           
+                            .style("stroke", "none");
+          
+                        active_link = "0"; //reset
+
+                        let x4 =  d3.select(this.parentNode).selectAll("rect")
+                        x4.each(function(d) {
+                            let cell = d3.select(this).datum()
+                            if (cell !== selectedLegend) {
+                                d3.select(this).style("opacity", 1)
+                            }
+                        })
+                        //restore plot to original
+                        // restorePlot(d);
+                    }
+                } //end active_link check
+            })
+
+        // console.log(d3.selectAll('rect').attr('class', 'swatch'))
         d3.select(".receivedLegend").call(receivedLegend);
 
         // Total sent graph legend
@@ -466,13 +509,17 @@ class GraphController {
                 .attr("class", "redrawElementReceived")
                 .call(d3.axisLeft(y_total_received_sms_range));
 
-            let receivedLayer = total_received_sms_graph
+            receivedLayer = total_received_sms_graph
                 .selectAll("#receivedStack")
                 .data(receivedDataStackedDaily)
                 .enter()
                 .append("g")
                 .attr("id", "receivedStack")
-                .attr("class", (d, i) => receivedKeys[i])
+                .attr("class", (d, i) => {
+                    
+                    // console.log(receivedKeys[i])
+                    receivedKeys[i]
+                })
                 .style("fill", (d, i) => color(i));
 
             // Values to adjust x and width attributes
@@ -490,6 +537,7 @@ class GraphController {
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
+                .attr("class", (d, i, n) => d3.select(n[i].parentNode).datum().key.replace(/\s/g, ''))
                 /* Reduce the right padding of bars 
                  - Accomodates the shift of the bars to the right so that they don't overlap */
                 .attr("width", (Width / Object.keys(dailyReceivedTotal).length) + rightPadding);
@@ -1020,6 +1068,75 @@ class GraphController {
                 .style("text-decoration", "bold")
                 .text("Total Failed Message(s) / 10 minutes");
         }
+
+        
+        function plotSingle(d, legendClassArray) {
+        
+            // class_keep = d.id.split("id").pop();
+            let class_keep = d,
+            idx = legendClassArray.indexOf(class_keep);    
+           
+            //erase all but selected bars by setting opacity to 0
+            for (let i = 0; i < legendClassArray.length; i++) {
+              if (legendClassArray[i] != class_keep) {
+                d3.selectAll(`.${legendClassArray[i]}`)
+                  .transition()
+                  .duration(1000)          
+                  .style("opacity", 0);
+              }
+            }
+        
+            //lower the bars to start on x-axis
+            y_orig = [];
+            receivedLayer.selectAll("rect")._groups[idx].forEach(function (d, i, n) {      
+                // get height and y posn of base bar and selected bar
+                let h_keep = d3.select(d).attr("height");
+                let y_keep = d3.select(d).attr("y");
+                // store y_base in array to restore plot
+                y_orig.push(y_keep);
+            
+                let h_base, y_base;
+                receivedLayer.selectAll("rect")._groups[0].forEach(function (d, i, n) {
+                    h_base = d3.select(d).attr("height");
+                    y_base = d3.select(d).attr("y");
+                })
+        
+                let h_shift = h_keep - h_base;
+                let y_new = y_base - h_shift;
+                // console.log(h_shift, y_new)
+            
+                //reposition selected bars
+                d3.select(d)
+                    .transition()
+                    // .ease("bounce")
+                    .duration(1000)
+                    .delay(750)
+                    .attr("y", y_new);
+            })
+        }
+
+        function restorePlot(d) {
+
+            state.selectAll("rect").forEach(function (d, i) {      
+              //restore shifted bars to original posn
+              d3.select(d[idx])
+                .transition()
+                .duration(1000)        
+                .attr("y", y_orig[i]);
+            })
+        
+            //restore opacity of erased bars
+            for (i = 0; i < legendClassArray.length; i++) {
+              if (legendClassArray[i] != class_keep) {
+                d3.selectAll(".class" + legendClassArray[i])
+                  .transition()
+                  .duration(1000)
+                  .delay(750)
+                  .style("opacity", 1);
+              }
+            }
+        
+          }
 
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
