@@ -370,6 +370,14 @@ class GraphController {
                     .tickSize(-Height)
                     .tickFormat("")
                 )
+                
+            // Add the Y gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedGrid")
+                .call(d3.axisLeft(y_total_received_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
 
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
