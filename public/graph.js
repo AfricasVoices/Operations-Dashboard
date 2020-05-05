@@ -1090,17 +1090,21 @@ class GraphController {
                 .text("Total Failed Message(s) / 10 minutes");
         }
 
-        function plotSingle(legendClicked, legendIdentityArray) {
+        function plotSingle(legendClicked, legendIdentityArray, transition = "true") {
             class_keep = legendClicked;
             idx = legendIdentityArray.indexOf(class_keep);    
            
             // Erase all but selected bars by setting opacity to 0
             for (let i = 0; i < legendIdentityArray.length; i++) {
               if (legendIdentityArray[i] != class_keep) {
-                d3.selectAll(`.${legendIdentityArray[i]}`)
-                  .transition()
-                  .duration(1000)          
-                  .style("opacity", 0);
+                if (!transition) {
+                    d3.selectAll(`.${legendIdentityArray[i]}`).style("opacity", 0);
+                } else {
+                    d3.selectAll(`.${legendIdentityArray[i]}`)
+                    .transition()
+                    .duration(1000)          
+                    .style("opacity", 0);
+                }
               }
             }
         
@@ -1123,12 +1127,16 @@ class GraphController {
                 let y_new = y_base - h_shift;
             
                 // Reposition selected bars
-                d3.select(d)
+                if (!transition) {
+                    d3.select(d).attr("y", y_new);
+                } else  {
+                    d3.select(d)
                     .transition()
                     .ease(d3.easeBounce)
                     .duration(1000)
                     .delay(750)
                     .attr("y", y_new);
+                }
             })
         }
 
@@ -1181,6 +1189,8 @@ class GraphController {
             if (GraphController.chartTimeUnit == "1day") {
                 yLimitReceived = this.value;
                 drawOneDayReceivedGraph(yLimitReceived);
+                if (active_link !== "0")
+                    plotSingle(legendClicked, legendIdentityArray, false);
             } else if (GraphController.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = this.value;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
