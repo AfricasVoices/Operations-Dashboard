@@ -339,6 +339,7 @@ class GraphController {
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack").remove();
             d3.selectAll("#receivedStack10min").remove();
+            d3.selectAll(".receivedGrid").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -479,6 +480,7 @@ class GraphController {
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll("#receivedStack").remove();
+            d3.selectAll(".receivedGrid").remove();
 
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
