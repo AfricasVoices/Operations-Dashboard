@@ -361,6 +361,16 @@ class GraphController {
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
+            // Add the X gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
                 .append("g")
