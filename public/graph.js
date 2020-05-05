@@ -500,6 +500,8 @@ class GraphController {
             d3.selectAll("#receivedStack").remove();
             d3.selectAll(".receivedGrid").remove();
 
+            const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
+
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
                 .append("g")
@@ -567,7 +569,6 @@ class GraphController {
                 })
 
             // "Add the X Axis for the total received sms graph
-            const tickValuesForAxis = dailyReceivedTotal.map(d => new Date(d.day));
             total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
