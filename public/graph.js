@@ -501,6 +501,15 @@ class GraphController {
             d3.selectAll(".receivedGrid").remove();
 
             const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
+            // Add the X gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
 
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
