@@ -206,3 +206,13 @@ table > tbody > tr > td {
     border-radius: 8px;			
     pointer-events: none;			
 }
+.receivedGrid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+}
+.receivedGrid path {
+    stroke: lightgrey;
+    stroke-opacity: 0.7;
+    shape-rendering: crispEdges;
+}
