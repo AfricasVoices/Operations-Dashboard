@@ -6,12 +6,13 @@ class GraphController {
         return newDate;
     }
 
-    static updateGraphs(data, projectName, MNOColors, week=7, month=30) {
-        const TIMEFRAME_WEEK = week,
-            TIMEFRAME_MONTH = month;
-        if (!GraphController.chartTimeUnit) {
-            GraphController.chartTimeUnit = "10min";
+    static updateGraphs(data, projectName, MNOColors) {
+        if (!(GraphController.TIMEFRAME_WEEK && GraphController.TIMEFRAME_MONTH)) {
+            GraphController.TIMEFRAME_WEEK = 7; 
+            GraphController.TIMEFRAME_MONTH = 30;
         }
+        if (!GraphController.chartTimeUnit) 
+            GraphController.chartTimeUnit = "10min";   
        
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
@@ -49,8 +50,8 @@ class GraphController {
         let offsetWeek = new Date(),
             offsetMonth = new Date();
 
-        offsetWeek.setDate(offsetWeek.getDate() - TIMEFRAME_WEEK);
-        offsetMonth.setDate(offsetMonth.getDate() - TIMEFRAME_MONTH);
+        offsetWeek.setDate(offsetWeek.getDate() - GraphController.TIMEFRAME_WEEK);
+        offsetMonth.setDate(offsetMonth.getDate() - GraphController.TIMEFRAME_MONTH);
         // Set date offsets to nearest midnight in the past 
         /* The offset dates sometime don't begin at the start of the day; thus they leave 
             the rest of the day messages not to be included in the first bar of graph when
@@ -382,6 +383,26 @@ class GraphController {
             d3.selectAll("#receivedStack").remove();
             d3.selectAll("#receivedStack10min").remove();
 
+            // Group data filtered by week daily and generate tick values for x axis
+            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
+                .rollup(v => {
+                    let firstTimestampOfDay = {}
+                    firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
+                    return firstTimestampOfDay
+                })
+                .entries(dataFilteredWeek);
+
+            // Flatten nested data
+            for (let entry in dataFilteredWeekGroupedDaily) {
+                let valueList = dataFilteredWeekGroupedDaily[entry].value;
+                for (let key in valueList) {
+                    dataFilteredWeekGroupedDaily[entry][key] = valueList[key];
+                }
+                delete dataFilteredWeekGroupedDaily[entry]["value"];
+                delete dataFilteredWeekGroupedDaily[entry]["key"];
+            }
+            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
                 .append("g")
@@ -450,7 +471,7 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(1))
+                        .tickValues(tickValuesForXAxis)
                         .tickFormat(timeFormat)
                 )
                 // Rotate axis labels
@@ -1143,12 +1164,14 @@ class GraphController {
         });
 
         d3.select("#timeFrame").on("change", function() {
-            let timeFrame = this.options[this.selectedIndex].value,
-                week = 7, month = 30;
+            let timeFrame = this.options[this.selectedIndex].value;
             if (timeFrame == "default") {
-                GraphController.updateGraphs(data, projectName, MNOColors, week, month)
+                GraphController.TIMEFRAME_WEEK = 7; 
+                GraphController.TIMEFRAME_MONTH = 30;
+                GraphController.updateGraphs(data, projectName, MNOColors)
             } else {
-                GraphController.updateGraphs(data, projectName, MNOColors, timeFrame, timeFrame)
+                GraphController.TIMEFRAME_WEEK = GraphController.TIMEFRAME_MONTH = timeFrame;
+                GraphController.updateGraphs(data, projectName, MNOColors)
             }
         })
 
