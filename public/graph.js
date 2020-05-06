@@ -1042,6 +1042,10 @@ class GraphController {
                 .text("Total Failed Message(s) / 10 minutes");
         }
 
+        function plotSingle(legendClicked, legendIdentityArray, transition = "true") {};
+
+        function restorePlot(legendIdentityArray) {};
+
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             GraphController.chartTimeUnit = "10min";
