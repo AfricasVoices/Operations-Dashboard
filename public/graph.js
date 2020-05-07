@@ -648,6 +648,9 @@ class GraphController {
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack1day").remove();
             d3.selectAll("#sentStack10min").remove();
+            d3.selectAll(".sentGrid").remove();
+            d3.selectAll(".sentXGrid10Min").remove();
+            d3.selectAll(".sentXGrid1Day").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -786,6 +789,9 @@ class GraphController {
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack10min").remove();
             d3.selectAll("#sentStack1day").remove();
+            d3.selectAll(".sentGrid").remove();
+            d3.selectAll(".sentXGrid1Day").remove();
+            d3.selectAll(".sentXGrid10Min").remove();
 
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
@@ -911,6 +917,9 @@ class GraphController {
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
             d3.selectAll("#failedBarChart10min").remove();
+            d3.selectAll(".failedGrid").remove();
+            d3.selectAll(".failedXGrid1Day").remove();
+            d3.selectAll(".failedXGrid10Min").remove();
 
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
@@ -1017,6 +1026,9 @@ class GraphController {
             d3.selectAll(".redrawElementFailed").remove();
             d3.selectAll("#failedBarChart").remove();
             d3.selectAll("#failedBarChart10min").remove();
+            d3.selectAll(".failedGrid").remove();
+            d3.selectAll(".failedXGrid10Min").remove();
+            d3.selectAll(".failedXGrid1Day").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
