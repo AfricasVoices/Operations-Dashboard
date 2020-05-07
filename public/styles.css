@@ -224,3 +224,21 @@ table > tbody > tr > td {
     stroke-opacity: 0.1;
     shape-rendering: crispEdges;
 }
+.sentGrid path,
+.sentXGrid10Min path,
+.sentXGrid1Day path,
+.sentGrid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.5;
+    shape-rendering: crispEdges;
+}
+.sentXGrid10Min line {
+    stroke: lightgrey;
+    stroke-opacity: 0.4;
+    shape-rendering: crispEdges;
+}
+.sentXGrid1Day line {
+    stroke: lightgrey;
+    stroke-opacity: 0.1;
+    shape-rendering: crispEdges;
+}
