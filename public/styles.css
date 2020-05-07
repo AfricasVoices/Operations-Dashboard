@@ -242,3 +242,21 @@ table > tbody > tr > td {
     stroke-opacity: 0.1;
     shape-rendering: crispEdges;
 }
+.failedGrid path,
+.failedXGrid10Min path,
+.failedXGrid1Day path,
+.failedGrid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.5;
+    shape-rendering: crispEdges;
+}
+.failedXGrid10Min line {
+    stroke: lightgrey;
+    stroke-opacity: 0.4;
+    shape-rendering: crispEdges;
+}
+.failedXGrid1Day line {
+    stroke: lightgrey;
+    stroke-opacity: 0.1;
+    shape-rendering: crispEdges;
+}
