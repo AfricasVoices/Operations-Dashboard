@@ -275,7 +275,16 @@ class GraphController {
             .orient("vertical")
             .scale(colorReceived)
             .labels(operators)
-            .on('cellclick', function(d) {
+            .on("cellover", function(d){        
+                let legendHovered = d.replace(/\s/g, '')
+                if (active_link === "0") d3.select(this).style("cursor", "pointer");
+                else {
+                  if (active_link === legendHovered) {
+                    d3.select(this).style("cursor", "pointer");
+                  } else d3.select(this).style("cursor", "auto");
+                }
+              })
+            .on("cellclick", function(d) {
                 legendClicked = d.replace(/\s/g, '')
                 if (active_link === "0") { //nothing selected, turn on this selection
                     active_link = legendClicked
