@@ -199,8 +199,8 @@ class UIController {
                 </div>
                 <div class="d-md-flex">
                     <span class="align-content-end font-weight-bold mr-1 p-1">Timescale</span>
-                    <input class="mr-2 btn btn-sm btn-brown" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                    <input class="btn btn-sm btn-brown" type="button" id="buttonUpdateViewOneDay" value="1 day">
+                    <input class="mr-2 btn btn-sm btn-brown form-control" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
+                    <input class="btn btn-sm btn-brown form-control" type="button" id="buttonUpdateViewOneDay" value="1 day">
                     <span class="align-content-end font-weight-bold ml-3 mr-1 p-1">TimeFrame</span>
                     <select class="btn-brown btn-sm form-control col-3" id="timeFrame">
                         <option value="default">Default</option>
@@ -212,7 +212,7 @@ class UIController {
                 </div>
                 <div class="d-flex">
                     <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
-                    <div class="font-weight-bold" id="lastUpdated"></div>
+                    <div class="font-weight-bold mb-0" id="lastUpdated"></div>
                 </div>
             </div> 
             <section>
