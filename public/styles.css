@@ -206,3 +206,21 @@ table > tbody > tr > td {
     border-radius: 8px;			
     pointer-events: none;			
 }
+.receivedGrid path,
+.receivedXGrid10Min path,
+.receivedXGrid1Day path,
+.receivedGrid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.5;
+    shape-rendering: crispEdges;
+}
+.receivedXGrid10Min line {
+    stroke: lightgrey;
+    stroke-opacity: 0.4;
+    shape-rendering: crispEdges;
+}
+.receivedXGrid1Day line {
+    stroke: lightgrey;
+    stroke-opacity: 0.1;
+    shape-rendering: crispEdges;
+}
