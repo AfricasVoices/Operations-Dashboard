@@ -672,6 +672,24 @@ class GraphController {
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
+            // Add the X gridlines
+            total_sent_sms_graph.append("g")			
+                .attr("class", "sentXGrid10Min")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+                
+            // Add the Y gridlines
+            total_sent_sms_graph.append("g")			
+                .attr("class", "sentGrid")
+                .call(d3.axisLeft(y_total_sent_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
                 .append("g")
@@ -1049,6 +1067,24 @@ class GraphController {
                 delete dataFilteredWeekGroupedDaily[entry]["key"];
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+
+            // Add the X gridlines
+            total_failed_sms_graph.append("g")			
+                .attr("class", "failedXGrid10Min")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+                
+            // Add the Y gridlines
+            total_failed_sms_graph.append("g")			
+                .attr("class", "failedGrid")
+                .call(d3.axisLeft(y_total_failed_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
 
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
