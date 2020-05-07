@@ -382,6 +382,9 @@ class GraphController {
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack").remove();
             d3.selectAll("#receivedStack10min").remove();
+            d3.selectAll(".receivedGrid").remove();
+            d3.selectAll(".receivedXGrid10Min").remove();
+            d3.selectAll(".receivedXGrid1Day").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -402,6 +405,24 @@ class GraphController {
                 delete dataFilteredWeekGroupedDaily[entry]["key"];
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+
+            // Add the X gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedXGrid10Min")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+                
+            // Add the Y gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedGrid")
+                .call(d3.axisLeft(y_total_received_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
 
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
@@ -522,6 +543,28 @@ class GraphController {
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll("#receivedStack").remove();
+            d3.selectAll(".receivedGrid").remove();
+            d3.selectAll(".receivedXGrid1Day").remove();
+            d3.selectAll(".receivedXGrid10Min").remove();
+
+            const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
+            // Add the X gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedXGrid1Day")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add the Y gridlines
+            total_received_sms_graph.append("g")			
+                .attr("class", "receivedGrid")
+                .call(d3.axisLeft(y_total_received_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
 
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
@@ -595,7 +638,6 @@ class GraphController {
                 })
 
             // "Add the X Axis for the total received sms graph
-            const tickValuesForAxis = dailyReceivedTotal.map(d => new Date(d.day));
             total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
@@ -603,7 +645,7 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .tickValues(tickValuesForAxis)
+                        .tickValues(tickValuesForXAxis)
                         .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
@@ -654,6 +696,26 @@ class GraphController {
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack1day").remove();
             d3.selectAll("#sentStack10min").remove();
+
+            // Group data filtered by week daily and generate tick values for x axis
+            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
+                .rollup(v => {
+                    let firstTimestampOfDay = {}
+                    firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
+                    return firstTimestampOfDay
+                })
+                .entries(dataFilteredWeek);
+
+            // Flatten nested data
+            for (let entry in dataFilteredWeekGroupedDaily) {
+                let valueList = dataFilteredWeekGroupedDaily[entry].value;
+                for (let key in valueList) {
+                    dataFilteredWeekGroupedDaily[entry][key] = valueList[key];
+                }
+                delete dataFilteredWeekGroupedDaily[entry]["value"];
+                delete dataFilteredWeekGroupedDaily[entry]["key"];
+            }
+            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
@@ -721,7 +783,7 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(1))
+                        .tickValues(tickValuesForXAxis)
                         .tickFormat(timeFormat)
                 )
                 // Rotate axis labels
@@ -1004,6 +1066,26 @@ class GraphController {
             d3.selectAll("#failedBarChart").remove();
             d3.selectAll("#failedBarChart10min").remove();
 
+            // Group data filtered by week daily and generate tick values for x axis
+            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
+                .rollup(v => {
+                    let firstTimestampOfDay = {}
+                    firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
+                    return firstTimestampOfDay
+                })
+                .entries(dataFilteredWeek);
+
+            // Flatten nested data
+            for (let entry in dataFilteredWeekGroupedDaily) {
+                let valueList = dataFilteredWeekGroupedDaily[entry].value;
+                for (let key in valueList) {
+                    dataFilteredWeekGroupedDaily[entry][key] = valueList[key];
+                }
+                delete dataFilteredWeekGroupedDaily[entry]["value"];
+                delete dataFilteredWeekGroupedDaily[entry]["key"];
+            }
+            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
                 .append("g")
@@ -1057,7 +1139,7 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .ticks(d3.timeDay.every(1))
+                        .tickValues(tickValuesForXAxis)
                         .tickFormat(timeFormat)
                 )
                 // Rotate axis labels
