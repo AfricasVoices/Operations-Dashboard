@@ -340,6 +340,8 @@ class GraphController {
             d3.selectAll("#receivedStack").remove();
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll(".receivedGrid").remove();
+            d3.selectAll(".receivedXGrid10Min").remove();
+            d3.selectAll(".receivedXGrid1Day").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -363,7 +365,7 @@ class GraphController {
 
             // Add the X gridlines
             total_received_sms_graph.append("g")			
-                .attr("class", "receivedGrid")
+                .attr("class", "receivedXGrid10Min")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
                     .tickValues(tickValuesForXAxis)
@@ -499,11 +501,13 @@ class GraphController {
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll("#receivedStack").remove();
             d3.selectAll(".receivedGrid").remove();
+            d3.selectAll(".receivedXGrid1Day").remove();
+            d3.selectAll(".receivedXGrid10Min").remove();
 
             const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
             // Add the X gridlines
             total_received_sms_graph.append("g")			
-                .attr("class", "receivedGrid")
+                .attr("class", "receivedXGrid1Day")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
                     .tickValues(tickValuesForXAxis)
