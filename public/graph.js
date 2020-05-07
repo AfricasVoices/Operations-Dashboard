@@ -811,6 +811,25 @@ class GraphController {
             d3.selectAll(".sentXGrid1Day").remove();
             d3.selectAll(".sentXGrid10Min").remove();
 
+            const tickValuesForXAxis = dailySentTotal.map(d => new Date(d.day));
+            // Add the X gridlines
+            total_sent_sms_graph.append("g")			
+                .attr("class", "sentXGrid1Day")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add the Y gridlines
+            total_sent_sms_graph.append("g")			
+                .attr("class", "sentGrid")
+                .call(d3.axisLeft(y_total_sent_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
                 .append("g")
@@ -876,7 +895,6 @@ class GraphController {
                 })
 
             //Add the X Axis for the total sent sms graph
-            const tickValuesForAxis = dailySentTotal.map(d => new Date(d.day));
             total_sent_sms_graph
                 .append("g")
                 .attr("class", "redrawElementSent")
@@ -884,7 +902,7 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(x)
-                        .tickValues(tickValuesForAxis)
+                        .tickValues(tickValuesForXAxis)
                         .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
@@ -939,6 +957,24 @@ class GraphController {
             d3.selectAll(".failedXGrid1Day").remove();
             d3.selectAll(".failedXGrid10Min").remove();
 
+            const tickValuesForXAxis = dailyFailedTotal.map(d => new Date(d.day));
+            total_failed_sms_graph.append("g")			
+                .attr("class", "failedXGrid1Day")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add the Y gridlines
+            total_failed_sms_graph.append("g")			
+                .attr("class", "failedGrid")
+                .call(d3.axisLeft(y_total_failed_sms_range)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add the Y Axis for the total failed sms graph
             total_failed_sms_graph
                 .append("g")
@@ -989,7 +1025,6 @@ class GraphController {
                 })
 
             // Add the X Axis for the total failed sms graph
-            const tickValuesForAxis = dailyFailedTotal.map(d => new Date(d.day));
             total_failed_sms_graph
                 .append("g")
                 .attr("class", "redrawElementFailed")
@@ -997,7 +1032,7 @@ class GraphController {
                 .call(
                     d3
                         .axisBottom(failed_messages_x_axis_range)
-                        .tickValues(tickValuesForAxis)
+                        .tickValues(tickValuesForXAxis)
                         .tickFormat(d => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
