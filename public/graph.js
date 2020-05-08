@@ -340,8 +340,6 @@ class GraphController {
             d3.selectAll("#receivedStack").remove();
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll(".receivedGrid").remove();
-            d3.selectAll(".receivedXGrid10Min").remove();
-            d3.selectAll(".receivedXGrid1Day").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -365,7 +363,7 @@ class GraphController {
 
             // Add the X gridlines
             total_received_sms_graph.append("g")			
-                .attr("class", "receivedXGrid10Min")
+                .attr("class", "receivedGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
                     .tickValues(tickValuesForXAxis)
@@ -501,13 +499,11 @@ class GraphController {
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll("#receivedStack").remove();
             d3.selectAll(".receivedGrid").remove();
-            d3.selectAll(".receivedXGrid1Day").remove();
-            d3.selectAll(".receivedXGrid10Min").remove();
 
             const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
             // Add the X gridlines
             total_received_sms_graph.append("g")			
-                .attr("class", "receivedXGrid1Day")
+                .attr("class", "receivedGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
                     .tickValues(tickValuesForXAxis)
@@ -649,8 +645,6 @@ class GraphController {
             d3.selectAll("#sentStack1day").remove();
             d3.selectAll("#sentStack10min").remove();
             d3.selectAll(".sentGrid").remove();
-            d3.selectAll(".sentXGrid10Min").remove();
-            d3.selectAll(".sentXGrid1Day").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -674,7 +668,7 @@ class GraphController {
 
             // Add the X gridlines
             total_sent_sms_graph.append("g")			
-                .attr("class", "sentXGrid10Min")
+                .attr("class", "sentGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
                     .tickValues(tickValuesForXAxis)
@@ -808,13 +802,11 @@ class GraphController {
             d3.selectAll("#sentStack10min").remove();
             d3.selectAll("#sentStack1day").remove();
             d3.selectAll(".sentGrid").remove();
-            d3.selectAll(".sentXGrid1Day").remove();
-            d3.selectAll(".sentXGrid10Min").remove();
 
             const tickValuesForXAxis = dailySentTotal.map(d => new Date(d.day));
             // Add the X gridlines
             total_sent_sms_graph.append("g")			
-                .attr("class", "sentXGrid1Day")
+                .attr("class", "sentGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
                     .tickValues(tickValuesForXAxis)
@@ -954,12 +946,10 @@ class GraphController {
             d3.selectAll("#failedBarChart").remove();
             d3.selectAll("#failedBarChart10min").remove();
             d3.selectAll(".failedGrid").remove();
-            d3.selectAll(".failedXGrid1Day").remove();
-            d3.selectAll(".failedXGrid10Min").remove();
 
             const tickValuesForXAxis = dailyFailedTotal.map(d => new Date(d.day));
             total_failed_sms_graph.append("g")			
-                .attr("class", "failedXGrid1Day")
+                .attr("class", "failedGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
                     .tickValues(tickValuesForXAxis)
@@ -1080,8 +1070,6 @@ class GraphController {
             d3.selectAll("#failedBarChart").remove();
             d3.selectAll("#failedBarChart10min").remove();
             d3.selectAll(".failedGrid").remove();
-            d3.selectAll(".failedXGrid10Min").remove();
-            d3.selectAll(".failedXGrid1Day").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -1105,7 +1093,7 @@ class GraphController {
 
             // Add the X gridlines
             total_failed_sms_graph.append("g")			
-                .attr("class", "failedXGrid10Min")
+                .attr("class", "failedGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
                     .tickValues(tickValuesForXAxis)

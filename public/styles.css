@@ -206,57 +206,17 @@ table > tbody > tr > td {
     border-radius: 8px;			
     pointer-events: none;			
 }
-.receivedGrid path,
-.receivedXGrid10Min path,
-.receivedXGrid1Day path,
-.receivedGrid line {
-    stroke: lightgrey;
-    stroke-opacity: 0.5;
-    shape-rendering: crispEdges;
-}
-.receivedXGrid10Min line {
-    stroke: lightgrey;
-    stroke-opacity: 0.4;
-    shape-rendering: crispEdges;
-}
-.receivedXGrid1Day line {
-    stroke: lightgrey;
-    stroke-opacity: 0.1;
-    shape-rendering: crispEdges;
-}
-.sentGrid path,
-.sentXGrid10Min path,
-.sentXGrid1Day path,
-.sentGrid line {
-    stroke: lightgrey;
-    stroke-opacity: 0.5;
-    shape-rendering: crispEdges;
-}
-.sentXGrid10Min line {
-    stroke: lightgrey;
-    stroke-opacity: 0.4;
-    shape-rendering: crispEdges;
-}
-.sentXGrid1Day line {
-    stroke: lightgrey;
-    stroke-opacity: 0.1;
-    shape-rendering: crispEdges;
-}
-.failedGrid path,
-.failedXGrid10Min path,
-.failedXGrid1Day path,
+.receivedGrid line,
+.sentGrid line,
 .failedGrid line {
     stroke: lightgrey;
+    stroke-opacity: 0.3;
+    shape-rendering: crispEdges;
+}
+.receivedGrid path,
+.sentGrid path,
+.failedGrid path {
+    stroke: lightgrey;
     stroke-opacity: 0.5;
-    shape-rendering: crispEdges;
-}
-.failedXGrid10Min line {
-    stroke: lightgrey;
-    stroke-opacity: 0.4;
-    shape-rendering: crispEdges;
-}
-.failedXGrid1Day line {
-    stroke: lightgrey;
-    stroke-opacity: 0.1;
     shape-rendering: crispEdges;
 }
