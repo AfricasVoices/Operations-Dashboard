@@ -7,11 +7,11 @@ class CodingProgressTableController {
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
         // Check the state of the column sorted 
-        if (!TableController.column) 
-            TableController.column = "Done";
+        if (!CodingProgressTableController.column) 
+            CodingProgressTableController.column = "Done";
 
         // Save sorting information
-        let sortInfo = { column: TableController.column, order: "" };
+        let sortInfo = { column: CodingProgressTableController.column, order: "" };
 
         // Invoke `transform` function with column to be sorted on page load
         transform(sortInfo.column);
@@ -24,13 +24,13 @@ class CodingProgressTableController {
             else { sortInfo.order = "descending"; sortInfo.column = column }
 
             // Keep the state of the column sorted to avoid its reset on update
-            TableController.column = sortInfo.column;
+            CodingProgressTableController.column = sortInfo.column;
 
             d3.select("tbody").selectAll("tr").remove();
 
             // Table Header
             d3.select("thead").selectAll("th")
-                .data(TableController.jsonToArray(data[0]))
+                .data(CodingProgressTableController.jsonToArray(data[0]))
                 .enter().append("th")
                 .attr("class", "table-heading")
                 .on("click", (d) => transform(d[0]))
@@ -42,13 +42,13 @@ class CodingProgressTableController {
                 .enter().append("tr")
                 .sort((a, b, order = sortInfo.order) => 
                     a == null || b == null ? 0 : column == "Dataset" ? 
-                        TableController.stringCompare(a[column], b[column], order) :
-                        TableController.sortNumber(a[column], b[column], order)
+                        CodingProgressTableController.stringCompare(a[column], b[column], order) :
+                        CodingProgressTableController.sortNumber(a[column], b[column], order)
                 );
 
             // Table Cells
             let td = tr.selectAll("td")
-                .data(d => TableController.jsonToArray(d))
+                .data(d => CodingProgressTableController.jsonToArray(d))
                 .enter().append("td")
                 .on("click", (d, i, n) => transform(d[0]));
 
@@ -105,7 +105,7 @@ class CodingProgressTableController {
         let arr = [];
         for (const key in json) {
             if (json.hasOwnProperty(key)) {
-                arr.push(TableController.jsonKeyValueToArray(key, json[key]));
+                arr.push(CodingProgressTableController.jsonKeyValueToArray(key, json[key]));
             }
         }
         return arr;
