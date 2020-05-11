@@ -40,8 +40,8 @@ class CodingProgressTableController {
             let tr = d3.select("tbody").selectAll("tr")
                 .data(data)
                 .enter().append("tr")
-                .sort((a, b, order = sortInfo.order) => 
-                    a == null || b == null ? 0 : column == "Dataset" ? 
+                .sort((a, b, order = sortInfo.order) => a == null || b == null ? 0 : 
+                    typeof a[column] === "string" && typeof b[column] === "string" ? 
                         CodingProgressTableController.stringCompare(a[column], b[column], order) :
                         CodingProgressTableController.sortNumber(a[column], b[column], order)
                 );
