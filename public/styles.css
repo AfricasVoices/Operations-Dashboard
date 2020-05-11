@@ -206,11 +206,11 @@ table > tbody > tr > td {
     border-radius: 8px;			
     pointer-events: none;			
 }
-tr:hover td { 
+th:hover {
     cursor: pointer;
 }
-th:hover {
-    cursor: grab;
+tr:hover td { 
+    cursor: pointer;
 }
 .receivedGrid line,
 .sentGrid line,
