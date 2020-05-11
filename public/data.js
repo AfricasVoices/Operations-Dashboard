@@ -59,13 +59,13 @@ class DataController {
                     notCodedMessages = codingProgressData["coding_progress"][datasetID]["not_coded_messages"]
                 let codingProgress = {}
                 codingProgress["Dataset"] = datasetID
-                codingProgress["Unique Texts"] = messagesCount
-                codingProgress["Unique Texts with a label"] = messagesWithLabel 
-                codingProgress["Done"] =  ((100 * messagesWithLabel) / messagesCount).toFixed(2);
-                codingProgress["Wrong Scheme messages"] = wrongSchemeMessages != null ? wrongSchemeMessages : "-";
-                codingProgress["WS %"] = wrongSchemeMessages != null ? ((100 * wrongSchemeMessages) / messagesCount).toFixed(2): "-";
-                codingProgress["Not Coded messages"] = notCodedMessages != null ? notCodedMessages : "-";
-                codingProgress["NC %"] = notCodedMessages != null ? ((100 * notCodedMessages) / messagesCount).toFixed(2) : "-";
+                codingProgress["Unique Texts"] = Number(messagesCount)
+                codingProgress["Unique Texts with a label"] = Number(messagesWithLabel)
+                codingProgress["Done"] =  Number(((100 * messagesWithLabel) / messagesCount).toFixed(2));
+                codingProgress["Wrong Scheme messages"] = Number(wrongSchemeMessages) != null ? wrongSchemeMessages : "-";
+                codingProgress["WS %"] = Number(wrongSchemeMessages) != null ? ((100 * wrongSchemeMessages) / messagesCount).toFixed(2): "-";
+                codingProgress["Not Coded messages"] = Number(notCodedMessages) != null ? notCodedMessages : "-";
+                codingProgress["NC %"] = Number(notCodedMessages) != null ? ((100 * notCodedMessages) / messagesCount).toFixed(2) : "-";
                 data.push(codingProgress)
             }
             onChange({data, lastUpdate : codingProgressData["last_update"]});  
