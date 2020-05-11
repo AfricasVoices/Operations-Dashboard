@@ -54,7 +54,8 @@ class CodingProgressTableController {
 
             // Filter Dataset column from columns & append text to td
             td.filter((d, i) => d[0] !== "Dataset" && i !== 0)
-                .text(d => ["Done", "WS %", "NC %"].includes(d[0]) ? `${d[1]}%` : d[1])
+                .text(d => Number.isNaN(d[1]) ? "-" : 
+                    ["Done", "WS %", "NC %"].includes(d[0]) ? `${d[1]}%` : d[1])
 
             // Select Dataset Column, create a link & append text to td
             td.filter((d, i) => d[0] === "Dataset" && i === 0)
