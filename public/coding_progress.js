@@ -50,21 +50,21 @@ class CodingProgressTableController {
             let td = tr.selectAll("td")
                 .data(d => CodingProgressTableController.jsonToArray(d))
                 .enter().append("td")
-                .on("click", (d, i, n) => transform(d[0]));
+                .on("click", (d) => transform(d[0]));
 
             // Filter Dataset column from columns & append text to td
-            td.filter((d, i, n) => d[0] !== "Dataset" && i !== 0)
+            td.filter((d, i) => d[0] !== "Dataset" && i !== 0)
                 .text(d => ["Done", "WS %", "NC %"].includes(d[0]) ? `${d[1]}%` : d[1])
 
             // Select Dataset Column, create a link & append text to td
-            td.filter((d, i, n) => d[0] === "Dataset" && i === 0)
+            td.filter((d, i) => d[0] === "Dataset" && i === 0)
                 .append("a")
                 .attr("href", d => `https://web-coda.firebaseapp.com/?dataset=${d[1]}`)
                 .attr("target", "_blank")
                 .text(d => d[1])
 
             // Filter table to remain with "Done" column
-            td.filter((d, i, n) => d[0] === "Done" && i === 3)
+            td.filter((d, i) => d[0] === "Done" && i === 3)
             .each((d, i, n) => {
                 // Select Table Row
                 let parentNode = d3.select(n[i].parentNode)
