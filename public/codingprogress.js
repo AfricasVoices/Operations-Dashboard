@@ -33,7 +33,7 @@ class CodingProgressTableController {
                 .data(TableController.jsonToArray(data[0]))
                 .enter().append("th")
                 .attr("class", "table-heading")
-                .on("click", (d, i, n) => transform(d[0]))
+                .on("click", (d) => transform(d[0]))
                 .text(d => d[0])
 
             // Table Rows
