@@ -71,6 +71,12 @@ a {
 table > tbody > tr > td {
     border-bottom: 1px solid rgb(0, 0, 0, 0.2);
 }
+td.float {
+    text-align: right
+}
+td.integer, td.dash {
+    text-align: center;
+}
 .coding-notstarted {
     background-color: #fc9f9f;
     font-size: 16;
