@@ -6,6 +6,12 @@ class CodingProgressTableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
+        // Record first & subsequent instances of `CodingProgressTableController` execution.
+        if (!CodingProgressTableController.isExecuted) // Check if defined
+            CodingProgressTableController.isExecuted = 0
+        CodingProgressTableController.isExecuted += 1;
+        let sortOrder;
+
         // Check the state of the column sorted 
         if (!CodingProgressTableController.column) 
             CodingProgressTableController.column = "Done";
@@ -18,10 +24,23 @@ class CodingProgressTableController {
         
         // Function used to generate coding progress table
         function transform(column) {
+            sortOrder = sortInfo.order
+
+            console.log(sortInfo.order)
             // Toggle sorting state
             if (sortInfo.order === "descending" && column === sortInfo.column)
                 sortInfo.order = "ascending";
             else { sortInfo.order = "descending"; sortInfo.column = column }
+            console.log(sortInfo.order)
+            
+            // Maintain sort order on data update
+            if (column !== "Done" && sortOrder == "")
+                sortInfo.order = "ascending"
+            if (column == "Done" && sortOrder == "" && CodingProgressTableController.isExecuted % 2 === 0) {
+                CodingProgressTableController.isExecuted -= 1
+                sortInfo.order = "ascending"
+            }
+            console.log(sortInfo.order)
 
             // Keep the state of the column sorted to avoid its reset on update
             CodingProgressTableController.column = sortInfo.column;
