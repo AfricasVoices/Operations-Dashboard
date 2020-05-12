@@ -31,18 +31,7 @@ class UIController {
         document.head.appendChild(script);
         let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
-                    <thead>
-                        <tr class="table-heading">
-                            <th scope="col">Dataset</th>
-                            <th scope="col">Unique Texts</th>
-                            <th scope="col">Unique Texts with a label</th>
-                            <th scope="col">Done</th>
-                            <th scope="col">Wrong Scheme messages</th>
-                            <th scope="col">WS %</th>
-                            <th scope="col">Not Coded messages</th>
-                            <th scope="col">NC %</th>
-                        </tr>
-                    </thead>
+                    <thead></thead>
                     <tbody id="coding-status-body"></tbody>
                 </table>
                 <div id="last-update">Last updated: </div>
