@@ -27,6 +27,7 @@ class CodingProgressTableController {
             CodingProgressTableController.column = sortInfo.column;
 
             d3.select("tbody").selectAll("tr").remove();
+            d3.select("thead").selectAll('tr').remove();
 
             // Table Header
             d3.select("thead").selectAll("th")
