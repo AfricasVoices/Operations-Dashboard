@@ -11,7 +11,7 @@ class CodingProgressTableController {
             CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "descending"}];
 
         // Save sorting information
-        let sortInfo = { column: CodingProgressTableController.column, order: "" };
+        let sortInfo = { ...CodingProgressTableController.sortInfoArray.slice(-1)[0] };
 
         // Invoke `transform` function with column to be sorted on page load
         transform(sortInfo.column);
