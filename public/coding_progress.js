@@ -8,7 +8,7 @@ class CodingProgressTableController {
 
         // Default sorting information
         if (!CodingProgressTableController.sortInfoArray)
-            CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "descending"}];
+            CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "ascending"}];
 
         // Latest sorting information
         let sortInfo = { ...CodingProgressTableController.sortInfoArray.slice(-1)[0] };
@@ -100,25 +100,25 @@ class CodingProgressTableController {
         previousColumnSorted = CodingProgressTableController.sortInfoArray.slice(-1)[0].column;
         previousSortOrder = CodingProgressTableController.sortInfoArray.slice(-1)[0].order;
         if (column == previousColumnSorted) {
-            if (previousSortOrder == "descending") {
-                sortInfo["order"] = "ascending"
-            } else {
+            if (previousSortOrder == "ascending") {
                 sortInfo["order"] = "descending"
+            } else {
+                sortInfo["order"] = "ascending"
             }
         } else {
-            sortInfo["order"] = "descending"
+            sortInfo["order"] = "ascending"
         }
         CodingProgressTableController.sortInfoArray.push(sortInfo);
     }
 
     static stringCompare(a, b, order) {
-        if (order === "descending") 
+        if (order === "ascending") 
             return a.localeCompare(b, 'en', { sensitivity: 'base' });
         return b.localeCompare(a, 'en', { sensitivity: 'base' });
     };
 
     static sortNumber(a, b, order) {
-        if (order === "descending") 
+        if (order === "ascending") 
             return a-b || isNaN(a)-isNaN(b);
         return b-a || isNaN(b)-isNaN(a);
     } 
