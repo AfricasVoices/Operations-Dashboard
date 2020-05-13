@@ -6,9 +6,9 @@ class CodingProgressTableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
-        // Check the state of the column sorted 
-        if (!CodingProgressTableController.column) 
-            CodingProgressTableController.column = "Done";
+        // Default sorting information
+        if (!CodingProgressTableController.sortInfoArray)
+            CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "descending"}];
 
         // Save sorting information
         let sortInfo = { column: CodingProgressTableController.column, order: "" };
