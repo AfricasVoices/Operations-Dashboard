@@ -64,12 +64,18 @@ a {
     height: 30px;
     color: #ffff;
 }
-.table thead > tr > th {
+.table > thead > th {
     vertical-align: bottom;
     border-bottom: 2px solid #8e3436;
 }
 table > tbody > tr > td {
     border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+}
+td.float {
+    text-align: right
+}
+td.integer, td.dash {
+    text-align: center;
 }
 .coding-notstarted {
     background-color: #fc9f9f;
@@ -205,4 +211,24 @@ table > tbody > tr > td {
     background: whitesmoke;	
     border-radius: 8px;			
     pointer-events: none;			
+}
+th:hover {
+    cursor: pointer;
+}
+tr:hover td { 
+    cursor: pointer;
+}
+.receivedGrid line,
+.sentGrid line,
+.failedGrid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.3;
+    shape-rendering: crispEdges;
+}
+.receivedGrid path,
+.sentGrid path,
+.failedGrid path {
+    stroke: lightgrey;
+    stroke-opacity: 0.5;
+    shape-rendering: crispEdges;
 }
