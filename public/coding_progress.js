@@ -18,6 +18,8 @@ class CodingProgressTableController {
         
         // Function used to generate coding progress table
         function transform(column, updatedSortInfo = "") {
+            if (typeof updatedSortInfo === "object")
+                sortInfo = updatedSortInfo;
 
             d3.select("tbody").selectAll("tr").remove();
 
