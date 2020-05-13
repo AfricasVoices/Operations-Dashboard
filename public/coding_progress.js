@@ -28,7 +28,11 @@ class CodingProgressTableController {
                 .data(CodingProgressTableController.jsonToArray(data[0]))
                 .enter().append("th")
                 .attr("class", "table-heading")
-                .on("click", (d) => transform(d[0]))
+                .on("click", (d) => {
+                    CodingProgressTableController.saveSortInfo(d[0])
+                    let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0]
+                    transform(d[0], latestSortInfo)
+                })
                 .text(d => d[0])
 
             // Table Rows
@@ -45,7 +49,11 @@ class CodingProgressTableController {
             let td = tr.selectAll("td")
                 .data(d => CodingProgressTableController.jsonToArray(d))
                 .enter().append("td")
-                .on("click", (d) => transform(d[0]));
+                .on("click", (d) => {
+                    CodingProgressTableController.saveSortInfo(d[0])
+                    let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0]
+                    transform(d[0], latestSortInfo)
+                });
 
             // Filter Dataset column from columns & append text to td
             td.filter((d, i) => d[0] !== "Dataset" && i !== 0)
