@@ -17,7 +17,7 @@ class CodingProgressTableController {
         transform(sortInfo.column);
         
         // Function used to generate coding progress table
-        function transform(column) {
+        function transform(column, updatedSortInfo = "") {
             // Toggle sorting state
             if (sortInfo.order === "descending" && column === sortInfo.column)
                 sortInfo.order = "ascending";
