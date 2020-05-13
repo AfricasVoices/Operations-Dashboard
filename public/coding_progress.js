@@ -91,6 +91,23 @@ class CodingProgressTableController {
         };
     };
 
+    static saveSortInfo(column) {
+        let sortInfo = {}, previousColumnSorted, previousSortOrder;
+        sortInfo["column"] = column;
+        previousColumnSorted = CodingProgressTableController.sortInfoArray.slice(-1)[0].column;
+        previousSortOrder = CodingProgressTableController.sortInfoArray.slice(-1)[0].order;
+        if (column == previousColumnSorted) {
+            if (previousSortOrder == "descending") {
+                sortInfo["order"] = "ascending"
+            } else {
+                sortInfo["order"] = "descending"
+            }
+        } else {
+            sortInfo["order"] = "descending"
+        }
+        CodingProgressTableController.sortInfoArray.push(sortInfo);
+    }
+
     static stringCompare(a, b, order) {
         if (order === "descending") 
             return a.localeCompare(b, 'en', { sensitivity: 'base' });
