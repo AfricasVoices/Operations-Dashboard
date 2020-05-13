@@ -7,7 +7,7 @@ class CodingProgressTableController {
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
         if (!CodingProgressTableController.sortInfoArray)
-            CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "descending"}];
+            CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "ascending"}];
 
         // Save sorting information
         let sortInfo = { ...CodingProgressTableController.sortInfoArray.slice(-1)[0] };
@@ -95,13 +95,13 @@ class CodingProgressTableController {
     };
 
     static stringCompare(a, b, order) {
-        if (order === "descending") 
+        if (order === "ascending") 
             return a.localeCompare(b, 'en', { sensitivity: 'base' });
         return b.localeCompare(a, 'en', { sensitivity: 'base' });
     };
 
     static sortNumber(a, b, order) {
-        if (order === "descending") 
+        if (order === "ascending") 
             return a-b || isNaN(a)-isNaN(b);
         return b-a || isNaN(b)-isNaN(a);
     } 
@@ -112,13 +112,13 @@ class CodingProgressTableController {
         previousColumnSorted = CodingProgressTableController.sortInfoArray.slice(-1)[0].column;
         previousSortOrder = CodingProgressTableController.sortInfoArray.slice(-1)[0].order;
         if (column == previousColumnSorted) {
-            if ("descending" == previousSortOrder) {
-                sortInfo["order"] = "ascending"
-            } else {
+            if ("ascending" == previousSortOrder) {
                 sortInfo["order"] = "descending"
+            } else {
+                sortInfo["order"] = "ascending"
             }
         } else {
-            sortInfo["order"] = "descending"
+            sortInfo["order"] = "ascending"
         }
         CodingProgressTableController.sortInfoArray.push(sortInfo);
         console.log(CodingProgressTableController.sortInfoArray)
