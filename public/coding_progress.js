@@ -6,44 +6,20 @@ class CodingProgressTableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
-        // Record first & subsequent instances of `CodingProgressTableController` execution.
-        if (!CodingProgressTableController.isExecuted) // Check if defined
-            CodingProgressTableController.isExecuted = 0
-        CodingProgressTableController.isExecuted += 1;
-        let sortOrder;
-
-        // Check the state of the column sorted 
-        if (!CodingProgressTableController.column) 
-            CodingProgressTableController.column = "Done";
+        if (!CodingProgressTableController.sortInfoArray)
+            CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "descending"}];
 
         // Save sorting information
-        let sortInfo = { column: CodingProgressTableController.column, order: "" };
+        let sortInfo = { ...CodingProgressTableController.sortInfoArray.slice(-1)[0] };
+        console.log(sortInfo)
 
         // Invoke `transform` function with column to be sorted on page load
         transform(sortInfo.column);
         
         // Function used to generate coding progress table
-        function transform(column) {
-            sortOrder = sortInfo.order
-
-            console.log(sortInfo.order)
-            // Toggle sorting state
-            if (sortInfo.order === "descending" && column === sortInfo.column)
-                sortInfo.order = "ascending";
-            else { sortInfo.order = "descending"; sortInfo.column = column }
-            console.log(sortInfo.order)
-            
-            // Maintain sort order on data update
-            if (column !== "Done" && sortOrder == "")
-                sortInfo.order = "ascending"
-            if (column == "Done" && sortOrder == "" && CodingProgressTableController.isExecuted % 2 === 0) {
-                CodingProgressTableController.isExecuted -= 1
-                sortInfo.order = "ascending"
-            }
-            console.log(sortInfo.order)
-
-            // Keep the state of the column sorted to avoid its reset on update
-            CodingProgressTableController.column = sortInfo.column;
+        function transform(column, updatedSortInfo = "") {
+            if (typeof updatedSortInfo === "object")
+                sortInfo = updatedSortInfo;
 
             d3.select("tbody").selectAll("tr").remove();
 
@@ -52,7 +28,11 @@ class CodingProgressTableController {
                 .data(CodingProgressTableController.jsonToArray(data[0]))
                 .enter().append("th")
                 .attr("class", "table-heading")
-                .on("click", (d) => transform(d[0]))
+                .on("click", (d) => {
+                    CodingProgressTableController.saveSortInfo(d[0])
+                    let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0]
+                    transform(d[0], latestSortInfo)
+                })
                 .text(d => d[0])
 
             // Table Rows
@@ -69,7 +49,11 @@ class CodingProgressTableController {
             let td = tr.selectAll("td")
                 .data(d => CodingProgressTableController.jsonToArray(d))
                 .enter().append("td")
-                .on("click", (d) => transform(d[0]));
+                .on("click", (d) => {
+                    CodingProgressTableController.saveSortInfo(d[0])
+                    let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0]
+                    transform(d[0], latestSortInfo)
+                });
 
             // Filter Dataset column from columns & append text to td
             td.filter((d, i) => d[0] !== "Dataset" && i !== 0)
@@ -121,6 +105,24 @@ class CodingProgressTableController {
             return a-b || isNaN(a)-isNaN(b);
         return b-a || isNaN(b)-isNaN(a);
     } 
+
+    static saveSortInfo(column) {
+        let sortInfo = {}, previousColumnSorted, previousSortOrder;
+        sortInfo["column"] = column;
+        previousColumnSorted = CodingProgressTableController.sortInfoArray.slice(-1)[0].column;
+        previousSortOrder = CodingProgressTableController.sortInfoArray.slice(-1)[0].order;
+        if (column == previousColumnSorted) {
+            if ("descending" == previousSortOrder) {
+                sortInfo["order"] = "ascending"
+            } else {
+                sortInfo["order"] = "descending"
+            }
+        } else {
+            sortInfo["order"] = "descending"
+        }
+        CodingProgressTableController.sortInfoArray.push(sortInfo);
+        console.log(CodingProgressTableController.sortInfoArray)
+    }
 
     static jsonKeyValueToArray(k, v) {return [k, v];}
 
