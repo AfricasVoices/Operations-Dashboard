@@ -18,13 +18,6 @@ class CodingProgressTableController {
         
         // Function used to generate coding progress table
         function transform(column, updatedSortInfo = "") {
-            // Toggle sorting state
-            if (sortInfo.order === "descending" && column === sortInfo.column)
-                sortInfo.order = "ascending";
-            else { sortInfo.order = "descending"; sortInfo.column = column }
-
-            // Keep the state of the column sorted to avoid its reset on update
-            CodingProgressTableController.column = sortInfo.column;
 
             d3.select("tbody").selectAll("tr").remove();
 
