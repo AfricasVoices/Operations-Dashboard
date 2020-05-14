@@ -49,12 +49,7 @@ class CodingProgressTableController {
             let td = tr.selectAll("td")
                 .data(d => CodingProgressTableController.jsonToArray(d))
                 .enter().append("td")
-                .on("click", (d) => {
-                    CodingProgressTableController.saveSortInfo(d[0])
-                    let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0]
-                    transform(d[0], latestSortInfo)
-                });
-
+            
             // Filter Dataset column from columns & append text to td
             td.filter((d, i) => d[0] !== "Dataset" && i !== 0)
             .attr('class', d => Number.isInteger(d[1]) ? "integer" : 

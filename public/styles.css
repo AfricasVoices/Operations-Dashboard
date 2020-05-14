@@ -215,9 +215,6 @@ td.integer, td.dash {
 th:hover {
     cursor: pointer;
 }
-tr:hover td { 
-    cursor: pointer;
-}
 .receivedGrid line,
 .sentGrid line,
 .failedGrid line {
