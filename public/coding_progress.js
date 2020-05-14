@@ -50,7 +50,6 @@ class CodingProgressTableController {
             let td = tr.selectAll("td")
                 .data(d => CodingProgressTableController.jsonToArray(d))
                 .enter().append("td")
-                .on("click", (d) => transform(d[0]));
 
             // Filter Dataset column from columns & append text to td
             td.filter((d, i) => d[0] !== "Dataset" && i !== 0)
