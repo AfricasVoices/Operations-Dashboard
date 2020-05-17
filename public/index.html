@@ -9,19 +9,55 @@
     <script src="vendor/firebase-7.12.0/firebase-app.js"></script>
     <script src="vendor/firebase-7.12.0/firebase-firestore.js"></script>
     <script src="vendor/firebase-7.12.0/firebase-auth.js"></script>
-    <script src="vendor/jquery-3.4.1/jquery.min.js"></script>
-    <script src="vendor/jquery.tablesorter-2.31.1/jquery.tablesorter.min.js"></script>
-    <script src="vendor/bootstrap-4.3.1/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="vendor/bootstrap-4.3.1/bootstrap.min.css">
     <link rel="stylesheet" href="vendor/font-5.11.2/fontawesome/css/all.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="firebase.js"></script>
 </head>
 <body>
+    <header class="main-header">
+        <div>
+            <a href="#" class="main-header__brand">
+                <img src="images/avfdashboardlogo.png" alt="avf-logo">
+            </a>
+        </div>
+        <nav class="main-nav">
+            <ul class="main-nav__items">
+                <li class="main-nav__item">
+                    <a href="#">SYSTEMS</a>
+                </li>
+                <li class="main-nav__item coding-progress-link">
+                    <a href="#">MESSAGE CODING</a>
+                </li>
+                <!-- <li class="main-nav__item main-nav__item-dropdown"></li> -->
+                <li class="main-nav__item main-nav__item--dropdown">
+                    <button class="dropbtn">
+                        TRAFFIC <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="project-dropdown-menu">
+                      <!-- <a href="#">Link</a> -->
+                    </div>
+                </li>
+                <li class="main-nav__item main-nav__item--logout">
+                    <button>
+                        Logout <i class="fas fa-sign-out-alt mx-2"></i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Display Coding Progress Table Here -->
+        <section class="coding_progress coding-progress-container"></section>
+        <!-- Display Graphs Here -->
+        <section class="graph-container"></section>
+    </main>
+
     <!-- NAVBAR WITH DROPDOWN & RESPONSIVE TOGGLE-->
     <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-1 py-0">
         <div class="container">
-            <a class="navbar-brand" href="#"><img class="logo" src="images/avfdashboardlogo.png" alt="avf-logo"></a>
+            <!-- <a class="navbar-brand" href="#"><img class="logo" src="images/avfdashboardlogo.png" alt="avf-logo"></a> -->
             <!-- TOGGLE TRIGGER FOR SMALL DEVICES -->
             <button class="navbar-light navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -43,9 +79,9 @@
         </div>
     </nav> 
      <!-- Display Coding Progress Table Here -->
-    <section class="coding_progress coding-progress-container"></section>
+    <!-- <section class="coding_progress coding-progress-container"></section> -->
     <!-- Display Graphs Here -->
-    <section class="graph-container"></section>
+    <!-- <section class="graph-container"></section> -->
     <script src="vendor/d3-5.12.0/d3.js"></script>
     <script src="vendor/d3-legend-2.25.6/d3-legend.min.js"></script>
     <script src="vendor/d3-tip-0.9.1/d3-tip.min.js"></script>

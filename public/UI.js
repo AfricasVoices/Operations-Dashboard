@@ -2,7 +2,7 @@
 class UIController {
     static getDOMstrings() {
         return {
-            projectMenu: ".project-menu",
+            projectMenu: ".project-dropdown-menu",
             codingProgressLinkSelector: ".coding-progress-link",
             codingProgressContainer: ".coding-progress-container",
             trafficsLinkSelector: ".traffics-link",
@@ -27,10 +27,10 @@ class UIController {
     static addCodingProgressSection() {
         let DOMstrings = UIController.getDOMstrings(),
             script = document.createElement('script');
-        script.setAttribute('src','scroll.js');
+        // script.setAttribute('src','scroll.js');
         document.head.appendChild(script);
-        let html = `<div class="container container-fluid table-responsive">
-                <table id='codingtable' class='table'>
+        let html = `<div>
+                <table id='codingtable' class='table sticky'>
                     <thead></thead>
                     <tbody id="coding-status-body"></tbody>
                 </table>
@@ -193,28 +193,30 @@ class UIController {
         script.setAttribute('src','scroll.js');
         document.head.appendChild(script);
         let html = `<div class="container"> 
-            <div class="d-md-flex justify-content-between p-1">
-                <div>
-                    <span class="txt-brown my-auto title"><b>%collection%</b></span>
-                </div>
-                <div class="d-md-flex">
-                    <span class="align-content-end font-weight-bold mr-1 p-1">Timescale</span>
-                    <input class="mr-2 btn btn-sm btn-brown form-control" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                    <input class="btn btn-sm btn-brown form-control" type="button" id="buttonUpdateViewOneDay" value="1 day">
-                    <span class="align-content-end font-weight-bold ml-3 mr-1 p-1">TimeFrame</span>
-                    <select class="btn-brown btn-sm form-control col-3" id="timeFrame">
-                        <option value="default">Default</option>
-                        <option value="1">48 Hours</option>
-                        <option value="6">7 days</option>
-                        <option value="13">14 days</option>
-                        <option value="29">30 days</option>
-                    </select> 
-                </div>
-                <div class="d-flex">
-                    <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
-                    <div class="font-weight-bold mb-0" id="lastUpdated"></div>
-                </div>
-            </div> 
+            <section>
+                <div class="d-md-flex justify-content-between p-1">
+                    <div>
+                        <span class="txt-brown my-auto title"><b>%collection%</b></span>
+                    </div>
+                    <div class="d-md-flex">
+                        <span class="align-content-end font-weight-bold mr-1 p-1">Timescale</span>
+                        <input class="mr-2 btn btn-sm btn-brown form-control" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
+                        <input class="btn btn-sm btn-brown form-control" type="button" id="buttonUpdateViewOneDay" value="1 day">
+                        <span class="align-content-end font-weight-bold ml-3 mr-1 p-1">TimeFrame</span>
+                        <select class="btn-brown btn-sm form-control col-3" id="timeFrame">
+                            <option value="default">Default</option>
+                            <option value="1">48 Hours</option>
+                            <option value="6">7 days</option>
+                            <option value="13">14 days</option>
+                            <option value="29">30 days</option>
+                        </select> 
+                    </div>
+                    <div class="d-flex">
+                        <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
+                        <div class="font-weight-bold mb-0" id="lastUpdated"></div>
+                    </div>
+                </div> 
+            </section>
             <section>
                 <div class="d-md-flex justify-content-start my-2">
                     <span class="font-weight-bold" type="text">Set the maximum number of incoming messages you want to see</span> 

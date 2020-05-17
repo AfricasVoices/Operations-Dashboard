@@ -1,7 +1,7 @@
-$('.accordion').on('shown.bs.collapse', function () { 
+// $('.accordion').on('shown.bs.collapse', function () { 
         
-    $('html, body').animate({ 
-        scrollTop: 10000
-    }, 600); 
+//     $('html, body').animate({ 
+//         scrollTop: 10000
+//     }, 600); 
         
-});
+// });
