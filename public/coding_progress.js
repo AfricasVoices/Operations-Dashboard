@@ -22,12 +22,14 @@ class CodingProgressTableController {
                 sortInfo = updatedSortInfo;
 
             d3.select("tbody").selectAll("tr").remove();
+            d3.select("thead").selectAll('tr').remove();
 
             // Table Header
-            d3.select("thead").selectAll("th")
-                .data(CodingProgressTableController.jsonToArray(data[0]))
-                .enter().append("th")
+            d3.select("thead").append('tr')
                 .attr("class", "table-heading")
+                .selectAll('th')
+                .data(CodingProgressTableController.jsonToArray(data[0])).enter() 
+                .append('th')
                 .on("click", (d) => {
                     CodingProgressTableController.saveSortInfo(d[0])
                     let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0]
