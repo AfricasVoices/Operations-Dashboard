@@ -27,13 +27,15 @@ class CodingProgressTableController {
             CodingProgressTableController.column = sortInfo.column;
 
             d3.select("tbody").selectAll("tr").remove();
+            d3.select("thead").selectAll('tr').remove();
 
             // Table Header
-            d3.select("thead").selectAll("th")
-                .data(CodingProgressTableController.jsonToArray(data[0]))
-                .enter().append("th")
+            d3.select("thead").append('tr')
                 .attr("class", "table-heading")
-                .on("click", (d) => transform(d[0]))
+                .selectAll('th')
+                .data(CodingProgressTableController.jsonToArray(data[0])).enter() 
+                .append('th')
+                .on("click", (d, i, n) => transform(d[0]))
                 .text(d => d[0])
 
             // Table Rows

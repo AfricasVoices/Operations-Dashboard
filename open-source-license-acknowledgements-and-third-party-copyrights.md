@@ -21,11 +21,6 @@ License: MIT<br/>
 https://github.com/jquery/jquery/blob/master/LICENSE.txt<br/> 
 Copyright JS Foundation and other contributors, https://js.foundation/
 
-### tablesorter jQuery Plugin
-License: MIT<br/> 
-https://github.com/christianbach/tablesorter/blob/master/LICENSE<br/> 
-Copyright (c) 2014 Christian Bach
-
 ### Bootstrap - front-end framework
 License: MIT<br/> 
 https://github.com/twbs/bootstrap/blob/master/LICENSE<br/> 
