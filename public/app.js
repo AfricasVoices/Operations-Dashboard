@@ -57,6 +57,17 @@ class Controller {
         DataController.registerSnapshotListener(unsubscribeFunc);
     }
 
+    static displaySystems() {
+        UIController.addSystemsGraphs();
+        Controller.resetActiveLink();
+        document
+            .querySelector(Controller.DOMstrings.systemsLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
+        // Update and show the Graphs
+        let unsubscribeFunc = DataController.watchSystemsMetrics(SystemGraphsController.updateGraphs2);
+        DataController.registerSnapshotListener(unsubscribeFunc);
+    }
+
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.resetUI();
@@ -117,6 +128,8 @@ class Controller {
         if (page_route) {
             if (page_route == "coding_progress") {
                 Controller.displayCodingProgress();
+            } else if (page_route == "systems") {
+                Controller.displaySystems();
             } else if (page_route.startsWith("traffic-")) {
                 DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
             } else {
