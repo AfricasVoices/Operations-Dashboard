@@ -77,6 +77,15 @@ class Controller {
         }
     }
 
+    static navigateToSystems(e) {
+        if (e.target && e.target.nodeName == "A") {
+            Controller.resetUI();
+            DataController.detachSnapshotListener();
+            window.location.hash = "systems";
+            Controller.displaySystems();
+        }
+    }
+
     static displayDeepLinkedTrafficPage(activeProjectsData) {
         let activeProjects = [],
             page_route = window.location.hash.substring(1);
