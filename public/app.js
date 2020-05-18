@@ -11,6 +11,9 @@ class Controller {
         document
             .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
+        document
+            .querySelector(Controller.DOMstrings.systemsLinkSelector)
+            .addEventListener("click", Controller.navigateToSystems);
     }
 
     static resetUI() {
