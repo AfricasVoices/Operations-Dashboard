@@ -130,6 +130,15 @@ class SystemGraphsController {
                     x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
                     areaChart.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
                 }
+
+                // Update axis and area position
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+                // Rotate X axis ticks
+                xAxis.selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-65)");
             }
 
         }
