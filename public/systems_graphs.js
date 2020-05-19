@@ -155,6 +155,11 @@ class SystemGraphsController {
                 d3.select("."+d).style("opacity", 1)
             }
 
+            // And when it is not hovered anymore
+            let noHighlight = function(d){
+                d3.selectAll(".diskArea").style("opacity", 1)
+            }
+
         }
 
         function plotMemoryMetrics(data) {}
