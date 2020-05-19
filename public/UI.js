@@ -185,4 +185,22 @@ class UIController {
             .querySelector(DOMstrings.codingProgressContainer)
             .insertAdjacentHTML("beforeend", newHtml);
     }
+
+    static addSystemsGraphs() {
+        let DOMstrings = UIController.getDOMstrings(),
+            html = `<div class="container"> 
+            <section>
+                <div class="card shadow chart my-1"></div>
+            </section> 
+            <section>
+                <div class="card shadow chart2 my-1"></div>
+            </section> 
+            <section>
+                <div class="card shadow chart3 my-1"></div>
+            </section> 
+        </div> `;
+        document
+            .querySelector(DOMstrings.codingProgressContainer)
+            .insertAdjacentHTML("beforeend", html);
+    }
 }
