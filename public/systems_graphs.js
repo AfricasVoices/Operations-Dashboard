@@ -58,6 +58,15 @@ class SystemGraphsController {
                 )
                 .style("text-anchor", "middle")
                 .text("Date (dd HH:mm)");
+
+            // Add Y axis label
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - Margin.left)
+                .attr("x", 0 - Height / 2)
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("GB")
  
         }
 
