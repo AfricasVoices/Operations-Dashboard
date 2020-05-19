@@ -21,6 +21,10 @@ class SystemGraphsController {
                 diskStr =  "disk_" + diskMetrics[i];
                 diskKeys.push(diskStr);
             }
+
+            let colors = ["#228B22", "#fbdb9c"]
+            // color palette
+            let color = d3.scaleOrdinal().domain(diskMetrics).range(colors);
         }
 
         function plotMemoryMetrics(data) {}
