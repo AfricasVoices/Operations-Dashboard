@@ -188,6 +188,15 @@ class SystemGraphsController {
                     .on("mouseover", highlight)
                     .on("mouseleave", noHighlight)
 
+            // Disk usage graph title
+            svg.append("text")
+                .attr("x", Width / 2)
+                .attr("y", 0 - Margin.top / 2)
+                .attr("text-anchor", "middle")
+                .style("font-size", "20px")
+                .style("text-decoration", "bold")
+                .text("Disk Usage");
+
         }
 
         function plotMemoryMetrics(data) {}
