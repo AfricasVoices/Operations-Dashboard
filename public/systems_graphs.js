@@ -28,6 +28,13 @@ class SystemGraphsController {
 
             let stackDisk = d3.stack().keys(diskKeys),
                 diskDataStacked = stackDisk(data);
+
+            let svg = d3.select(".chart")
+                .append("svg")
+                .attr("width", Width + Margin.left + Margin.right + 120)
+                .attr("height", Height + Margin.top + Margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")");
         }
 
         function plotMemoryMetrics(data) {}
