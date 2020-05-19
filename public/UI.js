@@ -3,6 +3,7 @@ class UIController {
     static getDOMstrings() {
         return {
             projectMenu: ".project-menu",
+            systemsLinkSelector: ".systems-link",
             codingProgressLinkSelector: ".coding-progress-link",
             codingProgressContainer: ".coding-progress-container",
             trafficsLinkSelector: ".traffics-link",
