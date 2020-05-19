@@ -1,8 +1,7 @@
 class SystemGraphsController {
     static updateGraphs2(data) {
+
         let dayTimeFormat = d3.timeFormat("%a %d (%H:%M)");
-        let diskMetrics = new Set();
-        let memoryMetrics = new Set();
 
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
@@ -14,18 +13,12 @@ class SystemGraphsController {
             Object.keys(d.disk_usage)
                 .sort()
                 .forEach(metric => {
-                    if (!(metric in diskMetrics)) {
-                        diskMetrics.add(metric);
-                        d[`disk_${metric}`] = (+d.disk_usage[metric] / 1e9);
-                    }
+                    d[`disk_${metric}`] = (+d.disk_usage[metric] / 1e9);
                 });
             Object.keys(d.memory_usage)
                 .sort()
                 .forEach(metric => {
-                    if (!(metric in memoryMetrics)) {
-                        memoryMetrics.add(metric);
-                        d[`memory_${metric}`] = (+d.memory_usage[metric] / 1e9);
-                    }
+                    d[`memory_${metric}`] = (+d.memory_usage[metric] / 1e9);
                 });
         })
 
@@ -44,24 +37,17 @@ class SystemGraphsController {
         plotCPUMetrics(data);
     
         function plotDiskMetrics(data) {
-            // Create keys to stack by based on operator and direction
+            let diskMetrics = ["used", "free"]
+            // Create keys to stack
             let diskKeys = [],
             diskStr = ""
-
-            diskMetrics = Array.from(diskMetrics);
 
             for (let i = 0; i < diskMetrics.length; i++) {
                 diskStr =  "disk_" + diskMetrics[i];
                 diskKeys.push(diskStr);
             }
 
-            let diskPercent = diskKeys.indexOf("disk_percent")
-            diskKeys.splice(diskPercent, 1)
-            let diskTotal = diskKeys.indexOf("disk_total")
-            diskKeys.splice(diskTotal, 1)
-            diskKeys.reverse()
-
-            let colors = ["orange", "green", "blue", "purple"]
+            let colors = ["orange", "green"]
             // color palette
             let color = d3.scaleOrdinal().domain(diskMetrics).range(colors);
             let stackDisk = d3.stack().keys(diskKeys),
@@ -202,20 +188,20 @@ class SystemGraphsController {
             // Add one dot in the legend for each name.
             let size = 20
             svg.selectAll("myrect")
-            .data(diskKeys)
-            .enter()
-            .append("rect")
-                .attr("x", Width + 10)
-                .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
-                .attr("width", size)
-                .attr("height", size)
-                .style("fill", d => color(d))
-                .on("mouseover", highlight)
-                .on("mouseleave", noHighlight)
+                .data(diskKeys)
+                .enter()
+                .append("rect")
+                    .attr("x", Width + 10)
+                    .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
+                    .attr("width", size)
+                    .attr("height", size)
+                    .style("fill", d => color(d))
+                    .on("mouseover", highlight)
+                    .on("mouseleave", noHighlight)
 
             // Add one dot in the legend for each name.
             svg.selectAll("mylabels")
-                .data(diskKeys)
+                .data(diskMetrics)
                 .enter()
                 .append("text")
                     .attr("x", Width + 10 + size*1.2)
@@ -238,6 +224,24 @@ class SystemGraphsController {
         }
 
         function plotMemoryMetrics(data) {
+            let memoryMetrics = ["used", "buffers", "cached", "free"]
+            // Create keys to stack
+            let memoryKeys = [],
+            memoryStr = ""
+
+            for (let i = 0; i < memoryMetrics.length; i++) {
+                memoryStr =  "memory_" + memoryMetrics[i];
+                memoryKeys.push(memoryStr);
+            }
+            
+            let colors = ["orange", "blue", "brown", "green"]
+            // color palette
+            let color = d3.scaleOrdinal()
+                .domain(memoryMetrics)
+                .range(colors);
+            let stackMemory = d3.stack().keys(memoryKeys),
+                memoryDataStacked = stackMemory(data);
+
             let svg = d3.select(".chart2")
                 .append("svg")
                 .attr("width", Width + Margin.left + Margin.right + 120)
@@ -245,26 +249,6 @@ class SystemGraphsController {
                 .append("g")
                 .attr("transform",
                     "translate(" + Margin.left + "," + Margin.top + ")");
-            // Create keys to stack by based on operator and direction
-            let memoryKeys = [],
-            memoryStr = ""
-
-            memoryMetrics = Array.from(memoryMetrics);
-
-            for (let i = 0; i < memoryMetrics.length; i++) {
-                memoryStr =  "memory_" + memoryMetrics[i];
-                memoryKeys.push(memoryStr);
-            }
-
-            memoryKeys = [memoryKeys[10], memoryKeys[2], memoryKeys[3], memoryKeys[4]]
-            
-            let colors = ["#0c2dde", "#fbdb9c", "#dedede", "#3dca12"]
-            // color palette
-            let color = d3.scaleOrdinal()
-                .domain(memoryMetrics)
-                .range(colors);
-            let stackMemory = d3.stack().keys(memoryKeys),
-                memoryDataStacked = stackMemory(data);
 
             // Add X axis
             let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([0, Width]);
@@ -405,7 +389,7 @@ class SystemGraphsController {
 
             // Add one dot in the legend for each name.
             svg.selectAll("mylabels")
-                .data(memoryKeys)
+                .data(memoryMetrics)
                 .enter()
                 .append("text")
                     .attr("x", Width + 10 + size*1.2)
@@ -428,6 +412,17 @@ class SystemGraphsController {
         }
 
         function plotCPUMetrics(data) {
+            let cpuMetrics = ["used", "free"],
+                cpuKeys = ["cpu_percent", "total_cpu_percent"];
+            
+            let colors = ["#0c2dde", "#fbdb9c"]
+            // color palette
+            let color = d3.scaleOrdinal()
+                .domain(cpuMetrics)
+                .range(colors);
+            let stackCPU = d3.stack().keys(cpuKeys),
+                cpuDataStacked = stackCPU(data);
+
             let svg = d3.select(".chart3")
                 .append("svg")
                 .attr("width", Width + Margin.left + Margin.right + 120)
@@ -435,17 +430,6 @@ class SystemGraphsController {
                 .append("g")
                 .attr("transform",
                     "translate(" + Margin.left + "," + Margin.top + ")");
-
-            let cpuMetrics = ["cpu_percent", "total_cpu_percent"],
-                cpuKeys = ["cpu_percent", "total_cpu_percent"];
-            
-            let colors = ["#0c2dde", "#fbdb9c", "#dedede", "#3dca12"]
-            // color palette
-            let color = d3.scaleOrdinal()
-                .domain(cpuMetrics)
-                .range(colors);
-            let stackCPU = d3.stack().keys(cpuKeys),
-                cpuDataStacked = stackCPU(data);
 
             // Add X axis
             let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([0, Width]);
@@ -586,7 +570,7 @@ class SystemGraphsController {
 
             // Add one dot in the legend for each name.
             svg.selectAll("mylabels")
-                .data(cpuKeys)
+                .data(cpuMetrics)
                 .enter()
                 .append("text")
                     .attr("x", Width + 10 + size*1.2)
