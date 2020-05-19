@@ -11,6 +11,8 @@ class SystemGraphsController {
             Width = 960 - Margin.left - Margin.right,
             Height = 500 - Margin.top - Margin.bottom;
 
+        plotDiskMetrics(data);
+
         function plotDiskMetrics(data) {
             let diskMetrics = ["used", "free"]
             // Create keys to stack
