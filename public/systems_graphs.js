@@ -118,6 +118,11 @@ class SystemGraphsController {
             let idleTimeout
             function idled() { idleTimeout = null; }
 
+            // A function that update the chart for given boundaries
+            function updateChart() {
+                
+            }
+
         }
 
         function plotMemoryMetrics(data) {}
