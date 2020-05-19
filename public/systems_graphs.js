@@ -462,7 +462,7 @@ class SystemGraphsController {
                 .attr("x", 0 - Height / 2)
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Percentage(%)")
+                .text("%")
 
             // Add Y axis
             let y = d3.scaleLinear()
