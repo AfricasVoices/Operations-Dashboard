@@ -64,7 +64,7 @@ class Controller {
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
-        let unsubscribeFunc = DataController.watchSystemsMetrics(SystemGraphsController.updateGraphs2);
+        let unsubscribeFunc = DataController.watchSystemsMetrics(SystemGraphsController.updateGraphs);
         DataController.registerSnapshotListener(unsubscribeFunc);
     }
 
