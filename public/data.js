@@ -97,6 +97,14 @@ class DataController {
             }, error => console.log(error));
     }
 
+    static watchSystemsMetrics(onChange) {
+        let systemMetrics = [];
+        return mediadb.collection("pipeline_system_metrics").onSnapshot(res => {
+            DataController.updateData(res, systemMetrics);
+            onChange(systemMetrics)
+        })
+    }
+
     static registerSnapshotListener(unsubscribeFunc) {
         if (unsubscribeFunc) {
             DataController.unsubscribeFunc = unsubscribeFunc;
