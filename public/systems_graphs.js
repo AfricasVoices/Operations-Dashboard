@@ -25,6 +25,9 @@ class SystemGraphsController {
             let colors = ["#228B22", "#fbdb9c"]
             // color palette
             let color = d3.scaleOrdinal().domain(diskMetrics).range(colors);
+
+            let stackDisk = d3.stack().keys(diskKeys),
+                diskDataStacked = stackDisk(data);
         }
 
         function plotMemoryMetrics(data) {}
