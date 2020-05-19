@@ -67,7 +67,14 @@ class SystemGraphsController {
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("GB")
- 
+                
+            let yLimit = data[0].disk_total
+            // Add Y axis
+            let y = d3.scaleLinear()
+                .domain([0, yLimit])
+                .range([ Height, 0 ]);
+                svg.append("g")
+                .call(d3.axisLeft(y).ticks(5))
         }
 
         function plotMemoryMetrics(data) {}
