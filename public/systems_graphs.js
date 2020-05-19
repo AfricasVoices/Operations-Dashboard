@@ -9,7 +9,6 @@ class SystemGraphsController {
         // format the data
         data.forEach(function(d) {
             d.datetime = new Date(d.datetime);
-            d.total_cpu_percent = 100;
             Object.keys(d.disk_usage)
                 .sort()
                 .forEach(metric => {
@@ -20,6 +19,8 @@ class SystemGraphsController {
                 .forEach(metric => {
                     d[`memory_${metric}`] = (+d.memory_usage[metric] / 1e9);
                 });
+            d.unused_cpu_percent = (100 - +d.cpu_percent)
+            d.total_ram = +d.memory_free + +d.memory_used;
         })
 
         console.log(data)
@@ -224,7 +225,7 @@ class SystemGraphsController {
         }
 
         function plotMemoryMetrics(data) {
-            let memoryMetrics = ["used", "buffers", "cached", "free"]
+            let memoryMetrics = ["used", "free"]
             // Create keys to stack
             let memoryKeys = [],
             memoryStr = ""
@@ -234,7 +235,7 @@ class SystemGraphsController {
                 memoryKeys.push(memoryStr);
             }
             
-            let colors = ["orange", "blue", "brown", "green"]
+            let colors = ["orange", "green"]
             // color palette
             let color = d3.scaleOrdinal()
                 .domain(memoryMetrics)
@@ -282,7 +283,7 @@ class SystemGraphsController {
                 .style("text-anchor", "middle")
                 .text("GB")
 
-            let yLimit = data[0].memory_total
+            let yLimit = d3.max(data, d => d.total_ram)
             // Add Y axis
             let y = d3.scaleLinear()
                 .domain([0, yLimit])
@@ -307,8 +308,8 @@ class SystemGraphsController {
             let areaChart = svg.append('g')
                 .attr("clip-path", "url(#clip)")
 
-             // Area generator
-             let area = d3.area().x(d => x(d.data.datetime))
+            // Area generator
+            let area = d3.area().x(d => x(d.data.datetime))
                 .y0(d => y(d[0]))
                 .y1(d => y(d[1]))
 
@@ -413,7 +414,7 @@ class SystemGraphsController {
 
         function plotCPUMetrics(data) {
             let cpuMetrics = ["used", "free"],
-                cpuKeys = ["cpu_percent", "total_cpu_percent"];
+                cpuKeys = ["cpu_percent", "unused_cpu_percent"];
             
             let colors = ["#0c2dde", "#fbdb9c"]
             // color palette
@@ -463,10 +464,9 @@ class SystemGraphsController {
                 .style("text-anchor", "middle")
                 .text("Percentage(%)")
 
-            let yLimit = data[0].total_cpu_percent
             // Add Y axis
             let y = d3.scaleLinear()
-                .domain([0, yLimit])
+                .domain([0, 100])
                 .range([ Height, 0 ]);
             svg.append("g").call(d3.axisLeft(y).ticks(5))
 
