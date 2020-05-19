@@ -99,6 +99,16 @@ class SystemGraphsController {
                         .y0(d => y(d[0]))
                         .y1(d => y(d[1]))
 
+            // Show the areas
+            areaChart
+                .selectAll("mylayers")
+                .data(diskDataStacked)
+                .enter()
+                .append("path")
+                    .attr("class", d => "diskArea " + d.key)
+                    .style("fill", d => color(d.key))
+                    .attr("d", area)
+
         }
 
         function plotMemoryMetrics(data) {}
