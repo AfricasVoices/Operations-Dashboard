@@ -115,6 +115,9 @@ class SystemGraphsController {
                 .attr("class", "brush")
                 .call(brush);
 
+            let idleTimeout
+            function idled() { idleTimeout = null; }
+
         }
 
         function plotMemoryMetrics(data) {}
