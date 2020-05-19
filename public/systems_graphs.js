@@ -146,6 +146,15 @@ class SystemGraphsController {
                     .attr("d", area)
             }
 
+            // What to do when one group is hovered
+            let highlight = function(d){
+                console.log(d)
+                // reduce opacity of all groups
+                d3.selectAll(".diskArea").style("opacity", .1)
+                // expect the one that is hovered
+                d3.select("."+d).style("opacity", 1)
+            }
+
         }
 
         function plotMemoryMetrics(data) {}
