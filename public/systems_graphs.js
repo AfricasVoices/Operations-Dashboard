@@ -6,28 +6,6 @@ class SystemGraphsController {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-        // format the data
-        data.forEach(function(d) {
-            d.datetime = new Date(d.datetime);
-            Object.keys(d.disk_usage)
-                .sort()
-                .forEach(metric => {
-                    d[`disk_${metric}`] = (+d.disk_usage[metric] / 1e9);
-                });
-            Object.keys(d.memory_usage)
-                .sort()
-                .forEach(metric => {
-                    d[`memory_${metric}`] = (+d.memory_usage[metric] / 1e9);
-                });
-            d.unused_cpu_percent = (100 - +d.cpu_percent)
-            d.total_ram = +d.memory_free + +d.memory_used;
-        })
-
-        console.log(data)
-
-        // Sort data by date
-        data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
-
         // set the dimensions and margins of the graph
         const Margin = {top: 40, right: 100, bottom: 105, left: 70},
             Width = 960 - Margin.left - Margin.right,
