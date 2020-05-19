@@ -1,7 +1,6 @@
 class SystemGraphsController {
     static updateGraphs2(data) {
-        let dayDateFormat = d3.timeFormat("%Y-%m-%d");
-        let dayTimeFormat = d3.timeFormat("%a %d (%H:%M)")
+        let dayTimeFormat = d3.timeFormat("%a %d (%H:%M)");
         let diskMetrics = new Set();
         let memoryMetrics = new Set();
 
@@ -11,7 +10,6 @@ class SystemGraphsController {
         // format the data
         data.forEach(function(d) {
             d.datetime = new Date(d.datetime);
-            d.day = dayDateFormat(new Date(d.datetime));
             d.total_cpu_percent = 100;
             Object.keys(d.disk_usage)
                 .sort()
@@ -37,9 +35,9 @@ class SystemGraphsController {
         data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
         // set the dimensions and margins of the graph
-        let Margin = {top: 40, right: 100, bottom: 105, left: 70},
-        Width = 960 - Margin.left - Margin.right,
-        Height = 500 - Margin.top - Margin.bottom;
+        const Margin = {top: 40, right: 100, bottom: 105, left: 70},
+            Width = 960 - Margin.left - Margin.right,
+            Height = 500 - Margin.top - Margin.bottom;
 
         plotDiskMetrics(data);
         plotMemoryMetrics(data);
@@ -176,10 +174,10 @@ class SystemGraphsController {
                 // Update axis and area position
                 xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat))
                 xAxis.selectAll("text")
-                .style("text-anchor", "end")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)");
+                    .style("text-anchor", "end")
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-65)");
 
                 areaChart
                     .selectAll("path")
@@ -208,7 +206,7 @@ class SystemGraphsController {
             .enter()
             .append("rect")
                 .attr("x", Width + 10)
-                .attr("y", (d,i) => 10 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
+                .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
                 .attr("width", size)
                 .attr("height", size)
                 .style("fill", d => color(d))
@@ -217,17 +215,17 @@ class SystemGraphsController {
 
             // Add one dot in the legend for each name.
             svg.selectAll("mylabels")
-            .data(diskKeys)
-            .enter()
-            .append("text")
-                .attr("x", Width + 10 + size*1.2)
-                .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
-                .style("fill", d => color(d))
-                .text(d => d)
-                .attr("text-anchor", "left")
-                .style("alignment-baseline", "middle")
-                .on("mouseover", highlight)
-                .on("mouseleave", noHighlight)
+                .data(diskKeys)
+                .enter()
+                .append("text")
+                    .attr("x", Width + 10 + size*1.2)
+                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 10 is where the first dot appears. 25 is the distance between dots
+                    .style("fill", d => color(d))
+                    .text(d => d)
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
+                    .on("mouseover", highlight)
+                    .on("mouseleave", noHighlight)
 
             // Disk usage graph title
             svg.append("text")
@@ -398,7 +396,7 @@ class SystemGraphsController {
                 .enter()
                 .append("rect")
                     .attr("x", Width + 10)
-                    .attr("y", (d,i) => 10 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
+                    .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
                     .attr("width", size)
                     .attr("height", size)
                     .style("fill", d => color(d))
@@ -411,7 +409,7 @@ class SystemGraphsController {
                 .enter()
                 .append("text")
                     .attr("x", Width + 10 + size*1.2)
-                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
+                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 10 is where the first dot appears. 25 is the distance between dots
                     .style("fill", d => color(d))
                     .text(d => d)
                     .attr("text-anchor", "left")
@@ -479,7 +477,7 @@ class SystemGraphsController {
                 .attr("x", 0 - Height / 2)
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("GB")
+                .text("Percentage(%)")
 
             let yLimit = data[0].total_cpu_percent
             // Add Y axis
@@ -579,7 +577,7 @@ class SystemGraphsController {
                 .enter()
                 .append("rect")
                     .attr("x", Width + 10)
-                    .attr("y", (d,i) => 10 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
+                    .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
                     .attr("width", size)
                     .attr("height", size)
                     .style("fill", d => color(d))
@@ -588,17 +586,17 @@ class SystemGraphsController {
 
             // Add one dot in the legend for each name.
             svg.selectAll("mylabels")
-            .data(cpuKeys)
-            .enter()
-            .append("text")
-                .attr("x", Width + 10 + size*1.2)
-                .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
-                .style("fill", d => color(d))
-                .text(d => d)
-                .attr("text-anchor", "left")
-                .style("alignment-baseline", "middle")
-                .on("mouseover", highlight)
-                .on("mouseleave", noHighlight)
+                .data(cpuKeys)
+                .enter()
+                .append("text")
+                    .attr("x", Width + 10 + size*1.2)
+                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 10 is where the first dot appears. 25 is the distance between dots
+                    .style("fill", d => color(d))
+                    .text(d => d)
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
+                    .on("mouseover", highlight)
+                    .on("mouseleave", noHighlight)
 
             // Disk usage graph title
             svg.append("text")
