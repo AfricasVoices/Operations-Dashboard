@@ -128,6 +128,8 @@ class Controller {
         if (page_route) {
             if (page_route == "coding_progress") {
                 Controller.displayCodingProgress();
+            } else if (page_route == "systems") {
+                Controller.displaySystems();
             } else if (page_route.startsWith("traffic-")) {
                 DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
             } else {
