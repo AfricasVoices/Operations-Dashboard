@@ -48,7 +48,7 @@ class SystemGraphsController {
                 diskKeys.push(diskStr);
             }
 
-            let colors = ["orange", "green"]
+            let colors = ["green", "#fbdb9c"]
             // color palette
             let color = d3.scaleOrdinal().domain(diskMetrics).range(colors);
             let stackDisk = d3.stack().keys(diskKeys),
@@ -235,7 +235,7 @@ class SystemGraphsController {
                 memoryKeys.push(memoryStr);
             }
             
-            let colors = ["orange", "green"]
+            let colors = ["brown", "#fbdb9c"]
             // color palette
             let color = d3.scaleOrdinal()
                 .domain(memoryMetrics)
