@@ -41,6 +41,13 @@ class SystemGraphsController {
             let xAxis = svg.append("g")
                  .attr("transform", "translate(0," + Height + ")")
                  .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+            
+            // Rotate X axis ticks
+            xAxis.selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-65)");
  
         }
 
