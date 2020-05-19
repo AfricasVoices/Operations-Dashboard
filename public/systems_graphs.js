@@ -11,5 +11,11 @@ class SystemGraphsController {
             Width = 960 - Margin.left - Margin.right,
             Height = 500 - Margin.top - Margin.bottom;
 
+        function plotDiskMetrics(data) {}
+
+        function plotMemoryMetrics(data) {}
+        
+        function plotCPUMetrics(data) {}
+
     }
 }
