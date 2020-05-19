@@ -11,10 +11,20 @@ class SystemGraphsController {
             Width = 960 - Margin.left - Margin.right,
             Height = 500 - Margin.top - Margin.bottom;
 
-        function plotDiskMetrics(data) {}
+        function plotDiskMetrics(data) {
+            let diskMetrics = ["used", "free"]
+            // Create keys to stack
+            let diskKeys = [],
+            diskStr = ""
+
+            for (let i = 0; i < diskMetrics.length; i++) {
+                diskStr =  "disk_" + diskMetrics[i];
+                diskKeys.push(diskStr);
+            }
+        }
 
         function plotMemoryMetrics(data) {}
-        
+
         function plotCPUMetrics(data) {}
 
     }
