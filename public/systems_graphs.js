@@ -160,6 +160,34 @@ class SystemGraphsController {
                 d3.selectAll(".diskArea").style("opacity", 1)
             }
 
+            // Add legend for each name.
+            let size = 20
+            svg.selectAll("myrect")
+                .data(diskKeys)
+                .enter()
+                .append("rect")
+                    .attr("x", Width + 10)
+                    .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
+                    .attr("width", size)
+                    .attr("height", size)
+                    .style("fill", d => color(d))
+                    .on("mouseover", highlight)
+                    .on("mouseleave", noHighlight)
+
+            // Add legend labels for each name.
+            svg.selectAll("mylabels")
+                .data(diskMetrics)
+                .enter()
+                .append("text")
+                    .attr("x", Width + 10 + size*1.2)
+                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 10 is where the first dot appears. 25 is the distance between dots
+                    .style("fill", d => color(d))
+                    .text(d => d)
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
+                    .on("mouseover", highlight)
+                    .on("mouseleave", noHighlight)
+
         }
 
         function plotMemoryMetrics(data) {}
