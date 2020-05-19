@@ -75,6 +75,15 @@ class SystemGraphsController {
                 .range([ Height, 0 ]);
                 svg.append("g")
                 .call(d3.axisLeft(y).ticks(5))
+
+            // Add a clipPath: everything out of this area won't be drawn.
+            let clip = svg.append("defs").append("svg:clipPath")
+                .attr("id", "clip")
+                .append("svg:rect")
+                .attr("width", Width )
+                .attr("height", Height )
+                .attr("x", 0)
+                .attr("y", 0);
         }
 
         function plotMemoryMetrics(data) {}
