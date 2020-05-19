@@ -146,7 +146,7 @@ class SystemGraphsController {
                 .data(diskDataStacked)
                 .enter()
                 .append("path")
-                    .attr("class", d => "myArea " + d.key)
+                    .attr("class", d => "diskArea " + d.key)
                     .style("fill", d => color(d.key))
                     .attr("d", area)
 
@@ -191,14 +191,14 @@ class SystemGraphsController {
             let highlight = function(d){
                 console.log(d)
                 // reduce opacity of all groups
-                d3.selectAll(".myArea").style("opacity", .1)
+                d3.selectAll(".diskArea").style("opacity", .1)
                 // expect the one that is hovered
                 d3.select("."+d).style("opacity", 1)
             }
 
             // And when it is not hovered anymore
             let noHighlight = function(d){
-                d3.selectAll(".myArea").style("opacity", 1)
+                d3.selectAll(".diskArea").style("opacity", 1)
             }
 
             // Add one dot in the legend for each name.
@@ -336,7 +336,7 @@ class SystemGraphsController {
                 .data(memoryDataStacked)
                 .enter()
                 .append("path")
-                    .attr("class", d => "myArea2 " + d.key)
+                    .attr("class", d => "memoryArea " + d.key)
                     .style("fill", d => color(d.key))
                     .attr("d", area)
 
@@ -381,14 +381,14 @@ class SystemGraphsController {
             let highlight = function(d){
                 console.log(d)
                 // reduce opacity of all groups
-                d3.selectAll(".myArea2").style("opacity", .1)
+                d3.selectAll(".memoryArea").style("opacity", .1)
                 // expect the one that is hovered
                 d3.select("."+d).style("opacity", 1)
             }
 
             // And when it is not hovered anymore
             let noHighlight = function(d){
-                d3.selectAll(".myArea2").style("opacity", 1)
+                d3.selectAll(".memoryArea").style("opacity", 1)
             }
 
             // Add one dot in the legend for each name.
@@ -407,18 +407,17 @@ class SystemGraphsController {
 
             // Add one dot in the legend for each name.
             svg.selectAll("mylabels")
-            // .attr("class", "redrawElementMemory")
-            .data(memoryKeys)
-            .enter()
-            .append("text")
-                .attr("x", Width + 10 + size*1.2)
-                .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
-                .style("fill", d => color(d))
-                .text(d => d)
-                .attr("text-anchor", "left")
-                .style("alignment-baseline", "middle")
-                .on("mouseover", highlight)
-                .on("mouseleave", noHighlight)
+                .data(memoryKeys)
+                .enter()
+                .append("text")
+                    .attr("x", Width + 10 + size*1.2)
+                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
+                    .style("fill", d => color(d))
+                    .text(d => d)
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
+                    .on("mouseover", highlight)
+                    .on("mouseleave", noHighlight)
 
             // Disk usage graph title
             svg.append("text")
@@ -508,7 +507,7 @@ class SystemGraphsController {
                 .attr("clip-path", "url(#clip)")
 
              // Area generator
-             let area = d3.area().x(d => x(d.data.datetime))
+            let area = d3.area().x(d => x(d.data.datetime))
                 .y0(d => y(d[0]))
                 .y1(d => y(d[1]))
 
@@ -518,7 +517,7 @@ class SystemGraphsController {
                 .data(cpuDataStacked)
                 .enter()
                 .append("path")
-                    .attr("class", d => "myArea2 " + d.key)
+                    .attr("class", d => "cpuArea " + d.key)
                     .style("fill", d => color(d.key))
                     .attr("d", area)
 
@@ -563,14 +562,14 @@ class SystemGraphsController {
             let highlight = function(d){
                 console.log(d)
                 // reduce opacity of all groups
-                d3.selectAll(".myArea2").style("opacity", .1)
+                d3.selectAll(".cpuArea").style("opacity", .1)
                 // expect the one that is hovered
                 d3.select("."+d).style("opacity", 1)
             }
 
             // And when it is not hovered anymore
             let noHighlight = function(d){
-                d3.selectAll(".myArea2").style("opacity", 1)
+                d3.selectAll(".cpuArea").style("opacity", 1)
             }
 
             // Add one dot in the legend for each name.
@@ -589,7 +588,6 @@ class SystemGraphsController {
 
             // Add one dot in the legend for each name.
             svg.selectAll("mylabels")
-            // .attr("class", "redrawElementMemory")
             .data(cpuKeys)
             .enter()
             .append("text")
