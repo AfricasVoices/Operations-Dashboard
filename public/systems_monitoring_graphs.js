@@ -483,6 +483,12 @@ class SystemGraphsController {
                     .style("fill", d => color(d.key))
                     .attr("d", area)
 
+            // Add the brushing
+            areaChart
+                .append("g")
+                .attr("class", "brush")
+                .call(brush);
+
         }
 
     }
