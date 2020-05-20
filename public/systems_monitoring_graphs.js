@@ -41,7 +41,7 @@ class SystemGraphsController {
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")");
 
             // Add X axis
-            let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([0, Width]);
+            let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
             let xAxis = svg.append("g")
                  .attr("transform", "translate(0," + Height + ")")
                  .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
@@ -86,7 +86,7 @@ class SystemGraphsController {
                 .append("svg:rect")
                 .attr("width", Width )
                 .attr("height", Height )
-                .attr("x", 0)
+                .attr("x", 1)
                 .attr("y", 0);
 
             // Add brushing
@@ -232,7 +232,7 @@ class SystemGraphsController {
                     "translate(" + Margin.left + "," + Margin.top + ")");
 
             // Add X axis
-            let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([0, Width]);
+            let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
             let xAxis = svg.append("g")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
@@ -276,7 +276,7 @@ class SystemGraphsController {
                 .append("svg:rect")
                 .attr("width", Width )
                 .attr("height", Height )
-                .attr("x", 0)
+                .attr("x", 1)
                 .attr("y", 0);
 
             // Add brushing
@@ -414,7 +414,7 @@ class SystemGraphsController {
                     "translate(" + Margin.left + "," + Margin.top + ")");
 
             // Add X axis
-            let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([0, Width]);
+            let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
             let xAxis = svg.append("g")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
@@ -457,7 +457,7 @@ class SystemGraphsController {
                 .append("svg:rect")
                 .attr("width", Width )
                 .attr("height", Height )
-                .attr("x", 0)
+                .attr("x", 1)
                 .attr("y", 0);
 
             // Add brushing
