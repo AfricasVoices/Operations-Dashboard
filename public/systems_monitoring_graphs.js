@@ -381,7 +381,7 @@ class SystemGraphsController {
                     .on("mouseover", highlight)
                     .on("mouseleave", noHighlight)
 
-            // Disk usage graph title
+            // Memory usage graph title
             svg.append("text")
                 .attr("x", Width / 2)
                 .attr("y", 0 - Margin.top / 2)
