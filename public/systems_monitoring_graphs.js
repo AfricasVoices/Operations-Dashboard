@@ -285,6 +285,11 @@ class SystemGraphsController {
             // Create the scatter variable: where both the circles and the brush take place
             let areaChart = svg.append('g')
                 .attr("clip-path", "url(#clip)")
+
+            // Area generator
+            let area = d3.area().x(d => x(d.data.datetime))
+                .y0(d => y(d[0]))
+                .y1(d => y(d[1]))
         }
 
         function plotCPUMetrics(data) {}
