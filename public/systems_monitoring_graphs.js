@@ -24,7 +24,7 @@ class SystemGraphsController {
                 diskKeys.push(diskStr);
             }
 
-            let colors = ["#228B22", "#fbdb9c"]
+            let colors = ["#0E86D4", "#bdefbd"]
             // color palette
             let color = d3.scaleOrdinal().domain(diskMetrics).range(colors);
 
