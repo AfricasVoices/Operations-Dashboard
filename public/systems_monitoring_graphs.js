@@ -201,7 +201,17 @@ class SystemGraphsController {
 
         }
 
-        function plotMemoryMetrics(data) {}
+        function plotMemoryMetrics(data) {
+            let memoryMetrics = ["used", "free"]
+            // Create keys to stack
+            let memoryKeys = [],
+            memoryStr = ""
+
+            for (let i = 0; i < memoryMetrics.length; i++) {
+                memoryStr =  "memory_" + memoryMetrics[i];
+                memoryKeys.push(memoryStr);
+            }
+        }
 
         function plotCPUMetrics(data) {}
 
