@@ -300,6 +300,12 @@ class SystemGraphsController {
                     .attr("class", d => "memoryArea " + d.key)
                     .style("fill", d => color(d.key))
                     .attr("d", area)
+
+            // Add the brushing
+            areaChart
+                .append("g")
+                .attr("class", "brush")
+                .call(brush);
         }
 
         function plotCPUMetrics(data) {}
