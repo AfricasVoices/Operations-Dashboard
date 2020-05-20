@@ -401,6 +401,9 @@ class SystemGraphsController {
                 .domain(cpuMetrics)
                 .range(colors);
 
+            let stackCPU = d3.stack().keys(cpuKeys),
+                cpuDataStacked = stackCPU(data);
+
         }
 
     }
