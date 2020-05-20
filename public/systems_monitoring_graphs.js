@@ -13,6 +13,7 @@ class SystemGraphsController {
 
         plotDiskMetrics(data);
         plotMemoryMetrics(data);
+        plotCPUMetrics(data);
 
         function plotDiskMetrics(data) {
             let diskMetrics = ["used", "free"]
