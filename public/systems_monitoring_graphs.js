@@ -12,6 +12,7 @@ class SystemGraphsController {
             Height = 500 - Margin.top - Margin.bottom;
 
         plotDiskMetrics(data);
+        plotMemoryMetrics(data);
 
         function plotDiskMetrics(data) {
             let diskMetrics = ["used", "free"]
