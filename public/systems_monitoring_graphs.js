@@ -444,6 +444,12 @@ class SystemGraphsController {
                 .style("text-anchor", "middle")
                 .text("%")
 
+            // Add Y axis
+            let y = d3.scaleLinear()
+                .domain([0, 100])
+                .range([ Height, 0 ]);
+            svg.append("g").call(d3.axisLeft(y).ticks(5))
+
         }
 
     }
