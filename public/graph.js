@@ -32,6 +32,8 @@ class GraphController {
                         GraphController.operators.add(operator);
                         d[`${operator}_received`] = +d.operators[operator]["received"];
                         d[`${operator}_sent`] = +d.operators[operator]["sent"];
+                    } else {
+                        console.warn(operator)
                     }
                 });
         });
