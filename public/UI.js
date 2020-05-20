@@ -3,7 +3,6 @@ class UIController {
     static getDOMstrings() {
         return {
             projectMenu: ".project-menu",
-            systemsLinkSelector: ".systems-link",
             codingProgressLinkSelector: ".coding-progress-link",
             codingProgressContainer: ".coding-progress-container",
             trafficsLinkSelector: ".traffics-link",
@@ -11,7 +10,8 @@ class UIController {
             logoutBtn: ".logout-btn",
             dropdownItem: ".dropdown-item",
             activeLinkClassName: "active-link",
-            activeLinks: "a.active-link"
+            activeLinks: "a.active-link",
+            systemsLinkSelector: ".systems-link"
         };
     }
 
