@@ -290,6 +290,16 @@ class SystemGraphsController {
             let area = d3.area().x(d => x(d.data.datetime))
                 .y0(d => y(d[0]))
                 .y1(d => y(d[1]))
+
+            // Show the areas
+            areaChart
+                .selectAll("mylayers")
+                .data(memoryDataStacked)
+                .enter()
+                .append("path")
+                    .attr("class", d => "memoryArea " + d.key)
+                    .style("fill", d => color(d.key))
+                    .attr("d", area)
         }
 
         function plotCPUMetrics(data) {}
