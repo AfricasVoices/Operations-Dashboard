@@ -391,7 +391,12 @@ class SystemGraphsController {
                 .text("Memory Utilization");
         }
 
-        function plotCPUMetrics(data) {}
+        function plotCPUMetrics(data) {
+            let cpuMetrics = ["used", "free"],
+                cpuKeys = ["cpu_percent", "unused_cpu_percent"];
+            
+           
+        }
 
     }
 }
