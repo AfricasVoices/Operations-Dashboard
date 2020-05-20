@@ -241,6 +241,16 @@ class SystemGraphsController {
                 .attr("dx", "-.8em")
                 .attr("dy", ".15em")
                 .attr("transform", "rotate(-65)");
+
+            // Add X axis label
+            svg.append("text")
+                .attr("text-anchor", "end")
+                .attr(
+                    "transform",
+                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+                )
+                .style("text-anchor", "middle")
+                .text("Date (dd:h:m)");
         }
 
         function plotCPUMetrics(data) {}
