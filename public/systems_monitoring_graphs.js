@@ -404,6 +404,14 @@ class SystemGraphsController {
             let stackCPU = d3.stack().keys(cpuKeys),
                 cpuDataStacked = stackCPU(data);
 
+            let svg = d3.select(".chart3")
+                .append("svg")
+                .attr("width", Width + Margin.left + Margin.right + 120)
+                .attr("height", Height + Margin.top + Margin.bottom)
+                .append("g")
+                .attr("transform",
+                    "translate(" + Margin.left + "," + Margin.top + ")");
+
         }
 
     }
