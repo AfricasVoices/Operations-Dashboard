@@ -220,6 +220,14 @@ class SystemGraphsController {
 
             let stackMemory = d3.stack().keys(memoryKeys),
                 memoryDataStacked = stackMemory(data);
+
+            let svg = d3.select(".chart2")
+                .append("svg")
+                .attr("width", Width + Margin.left + Margin.right + 120)
+                .attr("height", Height + Margin.top + Margin.bottom)
+                .append("g")
+                .attr("transform",
+                    "translate(" + Margin.left + "," + Margin.top + ")");
         }
 
         function plotCPUMetrics(data) {}
