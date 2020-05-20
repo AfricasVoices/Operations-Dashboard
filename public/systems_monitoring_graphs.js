@@ -337,6 +337,15 @@ class SystemGraphsController {
                     .transition().duration(1000)
                     .attr("d", area)
             }
+
+            // What to do when one group is hovered
+            let highlight = function(d){
+                console.log(d)
+                // reduce opacity of all groups
+                d3.selectAll(".memoryArea").style("opacity", .1)
+                // expect the one that is hovered
+                d3.select("."+d).style("opacity", 1)
+            }
         }
 
         function plotCPUMetrics(data) {}
