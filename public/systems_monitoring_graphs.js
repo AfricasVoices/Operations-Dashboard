@@ -211,7 +211,7 @@ class SystemGraphsController {
                 memoryStr =  "memory_" + memoryMetrics[i];
                 memoryKeys.push(memoryStr);
             }
-            
+
             let colors = ["#4B0082", "#fbdb9c"]
             // color palette
             let color = d3.scaleOrdinal()
