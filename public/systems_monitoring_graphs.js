@@ -281,6 +281,10 @@ class SystemGraphsController {
             let brush = d3.brushX()                 // Add the brush feature using the d3.brush function
                 .extent( [ [0,0], [Width, Height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
                 .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+
+            // Create the scatter variable: where both the circles and the brush take place
+            let areaChart = svg.append('g')
+                .attr("clip-path", "url(#clip)")
         }
 
         function plotCPUMetrics(data) {}
