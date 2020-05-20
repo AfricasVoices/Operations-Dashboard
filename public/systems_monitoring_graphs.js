@@ -395,7 +395,12 @@ class SystemGraphsController {
             let cpuMetrics = ["used", "free"],
                 cpuKeys = ["cpu_percent", "unused_cpu_percent"];
             
-           
+            let colors = ["#0c2dde", "#fbdb9c"]
+            // color palette
+            let color = d3.scaleOrdinal()
+                .domain(cpuMetrics)
+                .range(colors);
+
         }
 
     }
