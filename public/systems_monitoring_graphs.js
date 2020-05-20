@@ -217,6 +217,9 @@ class SystemGraphsController {
             let color = d3.scaleOrdinal()
                 .domain(memoryMetrics)
                 .range(colors);
+
+            let stackMemory = d3.stack().keys(memoryKeys),
+                memoryDataStacked = stackMemory(data);
         }
 
         function plotCPUMetrics(data) {}
