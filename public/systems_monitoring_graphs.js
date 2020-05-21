@@ -351,8 +351,6 @@ class SystemGraphsController {
                     .attr("width", size)
                     .attr("height", size)
                     .style("fill", d => color(d))
-                    .on("mouseover", highlight)
-                    .on("mouseleave", noHighlight)
 
             // Add legend label for each name.
             svg.selectAll("mylabels")
@@ -365,8 +363,6 @@ class SystemGraphsController {
                     .text(d => d)
                     .attr("text-anchor", "left")
                     .style("alignment-baseline", "middle")
-                    .on("mouseover", highlight)
-                    .on("mouseleave", noHighlight)
 
             // Memory usage graph title
             svg.append("text")
@@ -518,8 +514,6 @@ class SystemGraphsController {
                     .attr("width", size)
                     .attr("height", size)
                     .style("fill", d => color(d))
-                    .on("mouseover", highlight)
-                    .on("mouseleave", noHighlight)
 
             // Add legend label for each name.
             svg.selectAll("mylabels")
@@ -532,8 +526,6 @@ class SystemGraphsController {
                     .text(d => d)
                     .attr("text-anchor", "left")
                     .style("alignment-baseline", "middle")
-                    .on("mouseover", highlight)
-                    .on("mouseleave", noHighlight)
 
             // CPU usage graph title
             svg.append("text")
