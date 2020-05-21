@@ -242,22 +242,14 @@ class SystemGraphsController {
                 .attr("x", 0 - Height / 2)
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("GB")
+                .text("%")
 
+            let yLimit = 100;
             // Add Y axis
             let y = d3.scaleLinear()
-                .domain([0, 100])
+                .domain([0, yLimit])
                 .range([ Height, 0 ]);
-            svg.append("g").call(d3.axisLeft(y).ticks(10))
-
-            // Add the Y gridlines
-            svg.append("g")			
-                .attr("class", "receivedGrid")
-                .call(d3.axisLeft(y)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
-
+            svg.append("g").call(d3.axisLeft(y).ticks(5))
 
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
@@ -289,12 +281,46 @@ class SystemGraphsController {
                 .attr("stroke", "black")
                 .attr("stroke-width", 0.2)
                 .attr("d", area);
+                // .on("mouseover", function(d, i, n) {
+                //     console.log("here")
+                //   })
 
             // Add the brushing
             areaChart
                 .append("g")
                 .attr("class", "brush")
                 .call(brush);
+
+            // areaChart.on("mousemove", function() {
+            //     let mousex = d3.mouse(this);
+            //     console.log(mousex)
+            //     mousex = mousex[0];
+            //     var invertedx = x.invert(mousex);
+            //     console.log(invertedx)
+            //   })
+
+            // let mousex;
+            // var vertical = d3.select(".chart2")
+            //   .append("div")
+            //   .attr("class", "remove")
+            //   .style("position", "absolute")
+            //   .style("z-index", "19")
+            //   .style("width", "10px")
+            //   .style("height", "380px")
+            //   .style("top", "10px")
+            //   .style("bottom", "30px")
+            //   .style("left", "0px")
+            //   .style("background", "#fff");
+
+            //   d3.select(".chart2")
+            //   .on("mousemove", function(){  
+            //      mousex = d3.mouse(this);
+            //      mousex = mousex[0] + 5;
+            //      vertical.style("left", mousex + "px" )})
+            //   .on("mouseover", function(){  
+            //      mousex = d3.mouse(this);
+            //      mousex = mousex[0] + 5;
+            //      vertical.style("left", mousex + "px")});
 
             let idleTimeout
             function idled() { idleTimeout = null; }
@@ -313,17 +339,16 @@ class SystemGraphsController {
                 }
 
                 // Update axis and area position
-                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat)
-                .tickSize(-Height)).attr("class", "receivedGrid")
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat))
                 // Rotate X axis ticks
                 xAxis.selectAll("text")
                     .style("text-anchor", "end")
                     .attr("dx", "-.8em")
                     .attr("dy", ".15em")
-                    .attr("transform", "rotate(-65)")
+                    .attr("transform", "rotate(-65)");
 
                 areaChart
-                    .selectAll("path")
+                    .selectAll("memoryArea")
                     .transition().duration(1000)
                     .attr("d", area)
             }
