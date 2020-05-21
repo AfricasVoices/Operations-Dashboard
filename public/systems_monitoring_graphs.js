@@ -313,8 +313,7 @@ class SystemGraphsController {
                 }
 
                 // Update axis and area position
-                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat)
-                .tickSize(-Height)).attr("class", "receivedGrid")
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat))
                 // Rotate X axis ticks
                 xAxis.selectAll("text")
                     .style("text-anchor", "end")
