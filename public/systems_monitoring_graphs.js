@@ -290,6 +290,12 @@ class SystemGraphsController {
             // Create an area generator
             var area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.memory_usage.percent))
 
+            // // Add the brushing
+            areaChart
+                .append("g")
+                .attr("class", "brush")
+                .call(brush);
+
             // Add the area
             areaChart.append("path")
                 .datum(data)
@@ -298,13 +304,45 @@ class SystemGraphsController {
                 .attr("fill-opacity", .6)
                 .attr("stroke", "black")
                 .attr("stroke-width", 0.2)
-                .attr("d", area);
+                .attr("d", area)
+                .on("mouseover", function() {
+                    console.log("here")
+                    tooltip.style("display", null);
+                  })
+                  .on("mouseout", function() {
+                    console.log("here")
+                    tooltip.style("display", "none");
+                  })
+                  .on("mousemove", function(d) {
+                    // d3.selectAll(".brush").remove()
+                    // d3.select(this).style("cursor", "pointer"); 
+                    console.log("here")
+                    var xPosition = d3.mouse(this)[0] - 15;//x position of tooltip
+                    var yPosition = d3.mouse(this)[1] - 25;//y position of tooltip
+                    tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
+                    var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
+                    var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
+                    tooltip.select("text").text(d3.timeFormat('%Y-%m-%d')(x0)+ " " +Math.round(y0));//show the text after formatting the date
+                  });;
 
-            // Add the brushing
-            areaChart
-                .append("g")
-                .attr("class", "brush")
-                .call(brush);
+            // Prep the tooltip bits, initial display is hidden
+            var tooltip = svg.append("g")
+                .attr("class", "tooltip")
+                .style("opacity", 1.0)
+                .style("display", "none");
+
+            tooltip.append("rect")
+                .attr("width", 120)
+                .attr("height", 20)
+                .attr("fill", "white")
+                .style("opacity", 1.0);
+
+            tooltip.append("text")
+                .attr("x", 60)
+                .attr("dy", "1.2em")
+                .style("text-anchor", "middle")
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold");
 
             let idleTimeout
             function idled() { idleTimeout = null; }
