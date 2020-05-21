@@ -218,6 +218,16 @@ class SystemGraphsController {
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
 
+            // Add the X gridlines
+            svg.append("g")			
+                .attr("class", "receivedGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    // .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
             // Rotate axis ticks
             xAxis.selectAll("text")
                 .style("text-anchor", "end")
@@ -252,7 +262,7 @@ class SystemGraphsController {
 
             // Add the Y gridlines
             svg.append("g")			
-                .attr("class", "receivedGrid")
+                .attr("class", "sentGrid")
                 .call(d3.axisLeft(y)
                     .tickSize(-Width)
                     .tickFormat("")
@@ -325,6 +335,16 @@ class SystemGraphsController {
                     .selectAll("path")
                     .transition().duration(1000)
                     .attr("d", area)
+
+                d3.selectAll(".receivedGrid").remove();
+                svg.append("g")			
+                    .attr("class", "receivedGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                        // .tickValues(tickValuesForXAxis)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
             }
 
             // Memory usage graph title
