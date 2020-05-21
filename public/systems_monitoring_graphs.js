@@ -204,7 +204,7 @@ class SystemGraphsController {
         }
 
         function plotMemoryMetrics(data) {
-            let memoryMetrics = ["used", "free"]
+            let memoryMetrics = ["used"]
             // Create keys to stack
             let memoryKeys = [],
             memoryStr = ""
@@ -214,7 +214,7 @@ class SystemGraphsController {
                 memoryKeys.push(memoryStr);
             }
 
-            let colors = ["#4B0082", "#fbdb9c"]
+            let colors = ["#4B0082"]
             // color palette
             let color = d3.scaleOrdinal()
                 .domain(memoryMetrics)
@@ -340,20 +340,6 @@ class SystemGraphsController {
                     .attr("d", area)
             }
 
-            // What to do when one group is hovered
-            let highlight = function(d){
-                console.log(d)
-                // reduce opacity of all groups
-                d3.selectAll(".memoryArea").style("opacity", .1)
-                // expect the one that is hovered
-                d3.select("."+d).style("opacity", 1)
-            }
-
-            // And when it is not hovered anymore
-            let noHighlight = function(d){
-                d3.selectAll(".memoryArea").style("opacity", 1)
-            }
-
             // Add legend for each name.
             let size = 20
             svg.selectAll("myrect")
@@ -393,10 +379,10 @@ class SystemGraphsController {
         }
 
         function plotCPUMetrics(data) {
-            let cpuMetrics = ["used", "free"],
-                cpuKeys = ["cpu_percent", "unused_cpu_percent"];
+            let cpuMetrics = ["used"],
+                cpuKeys = ["cpu_percent"];
             
-            let colors = ["#0c2dde", "#fbdb9c"]
+            let colors = ["#0c2dde"]
             // color palette
             let color = d3.scaleOrdinal()
                 .domain(cpuMetrics)
@@ -519,20 +505,6 @@ class SystemGraphsController {
                     .selectAll("path")
                     .transition().duration(1000)
                     .attr("d", area)
-            }
-
-            // What to do when one group is hovered
-            let highlight = function(d){
-                console.log(d)
-                // reduce opacity of all groups
-                d3.selectAll(".cpuArea").style("opacity", .1)
-                // expect the one that is hovered
-                d3.select("."+d).style("opacity", 1)
-            }
-
-            // And when it is not hovered anymore
-            let noHighlight = function(d){
-                d3.selectAll(".cpuArea").style("opacity", 1)
             }
 
             // Add legend for each name.
