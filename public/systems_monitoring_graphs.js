@@ -204,9 +204,6 @@ class SystemGraphsController {
         }
 
         function plotMemoryMetrics(data) {
-            let stackMemory = d3.stack().keys(memoryKeys),
-                memoryDataStacked = stackMemory(data);
-
             let svg = d3.select(".chart2")
                 .append("svg")
                 .attr("width", Width + Margin.left + Margin.right + 120)
@@ -359,9 +356,6 @@ class SystemGraphsController {
         }
 
         function plotCPUMetrics(data) {            
-            let stackCPU = d3.stack().keys(cpuKeys),
-                cpuDataStacked = stackCPU(data);
-
             let svg = d3.select(".chart3")
                 .append("svg")
                 .attr("width", Width + Margin.left + Margin.right + 120)
