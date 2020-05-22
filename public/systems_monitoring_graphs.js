@@ -490,6 +490,16 @@ class SystemGraphsController {
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
 
+            // Add the X gridlines
+            svg.append("g")			
+                .attr("class", "receivedGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    // .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
             // Rotate axis ticks
             xAxis.selectAll("text")
                 .style("text-anchor", "end")
@@ -522,6 +532,14 @@ class SystemGraphsController {
                 .range([ Height, 0 ]);
             svg.append("g").call(d3.axisLeft(y).ticks(5))
 
+            // Add the Y gridlines
+            svg.append("g")			
+                .attr("class", "sentGrid")
+                .call(d3.axisLeft(y)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
                 .attr("id", "clip")
@@ -544,6 +562,12 @@ class SystemGraphsController {
             let area = d3.area().x(d => x(d.data.datetime))
                 .y0(d => y(d[0]))
                 .y1(d => y(d[1]))
+
+            // Add the brushing
+            areaChart
+                .append("g")
+                .attr("class", "brush")
+                .call(brush);
                 
             // Show the areas
             areaChart
@@ -554,12 +578,42 @@ class SystemGraphsController {
                     .attr("class", d => "cpuArea " + d.key)
                     .style("fill", d => color(d.key))
                     .attr("d", area)
+                    .on("mouseover", function() {
+                        console.log("here")
+                        tooltip.style("display", null);
+                    })
+                    .on("mouseout", function() {
+                    // console.log("here")
+                    tooltip.style("display", "none");
+                    })
+                    .on("mousemove", function(d) {
+                        console.log("here")
+                        var xPosition = d3.mouse(this)[0] - 15;//x position of tooltip
+                        var yPosition = d3.mouse(this)[1] - 25;//y position of tooltip
+                        tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
+                        var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
+                        var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
+                        tooltip.select("text").text(d3.timeFormat('%Y-%m-%d')(x0)+ " " +Math.round(y0));//show the text after formatting the date
+                    });;
 
-            // Add the brushing
-            areaChart
-                .append("g")
-                .attr("class", "brush")
-                .call(brush);
+            // Prep the tooltip bits, initial display is hidden
+            var tooltip = svg.append("g")
+                .attr("class", "tooltip")
+                .style("opacity", 1.0)
+                .style("display", "none");
+
+            tooltip.append("rect")
+                .attr("width", 120)
+                .attr("height", 20)
+                .attr("fill", "white")
+                .style("opacity", 1.0);
+
+            tooltip.append("text")
+                .attr("x", 60)
+                .attr("dy", "1.2em")
+                .style("text-anchor", "middle")
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold");
 
             let idleTimeout
             function idled() { idleTimeout = null; }
@@ -590,6 +644,16 @@ class SystemGraphsController {
                     .selectAll("path")
                     .transition().duration(1000)
                     .attr("d", area)
+
+                d3.selectAll(".receivedGrid").remove();
+                svg.append("g")			
+                    .attr("class", "receivedGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                        // .tickValues(tickValuesForXAxis)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
             }
 
             // Add legend for each name.
