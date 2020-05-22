@@ -321,30 +321,6 @@ class SystemGraphsController {
                     .attr("d", area)
             }
 
-            // Add legend for each name.
-            let size = 20
-            svg.selectAll("myrect")
-                .data(memoryKeys)
-                .enter()
-                .append("rect")
-                    .attr("x", Width + 10)
-                    .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
-                    .attr("width", size)
-                    .attr("height", size)
-                    .style("fill", d => color(d))
-
-            // Add legend label for each name.
-            svg.selectAll("mylabels")
-                .data(memoryMetrics)
-                .enter()
-                .append("text")
-                    .attr("x", Width + 10 + size*1.2)
-                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 10 is where the first dot appears. 25 is the distance between dots
-                    .style("fill", d => color(d))
-                    .text(d => d)
-                    .attr("text-anchor", "left")
-                    .style("alignment-baseline", "middle")
-
             // Memory usage graph title
             svg.append("text")
                 .attr("x", Width / 2)
@@ -471,30 +447,6 @@ class SystemGraphsController {
                     .transition().duration(1000)
                     .attr("d", area)
             }
-
-            // Add legend for each name.
-            let size = 20
-            svg.selectAll("myrect")
-                .data(cpuKeys)
-                .enter()
-                .append("rect")
-                    .attr("x", Width + 10)
-                    .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
-                    .attr("width", size)
-                    .attr("height", size)
-                    .style("fill", d => color(d))
-
-            // Add legend label for each name.
-            svg.selectAll("mylabels")
-                .data(cpuMetrics)
-                .enter()
-                .append("text")
-                    .attr("x", Width + 10 + size*1.2)
-                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 10 is where the first dot appears. 25 is the distance between dots
-                    .style("fill", d => color(d))
-                    .text(d => d)
-                    .attr("text-anchor", "left")
-                    .style("alignment-baseline", "middle")
 
             // CPU usage graph title
             svg.append("text")
