@@ -261,7 +261,6 @@ class SystemGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Disk Usage");
-
         }
 
         function plotMemoryMetrics(data) {
