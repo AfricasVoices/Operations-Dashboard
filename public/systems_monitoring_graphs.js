@@ -45,7 +45,7 @@ class SystemGraphsController {
             let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
             let xAxis = svg.append("g")
                  .attr("transform", "translate(0," + Height + ")")
-                 .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+                 .call(d3.axisBottom(x).tickFormat(dayTimeFormat).ticks(13))
             
             // Add the X gridlines
             svg.append("g")			
@@ -191,7 +191,7 @@ class SystemGraphsController {
                 }
 
                 // Update axis and area position
-                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat).ticks(13))
                 // Rotate X axis ticks
                 xAxis.selectAll("text")
                     .style("text-anchor", "end")
@@ -280,7 +280,7 @@ class SystemGraphsController {
             let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
             let xAxis = svg.append("g")
                 .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+                .call(d3.axisBottom(x).tickFormat(dayTimeFormat).ticks(13))
 
             // Add the X gridlines
             svg.append("g")			
@@ -419,7 +419,7 @@ class SystemGraphsController {
                 }
 
                 // Update axis and area position
-                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat).ticks(13))
                 // Rotate X axis ticks
                 xAxis.selectAll("text")
                     .style("text-anchor", "end")
@@ -466,7 +466,7 @@ class SystemGraphsController {
             let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
             let xAxis = svg.append("g")
                 .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+                .call(d3.axisBottom(x).tickFormat(dayTimeFormat).ticks(13))
 
             // Add the X gridlines
             svg.append("g")			
@@ -604,7 +604,7 @@ class SystemGraphsController {
                 }
 
                 // Update axis and area position
-                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(dayTimeFormat).ticks(13))
                 // Rotate X axis ticks
                 xAxis.selectAll("text")
                     .style("text-anchor", "end")
