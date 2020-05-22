@@ -200,6 +200,15 @@ class SystemGraphsController {
                     .selectAll("path")
                     .transition().duration(1000)
                     .attr("d", area)
+
+                d3.selectAll(".diskXGrid").remove();
+                svg.append("g")			
+                    .attr("class", "diskXGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
             }
 
             // What to do when one group is hovered
@@ -419,6 +428,15 @@ class SystemGraphsController {
                     .selectAll("path")
                     .transition().duration(1000)
                     .attr("d", area)
+
+                d3.selectAll(".memoryXGrid").remove();
+                svg.append("g")			
+                    .attr("class", "memoryXGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    ) 
             }
 
             // Memory usage graph title
@@ -594,6 +612,15 @@ class SystemGraphsController {
                     .selectAll("path")
                     .transition().duration(1000)
                     .attr("d", area)
+
+                d3.selectAll(".cpuXGrid").remove();
+                svg.append("g")			
+                    .attr("class", "cpuXGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    ) 
             }
 
             // CPU usage graph title
