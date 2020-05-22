@@ -153,23 +153,23 @@ class SystemGraphsController {
                         tooltip.select("text").text(d3.timeFormat('%Y-%m-%d')(x0)+ " " +Math.round(y0));//show the text after formatting the date
                     });;
             
-                let tooltip = svg.append("g")
-                    .attr("class", "tooltip")
-                    .style("opacity", 1.0)
-                    .style("display", "none");
-    
-                tooltip.append("rect")
-                    .attr("width", 120)
-                    .attr("height", 20)
-                    .attr("fill", "white")
-                    .style("opacity", 1.0);
-    
-                tooltip.append("text")
-                    .attr("x", 60)
-                    .attr("dy", "1.2em")
-                    .style("text-anchor", "middle")
-                    .attr("font-size", "12px")
-                    .attr("font-weight", "bold");
+            let tooltip = svg.append("g")
+                .attr("class", "tooltip")
+                .style("opacity", 1.0)
+                .style("display", "none");
+
+            tooltip.append("rect")
+                .attr("width", 120)
+                .attr("height", 20)
+                .attr("fill", "white")
+                .style("opacity", 1.0);
+
+            tooltip.append("text")
+                .attr("x", 60)
+                .attr("dy", "1.2em")
+                .style("text-anchor", "middle")
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold");
 
             let idleTimeout
             function idled() { idleTimeout = null; }
