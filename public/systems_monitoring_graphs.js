@@ -89,6 +89,14 @@ class SystemGraphsController {
                 svg.append("g")
                 .call(d3.axisLeft(y).ticks(5))
 
+            // Add the Y gridlines
+            svg.append("g")			
+                .attr("class", "diskGrid")
+                .call(d3.axisLeft(y)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
                 .attr("id", "clip")
@@ -301,6 +309,14 @@ class SystemGraphsController {
                 .range([ Height, 0 ]);
             svg.append("g").call(d3.axisLeft(y).ticks(5))
 
+            // Add the Y gridlines
+            svg.append("g")			
+                .attr("class", "diskGrid")
+                .call(d3.axisLeft(y)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
+
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
                 .attr("id", "clip")
@@ -467,6 +483,14 @@ class SystemGraphsController {
                 .domain([0, 100])
                 .range([ Height, 0 ]);
             svg.append("g").call(d3.axisLeft(y).ticks(5))
+
+            // Add the Y gridlines
+            svg.append("g")			
+                .attr("class", "diskGrid")
+                .call(d3.axisLeft(y)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
 
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
