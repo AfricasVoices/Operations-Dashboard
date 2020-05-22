@@ -40,6 +40,25 @@ class SystemGraphsController {
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")");
 
+            // Prep the tooltip bits, initial display is hidden
+            let tooltip = svg.append("g")
+                .attr("class", "tooltip")
+                .style("opacity", 1.0)
+                .style("display", "none");
+
+            tooltip.append("rect")
+                .attr("width", 120)
+                .attr("height", 20)
+                .attr("fill", "white")
+                .style("opacity", 1.0);
+
+            tooltip.append("text")
+                .attr("x", 60)
+                .attr("dy", "1.2em")
+                .style("text-anchor", "middle")
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold");
+
             // Add X axis
             let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
             let xAxis = svg.append("g")
@@ -212,6 +231,25 @@ class SystemGraphsController {
                 .attr("transform",
                     "translate(" + Margin.left + "," + Margin.top + ")");
 
+            // Prep the tooltip bits, initial display is hidden
+            let tooltip = svg.append("g")
+                .attr("class", "tooltip")
+                .style("opacity", 1.0)
+                .style("display", "none");
+
+            tooltip.append("rect")
+                .attr("width", 120)
+                .attr("height", 20)
+                .attr("fill", "white")
+                .style("opacity", 1.0);
+
+            tooltip.append("text")
+                .attr("x", 60)
+                .attr("dy", "1.2em")
+                .style("text-anchor", "middle")
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold");
+
             // Add X axis
             let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
             let xAxis = svg.append("g")
@@ -337,6 +375,25 @@ class SystemGraphsController {
                 .append("g")
                 .attr("transform",
                     "translate(" + Margin.left + "," + Margin.top + ")");
+
+            // Prep the tooltip bits, initial display is hidden
+            let tooltip = svg.append("g")
+                .attr("class", "tooltip")
+                .style("opacity", 1.0)
+                .style("display", "none");
+
+            tooltip.append("rect")
+                .attr("width", 120)
+                .attr("height", 20)
+                .attr("fill", "white")
+                .style("opacity", 1.0);
+
+            tooltip.append("text")
+                .attr("x", 60)
+                .attr("dy", "1.2em")
+                .style("text-anchor", "middle")
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold");
 
             // Add X axis
             let x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.datetime))).range([1, Width]);
