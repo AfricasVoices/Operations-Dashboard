@@ -45,6 +45,16 @@ class SystemGraphsController {
             let xAxis = svg.append("g")
                  .attr("transform", "translate(0," + Height + ")")
                  .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+
+            // Add the X gridlines
+            svg.append("g")			
+                .attr("class", "receivedGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    // .tickValues(tickValuesForXAxis)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
             
             // Rotate X axis ticks
             xAxis.selectAll("text")
@@ -80,6 +90,14 @@ class SystemGraphsController {
                 .range([ Height, 0 ]);
                 svg.append("g")
                 .call(d3.axisLeft(y).ticks(5))
+
+            // Add the Y gridlines
+            svg.append("g")			
+                .attr("class", "sentGrid2")
+                .call(d3.axisLeft(y)
+                    .tickSize(-Width)
+                    .tickFormat("")
+                )
 
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
@@ -188,6 +206,16 @@ class SystemGraphsController {
                     .selectAll("path")
                     .transition().duration(1000)
                     .attr("d", area)
+
+                    d3.selectAll(".receivedGrid").remove();
+                    svg.append("g")			
+                        .attr("class", "receivedGrid")
+                        .attr("transform", "translate(0," + Height + ")")
+                        .call(d3.axisBottom(x)
+                            // .tickValues(tickValuesForXAxis)
+                            .tickSize(-Height)
+                            .tickFormat("")
+                        )
             }
 
             // What to do when one group is hovered

@@ -229,3 +229,9 @@ th:hover {
     stroke-opacity: 0.5;
     shape-rendering: crispEdges;
 }
+.sentGrid2 line,
+.sentGrid2 path {
+    stroke: lightgrey;
+    stroke-opacity: 0.9;
+    shape-rendering: crispEdges;
+}
