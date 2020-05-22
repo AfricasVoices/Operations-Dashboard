@@ -204,12 +204,6 @@ class SystemGraphsController {
         }
 
         function plotMemoryMetrics(data) {
-            let colors = ["#4B0082"]
-            // color palette
-            let color = d3.scaleOrdinal()
-                .domain(memoryMetrics)
-                .range(colors);
-
             let stackMemory = d3.stack().keys(memoryKeys),
                 memoryDataStacked = stackMemory(data);
 
@@ -365,12 +359,6 @@ class SystemGraphsController {
         }
 
         function plotCPUMetrics(data) {            
-            let colors = ["#0c2dde"]
-            // color palette
-            let color = d3.scaleOrdinal()
-                .domain(cpuMetrics)
-                .range(colors);
-
             let stackCPU = d3.stack().keys(cpuKeys),
                 cpuDataStacked = stackCPU(data);
 
