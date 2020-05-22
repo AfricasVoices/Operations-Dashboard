@@ -269,20 +269,18 @@ class SystemGraphsController {
             let areaChart = svg.append('g')
                 .attr("clip-path", "url(#clip)")
 
-            // Area generator
-            let area = d3.area().x(d => x(d.data.datetime))
-                .y0(d => y(d[0]))
-                .y1(d => y(d[1]))
+            // Create an area generator
+            let area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.memory_usage.percent))
 
-            // Show the areas
-            areaChart
-                .selectAll("mylayers")
-                .data(memoryDataStacked)
-                .enter()
-                .append("path")
-                    .attr("class", d => "memoryArea " + d.key)
-                    .style("fill", d => color(d.key))
-                    .attr("d", area)
+            // Add the area
+            areaChart.append("path")
+                .datum(data)
+                .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
+                .attr("fill", "blue")
+                .attr("fill-opacity", .6)
+                .attr("stroke", "black")
+                .attr("stroke-width", 0.2)
+                .attr("d", area)
 
             // Add the brushing
             areaChart
@@ -396,20 +394,18 @@ class SystemGraphsController {
             let areaChart = svg.append('g')
                 .attr("clip-path", "url(#clip)")
 
-            // Area generator
-            let area = d3.area().x(d => x(d.data.datetime))
-                .y0(d => y(d[0]))
-                .y1(d => y(d[1]))
-                
-            // Show the areas
-            areaChart
-                .selectAll("mylayers")
-                .data(cpuDataStacked)
-                .enter()
-                .append("path")
-                    .attr("class", d => "cpuArea " + d.key)
-                    .style("fill", d => color(d.key))
-                    .attr("d", area)
+            // Create an area generator
+            let area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.cpu_percent))
+
+            // Add the area
+            areaChart.append("path")
+                .datum(data)
+                .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
+                .attr("fill", "yellow")
+                .attr("fill-opacity", .6)
+                .attr("stroke", "black")
+                .attr("stroke-width", 0.1)
+                .attr("d", area)
 
             // Add the brushing
             areaChart
