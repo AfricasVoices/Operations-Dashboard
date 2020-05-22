@@ -360,7 +360,7 @@ class SystemGraphsController {
             areaChart.append("path")
                 .datum(data)
                 .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
-                .attr("fill", "blue")
+                .attr("fill", "#000080")
                 .attr("fill-opacity", .6)
                 .attr("stroke", "black")
                 .attr("stroke-width", 0.2)
@@ -544,7 +544,7 @@ class SystemGraphsController {
             areaChart.append("path")
                 .datum(data)
                 .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
-                .attr("fill", "yellow")
+                .attr("fill", "	#0000CD")
                 .attr("fill-opacity", .6)
                 .attr("stroke", "black")
                 .attr("stroke-width", 0.1)
