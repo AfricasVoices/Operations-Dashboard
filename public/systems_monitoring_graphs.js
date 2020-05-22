@@ -46,6 +46,15 @@ class SystemGraphsController {
                  .attr("transform", "translate(0," + Height + ")")
                  .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
             
+            // Add the X gridlines
+            svg.append("g")			
+                .attr("class", "diskXGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+            
             // Rotate X axis ticks
             xAxis.selectAll("text")
                 .style("text-anchor", "end")
@@ -250,6 +259,15 @@ class SystemGraphsController {
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
 
+            // Add the X gridlines
+            svg.append("g")			
+                .attr("class", "memoryXGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
             // Rotate axis ticks
             xAxis.selectAll("text")
                 .style("text-anchor", "end")
@@ -408,6 +426,15 @@ class SystemGraphsController {
             let xAxis = svg.append("g")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x).tickFormat(dayTimeFormat))
+
+            // Add the X gridlines
+            svg.append("g")			
+                .attr("class", "cpuXGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
 
             // Rotate axis ticks
             xAxis.selectAll("text")
