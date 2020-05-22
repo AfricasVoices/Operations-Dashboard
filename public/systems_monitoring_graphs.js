@@ -207,15 +207,15 @@ class SystemGraphsController {
                     .transition().duration(1000)
                     .attr("d", area)
 
-                    d3.selectAll(".receivedGrid").remove();
-                    svg.append("g")			
-                        .attr("class", "receivedGrid")
-                        .attr("transform", "translate(0," + Height + ")")
-                        .call(d3.axisBottom(x)
-                            // .tickValues(tickValuesForXAxis)
-                            .tickSize(-Height)
-                            .tickFormat("")
-                        )
+                d3.selectAll(".receivedGrid").remove();
+                svg.append("g")			
+                    .attr("class", "receivedGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                        // .tickValues(tickValuesForXAxis)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
             }
 
             // What to do when one group is hovered
