@@ -109,13 +109,6 @@ class DataController {
                     .forEach(metric => {
                         d[`disk_${metric}`] = (+d.disk_usage[metric] / 1e9);
                     });
-                Object.keys(d.memory_usage)
-                    .sort()
-                    .forEach(metric => {
-                        d[`memory_${metric}`] = (+d.memory_usage[metric] / 1e9);
-                    });
-                d.unused_cpu_percent = (100 - +d.cpu_percent)
-                d.total_ram = +d.memory_free + +d.memory_used;
             })
             // Sort data by date
             systemMetrics.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
