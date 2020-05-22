@@ -85,7 +85,8 @@ class SystemGraphsController {
             let yLimit = data[0].disk_total
             // Add Y axis
             let y = d3.scaleLinear()
-                .domain([0, yLimit])
+                // Add 100 to yLimit to increase brushing area
+                .domain([0, yLimit + 100])
                 .range([ Height, 0 ]);
                 svg.append("g")
                 .call(d3.axisLeft(y).ticks(5))
