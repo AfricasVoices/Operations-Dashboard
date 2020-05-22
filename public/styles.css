@@ -229,3 +229,23 @@ th:hover {
     stroke-opacity: 0.5;
     shape-rendering: crispEdges;
 }
+.diskGrid line,
+.memoryGrid line,
+.cpuGrid line,
+.diskXGrid line,
+.memoryXGrid line,
+.cpuXGrid line  {
+    stroke: lightgrey;
+    stroke-opacity: 0.6;
+    shape-rendering: crispEdges;
+}
+.diskGrid path,
+.memoryGrid path,
+.cpuGrid path,
+.diskXGrid path,
+.memoryXGrid path,
+.cpuXGrid path  {
+    stroke: lightgrey;
+    stroke-opacity: 0.6;
+    shape-rendering: crispEdges;
+}
