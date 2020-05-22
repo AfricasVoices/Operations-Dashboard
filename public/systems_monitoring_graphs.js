@@ -80,7 +80,7 @@ class SystemGraphsController {
                 .attr("x", 0 - Height / 2)
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("GB")
+                .text("Disc Usage (GB)");
                 
             let yLimit = data[0].disk_total
             // Add Y axis
@@ -313,7 +313,7 @@ class SystemGraphsController {
                 .attr("x", 0 - Height / 2)
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("GB")
+                .text("Total Memory Used (%)");
 
             let yLimit = 100;
             // Add Y axis
@@ -499,7 +499,7 @@ class SystemGraphsController {
                 .attr("x", 0 - Height / 2)
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("%")
+                .text("CPU Utilization (%)")
 
             // Add Y axis
             let y = d3.scaleLinear()
