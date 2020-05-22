@@ -364,10 +364,7 @@ class SystemGraphsController {
                 .text("Memory Utilization");
         }
 
-        function plotCPUMetrics(data) {
-            let cpuMetrics = ["used"],
-                cpuKeys = ["cpu_percent"];
-            
+        function plotCPUMetrics(data) {            
             let colors = ["#0c2dde"]
             // color palette
             let color = d3.scaleOrdinal()
