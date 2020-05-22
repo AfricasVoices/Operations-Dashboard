@@ -150,7 +150,7 @@ class SystemGraphsController {
                         tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
                         var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
                         var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
-                        tooltip.select("text").text(d3.timeFormat('%Y-%m-%d')(x0)+ " " +Math.round(y0));//show the text after formatting the date
+                        tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} GB`);//show the text after formatting the date
                     });;
             
             let tooltip = svg.append("g")
@@ -159,13 +159,13 @@ class SystemGraphsController {
                 .style("display", "none");
 
             tooltip.append("rect")
-                .attr("width", 120)
+                .attr("width", 150)
                 .attr("height", 20)
                 .attr("fill", "white")
                 .style("opacity", 1.0);
 
             tooltip.append("text")
-                .attr("x", 60)
+                .attr("x", 75)
                 .attr("dy", "1.2em")
                 .style("text-anchor", "middle")
                 .attr("font-size", "12px")
@@ -314,7 +314,7 @@ class SystemGraphsController {
                 .style("text-anchor", "middle")
                 .text("GB")
 
-            let yLimit = d3.max(data, d => d.total_ram)
+            let yLimit = 100;
             // Add Y axis
             let y = d3.scaleLinear()
                 .domain([0, yLimit])
@@ -377,7 +377,7 @@ class SystemGraphsController {
                     tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
                     var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
                     var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
-                    tooltip.select("text").text(d3.timeFormat('%Y-%m-%d')(x0)+ " " +Math.round(y0));//show the text after formatting the date
+                    tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} %`);//show the text after formatting the date
                 });;
             
             // Prep the tooltip bits, initial display is hidden
@@ -387,13 +387,13 @@ class SystemGraphsController {
                 .style("display", "none");
 
             tooltip.append("rect")
-                .attr("width", 120)
+                .attr("width", 150)
                 .attr("height", 20)
                 .attr("fill", "white")
                 .style("opacity", 1.0);
 
             tooltip.append("text")
-                .attr("x", 60)
+                .attr("x", 75)
                 .attr("dy", "1.2em")
                 .style("text-anchor", "middle")
                 .attr("font-size", "12px")
@@ -561,7 +561,7 @@ class SystemGraphsController {
                     tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
                     var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
                     var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
-                    tooltip.select("text").text(d3.timeFormat('%Y-%m-%d')(x0)+ " " +Math.round(y0));//show the text after formatting the date
+                    tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} %`);//show the text after formatting the date
                 });;
 
             // Prep the tooltip bits, initial display is hidden
@@ -571,13 +571,13 @@ class SystemGraphsController {
                 .style("display", "none");
 
             tooltip.append("rect")
-                .attr("width", 120)
+                .attr("width", 150)
                 .attr("height", 20)
                 .attr("fill", "white")
                 .style("opacity", 1.0);
 
             tooltip.append("text")
-                .attr("x", 60)
+                .attr("x", 75)
                 .attr("dy", "1.2em")
                 .style("text-anchor", "middle")
                 .attr("font-size", "12px")
