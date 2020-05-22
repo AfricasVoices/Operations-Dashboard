@@ -133,7 +133,7 @@ class SystemGraphsController {
                 .enter()
                 .append("path")
                     .attr("fill-opacity", .6)
-                    .attr("stroke", "black")
+                    .attr("stroke", d => color(d.key))
                     .attr("stroke-width", 0.1)
                     .attr("class", d => "diskArea " + d.key)
                     .style("fill", d => color(d.key))
@@ -362,7 +362,7 @@ class SystemGraphsController {
                 .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
                 .attr("fill", "#000080")
                 .attr("fill-opacity", .6)
-                .attr("stroke", "black")
+                .attr("stroke", "#000080")
                 .attr("stroke-width", 0.2)
                 .attr("d", area)
                 .on("mouseover", function() {
@@ -544,9 +544,9 @@ class SystemGraphsController {
             areaChart.append("path")
                 .datum(data)
                 .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
-                .attr("fill", "	#0000CD")
+                .attr("fill", "#0000CD")
                 .attr("fill-opacity", .6)
-                .attr("stroke", "black")
+                .attr("stroke", "#0000CD")
                 .attr("stroke-width", 0.1)
                 .attr("d", area)
                 .on("mouseover", function() {
