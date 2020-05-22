@@ -326,7 +326,7 @@ class SystemGraphsController {
 
             // Add the Y gridlines
             svg.append("g")			
-                .attr("class", "diskGrid")
+                .attr("class", "memoryGrid")
                 .call(d3.axisLeft(y)
                     .tickSize(-Width)
                     .tickFormat("")
@@ -511,7 +511,7 @@ class SystemGraphsController {
 
             // Add the Y gridlines
             svg.append("g")			
-                .attr("class", "diskGrid")
+                .attr("class", "cpuGrid")
                 .call(d3.axisLeft(y)
                     .tickSize(-Width)
                     .tickFormat("")
