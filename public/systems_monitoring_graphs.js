@@ -204,16 +204,6 @@ class SystemGraphsController {
         }
 
         function plotMemoryMetrics(data) {
-            let memoryMetrics = ["used"]
-            // Create keys to stack
-            let memoryKeys = [],
-            memoryStr = ""
-
-            for (let i = 0; i < memoryMetrics.length; i++) {
-                memoryStr =  "memory_" + memoryMetrics[i];
-                memoryKeys.push(memoryStr);
-            }
-
             let colors = ["#4B0082"]
             // color palette
             let color = d3.scaleOrdinal()
