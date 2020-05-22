@@ -488,7 +488,7 @@ class SystemGraphsController {
                     "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
                 )
                 .style("text-anchor", "middle")
-                .text("Date (dd HH:mm)");
+                .text("Date (dd:hh:m)");
 
             // Add Y axis label
             svg.append("text")
