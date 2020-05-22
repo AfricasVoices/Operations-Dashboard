@@ -139,6 +139,8 @@ class SystemGraphsController {
                     .attr("class", d => "diskArea " + d.key)
                     .style("fill", d => color(d.key))
                     .attr("d", area)
+
+            areaChart.selectAll(".disk_used")
                     .on("mouseover", function() {
                         tooltip.style("display", null);
                     })
