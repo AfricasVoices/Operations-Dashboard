@@ -174,6 +174,159 @@ body {
 }
 
 /* ====================== */
+/* TRAFFIC HEADER */
+/* ====================== */
+.traffic-header {
+    width: 100%;
+    position: fixed;
+    top: 47px;
+    left: 0;
+    background: #ffff;
+    padding: 8px 16px;
+    /* box-shadow: 0 2px 2px -2px steelblue; */
+    z-index: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 45px;
+}
+.traffic-header__brand {
+    color: #8d3538;;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 22px;
+    margin-left: 60px;
+}
+.traffic-nav {
+    display: flex;
+    width: 80%;
+}
+
+.traffic-nav__items {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* margin: 0px;
+    padding: 0px; */
+    list-style: none;
+    border: 1px solid #8d3538;
+    border-right: none;
+    border-bottom: none;
+} 
+.traffic-nav__item {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0px 32px;
+    border-right: 1px solid #8d3538;
+}
+.traffic-item {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 2px;
+}
+.traffic-item__timescale {
+    display: flex;
+    box-shadow: 2px 2px 2px #888888; 
+}
+.traffic-item__timescale button {
+    line-height: 1.5;
+    background: #FFFAFA;
+    padding: 8px 16px;
+    color: #8d3538;
+    border: 1px solid #8d3538;
+    outline: none;
+    border-radius: .2rem;
+    font: inherit;
+    cursor: pointer;
+}
+.traffic-item__timescale button:first-child {
+    border-right: none; /* Prevent double borders */
+    margin-right: -2px;
+  }
+.traffic-item__timescale button:hover,
+.traffic-item__timescale button:active {
+    color: white;
+    background: #8d3538;
+}
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 80%;
+    margin: auto;
+    text-align: center;
+    font-family: arial;
+  }
+
+
+
+
+
+/* The container must be positioned relative: */
+.custom-select {
+    position: relative;
+    font-family: Arial;
+}
+  
+.custom-select select {
+    display: none; /*hide original SELECT element: */
+}
+  
+.select-selected {
+    background-color: 	#FFFAFA;
+    box-shadow: 2px 2px 2px #888888;
+}
+  
+/* Style the arrow inside the select element: */
+.select-selected:after {
+    position: absolute;
+    content: "";
+    top: 15px;
+    /* top: 20px; */
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: black transparent transparent transparent;
+}
+  
+  /* Point the arrow upwards when the select box is open (active): */
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent black transparent;
+    top: 7px;
+  }
+  
+  /* style the items (options), including the selected item: */
+  .select-items div,.select-selected {
+    /* color: #ffffff; */
+    color: black;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+  }
+  
+  /* Style items (options): */
+  .select-items {
+    position: absolute;
+    background-color: #FFFAFA;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
+  
+  /* Hide the items when the select box is closed: */
+  .select-hide {
+    display: none;
+  }
+  
+  .select-items div:hover, .same-as-selected {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+/* ====================== */
 /* CODING PROGRESS TABLE */
 /* ====================== */
 /* button {

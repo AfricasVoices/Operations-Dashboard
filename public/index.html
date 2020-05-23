@@ -47,6 +47,66 @@
         </nav>
     </header>
 
+    <header class="traffic-header">
+        <div class="traffic-item">
+            <a href="#" class="traffic-header__brand">
+                UNICEF-SOM <i class="fas fa-chart-bar"></i>
+            </a>
+        </div>
+        <div class="traffic-item">
+            <p style="padding: 9.6px; color: gray;">TimeScale <i class="fas fa-hourglass-half"></i></p>
+            <div class="traffic-item__timescale btn-group2">
+                <button>10 minutes</button>
+                <button>1 day</button>
+            </div>
+        </div>
+        <div class="traffic-item">
+            <p style="margin: 9.6px; color: gray;">TimeFrame <i class="far fa-clock mx-2"></i></p>
+            <div class="custom-select" style="width:100px;">
+                <select>
+                    <option value="default">Default</option>
+                    <option value="1">48 Hours </option>
+                    <option value="6">7 days</option>
+                    <option value="13">14 days</option>
+                    <option value="29">30 days</option>
+                </select>
+            </div>
+        </div>
+        <div class="traffic-item" style="width: 280px;">
+            <p style="padding: 9.6px; color: gray" >Last Updated: </p>
+            <div id="lastUpdated" style="color: brown;"></div>
+        </div>
+    </header>
+
+    <button style="top: 20px" class="accordion">Section 1</button>
+        <div class="panel">
+        <p>Lorem ipsum...</p>
+    </div>
+                            
+
+        <!-- <nav class="traffic-nav">
+            <ul class="traffic-nav__items">
+                <li class="traffic-nav__item">
+                    <button class="dropbt">
+                        TRAFFIC <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="project-dropdown-menu">
+                    
+                    </div>
+                </li>
+                <li class="traffic-nav__item">
+                    <button>
+                        Logout <i class="fas fa-sign-out-alt mx-2"></i>
+                    </button>
+                </li>
+                <li class="traffic-nav__item">
+                    <a href="#">MESSAGE CODING</a>
+                    <div id="lastUpdated"></div>
+                </li>
+            </ul>
+        </nav> -->
+    
+
     <main>
         <!-- Display Coding Progress Table Here -->
         <section class="coding_progress coding-progress-container"></section>
@@ -85,6 +145,7 @@
     <script src="vendor/d3-5.12.0/d3.js"></script>
     <script src="vendor/d3-legend-2.25.6/d3-legend.min.js"></script>
     <script src="vendor/d3-tip-0.9.1/d3-tip.min.js"></script>
+    <script src="select_box.js"></script>
     <script src="auth.js"></script>
     <script src="data.js"></script>
     <script src="UI.js"></script>
