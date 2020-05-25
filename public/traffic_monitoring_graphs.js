@@ -1,5 +1,5 @@
 // GRAPH CONTROLLER
-class GraphController {
+export class GraphController {
     static addOneDayToDate(date) {
         let newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);

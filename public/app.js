@@ -1,10 +1,17 @@
+// import AuthController from "./auth.js";
+import { UIController } from "./UI.js";
+import { DataController } from "./data.js";
+
 // GLOBAL APP CONTROLLER
 class Controller {
     static setupEventListeners() {
         Controller.DOMstrings = UIController.getDOMstrings();
         document
             .querySelector(Controller.DOMstrings.logoutBtn)
-            .addEventListener("click", AuthController.logout);
+            .addEventListener("click", () => {import("./auth.js").then(module => {
+                    module.AuthController.logout();
+                })
+            });
         document
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .addEventListener("click", Controller.navigateToCodingProgress);
@@ -19,7 +26,9 @@ class Controller {
     static resetUI() {
         document.querySelector(Controller.DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(Controller.DOMstrings.graphContainer).innerHTML = "";
-        GraphController.clearTimers();
+        import("./traffic_monitoring_graphs.js").then(module => {
+            module.GraphController.clearTimers();
+        })
     }
 
     static resetActiveLink() {
@@ -37,9 +46,11 @@ class Controller {
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Get data for coding progress table
-        let unsubscribeFunc = DataController.watchCodingProgress(
-            CodingProgressTableController.updateCodingProgressTable);
-        DataController.registerSnapshotListener(unsubscribeFunc);
+        import("./coding_progress.js").then(module => {
+            let unsubscribeFunc = DataController.watchCodingProgress(
+                module.CodingProgressTableController.updateCodingProgressTable);
+                DataController.registerSnapshotListener(unsubscribeFunc);
+        }); 
     }
 
     static displayProject(project) {
@@ -50,11 +61,13 @@ class Controller {
             .querySelector(Controller.DOMstrings.trafficsLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
-        let unsubscribeFunc = DataController.watchProjectTrafficData(
-            project,
-            GraphController.updateGraphs
-        );
-        DataController.registerSnapshotListener(unsubscribeFunc);
+        import("./traffic_monitoring_graphs.js").then(module => {
+            let unsubscribeFunc = DataController.watchProjectTrafficData(
+                project,
+                module.GraphController.updateGraphs
+            );
+            DataController.registerSnapshotListener(unsubscribeFunc);
+        })
     }
 
     static displaySystems() {
@@ -64,8 +77,10 @@ class Controller {
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
-        let unsubscribeFunc = DataController.watchSystemsMetrics(SystemGraphsController.updateGraphs);
-        DataController.registerSnapshotListener(unsubscribeFunc);
+        import("./systems_monitoring_graphs.js").then(module => {
+            let unsubscribeFunc = DataController.watchSystemsMetrics(module.SystemGraphsController.updateGraphs);
+            DataController.registerSnapshotListener(unsubscribeFunc);
+        })
     }
 
     static navigateToCodingProgress(e) {
@@ -117,7 +132,8 @@ class Controller {
     static init() {
         console.log("Application has started.");
         // Authorize user
-        AuthController.getUser();
+        import("./auth.js").then(module => { module.AuthController.getUser(); })
+        // AuthController.getUser();
         // set up event listeners
         Controller.setupEventListeners();
         // Add the dropdown menu to the UI
@@ -145,5 +161,5 @@ class Controller {
 }
 
 // Initialize the application
-const mediadb = firebase.firestore();
+export const mediadb = firebase.firestore();
 Controller.init();

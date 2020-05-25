@@ -1,5 +1,5 @@
 // UI CONTROLLER
-class UIController {
+export class UIController {
     static getDOMstrings() {
         return {
             projectMenu: ".project-menu",
@@ -188,7 +188,7 @@ class UIController {
 
     static addSystemsGraphs() {
         let DOMstrings = UIController.getDOMstrings(),
-            html = `<div class="container"> 
+            html = `<div class="container hes"> 
             <section>
                 <div class="card shadow chart my-1"></div>
             </section> 

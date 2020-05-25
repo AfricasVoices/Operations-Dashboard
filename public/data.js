@@ -1,4 +1,6 @@
-class DataController {
+import { mediadb } from "./app.js";
+
+export class DataController {
     static updateData(snapshot, data) {
         // Update data every time it changes in firestore
         snapshot.docChanges().forEach(change => {
