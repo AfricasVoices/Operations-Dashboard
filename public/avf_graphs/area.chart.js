@@ -15,31 +15,6 @@ export class AreaChart extends GraphLayout {
         this.draw()
     }
 
-    setTitle(title) {
-        this.title = title;
-        return this;
-    }
-
-    setXAxisLabel(xAxis) {
-        this.xAxisLabel = xAxis;
-        return this;
-    }
-
-    setYAxisLabel(yAxis) {
-        this.yAxisLabel = yAxis;
-        return this;
-    }
-
-    setId(id) {
-        this.id = id;
-        return this;
-    }
-
-    setColor(color) {
-        this.color = color;
-        return this;
-    }
-
     draw() {
         let vis = this;
         vis.layout()

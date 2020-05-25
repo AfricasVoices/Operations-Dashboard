@@ -25,4 +25,29 @@ export class GraphLayout {
         vis.plot = svg.append('g')
             .attr('transform',`translate(${vis.margin.left},${vis.margin.top})`);
     }
+
+    setTitle(title) {
+        this.title = title;
+        return this;
+    }
+
+    setXAxisLabel(xAxis) {
+        this.xAxisLabel = xAxis;
+        return this;
+    }
+
+    setYAxisLabel(yAxis) {
+        this.yAxisLabel = yAxis;
+        return this;
+    }
+
+    setId(id) {
+        this.id = id;
+        return this;
+    }
+
+    setColorScheme(color) {
+        this.color = color;
+        return this;
+    }
 }

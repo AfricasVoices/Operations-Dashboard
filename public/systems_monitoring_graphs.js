@@ -6,8 +6,9 @@ export class SystemGraphsController {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-
-        let data2 = JSON.parse(JSON.stringify(data));
+/*                         C P U  UTILIZATION GRAPH  
+/*      ==================================================================
+*/      let data2 = JSON.parse(JSON.stringify(data));
         data2.forEach(function(d) {
             d.date = new Date(d.datetime);
             d.value = +d.cpu_percent;
@@ -19,12 +20,12 @@ export class SystemGraphsController {
             .setTitle("CPU Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
             .setYAxisLabel("CPU Utilization (%)")
-            .setColor("#0000CD")
+            .setColorScheme("#0000CD")
             .draw();
 
-        // =======================================================
-
-        let db = JSON.parse(JSON.stringify(data));
+/*                         MEMORY  UTILIZATION GRAPH  
+/*       ==================================================================
+*/      let db = JSON.parse(JSON.stringify(data));
         db.forEach(function(d) {
             d.date = new Date(d.datetime);
             d.value = +d.memory_usage.percent;
@@ -36,9 +37,12 @@ export class SystemGraphsController {
             .setTitle("Memory Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
             .setYAxisLabel("Memoru Utilization (%)")
-            .setColor("#000080")
+            .setColorScheme("#000080")
             .draw();
 
+/*                         DISK UTILIZATION GRAPH
+/*        ==================================================================
+*/
         plotDiskMetrics(data)
 
         function plotDiskMetrics(data) {
