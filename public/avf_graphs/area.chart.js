@@ -39,4 +39,26 @@ export class AreaChart extends GraphLayout {
             .range([this.height, 0])
             .domain(yExtent);
     }
+
+    addAxes() {
+        // Create and append axis elements
+        const xAxis = d3.axisBottom(this.xScale);
+        const yAxis = d3.axisLeft(this.yScale);
+
+        this.xAxis = this.plot.append("g")
+            .attr("class", `${this.id}XAxis`)
+            .attr("transform", `translate(0, ${this.height})`)
+            .call(xAxis);
+
+        // Rotate x axis ticks
+        this.plot.selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
+        this.plot.append("g")
+            .attr("class", `${this.id}YAxis`)
+            .call(yAxis)
+    }
 }
