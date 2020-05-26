@@ -383,7 +383,7 @@ class SystemGraphsController {
                     tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
                     var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
                     var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
-                    tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} GB`);//show the text after formatting the date
+                    tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${decimalFormatter(y0).replace('G', 'GB')}`);//show the text after formatting the date
                 });;
             
             // Prep the tooltip bits, initial display is hidden
