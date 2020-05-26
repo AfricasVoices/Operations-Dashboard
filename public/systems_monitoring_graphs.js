@@ -26,7 +26,7 @@ class SystemGraphsController {
                 diskKeys.push(diskStr);
             }
 
-            let colors = ["#00792C", "#F8EFDE"]
+            let colors = ["#0E86D4", "#bdefbd"]
             // color palette
             let color = d3.scaleOrdinal().domain(diskMetrics).range(colors);
 
@@ -366,9 +366,9 @@ class SystemGraphsController {
             areaChart.append("path")
                 .datum(data)
                 .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
-                .attr("fill", "#000080")
+                .attr("fill", "#00792C")
                 .attr("fill-opacity", .6)
-                .attr("stroke", "#000080")
+                .attr("stroke", "#00792C")
                 .attr("stroke-width", 0.2)
                 .attr("d", area)
                 .on("mouseover", function() {
