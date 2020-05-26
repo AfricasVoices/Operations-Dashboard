@@ -84,12 +84,13 @@ class SystemGraphsController {
                 
             let yLimit = data[0].disk_total
             // Add Y axis
+            let decimalFormatter = d3.format(".2s");
             let y = d3.scaleLinear()
                 // Add 100 to yLimit to increase brushing area
                 .domain([0, yLimit + 100])
                 .range([ Height, 0 ]);
                 svg.append("g")
-                .call(d3.axisLeft(y).ticks(5))
+                .call(d3.axisLeft(y).ticks(5).tickFormat((d) => decimalFormatter(d).replace('G', 'GB')))      
 
             // Add the Y gridlines
             svg.append("g")			
@@ -154,7 +155,7 @@ class SystemGraphsController {
                         tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
                         var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
                         var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
-                        tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} GB`);//show the text after formatting the date
+                        tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${decimalFormatter(y0).replace('G', 'GB')}`);//show the text after formatting the date
                     });;
             
             let tooltip = svg.append("g")
@@ -319,7 +320,7 @@ class SystemGraphsController {
                 .style("text-anchor", "middle")
                 .text("Memory Utilization(GB)");
 
-            var decimalFormatter = d3.format(".2s");
+            let decimalFormatter = d3.format(".2s");
             let yLimit = data[0].memory_usage.total;
             // Add Y axis
             let y = d3.scaleLinear()

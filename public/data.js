@@ -107,7 +107,7 @@ class DataController {
                 Object.keys(d.disk_usage)
                     .sort()
                     .forEach(metric => {
-                        d[`disk_${metric}`] = (+d.disk_usage[metric] / 1e9);
+                        d[`disk_${metric}`] = +d.disk_usage[metric];
                     });
             })
             // Sort data by date
