@@ -101,4 +101,56 @@ export class AreaChart extends GraphLayout {
             .attr("font-size", "12px")
             .attr("font-weight", "bold");
     }
+
+    addArea() {
+        // Add a clipPath: everything out of this area won't be drawn.
+        let clip = this.plot.append("defs").append("svg:clipPath")
+            .attr("id", "clip")
+            .append("svg:rect")
+            .attr("width", this.width )
+            .attr("height", this.height )
+            .attr("x", 0)
+            .attr("y", 0);
+
+        // Create the area variable: where both the area and the brush take place
+        this.area = this.plot.append('g').attr("clip-path", "url(#clip)")
+
+        // Add brushing
+        this.brush = d3.brushX()                   // Add the brush feature using the d3.brush function
+            .extent( [ [0,0], [this.width, this.height] ] )  // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+            .on("end", this.updateChart.bind(this))
+
+        this.areaGenerator = d3.area()
+            .x(d => this.xScale(new Date(d.date)))
+            .y0(this.yScale(0))
+            .y1(d => this.yScale(d.value))
+
+        // Add the brushing
+        this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
+
+        this.area.append("path")
+            .datum(this.data)
+            .classed('area',true)
+            .attr("fill", this.color)
+            .attr("fill-opacity", .6)
+            .attr("stroke", this.color)
+            .attr("stroke-width", 0.1)
+            .attr("d", this.areaGenerator)
+            .on("mouseover", () => {
+                this.tooltip.style("display", null);
+            })
+            .on("mouseout", () => {
+                this.tooltip.style("display", "none");
+            })
+            .on("mousemove", (d, i, n) => {
+                let xPosition = d3.mouse(n[i])[0] - 15;//x position of tooltip
+                let yPosition = d3.mouse(n[i])[1] - 25;//y position of tooltip
+                this.tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
+                let x0 = this.xScale.invert(d3.mouse(n[i])[0]);//n[i] will give the x for the mouse position on x
+                let y0 = this.yScale.invert(d3.mouse(n[i])[1]);//n[i] will give the y for the mouse position on y
+                this.tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} %`);//show the text after formatting the date
+            });;
+
+        this.prepareTooltip();
+    }
 }
