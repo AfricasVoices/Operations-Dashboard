@@ -120,5 +120,5 @@ class Controller {
 }
 
 // Initialize the application
-const mediadb = firebase.firestore();
+export const mediadb = firebase.firestore();
 Controller.init();

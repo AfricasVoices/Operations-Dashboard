@@ -1,4 +1,4 @@
-class DataController {
+export class DataController {
     static updateData(snapshot, data) {
         // Update data every time it changes in firestore
         snapshot.docChanges().forEach(change => {
