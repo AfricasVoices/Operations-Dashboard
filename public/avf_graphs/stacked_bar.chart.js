@@ -1,6 +1,6 @@
 import { GraphLayout } from "./graph.layout.js";
 
-export class stackedBarChart extends GraphLayout {
+export class StackedBarChart extends GraphLayout {
 
     constructor(opts) {
         super(opts.element)
@@ -26,15 +26,14 @@ export class stackedBarChart extends GraphLayout {
     createScales() {
         let vis = this;
         // calculate max and min for data
-        const xExtent = d3.range(this.data.length);
-        const yExtent = [0, d3.max( this.data, function(d){ return d.pigeons + d.doves + d.eagles;})];
-
+        const xExtent = d3.extent(vis.data, d => new Date(d.datetime));
+        // const yExtent = [0, d3.max( this.data, function(d){ return d.pigeons + d.doves + d.eagles;})];
+        const yExtent = [0, 100];
         // force zero baseline if all data points are positive
         if (yExtent[0] > 0) { yExtent[0] = 0; };
 
-        vis.xScale = d3.scaleBand()
-            .range([0, vis.width])
-            .paddingInner(0.05)
+        vis.xScale = d3.scaleTime()
+            .range([1, vis.width])
             .domain(xExtent);
 
         vis.yScale = d3.scaleLinear()
@@ -100,10 +99,11 @@ export class stackedBarChart extends GraphLayout {
             .data( d => d)
             .enter()
             .append("rect")
-            .attr("x", (d, i) =>  this.xScale(i))
+            .attr("x", (d, i) =>  this.xScale(d.data.datetime))
             .attr("y", d => this.yScale(d[1]))
             .attr("height", d => this.yScale(d[0]) - this.yScale(d[1]))
-            .attr("width", this.xScale.bandwidth());
+            .attr("width", this.width / Object.keys(this.data).length);
     }
 
 }
+

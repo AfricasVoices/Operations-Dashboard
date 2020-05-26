@@ -1,3 +1,4 @@
+import { StackedBarChart } from "./avf_graphs/stacked_bar.chart.js";
 // GRAPH CONTROLLER
 export class GraphController {
     static addOneDayToDate(date) {
@@ -331,7 +332,17 @@ export class GraphController {
             let stackReceived = d3.stack().keys(receivedKeys),
                 receivedDataStacked = stackReceived(dataFilteredWeek);
 
-            // set scale domains
+            console.log(dataFilteredWeek)
+
+            const stackedBar = new StackedBarChart({
+                element: document.querySelector('.total_received_sms_graph'),
+                data: dataFilteredWeek,
+                stackedData: receivedDataStacked,
+                // keys: keys, 
+                color
+            });
+        
+            /*// set scale domains
             x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
             if (yLimitReceived > 0)
                 y_total_received_sms_range.domain([0, yLimitReceived]);
@@ -477,7 +488,7 @@ export class GraphController {
                 .attr("text-anchor", "middle")
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
-                .text("Total Incoming Message(s) / 10 minutes");
+                .text("Total Incoming Message(s) / 10 minutes");*/
         }
 
         function drawOneDayReceivedGraph(yLimitReceived) {
