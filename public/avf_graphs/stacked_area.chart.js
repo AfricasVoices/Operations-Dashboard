@@ -27,6 +27,7 @@ export class StackedAreaChart extends GraphLayout {
         vis.addAxes();
         vis.addArea();
         vis.addLegend();
+        vis.addLabels();
     }
 
     createScales() {
@@ -118,9 +119,9 @@ export class StackedAreaChart extends GraphLayout {
             .data(this.stackedData)
             .enter()
             .append("path")
-            .attr("fill-opacity", .3)
-            .attr("stroke", "black")
-            .attr("stroke-width", 1)
+            .attr("fill-opacity", .6)
+            .attr("stroke", d => this.color(d.key))
+            .attr("stroke-width", .1)
             .attr("class", d => "myArea " + d.key)
             .style("fill", d => this.color(d.key))
             .attr("d", this.areaGenerator)
@@ -148,6 +149,13 @@ export class StackedAreaChart extends GraphLayout {
   
         // Update axis and area position
         this.xAxis.transition().duration(1000).call(d3.axisBottom(this.xScale).ticks(5))
+        // Rotate X axis ticks
+        this.xAxis.selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
         this.area
             .selectAll("path")
             .transition().duration(1000)
@@ -196,5 +204,35 @@ export class StackedAreaChart extends GraphLayout {
       // And when it is not hovered anymore
     noHighlight(d) {
         d3.selectAll(".myArea").style("opacity", 1)
+    }
+
+    addLabels() {
+        // Graph title
+        this.plot.append("text")
+            .attr("x", this.width / 2)
+            .attr("y", 0 - this.margin.top / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "20px")
+            .style("text-decoration", "bold")
+            .text(this.title);
+
+        // Add X axis label
+        this.plot.append("text")
+            .attr("text-anchor", "end")
+            .attr(
+                "transform",
+                "translate(" + this.width / 2 + " ," + (this.height + this.margin.top + 50) + ")"
+            )
+            .style("text-anchor", "middle")
+            .text(this.xAxisLabel);
+
+        // Add Y axis label
+        this.plot.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - this.margin.left)
+            .attr("x", 0 - this.height / 2)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text(this.yAxisLabel);
     }
 }

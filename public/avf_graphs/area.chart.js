@@ -22,7 +22,7 @@ export class AreaChart extends GraphLayout {
         vis.createScales();
         vis.addAxes();
         vis.addArea();
-        vis.addLabels()
+        vis.addLabels();
     }
 
     createScales() {
@@ -45,12 +45,8 @@ export class AreaChart extends GraphLayout {
 
     addAxes() {
         // create and append axis elements
-        // this is all pretty straightforward D3 stuff
         const xAxis = d3.axisBottom(this.xScale)
-
         const yAxis = d3.axisLeft(this.yScale)
-            // .scale(this.yScale)
-            // .tickFormat(d3.format("d"));
 
         this.xAxis = this.plot.append("g")
             .attr("class", `${this.id}XAxis`)
@@ -143,7 +139,7 @@ export class AreaChart extends GraphLayout {
             .attr("fill", this.color)
             .attr("fill-opacity", .6)
             .attr("stroke", this.color)
-            .attr("stroke-width", 0.1)
+            .attr("stroke-width", .1)
             .attr("d", this.areaGenerator)
             .on("mouseover", () => {
                 this.tooltip.style("display", null);
