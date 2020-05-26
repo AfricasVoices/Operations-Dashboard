@@ -317,7 +317,7 @@ class SystemGraphsController {
                 .attr("x", 0 - Height / 2)
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Total Memory Used (%)");
+                .text("Memory Utilization(GB)");
 
             let yLimit = 100;
             // Add Y axis
