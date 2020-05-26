@@ -366,9 +366,9 @@ class SystemGraphsController {
             areaChart.append("path")
                 .datum(data)
                 .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
-                .attr("fill", "#00792C")
+                .attr("fill", "#90413C")
                 .attr("fill-opacity", .6)
-                .attr("stroke", "#00792C")
+                .attr("stroke", "#90413C")
                 .attr("stroke-width", 0.2)
                 .attr("d", area)
                 .on("mouseover", function() {
