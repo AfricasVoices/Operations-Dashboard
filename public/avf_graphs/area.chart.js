@@ -177,4 +177,29 @@ export class AreaChart extends GraphLayout {
             this.zoomChart()
         });
     }
+
+    zoomChart() {
+        this.xAxis.transition().duration(1000).call(d3.axisBottom(this.xScale))
+        // Rotate X axis ticks
+        this.xAxis.selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
+        this.area
+            .select('.area')
+            .transition()
+            .duration(1000)
+            .attr("d", this.areaGenerator)
+        
+        d3.selectAll(`.${this.id}XGrid`).remove();
+        this.area.append("g")			
+            .attr("class", `${this.id}XGrid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+                .tickSize(-this.height)
+                .tickFormat("")
+            ) 
+    }
 }
