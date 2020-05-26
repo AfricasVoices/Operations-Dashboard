@@ -22,4 +22,21 @@ export class AreaChart extends GraphLayout {
         this.addArea();
         this.addLabels();
     }
+
+    createScales() {
+        // Calculate max and min for data
+        const xExtent = d3.extent(this.data, d => new Date(d.date));
+        const yExtent = d3.extent(this.data, d => +d.value);
+
+        // Force zero baseline if all data points are positive
+        if (yExtent[0] > 0) { yExtent[0] = 0; };
+
+        this.xScale = d3.scaleTime()
+            .range([1, this.width])
+            .domain(xExtent);
+
+        this.yScale = d3.scaleLinear()
+            .range([this.height, 0])
+            .domain(yExtent);
+    }
 }
