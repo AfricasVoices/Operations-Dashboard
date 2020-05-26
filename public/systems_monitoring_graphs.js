@@ -319,12 +319,14 @@ class SystemGraphsController {
                 .style("text-anchor", "middle")
                 .text("Memory Utilization(GB)");
 
-            let yLimit = 100;
+            var decimalFormatter = d3.format(".2s");
+            let yLimit = data[0].memory_usage.total;
             // Add Y axis
             let y = d3.scaleLinear()
                 .domain([0, yLimit])
                 .range([ Height, 0 ]);
-            svg.append("g").call(d3.axisLeft(y).ticks(5))
+            svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d) => decimalFormatter(d).replace('G', 'GB')))
+            console.log(d3.axisLeft(y))
 
             // Add the Y gridlines
             svg.append("g")			
@@ -353,7 +355,7 @@ class SystemGraphsController {
                 .attr("clip-path", "url(#clip)")
 
             // Create an area generator
-            let area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.memory_usage.percent))
+            let area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.memory_usage.used))
 
             // Add the brushing
             areaChart
@@ -382,7 +384,7 @@ class SystemGraphsController {
                     tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
                     var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
                     var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
-                    tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} %`);//show the text after formatting the date
+                    tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} GB`);//show the text after formatting the date
                 });;
             
             // Prep the tooltip bits, initial display is hidden
