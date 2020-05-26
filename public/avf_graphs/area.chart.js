@@ -79,5 +79,26 @@ export class AreaChart extends GraphLayout {
                 .tickSize(-this.height)
                 .tickFormat("")
             )
-    } 
+    }
+
+    prepareTooltip() {
+        // Prep the tooltip bits, initial display is hidden
+        this.tooltip = this.plot.append("g")
+            .attr("class", `${this.id}Tooltip`)
+            .style("opacity", 1.0)
+            .style("display", "none");
+
+        this.tooltip.append("rect")
+            .attr("width", 150)
+            .attr("height", 20)
+            .attr("fill", "white")
+            .style("opacity", 1.0);
+
+        this.tooltip.append("text")
+            .attr("x", 75)
+            .attr("dy", "1.2em")
+            .style("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("font-weight", "bold");
+    }
 }
