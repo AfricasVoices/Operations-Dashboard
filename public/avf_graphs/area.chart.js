@@ -61,4 +61,23 @@ export class AreaChart extends GraphLayout {
             .attr("class", `${this.id}YAxis`)
             .call(yAxis)
     }
+
+    addGridlines() {
+        // Add the Y axis gridlines
+        this.plot.append("g")			
+            .attr("class", `${this.id}Grid`)
+            .call(d3.axisLeft(this.yScale)
+                .tickSize(-this.width)
+                .tickFormat("")
+            )
+
+        // Add the X axis gridlines
+        this.plot.append("g")
+            .attr("class", `${this.id}XGrid`)		
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
+    } 
 }
