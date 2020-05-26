@@ -91,6 +91,27 @@ export class StackedAreaChart extends GraphLayout {
         )
     } 
 
+    prepareTooltip() {
+        // Prep the tooltip bits, initial display is hidden
+        this.tooltip = this.plot.append("g")
+            .attr("class", `${this.id}Tooltip`)
+            .style("opacity", 1.0)
+            .style("display", "none");
+
+        this.tooltip.append("rect")
+            .attr("width", 150)
+            .attr("height", 20)
+            .attr("fill", "white")
+            .style("opacity", 1.0);
+
+        this.tooltip.append("text")
+            .attr("x", 75)
+            .attr("dy", "1.2em")
+            .style("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("font-weight", "bold");
+    }
+
     addArea() {
         // Add a clipPath: everything out of this area won't be drawn.
         var clip = this.plot.append("defs").append("svg:clipPath")
@@ -114,6 +135,9 @@ export class StackedAreaChart extends GraphLayout {
             .y0(d => this.yScale(d[0]))
             .y1(d => this.yScale(d[1]))
 
+        // Add the brushing
+        this.area.append("g").attr("class", "brush").call(this.brush);
+
         this.area
             .selectAll("mylayers")
             .data(this.stackedData)
@@ -125,9 +149,22 @@ export class StackedAreaChart extends GraphLayout {
             .attr("class", d => "myArea " + d.key)
             .style("fill", d => this.color(d.key))
             .attr("d", this.areaGenerator)
+            .on("mouseover", () => {
+                this.tooltip.style("display", null);
+            })
+            .on("mouseout", () => {
+                this.tooltip.style("display", "none");
+            })
+            .on("mousemove", (d, i, n) => {
+                var xPosition = d3.mouse(n[i])[0] - 15;//x position of tooltip
+                var yPosition = d3.mouse(n[i])[1] - 25;//y position of tooltip
+                this.tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
+                var x0 = this.xScale.invert(d3.mouse(n[i])[0]);//this will give the x for the mouse position on x
+                var y0 = this.yScale.invert(d3.mouse(n[i])[1]);//this will give the y for the mouse position on y
+                this.tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} %`);//show the text after formatting the date
+            });;
 
-        // Add the brushing
-        this.area.append("g").attr("class", "brush").call(this.brush);
+        this.prepareTooltip();
     }
     
     idleTimeout;
