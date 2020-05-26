@@ -326,7 +326,6 @@ class SystemGraphsController {
                 .domain([0, yLimit])
                 .range([ Height, 0 ]);
             svg.append("g").call(d3.axisLeft(y).ticks(5).tickFormat((d) => decimalFormatter(d).replace('G', 'GB')))
-            console.log(d3.axisLeft(y))
 
             // Add the Y gridlines
             svg.append("g")			
