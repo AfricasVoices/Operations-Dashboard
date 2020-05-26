@@ -6,11 +6,10 @@ export class StackedAreaChart extends GraphLayout {
         // load in arguments from config object
         super(opts.element)
         this.data = opts.data;
-        this.stackedData = opts.stackedData;
-        this.color = opts.color;
-        this.keys = opts.keys; 
         this.id = "id";
-        // this.color = "red";
+        this.keys = []; 
+        this.color = "";
+        this.stackedData = [];
         this.title = "Area Chart";
         this.xAxisLabel = "X Axis";
         this.yAxisLabel = "Y Axis";
@@ -18,6 +17,17 @@ export class StackedAreaChart extends GraphLayout {
         // create the chart
         this.draw();
     }
+
+    setKeys(keys) {
+        this.keys = keys;
+        return this;
+    }
+
+    setStackedData(stackedData) {
+        this.stackedData = stackedData;
+        return this;
+    }
+
 
     draw() {
         let vis = this;

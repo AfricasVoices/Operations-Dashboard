@@ -68,12 +68,15 @@ export class SystemGraphsController {
             let stackDisk = d3.stack().keys(keys),
                     stackedData = stackDisk(db2);
 
-            const stackedArea = new StackedAreaChart({
-                element: document.querySelector('.chart'),
-                data: db2,
-                stackedData: stackedData,
-                keys: keys,
-                color
-            });
+            const stackedArea = new StackedAreaChart({ element: document.querySelector('.chart'), data: db2 });
+            stackedArea
+                .setKeys(keys)
+                .setStackedData(stackedData)
+                .setId("disk")
+                .setTitle("Disk Utilization")
+                .setXAxisLabel("Date (dd:hh:m)")
+                .setYAxisLabel("Disk Utilization (%)")
+                .setColorScheme(color)
+                .draw();
     }  
 }
