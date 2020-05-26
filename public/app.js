@@ -1,3 +1,6 @@
+import { UIController } from "./UI.js";
+import { DataController } from "./data.js";
+
 // GLOBAL APP CONTROLLER
 class Controller {
     static setupEventListeners() {
