@@ -3,13 +3,18 @@ import { GraphLayout } from "./graph.layout.js";
 export class StackedAreaChart extends GraphLayout {
 
     constructor(opts) {
-        super(opts.element)
         // load in arguments from config object
+        super(opts.element)
         this.data = opts.data;
         this.stackedData = opts.stackedData;
         this.color = opts.color;
-        // this.keys = opts.keys; 
-        // this.element = opts.element;
+        this.keys = opts.keys; 
+        this.id = "id";
+        // this.color = "red";
+        this.title = "Area Chart";
+        this.xAxisLabel = "X Axis";
+        this.yAxisLabel = "Y Axis";
+
         // create the chart
         this.draw();
     }
@@ -21,19 +26,20 @@ export class StackedAreaChart extends GraphLayout {
         vis.createScales();
         vis.addAxes();
         vis.addArea();
+        vis.addLegend();
     }
 
     createScales() {
         let vis = this;
         // calculate max and min for data
-        const xExtent = d3.extent(vis.data, d => d.year);
-        const yExtent = [0, 200000];
+        const xExtent = d3.extent(vis.data, d => new Date(d.date));
+        const yExtent = [0, vis.data[0].disk_total];
 
         // force zero baseline if all data points are positive
         if (yExtent[0] > 0) { yExtent[0] = 0; };
 
-        vis.xScale = d3.scaleLinear()
-            .range([0, vis.width])
+        vis.xScale = d3.scaleTime()
+            .range([1, vis.width])
             .domain(xExtent);
 
         vis.yScale = d3.scaleLinear()
@@ -43,7 +49,6 @@ export class StackedAreaChart extends GraphLayout {
 
     addAxes() {
         // create and append axis elements
-        // this is all pretty straightforward D3 stuff
         const xAxis = d3.axisBottom(this.xScale)
         const yAxis = d3.axisLeft(this.yScale).ticks(5)
 
@@ -104,7 +109,7 @@ export class StackedAreaChart extends GraphLayout {
             .on("end", this.updateChart.bind(this))
 
         this.areaGenerator = d3.area()
-            .x(d => this.xScale(d.data.year))
+            .x(d => this.xScale(new Date(d.data.date)))
             .y0(d => this.yScale(d[0]))
             .y1(d => this.yScale(d[1]))
 
@@ -129,17 +134,13 @@ export class StackedAreaChart extends GraphLayout {
     idled = () => { this.idleTimeout = null; }
 
     updateChart() {
-        // A function that set idleTimeOut to null
-        // var idleTimeout
-        // // A function that set idleTimeOut to null
-        // function idled() { idleTimeout = null; }
         // What are the selected boundaries?
         this.extent = d3.event.selection
   
         // If no selection, back to initial coordinate. Otherwise, update X axis domain
         if (!this.extent) {
             if (!this.idleTimeout) return this.idleTimeout = setTimeout(this.idled, 350); // This allows to wait a little bit
-            this.xScale.domain(d3.extent(this.data, d => d.year))
+            this.xScale.domain(d3.extent(this.data, d => new Date(d.date)))
         } else {
             this.xScale.domain([ this.xScale.invert(this.extent[0]), this.xScale.invert(this.extent[1]) ])
             this.area.select(".brush").call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
@@ -151,15 +152,49 @@ export class StackedAreaChart extends GraphLayout {
             .selectAll("path")
             .transition().duration(1000)
             .attr("d", this.areaGenerator)
+    }
 
-         // If user double click, reinitialize the chart
-        //  this.area.on("dblclick", () => {
-        //     this.xScale.domain(d3.extent(this.data, function(d) { return d.year }))
-        //     this.xAxis.transition().call(d3.axisBottom(this.xScale))
-        //     this.area
-        //     .select('path')
-        //     .transition()
-        //     .attr("d", this.areaGenerator);
-        // });
+    addLegend() {
+        // Add one dot in the legend for each name.
+        let size = 20
+        this.plot.selectAll("myrect")
+            .data(this.keys)
+            .enter()
+            .append("rect")
+                .attr("x", this.width + 10)
+                .attr("y", (d,i) => 10 + i*(size+5)) // 100 is where the first dot appears. 25 is the distance between dots
+                .attr("width", size)
+                .attr("height", size)
+                .style("fill", d => this.color(d))
+                .on("mouseover", this.highlight)
+                .on("mouseleave", this.noHighlight)
+
+        // Add one dot in the legend for each name.
+        this.plot.selectAll("mylabels")
+            .data(this.keys)
+            .enter()
+            .append("text")
+                .attr("x", this.width + 10 + size*1.2)
+                .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 100 is where the first dot appears. 25 is the distance between dots
+                .style("fill", d => this.color(d))
+                .text(d => d)
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
+                .on("mouseover", this.highlight)
+                .on("mouseleave", this.noHighlight)
+    }
+
+    // What to do when one group is hovered
+    highlight(d) {
+        console.log(d)
+        // reduce opacity of all groups
+        d3.selectAll(".myArea").style("opacity", .1)
+        // expect the one that is hovered
+        d3.select("."+d).style("opacity", 1)
+    }
+  
+      // And when it is not hovered anymore
+    noHighlight(d) {
+        d3.selectAll(".myArea").style("opacity", 1)
     }
 }
