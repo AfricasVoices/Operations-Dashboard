@@ -153,4 +153,28 @@ export class AreaChart extends GraphLayout {
 
         this.prepareTooltip();
     }
+
+    updateChart() {
+        let idleTimeout
+        // A function that set idleTimeOut to null
+        function idled() { idleTimeout = null; }
+        // What are the selected boundaries?
+        this.extent = d3.event.selection
+  
+        // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        if (!this.extent) {
+            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+            this.xScale.domain([ 4,8])
+        } else {
+            this.xScale.domain([ this.xScale.invert(this.extent[0]), this.xScale.invert(this.extent[1]) ])
+            this.area.select(`.${this.id}Brush`).call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
+        }
+        this.zoomChart()
+
+        // If user double click, reinitialize the chart
+        this.plot.on("dblclick", () => {
+            this.xScale.domain(d3.extent(this.data, function(d) { return new Date(d.date); }))
+            this.zoomChart()
+        });
+    }
 }
