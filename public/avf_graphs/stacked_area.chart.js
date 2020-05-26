@@ -64,7 +64,7 @@ export class StackedAreaChart extends GraphLayout {
         const yAxis = d3.axisLeft(this.yScale).ticks(5)
 
         this.xAxis = this.plot.append("g")
-            .attr("class", "x axis")
+            .attr("class", `${this.id}XAxis`)
             .attr("transform", `translate(0, ${this.height})`)
             .call(xAxis);
 
@@ -76,7 +76,7 @@ export class StackedAreaChart extends GraphLayout {
             .attr("transform", "rotate(-65)");
 
         this.plot.append("g")
-            .attr("class", "y axis")
+            .attr("class", `${this.id}YAxis`)
             .call(yAxis)
 
         this.addGridlines()
@@ -85,20 +85,20 @@ export class StackedAreaChart extends GraphLayout {
     addGridlines() {
         // Add the Y gridlines
         this.plot.append("g")			
-        .attr("class", "memoryGrid")
-        .call(d3.axisLeft(this.yScale)
-            .tickSize(-this.width)
-            .tickFormat("")
-        )
+            .attr("class", `${this.id}Grid`)
+            .call(d3.axisLeft(this.yScale)
+                .tickSize(-this.width)
+                .tickFormat("")
+            )
 
         // Add the X gridlines
         this.plot.append("g")			
-        .attr("class", "memoryXGrid")
-        .attr("transform", "translate(0," + this.height + ")")
-        .call(d3.axisBottom(this.xScale)
-            .tickSize(-this.height)
-            .tickFormat("")
-        )
+            .attr("class", `${this.id}XGrid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
     } 
 
     prepareTooltip() {
@@ -146,7 +146,7 @@ export class StackedAreaChart extends GraphLayout {
             .y1(d => this.yScale(d[1]))
 
         // Add the brushing
-        this.area.append("g").attr("class", "brush").call(this.brush);
+        this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
 
         this.area
             .selectAll("mylayers")
@@ -191,7 +191,7 @@ export class StackedAreaChart extends GraphLayout {
             this.xScale.domain(d3.extent(this.data, d => new Date(d.date)))
         } else {
             this.xScale.domain([ this.xScale.invert(this.extent[0]), this.xScale.invert(this.extent[1]) ])
-            this.area.select(".brush").call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
+            this.area.select(`.${this.id}Brush`).call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
         }
   
         // Update axis and area position
