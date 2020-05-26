@@ -8,7 +8,7 @@ export class StackedAreaChart extends GraphLayout {
         this.data = opts.data;
         this.id = "id";
         this.keys = []; 
-        this.color = "";
+        this.color = ""; // expects a function
         this.stackedData = [];
         this.title = "Area Chart";
         this.xAxisLabel = "X Axis";
