@@ -14,4 +14,12 @@ export class AreaChart extends GraphLayout {
 
         this.draw()
     }
+
+    draw() {
+        this.layout();
+        this.createScales();
+        this.addAxes();
+        this.addArea();
+        this.addLabels();
+    }
 }
