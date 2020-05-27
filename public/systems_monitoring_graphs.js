@@ -219,7 +219,6 @@ class SystemGraphsController {
 
             // What to do when one group is hovered
             let highlight = function(d){
-                console.log(d)
                 // reduce opacity of all groups
                 d3.selectAll(".diskArea").style("opacity", .1)
                 // expect the one that is hovered
