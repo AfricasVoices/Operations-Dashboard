@@ -34,7 +34,7 @@ class SystemGraphsController {
                 diskDataStacked = stackDisk(data);
 
             // Append svg to element with class chart
-            let svg = d3.select(".chart")
+            let svg = d3.select(".disc-usage-chart")
                 .append("svg")
                 .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
@@ -270,7 +270,7 @@ class SystemGraphsController {
 
         function plotMemoryMetrics(data) {
             // Append svg to element with class chart2
-            let svg = d3.select(".chart2")
+            let svg = d3.select(".memory-utilization-chart")
                 .append("svg")
                 .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
@@ -457,7 +457,7 @@ class SystemGraphsController {
 
         function plotCPUMetrics(data) {       
             // Append svg to element with class chart3     
-            let svg = d3.select(".chart3")
+            let svg = d3.select(".cpu-utilization-chart")
                 .append("svg")
                 .attr("width", Width + Margin.left + Margin.right + 120)
                 .attr("height", Height + Margin.top + Margin.bottom)
