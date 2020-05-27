@@ -16,23 +16,6 @@ class SystemGraphsController {
         plotCPUMetrics(data);
 
         function plotDiskMetrics(data) {
-            let diskMetrics = ["used", "free"]
-            // Create keys to stack
-            let diskKeys = [],
-            diskStr = ""
-
-            for (let i = 0; i < diskMetrics.length; i++) {
-                diskStr =  "disk_" + diskMetrics[i];
-                diskKeys.push(diskStr);
-            }
-
-            let colors = ["#0E86D4", "#bdefbd"]
-            // color palette
-            let color = d3.scaleOrdinal().domain(diskMetrics).range(colors);
-
-            let stackDisk = d3.stack().keys(diskKeys),
-                diskDataStacked = stackDisk(data);
-
             // Append svg to element with class chart
             let svg = d3.select(".disc-usage-chart")
                 .append("svg")
@@ -119,9 +102,7 @@ class SystemGraphsController {
                 .attr("clip-path", "url(#clip)")
 
             // Area generator
-            let area = d3.area().x(d => x(d.data.datetime))
-                        .y0(d => y(d[0]))
-                        .y1(d => y(d[1]))
+            let area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.disk_usage.used))
 
             // Add the brushing
             areaChart
@@ -129,34 +110,29 @@ class SystemGraphsController {
                 .attr("class", "brush")
                 .call(brush);
 
-            // Show the areas
-            areaChart
-                .selectAll("mylayers")
-                .data(diskDataStacked)
-                .enter()
-                .append("path")
-                    .attr("fill-opacity", .6)
-                    .attr("stroke", d => color(d.key))
-                    .attr("stroke-width", 0.1)
-                    .attr("class", d => "diskArea " + d.key)
-                    .style("fill", d => color(d.key))
-                    .attr("d", area)
-
-            areaChart.selectAll(".disk_used")
-                    .on("mouseover", function() {
-                        tooltip.style("display", null);
-                    })
-                    .on("mouseout", function() {
+            // Add the area
+            areaChart.append("path")
+                .datum(data)
+                .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
+                .attr("fill", "#0E86D4")
+                .attr("fill-opacity", .6)
+                .attr("stroke", "#0E86D4")
+                .attr("stroke-width", 0.2)
+                .attr("d", area)
+                .on("mouseover", function() {
+                    tooltip.style("display", null);
+                })
+                .on("mouseout", function() {
                     tooltip.style("display", "none");
-                    })
-                    .on("mousemove", function(d) {
-                        var xPosition = d3.mouse(this)[0] - 15;//x position of tooltip
-                        var yPosition = d3.mouse(this)[1] - 25;//y position of tooltip
-                        tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
-                        var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
-                        var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
-                        tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d (%H:%M)')(x0)} Used: ${decimalFormatter(y0).replace('G', 'GB')}`);//show the text after formatting the date
-                    });;
+                })
+                .on("mousemove", function(d) {
+                    var xPosition = d3.mouse(this)[0] - 15;//x position of tooltip
+                    var yPosition = d3.mouse(this)[1] - 25;//y position of tooltip
+                    tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
+                    var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
+                    var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
+                    tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d (%H:%M)')(x0)} Used: ${decimalFormatter(y0).replace('G', 'GB')}`);//show the text after formatting the date
+                });;
             
             let tooltip = svg.append("g")
                 .attr("class", "tooltip")
@@ -216,47 +192,6 @@ class SystemGraphsController {
                         .tickFormat("")
                     )
             }
-
-            // What to do when one group is hovered
-            let highlight = function(d){
-                // reduce opacity of all groups
-                d3.selectAll(".diskArea").style("opacity", .1)
-                // expect the one that is hovered
-                d3.select("."+d).style("opacity", 1)
-            }
-
-            // And when it is not hovered anymore
-            let noHighlight = function(d){
-                d3.selectAll(".diskArea").style("opacity", 1)
-            }
-
-            // Add legend for each name.
-            let size = 20
-            svg.selectAll("myrect")
-                .data(diskKeys)
-                .enter()
-                .append("rect")
-                    .attr("x", Width + 10)
-                    .attr("y", (d,i) => 10 + i*(size+5)) // 10 is where the first dot appears. 25 is the distance between dots
-                    .attr("width", size)
-                    .attr("height", size)
-                    .style("fill", d => color(d))
-                    .on("mouseover", highlight)
-                    .on("mouseleave", noHighlight)
-
-            // Add legend labels for each name.
-            svg.selectAll("mylabels")
-                .data(diskMetrics)
-                .enter()
-                .append("text")
-                    .attr("x", Width + 10 + size*1.2)
-                    .attr("y", (d,i) => 10 + i*(size+5) + (size/2)) // 10 is where the first dot appears. 25 is the distance between dots
-                    .style("fill", d => color(d))
-                    .text(d => d)
-                    .attr("text-anchor", "left")
-                    .style("alignment-baseline", "middle")
-                    .on("mouseover", highlight)
-                    .on("mouseleave", noHighlight)
 
             // Disk usage graph title
             svg.append("text")
