@@ -152,8 +152,9 @@ class SystemGraphsController {
                 .attr("font-size", "12px")
                 .attr("font-weight", "bold");
 
+            // Will hold time set before subsequent brushing trigger `updateChart`
             let idleTimeout
-            function idled() { idleTimeout = null; }
+            function resetIdleTimeout() { idleTimeout = null; }
 
             // A function that update the chart for given boundaries
             function updateChart() {
@@ -161,7 +162,7 @@ class SystemGraphsController {
 
                 // If no selection, back to initial coordinate. Otherwise, update X axis domain
                 if(!extent) {
-                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    if (!idleTimeout) return idleTimeout = setTimeout(resetIdleTimeout, 350); // This allows to wait a little bit
                     x.domain(d3.extent(data, d => d.datetime))
                 } else {
                     x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
@@ -340,8 +341,9 @@ class SystemGraphsController {
                 .attr("font-size", "12px")
                 .attr("font-weight", "bold");
 
+            // Will hold time set before subsequent brushing trigger `updateChart`
             let idleTimeout
-            function idled() { idleTimeout = null; }
+            function resetIdleTimeout() { idleTimeout = null; }
 
             // A function that update the chart for given boundaries
             function updateChart() {
@@ -349,7 +351,7 @@ class SystemGraphsController {
 
                 // If no selection, back to initial coordinate. Otherwise, update X axis domain
                 if(!extent) {
-                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    if (!idleTimeout) return idleTimeout = setTimeout(resetIdleTimeout, 350); // This allows to wait a little bit
                     x.domain(d3.extent(data, d => d.datetime))
                 } else {
                     x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
@@ -525,8 +527,9 @@ class SystemGraphsController {
                 .attr("font-size", "12px")
                 .attr("font-weight", "bold");
 
+            // Will hold time set before subsequent brushing trigger `updateChart`
             let idleTimeout
-            function idled() { idleTimeout = null; }
+            function resetIdleTimeout() { idleTimeout = null; }
 
             // A function that update the chart for given boundaries
             function updateChart() {
@@ -534,7 +537,7 @@ class SystemGraphsController {
 
                 // If no selection, back to initial coordinate. Otherwise, update X axis domain
                 if(!extent) {
-                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    if (!idleTimeout) return idleTimeout = setTimeout(resetIdleTimeout, 350); // This allows to wait a little bit
                     x.domain(d3.extent(data, d => d.datetime))
                 } else {
                     x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
