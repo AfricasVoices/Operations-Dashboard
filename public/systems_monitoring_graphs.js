@@ -126,7 +126,7 @@ class SystemGraphsController {
                     tooltip.style("display", "none");
                 })
                 .on("mousemove", function(d) {
-                    var xPosition = d3.mouse(this)[0] - 15;//x position of tooltip
+                    var xPosition = d3.mouse(this)[0] - 15; // x position of tooltip
                     var yPosition = d3.mouse(this)[1] - 25;//y position of tooltip
                     tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
                     var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
