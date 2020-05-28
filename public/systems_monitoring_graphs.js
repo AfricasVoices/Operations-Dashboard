@@ -142,10 +142,8 @@ class SystemGraphsController {
                     .style("opacity", 1)
     
                 // Create an overlay path to draw the above objects on top of
-                svg.append("path")
-                    .datum(data)
+                areaChart
                     .attr("class", "overlay")  
-                    .attr("d", area)
                     .on("mouseover", () => focus.style("display", null))
                     .on("mouseout", () => focus.style("display", "none"))
                     .on("mousemove", tipMove);
@@ -215,7 +213,6 @@ class SystemGraphsController {
     
                 };
             }
-            drawFocus(); 
             
             // Add the area
             areaChart.append("path")
@@ -236,6 +233,8 @@ class SystemGraphsController {
                 .append("g")
                 .attr("class", "brush")
                 .call(brush);
+
+            drawFocus(); 
 
             // Will hold time set before subsequent brushing trigger `updateChart`
             let idleTimeout
@@ -415,10 +414,8 @@ class SystemGraphsController {
                     .style("opacity", 1)
     
                 // Create an overlay path to draw the above objects on top of
-                svg.append("path")
-                    .datum(data)
+                areaChart
                     .attr("class", "overlay2")  
-                    .attr("d", area)
                     .on("mouseover", () => focus.style("display", null))
                     .on("mouseout", () => focus.style("display", "none"))
                     .on("mousemove", tipMove);
@@ -487,7 +484,6 @@ class SystemGraphsController {
     
                 };
             }
-            drawFocus();
 
             // Add the area
             areaChart.append("path")
@@ -508,6 +504,8 @@ class SystemGraphsController {
                 .append("g")
                 .attr("class", "brush")
                 .call(brush);
+
+            drawFocus();
 
             // Will hold time set before subsequent brushing trigger `updateChart`
             let idleTimeout
@@ -683,10 +681,8 @@ class SystemGraphsController {
                     .style("opacity", 1)
     
                 // Create an overlay path to draw the above objects on top of
-                svg.append("path")
-                    .datum(data)
+                areaChart
                     .attr("class", "overlay3")  
-                    .attr("d", area)
                     .on("mouseover", () => focus.style("display", null))
                     .on("mouseout", () => focus.style("display", "none"))
                     .on("mousemove", tipMove);
@@ -755,7 +751,6 @@ class SystemGraphsController {
     
                 };
             }
-            drawFocus();
 
             // Add the area
             areaChart.append("path")
@@ -776,6 +771,8 @@ class SystemGraphsController {
                 .append("g")
                 .attr("class", "brush")
                 .call(brush);
+
+            drawFocus();
 
             // Will hold time set before subsequent brushing trigger `updateChart`
             let idleTimeout
