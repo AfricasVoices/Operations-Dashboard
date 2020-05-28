@@ -20,6 +20,7 @@ class Controller {
         document.querySelector(Controller.DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(Controller.DOMstrings.graphContainer).innerHTML = "";
         GraphController.clearTimers();
+        SystemGraphsController.clearTimers();
     }
 
     static resetActiveLink() {
