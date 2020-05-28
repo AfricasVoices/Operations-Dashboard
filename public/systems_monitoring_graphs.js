@@ -95,62 +95,148 @@ class SystemGraphsController {
             // Create the scatter variable: where both the circles and the brush take place
             let areaChart = svg.append('g')
                 .attr("clip-path", "url(#clip)")
-
-            // Area generator
-            let area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.disk_usage.used))
-
+            
             // Add brushing
             let brush = d3.brushX()                 // Add the brush feature using the d3.brush function
                 .extent( [ [0,0], [Width, Height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
                 .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+
+            // Area generator
+            let area = d3.area().x(d => x(d.datetime)).y0(y(0))
+                .y1(d => y(d.disk_usage.used)).curve(d3.curveCardinal); // this smooths out the curves of the line
+
+           // This will select the closest date on the x axiswhen a user hover over the chart
+            let bisectDate = d3.bisector(function(d) {return d.datetime;}).left;
+        
+            function drawFocus() {    
+                // Create focus object
+                let focus = svg.append("g")
+                    .attr("class", "focus")
+
+                // Add an x-line to show where hovering
+                focus.append("line")
+                    .classed("x", true);
+
+                // Add a y-line to show where hovering
+                focus.append("line")
+                    .classed("y", true);
+    
+                // Append circle on the line path
+                focus.append("circle")
+                    .attr("r", 7.5)
+    
+                // Add background rectangle behind the text tooltip
+                focus.append("rect")
+                    .attr("x", -30)
+                    .attr("y", "-2em")
+                    .attr("width", 200)
+                    .attr("height", 20)
+                    .style("fill", "white");
+    
+                // Add text annotation for tooltip
+                focus.append("text")
+                    .attr("x", -30)
+                    .attr("dy", "-1em")
+                    .style("fill", "black")
+                    .style("font-family", "SuisseIntl");
+    
+                focus.append("div")
+                    .attr("x", 10)
+                    .attr("dy", ".35em")
+                    .attr("class", "tooltip")
+                    .style("opacity", 1)
+    
+                // Create an overlay path to draw the above objects on top of
+                svg.append("path")
+                    .datum(data)
+                    .attr("class", "overlay")  
+                    .attr("d", area)
+                    .on("mouseover", () => focus.style("display", null))
+                    .on("mouseout", () => focus.style("display", "none"))
+                    .on("mousemove", tipMove);
+
+                // Make the overlay rectangle transparent,
+                // So it only serves the purpose of detecting mouse events
+                d3.select(".overlay")
+                    .style("fill", "none")
+                    .style("pointer-events", "all");
+    
+                // Select focus objects and set opacity
+                d3.selectAll(".focus")
+                    .style("opacity", 0.9);
+
+                // Select the circle and style it
+                d3.selectAll(".focus circle")
+                    .style("fill", "#068ca0")
+                    .style("opacity", 0)
+    
+                // select the hover lines and style them
+                d3.selectAll(".focus line")
+                    .style("fill", "none")
+                    .style("stroke", "black")
+                    .style("opacity", 0.4)
+                    .style("stroke-width", "1px");
+    
+
+                // Function that adds tooltip on hover
+                function tipMove() {
+                    // Below code finds the date by bisecting and
+                    // Stores the x and y coordinate as variables
+                    let x0 = x.invert(d3.mouse(this)[0]);
+                    let i = bisectDate(data, x0, 1);
+                    let d0 = data[i - 1];
+                    let d1 = data[i];
+                    let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
+    
+                    // Place the focus objects on the same path as the line
+                    focus.attr("transform", `translate(${x(d.datetime)}, ${y(d.disk_usage.used)})`);
+    
+                    // Position the x line
+                    focus.select("line.x")
+                        .attr("x1", 0)
+                        .attr("x2", -x(d.datetime))
+                        .attr("y1", 0)
+                        .attr("y2", 0)
+                        .style("opacity", 0.1);
+
+                    // Position the y line
+                    focus.select("line.y")
+                        .attr("x1", 0)
+                        .attr("x2", 0)
+                        .attr("y1", 0)
+                        .attr("y2", Height - y(d.disk_usage.used));
+    
+                    // Position the text
+                    focus.select("text")
+                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(x0)} 
+                            Used: ${d3.formatPrefix(".2", d.disk_usage.used)(d.disk_usage.used).replace("G", "GB")}`)
+                        .transition() // slowly fade in the tooltip
+                            .duration(100)
+                            .style("opacity", 1);
+    
+                    // Show the circle on the path
+                    focus.selectAll(".focus circle")
+                        .style("opacity", 1)
+    
+                };
+            }
+            drawFocus(); 
+            
+            // Add the area
+            areaChart.append("path")
+                .datum(data)
+                .attr("class", "diskArea")  // I add the class memoryArea to be able to modify it later on.
+                .attr("fill", "#0E86D4")
+                .attr("fill-opacity", .6)
+                .attr("stroke", "#0E86D4")
+                .attr("stroke-width", 0.2)
+                .attr("d", area);
 
             // Add the brushing
             areaChart
                 .append("g")
                 .attr("class", "brush")
                 .call(brush);
-
-            // Add the area
-            areaChart.append("path")
-                .datum(data)
-                .attr("class", "memoryArea")  // I add the class memoryArea to be able to modify it later on.
-                .attr("fill", "#0E86D4")
-                .attr("fill-opacity", .6)
-                .attr("stroke", "#0E86D4")
-                .attr("stroke-width", 0.2)
-                .attr("d", area)
-                .on("mouseover", function() {
-                    tooltip.style("display", null);
-                })
-                .on("mouseout", function() {
-                    tooltip.style("display", "none");
-                })
-                .on("mousemove", function(d) {
-                    var xPosition = d3.mouse(this)[0] - 15; // x position of tooltip
-                    var yPosition = d3.mouse(this)[1] - 25;//y position of tooltip
-                    tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
-                    var x0 = x.invert(d3.mouse(this)[0]);//this will give the x for the mouse position on x
-                    var y0 = y.invert(d3.mouse(this)[1]);//this will give the y for the mouse position on y
-                    tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d (%H:%M)')(x0)} Used: ${decimalFormatter(y0).replace('G', 'GB')}`);//show the text after formatting the date
-                });;
-            
-            let tooltip = svg.append("g")
-                .attr("class", "tooltip")
-                .style("opacity", 1.0)
-                .style("display", "none");
-
-            tooltip.append("rect")
-                .attr("width", 190)
-                .attr("height", 20)
-                .attr("fill", "white")
-                .style("opacity", 1.0);
-
-            tooltip.append("text")
-                .attr("x", 95)
-                .attr("dy", "1.2em")
-                .style("text-anchor", "middle")
-                .attr("font-size", "12px")
-                .attr("font-weight", "bold");
 
             // Will hold time set before subsequent brushing trigger `updateChart`
             let idleTimeout
