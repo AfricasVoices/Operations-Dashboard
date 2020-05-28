@@ -577,5 +577,43 @@ class SystemGraphsController {
                 .style("text-decoration", "bold")
                 .text("CPU Utilization");
         }
+
+        let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
+        // Update timestamp of update and reset formatting
+        let lastUpdateTimeStamp = new Date(
+            Math.max.apply(
+                null,
+                data.map(d => new Date(d.datetime))
+            )
+        );
+        lastUpdateTimeStamp.setMinutes(lastUpdateTimeStamp.getMinutes());
+        lastUpdateTimeStamp = new Date(lastUpdateTimeStamp);
+
+        d3.select("#lastUpdated")
+            .classed("text-stale-info", false)
+            .text(fullDateFormat(lastUpdateTimeStamp));
+
+        function setLastUpdatedAlert() {
+            // Calculate time diff bw current and lastUpdateTimeStamp
+            let currentTime = new Date(),
+                difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000,
+                difference_minutes = Math.floor(difference_ms % 60);
+            if (difference_minutes > 10) {
+                d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
+            } else {
+                d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
+            }
+        }
+        if (SystemGraphsController.lastUpdateTimer) {
+            clearInterval(SystemGraphsController.lastUpdateTimer);
+        }
+        SystemGraphsController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
+    }
+    
+    static clearTimers() {
+        if (SystemGraphsController.lastUpdateTimer) {
+            clearInterval(SystemGraphsController.lastUpdateTimer);
+            SystemGraphsController.lastUpdateTimer = null;
+        }
     }
 }
