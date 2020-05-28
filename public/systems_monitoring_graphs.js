@@ -96,11 +96,6 @@ class SystemGraphsController {
             let areaChart = svg.append('g')
                 .attr("clip-path", "url(#clip)")
             
-            // Add brushing
-            let brush = d3.brushX()                 // Add the brush feature using the d3.brush function
-                .extent( [ [0,0], [Width, Height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-                .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
-
             // Area generator
             let area = d3.area().x(d => x(d.datetime)).y0(y(0))
                 .y1(d => y(d.disk_usage.used)).curve(d3.curveCardinal); // this smooths out the curves of the line
@@ -232,7 +227,11 @@ class SystemGraphsController {
                 .attr("stroke-width", 0.2)
                 .attr("d", area);
 
-            // Add the brushing
+            // Add brushing
+            let brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+                .extent( [ [0,0], [Width, Height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+                .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+
             areaChart
                 .append("g")
                 .attr("class", "brush")
@@ -370,11 +369,6 @@ class SystemGraphsController {
             let areaChart = svg.append('g')
                 .attr("clip-path", "url(#clip)")
 
-            // Add brushing
-            let brush = d3.brushX()                 // Add the brush feature using the d3.brush function
-                .extent( [ [0,0], [Width, Height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-                .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
-
             // Create an area generator
             let area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.memory_usage.used))
             // .curve(d3.curveCardinal); // this smooths out the curves of the line
@@ -505,7 +499,11 @@ class SystemGraphsController {
                 .attr("stroke-width", 0.2)
                 .attr("d", area);
 
-            // Add the brushing
+            // Add brushing
+            let brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+                .extent( [ [0,0], [Width, Height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+                .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+
             areaChart
                 .append("g")
                 .attr("class", "brush")
@@ -640,19 +638,8 @@ class SystemGraphsController {
             let areaChart = svg.append('g')
                 .attr("clip-path", "url(#clip)")
 
-            // Add brushing
-            let brush = d3.brushX()                 // Add the brush feature using the d3.brush function
-                .extent( [ [0,0], [Width, Height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-                .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
-
             // Create an area generator
             let area = d3.area().x(d => x(d.datetime)).y0(y(0)).y1(d => y(d.cpu_percent))
-
-            // Add the brushing
-            areaChart
-                .append("g")
-                .attr("class", "brush")
-                .call(brush);
             
             // This will select the closest date on the x axiswhen a user hover over the chart
             let bisectDate = d3.bisector(function(d) {return d.datetime;}).left;
@@ -780,7 +767,11 @@ class SystemGraphsController {
                 .attr("stroke-width", 0.1)
                 .attr("d", area);
 
-            // Add the brushing
+            // Add brushing
+            let brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+                .extent( [ [0,0], [Width, Height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+                .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+
             areaChart
                 .append("g")
                 .attr("class", "brush")
