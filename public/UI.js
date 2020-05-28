@@ -189,6 +189,9 @@ class UIController {
     static addSystemsGraphs() {
         let DOMstrings = UIController.getDOMstrings(),
             html = `<div class="container"> 
+            <section class="d-flex justify-content-end">
+                <div class="font-weight-bold mb-0" id="lastUpdated"></div>
+            </section>
             <section>
                 <div class="card shadow disc-usage-chart my-1"></div>
             </section> 
