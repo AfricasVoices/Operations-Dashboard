@@ -170,7 +170,6 @@ class SystemGraphsController {
                     .style("opacity", 0.4)
                     .style("stroke-width", "1px");
     
-
                 // Function that adds tooltip on hover
                 function tipMove() {
                     // Below code finds the date by bisecting and
