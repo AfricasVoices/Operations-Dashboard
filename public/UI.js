@@ -190,6 +190,7 @@ class UIController {
         let DOMstrings = UIController.getDOMstrings(),
             html = `<div class="container"> 
             <section class="d-flex justify-content-end">
+                <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
                 <div class="font-weight-bold mb-0" id="lastUpdated"></div>
             </section>
             <section>
