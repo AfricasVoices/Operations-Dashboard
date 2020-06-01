@@ -136,12 +136,6 @@ class SystemGraphsController {
                     .attr("font-size", "12px")
                     .style("fill", "#0E86D4");
     
-                focus.append("div")
-                    .attr("x", 10)
-                    .attr("dy", ".35em")
-                    .attr("class", "tooltip")
-                    .style("opacity", 1)
-    
                 // Create an overlay path to draw the above objects on top of
                 areaChart
                     .attr("class", "overlay")  
@@ -409,12 +403,6 @@ class SystemGraphsController {
                     .attr("font-size", "12px")
                     .style("fill", "#A0522D");
     
-                focus.append("div")
-                    .attr("x", 10)
-                    .attr("dy", ".35em")
-                    .attr("class", "tooltip")
-                    .style("opacity", 1)
-    
                 // Create an overlay path to draw the above objects on top of
                 areaChart
                     .attr("class", "overlay2")  
@@ -677,12 +665,6 @@ class SystemGraphsController {
                     .attr("dy", "-1em")
                     .attr("font-size", "12px")
                     .style("fill", "#00008B");
-    
-                focus.append("div")
-                    .attr("x", 10)
-                    .attr("dy", ".35em")
-                    .attr("class", "tooltip")
-                    .style("opacity", 1)
     
                 // Create an overlay path to draw the above objects on top of
                 areaChart
