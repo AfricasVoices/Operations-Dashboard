@@ -237,7 +237,7 @@ th:hover {
 .memoryXGrid line,
 .cpuXGrid line  {
     stroke: lightgrey;
-    stroke-opacity: 0.6;
+    stroke-opacity: 0.3;
     shape-rendering: crispEdges;
 }
 .diskGrid path,
@@ -247,7 +247,7 @@ th:hover {
 .memoryXGrid path,
 .cpuXGrid path  {
     stroke: lightgrey;
-    stroke-opacity: 0.6;
+    stroke-opacity: 0.5;
     shape-rendering: crispEdges;
 }
 .brush .extent {
