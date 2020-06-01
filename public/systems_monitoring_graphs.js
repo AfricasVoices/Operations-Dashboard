@@ -602,7 +602,7 @@ class SystemGraphsController {
                     .attr("y", "-32px")
                     .attr("rx", 6)
                     .attr("ry", 6)
-                    .attr("width", 210)
+                    .attr("width", 200)
                     .attr("height", 20);
     
                 // Add text annotation for tooltip
