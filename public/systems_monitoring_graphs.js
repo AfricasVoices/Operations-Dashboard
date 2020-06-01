@@ -107,14 +107,6 @@ class SystemGraphsController {
                 // Create focus object
                 let focus = svg.append("g")
                     .attr("class", "focus")
-
-                // Add an x-line to show where hovering
-                focus.append("line")
-                    .classed("x", true);
-
-                // Add a y-line to show where hovering
-                focus.append("line")
-                    .classed("y", true);
     
                 // Append circle on the line path
                 focus.append("circle")
@@ -163,13 +155,6 @@ class SystemGraphsController {
                     .style("fill", "whitesmoke")
                     .style("opacity", 0)
     
-                // select the hover lines and style them
-                d3.selectAll(".focus line")
-                    .style("fill", "none")
-                    .style("stroke", "black")
-                    .style("opacity", 0.4)
-                    .style("stroke-width", "1px");
-    
                 // Function that adds tooltip on hover
                 function tipMove() {
                     // Below code finds the date by bisecting and
@@ -182,14 +167,6 @@ class SystemGraphsController {
     
                     // Place the focus objects on the same path as the line
                     focus.attr("transform", `translate(${x(d.datetime)}, ${y(d.disk_usage.used)})`);
-    
-                    // Position the x line
-                    focus.select("line.x")
-                        .attr("x1", 0)
-                        .attr("x2", -x(d.datetime))
-                        .attr("y1", 0)
-                        .attr("y2", 0)
-                        .style("opacity", 0.1);
     
                     // Position the text
                     focus.select("text")
@@ -374,14 +351,6 @@ class SystemGraphsController {
                 // Create focus object
                 let focus = svg.append("g")
                     .attr("class", "focus2")
-
-                // Add an x-line to show where hovering
-                focus.append("line")
-                    .classed("x", true);
-
-                // Add a y-line to show where hovering
-                focus.append("line")
-                    .classed("y", true);
     
                 // Append circle on the line path
                 focus.append("circle")
@@ -430,13 +399,6 @@ class SystemGraphsController {
                     .style("fill", "whitesmoke")
                     .style("opacity", 0)
     
-                // select the hover lines and style them
-                d3.selectAll(".focus2 line")
-                    .style("fill", "none")
-                    .style("stroke", "black")
-                    .style("opacity", 0.4)
-                    .style("stroke-width", "1px");
-    
                 // Function that adds tooltip on hover
                 function tipMove() {
                     // Below code finds the date by bisecting and
@@ -449,14 +411,6 @@ class SystemGraphsController {
     
                     // Place the focus objects on the same path as the line
                     focus.attr("transform", `translate(${x(d.datetime)}, ${y(d.memory_usage.used)})`);
-    
-                    // Position the x line
-                    focus.select("line.x")
-                        .attr("x1", 0)
-                        .attr("x2", -x(d.datetime))
-                        .attr("y1", 0)
-                        .attr("y2", 0)
-                        .style("opacity", 0.1);
     
                     // Position the text
                     focus.select("text")
@@ -637,14 +591,6 @@ class SystemGraphsController {
                 // Create focus object
                 let focus = svg.append("g")
                     .attr("class", "focus3")
-
-                // Add an x-line to show where hovering
-                focus.append("line")
-                    .classed("x", true);
-
-                // Add a y-line to show where hovering
-                focus.append("line")
-                    .classed("y", true);
     
                 // Append circle on the line path
                 focus.append("circle")
@@ -693,13 +639,6 @@ class SystemGraphsController {
                     .style("fill", "whitesmoke")
                     .style("opacity", 0)
     
-                // select the hover lines and style them
-                d3.selectAll(".focus3 line")
-                    .style("fill", "none")
-                    .style("stroke", "black")
-                    .style("opacity", 0.4)
-                    .style("stroke-width", "1px");
-    
                 // Function that adds tooltip on hover
                 function tipMove() {
                     // Below code finds the date by bisecting and
@@ -711,15 +650,7 @@ class SystemGraphsController {
                     let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
     
                     // Place the focus objects on the same path as the line
-                    focus.attr("transform", `translate(${x(d.datetime)}, ${y(d.cpu_percent)})`);
-    
-                    // Position the x line
-                    focus.select("line.x")
-                        .attr("x1", 0)
-                        .attr("x2", -x(d.datetime))
-                        .attr("y1", 0)
-                        .attr("y2", 0)
-                        .style("opacity", 0.1);                    
+                    focus.attr("transform", `translate(${x(d.datetime)}, ${y(d.cpu_percent)})`);                  
     
                     // Position the text
                     focus.select("text")
