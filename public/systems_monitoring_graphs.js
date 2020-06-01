@@ -118,7 +118,7 @@ class SystemGraphsController {
     
                 // Append circle on the line path
                 focus.append("circle")
-                    .attr("r", 7.5)
+                    .attr("r", 3.5)
     
                 // Add background rectangle behind the text tooltip
                 focus.append("rect")
@@ -389,7 +389,7 @@ class SystemGraphsController {
     
                 // Append circle on the line path
                 focus.append("circle")
-                    .attr("r", 7.5)
+                    .attr("r", 3.5)
     
                 // Add background rectangle behind the text tooltip
                 focus.append("rect")
@@ -656,7 +656,7 @@ class SystemGraphsController {
     
                 // Append circle on the line path
                 focus.append("circle")
-                    .attr("r", 7.5)
+                    .attr("r", 3.5)
     
                 // Add background rectangle behind the text tooltip
                 focus.append("rect")
