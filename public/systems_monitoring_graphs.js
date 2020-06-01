@@ -115,7 +115,7 @@ class SystemGraphsController {
                 // Add background rectangle behind the text tooltip
                 focus.append("rect")
                     .attr("x", -30)
-                    .attr("y", "-2em")
+                    .attr("y", "-32px")
                     .attr("rx", 6)
                     .attr("ry", 6)
                     .attr("width", 220)
@@ -124,7 +124,7 @@ class SystemGraphsController {
                 // Add text annotation for tooltip
                 focus.append("text")
                     .attr("x", -20)
-                    .attr("dy", "-1em")
+                    .attr("dy", "-18px")
                     .attr("font-size", "12px")
                     .style("fill", "#0E86D4");
     
@@ -359,7 +359,7 @@ class SystemGraphsController {
                 // Add background rectangle behind the text tooltip
                 focus.append("rect")
                     .attr("x", -30)
-                    .attr("y", "-2em")
+                    .attr("y", "-32px")
                     .attr("rx", 6)
                     .attr("ry", 6)
                     .attr("width", 210)
@@ -368,7 +368,7 @@ class SystemGraphsController {
                 // Add text annotation for tooltip
                 focus.append("text")
                     .attr("x", -20)
-                    .attr("dy", "-1em")
+                    .attr("dy", "-18px")
                     .attr("font-size", "12px")
                     .style("fill", "#A0522D");
     
@@ -599,7 +599,7 @@ class SystemGraphsController {
                 // Add background rectangle behind the text tooltip
                 focus.append("rect")
                     .attr("x", -30)
-                    .attr("y", "-2em")
+                    .attr("y", "-32px")
                     .attr("rx", 6)
                     .attr("ry", 6)
                     .attr("width", 210)
@@ -608,7 +608,7 @@ class SystemGraphsController {
                 // Add text annotation for tooltip
                 focus.append("text")
                     .attr("x", -20)
-                    .attr("dy", "-1em")
+                    .attr("dy", "-18px")
                     .attr("font-size", "12px")
                     .style("fill", "#00008B");
     
