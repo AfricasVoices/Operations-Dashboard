@@ -124,16 +124,17 @@ class SystemGraphsController {
                 focus.append("rect")
                     .attr("x", -30)
                     .attr("y", "-2em")
-                    .attr("width", 200)
-                    .attr("height", 20)
-                    .style("fill", "white");
+                    .attr("rx", 6)
+                    .attr("ry", 6)
+                    .attr("width", 220)
+                    .attr("height", 20);
     
                 // Add text annotation for tooltip
                 focus.append("text")
-                    .attr("x", -30)
+                    .attr("x", -20)
                     .attr("dy", "-1em")
-                    .style("fill", "black")
-                    .style("font-family", "SuisseIntl");
+                    .attr("font-size", "12px")
+                    .style("fill", "#0E86D4");
     
                 focus.append("div")
                     .attr("x", 10)
@@ -161,6 +162,11 @@ class SystemGraphsController {
                 // Select the circle and style it
                 d3.selectAll(".focus circle")
                     .style("fill", "#068ca0")
+                    .style("opacity", 0)
+
+                // Select the rect and style it
+                d3.selectAll(".focus rect")
+                    .style("fill", "whitesmoke")
                     .style("opacity", 0)
     
                 // select the hover lines and style them
@@ -202,7 +208,10 @@ class SystemGraphsController {
                     // Show the circle on the path
                     focus.selectAll(".focus circle")
                         .style("opacity", 1)
-    
+
+                    // Show the rect on the path
+                    d3.selectAll(".focus rect")
+                        .style("opacity", 1)
                 };
             }
             
@@ -388,16 +397,17 @@ class SystemGraphsController {
                 focus.append("rect")
                     .attr("x", -30)
                     .attr("y", "-2em")
-                    .attr("width", 230)
-                    .attr("height", 20)
-                    .style("fill", "white");
-    
+                    .attr("rx", 6)
+                    .attr("ry", 6)
+                    .attr("width", 210)
+                    .attr("height", 20);
+
                 // Add text annotation for tooltip
                 focus.append("text")
-                    .attr("x", -30)
+                    .attr("x", -20)
                     .attr("dy", "-1em")
-                    .style("fill", "black")
-                    .style("font-family", "SuisseIntl");
+                    .attr("font-size", "12px")
+                    .style("fill", "#A0522D");
     
                 focus.append("div")
                     .attr("x", 10)
@@ -425,6 +435,11 @@ class SystemGraphsController {
                 // Select the circle and style it
                 d3.selectAll(".focus2 circle")
                     .style("fill", "#A0522D")
+                    .style("opacity", 0)
+
+                // Select the rect and style it
+                d3.selectAll(".focus2 rect")
+                    .style("fill", "whitesmoke")
                     .style("opacity", 0)
     
                 // select the hover lines and style them
@@ -466,7 +481,10 @@ class SystemGraphsController {
                     // Show the circle on the path
                     focus.selectAll(".focus2 circle")
                         .style("opacity", 1)
-    
+
+                    // Show the rect on the path
+                    d3.selectAll(".focus2 rect")
+                        .style("opacity", 1)
                 };
             }
 
@@ -648,16 +666,17 @@ class SystemGraphsController {
                 focus.append("rect")
                     .attr("x", -30)
                     .attr("y", "-2em")
-                    .attr("width", 230)
-                    .attr("height", 20)
-                    .style("fill", "white");
+                    .attr("rx", 6)
+                    .attr("ry", 6)
+                    .attr("width", 210)
+                    .attr("height", 20);
     
                 // Add text annotation for tooltip
                 focus.append("text")
-                    .attr("x", -30)
+                    .attr("x", -20)
                     .attr("dy", "-1em")
-                    .style("fill", "black")
-                    .style("font-family", "SuisseIntl");
+                    .attr("font-size", "12px")
+                    .style("fill", "#00008B");
     
                 focus.append("div")
                     .attr("x", 10)
@@ -685,6 +704,11 @@ class SystemGraphsController {
                 // Select the circle and style it
                 d3.selectAll(".focus3 circle")
                     .style("fill", "#00008B")
+                    .style("opacity", 0)
+
+                // Select the rect and style it
+                d3.selectAll(".focus3 rect")
+                    .style("fill", "whitesmoke")
                     .style("opacity", 0)
     
                 // select the hover lines and style them
@@ -726,7 +750,10 @@ class SystemGraphsController {
                     // Show the circle on the path
                     focus.selectAll(".focus3 circle")
                         .style("opacity", 1)
-    
+
+                    // Show the rect on the path
+                    d3.selectAll(".focus3 rect")
+                        .style("opacity", 1)
                 };
             }
 
