@@ -65,7 +65,7 @@ class SystemGraphsController {
                 .style("text-anchor", "middle")
                 .text("Disc Usage (GB)");
                 
-            let yLimit = data[0].disk_total
+            let yLimit = data[0].disk_usage.total
             // Add Y axis
             let decimalFormatter = d3.format(".2s");
             let y = d3.scaleLinear()

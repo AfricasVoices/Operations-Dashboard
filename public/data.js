@@ -104,11 +104,6 @@ class DataController {
             // format the data
             systemMetrics.forEach(function(d) {
                 d.datetime = new Date(d.datetime);
-                Object.keys(d.disk_usage)
-                    .sort()
-                    .forEach(metric => {
-                        d[`disk_${metric}`] = +d.disk_usage[metric];
-                    });
             })
             // Sort data by date
             systemMetrics.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
