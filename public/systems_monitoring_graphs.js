@@ -654,8 +654,7 @@ class SystemGraphsController {
     
                     // Position the text
                     focus.select("text")
-                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(x0)} 
-                            Used: ${d3.formatPrefix(".2", d.cpu_percent)(d.cpu_percent)} %`)
+                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(x0)} Used: ${d.cpu_percent} %`)
                         .transition() // slowly fade in the tooltip
                             .duration(100)
                             .style("opacity", 1);
