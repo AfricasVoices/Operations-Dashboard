@@ -250,9 +250,5 @@ th:hover {
     stroke-opacity: 0.5;
     shape-rendering: crispEdges;
 }
-.brush .extent {
-    stroke: #fff;
-    fill-opacity: .125;
-    shape-rendering: crispEdges;
-}
+
 
