@@ -190,13 +190,6 @@ class SystemGraphsController {
                         .attr("y1", 0)
                         .attr("y2", 0)
                         .style("opacity", 0.1);
-
-                    // Position the y line
-                    focus.select("line.y")
-                        .attr("x1", 0)
-                        .attr("x2", 0)
-                        .attr("y1", 0)
-                        .attr("y2", Height - y(d.disk_usage.used));
     
                     // Position the text
                     focus.select("text")
@@ -461,13 +454,6 @@ class SystemGraphsController {
                         .attr("y1", 0)
                         .attr("y2", 0)
                         .style("opacity", 0.1);
-
-                    // Position the y line
-                    focus.select("line.y")
-                        .attr("x1", 0)
-                        .attr("x2", 0)
-                        .attr("y1", 0)
-                        .attr("y2", Height - y(d.memory_usage.used));
     
                     // Position the text
                     focus.select("text")
@@ -727,14 +713,7 @@ class SystemGraphsController {
                         .attr("x2", -x(d.datetime))
                         .attr("y1", 0)
                         .attr("y2", 0)
-                        .style("opacity", 0.1);
-
-                    // Position the y line
-                    focus.select("line.y")
-                        .attr("x1", 0)
-                        .attr("x2", 0)
-                        .attr("y1", 0)
-                        .attr("y2", Height - y(d.cpu_percent));
+                        .style("opacity", 0.1);                    
     
                     // Position the text
                     focus.select("text")
