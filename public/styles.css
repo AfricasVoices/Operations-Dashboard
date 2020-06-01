@@ -204,7 +204,7 @@ td.integer, td.dash {
 .alert-stale-info {
     background-color: #f08080;
 }
-.tooltip{	
+.tooltip {	
     position: absolute;		
     text-align: center;			
     padding: 4px;				
