@@ -250,5 +250,27 @@ th:hover {
     stroke-opacity: 0.5;
     shape-rendering: crispEdges;
 }
+.stopDiskGrid line,
+.stopMemoryGrid line,
+.stopCpuGrid line {
+    stroke: red;
+    stroke-opacity: 1;
+    shape-rendering: crispEdges;
+}
+.startDiskGrid line,
+.startMemoryGrid line,
+.startCpuGrid line {
+    stroke: green;
+    stroke-opacity: 1;
+    shape-rendering: crispEdges;
+}
+.stopDiskGrid path,
+.stopMemoryGrid path,
+.stopCpuGrid path,
+.startDiskGrid path,
+.startMemoryGrid path,
+.startCpuGrid path {
+    stroke-opacity: 0;
+}
 
 
