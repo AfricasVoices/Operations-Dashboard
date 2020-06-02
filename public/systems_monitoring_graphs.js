@@ -1076,7 +1076,7 @@ class SystemGraphsController {
             // Calculate time diff bw current and lastUpdateTimeStamp
             let currentTime = new Date(),
                 difference_minutes = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000;
-            if (difference_minutes > 10) {
+            if (difference_minutes > 30) {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
             } else {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
