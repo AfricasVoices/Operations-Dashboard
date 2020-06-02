@@ -114,11 +114,11 @@ class SystemGraphsController {
                 .attr("x", 1)
                 .attr("y", 0);
 
-            let hitchLines = svg.append('g')
+            let outageLines = svg.append('g')
                 .attr("clip-path", "url(#clip-lines)")
 
             // Add the hitch gridlines
-            hitchLines.append("g")			
+            outageLines.append("g")			
                 .attr("class", "stopDiskGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
@@ -127,7 +127,7 @@ class SystemGraphsController {
                     .tickFormat("")
                 )
 
-            hitchLines.append("g")			
+            outageLines.append("g")			
                 .attr("class", "startDiskGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
@@ -306,7 +306,7 @@ class SystemGraphsController {
                     )
 
                 // Add the hitch gridlines
-                hitchLines.append("g")			
+                outageLines.append("g")			
                     .attr("class", "stopDiskGrid")
                     .attr("transform", "translate(0," + Height + ")")
                     .call(d3.axisBottom(x)
@@ -315,7 +315,7 @@ class SystemGraphsController {
                         .tickFormat("")
                     )
 
-                hitchLines.append("g")			
+                outageLines.append("g")			
                     .attr("class", "startDiskGrid")
                     .attr("transform", "translate(0," + Height + ")")
                     .call(d3.axisBottom(x)
@@ -459,11 +459,11 @@ class SystemGraphsController {
                 .attr("x", 1)
                 .attr("y", 0);
 
-            let hitchLines = svg.append('g')
+            let outageLines = svg.append('g')
                 .attr("clip-path", "url(#clip-lines)")
 
             // Add the hitch gridlines
-            hitchLines.append("g")			
+            outageLines.append("g")			
                 .attr("class", "stopMemoryGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
@@ -472,7 +472,7 @@ class SystemGraphsController {
                     .tickFormat("")
                 )
 
-            hitchLines.append("g")			
+            outageLines.append("g")			
                 .attr("class", "startMemoryGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
@@ -650,7 +650,7 @@ class SystemGraphsController {
                     ) 
 
                 // Add the hitch gridlines
-                hitchLines.append("g")			
+                outageLines.append("g")			
                     .attr("class", "stopMemoryGrid")
                     .attr("transform", "translate(0," + Height + ")")
                     .call(d3.axisBottom(x)
@@ -659,7 +659,7 @@ class SystemGraphsController {
                         .tickFormat("")
                     )
 
-                hitchLines.append("g")			
+                outageLines.append("g")			
                     .attr("class", "startMemoryGrid")
                     .attr("transform", "translate(0," + Height + ")")
                     .call(d3.axisBottom(x)
@@ -801,11 +801,11 @@ class SystemGraphsController {
                 .attr("x", 1)
                 .attr("y", 0);
 
-            let hitchLines = svg.append('g')
+            let outageLines = svg.append('g')
                 .attr("clip-path", "url(#clip-lines)")
 
             // Add the hitch gridlines
-            hitchLines.append("g")			
+            outageLines.append("g")			
                 .attr("class", "stopCpuGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
@@ -814,7 +814,7 @@ class SystemGraphsController {
                     .tickFormat("")
                 )
 
-            hitchLines.append("g")			
+            outageLines.append("g")			
                 .attr("class", "startCpuGrid")
                 .attr("transform", "translate(0," + Height + ")")
                 .call(d3.axisBottom(x)
@@ -990,7 +990,7 @@ class SystemGraphsController {
                     ) 
 
                 // Add the hitch gridlines
-                hitchLines.append("g")			
+                outageLines.append("g")			
                     .attr("class", "stopCpuGrid")
                     .attr("transform", "translate(0," + Height + ")")
                     .call(d3.axisBottom(x)
@@ -999,7 +999,7 @@ class SystemGraphsController {
                         .tickFormat("")
                     )
 
-                hitchLines.append("g")			
+                outageLines.append("g")			
                     .attr("class", "startCpuGrid")
                     .attr("transform", "translate(0," + Height + ")")
                     .call(d3.axisBottom(x)
