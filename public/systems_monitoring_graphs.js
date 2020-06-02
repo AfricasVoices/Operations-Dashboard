@@ -103,6 +103,37 @@ class SystemGraphsController {
             })
             
             // Add a clipPath: everything out of this area won't be drawn.
+            svg.append("defs").append("svg:clipPath")
+                .attr("id", "clip-lines")
+                .append("svg:rect")
+                .attr("width", Width )
+                .attr("height", Height )
+                .attr("x", 1)
+                .attr("y", 0);
+
+            let hitchLines = svg.append('g')
+                .attr("clip-path", "url(#clip-lines)")
+
+            // Add the hitch gridlines
+            hitchLines.append("g")			
+                .attr("class", "stopDiskGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                .tickValues(stop)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            hitchLines.append("g")			
+                .attr("class", "startDiskGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                .tickValues(start)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
                 .attr("id", "clip")
                 .append("svg:rect")
@@ -392,6 +423,37 @@ class SystemGraphsController {
             })
 
             // Add a clipPath: everything out of this area won't be drawn.
+            svg.append("defs").append("svg:clipPath")
+                .attr("id", "clip-lines")
+                .append("svg:rect")
+                .attr("width", Width )
+                .attr("height", Height )
+                .attr("x", 1)
+                .attr("y", 0);
+
+            let hitchLines = svg.append('g')
+                .attr("clip-path", "url(#clip-lines)")
+
+            // Add the hitch gridlines
+            hitchLines.append("g")			
+                .attr("class", "stopMemoryGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                .tickValues(stop)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            hitchLines.append("g")			
+                .attr("class", "startMemoryGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                .tickValues(start)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
                 .attr("id", "clip")
                 .append("svg:rect")
@@ -676,6 +738,37 @@ class SystemGraphsController {
                     } 
                 }
             })
+
+            // Add a clipPath: everything out of this area won't be drawn.
+            svg.append("defs").append("svg:clipPath")
+                .attr("id", "clip-lines")
+                .append("svg:rect")
+                .attr("width", Width )
+                .attr("height", Height )
+                .attr("x", 1)
+                .attr("y", 0);
+
+            let hitchLines = svg.append('g')
+                .attr("clip-path", "url(#clip-lines)")
+
+            // Add the hitch gridlines
+            hitchLines.append("g")			
+                .attr("class", "stopCpuGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                .tickValues(stop)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
+
+            hitchLines.append("g")			
+                .attr("class", "startCpuGrid")
+                .attr("transform", "translate(0," + Height + ")")
+                .call(d3.axisBottom(x)
+                .tickValues(start)
+                    .tickSize(-Height)
+                    .tickFormat("")
+                )
 
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
