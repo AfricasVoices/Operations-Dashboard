@@ -90,12 +90,15 @@ class SystemGraphsController {
                     let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
                     difference_minutes = Math.floor(difference_ms % 60);
                     if (difference_minutes > 10) {
+                        d.disk_usage.used = 0;
                         stop.push(d.datetime)
                     }
                 } else if (i>0) {
                     let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
                     difference_minutes = Math.floor(difference_ms % 60);
                     if (difference_minutes > 10) {
+                        n[i-1].disk_usage.used = 0;
+                        d.disk_usage.used = 0;
                         stop.push(n[i-1].datetime)
                         start.push(d.datetime)
                     } 
@@ -148,7 +151,8 @@ class SystemGraphsController {
             
             // Area generator
             let area = d3.area().x(d => x(d.datetime)).y0(y(0))
-                .y1(d => y(d.disk_usage.used)).curve(d3.curveCardinal); // this smooths out the curves of the line
+                .y1(d => y(d.disk_usage.used))
+                // .curve(d3.curveCardinal); // this smooths out the curves of the line
 
            // This will select the closest date on the x axiswhen a user hover over the chart
             let bisectDate = d3.bisector(function(d) {return d.datetime;}).left;
@@ -432,12 +436,15 @@ class SystemGraphsController {
                     let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
                     difference_minutes = Math.floor(difference_ms % 60);
                     if (difference_minutes > 10) {
+                        d.memory_usage.used = 0;
                         stop.push(d.datetime)
                     }
                 } else if (i>0) {
                     let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
                     difference_minutes = Math.floor(difference_ms % 60);
                     if (difference_minutes > 10) {
+                        n[i-1].memory_usage.used = 0;
+                        d.memory_usage.used = 0;
                         stop.push(n[i-1].datetime)
                         start.push(d.datetime)
                     } 
@@ -771,12 +778,15 @@ class SystemGraphsController {
                     let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
                     difference_minutes = Math.floor(difference_ms % 60);
                     if (difference_minutes > 10) {
+                        d.cpu_percent = 0;
                         stop.push(d.datetime)
                     }
                 } else if (i>0) {
                     let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
                     difference_minutes = Math.floor(difference_ms % 60);
                     if (difference_minutes > 10) {
+                        n[i-1].cpu_percent = 0;
+                        d.cpu_percent = 0;
                         stop.push(n[i-1].datetime)
                         start.push(d.datetime)
                     } 
