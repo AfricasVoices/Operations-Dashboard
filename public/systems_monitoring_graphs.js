@@ -301,6 +301,25 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     )
+
+                // Add the hitch gridlines
+                hitchLines.append("g")			
+                    .attr("class", "stopDiskGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                    .tickValues(stop)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
+
+                hitchLines.append("g")			
+                    .attr("class", "startDiskGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                    .tickValues(start)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
             }
 
             // Disk usage graph title
@@ -623,6 +642,25 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     ) 
+
+                // Add the hitch gridlines
+                hitchLines.append("g")			
+                    .attr("class", "stopMemoryGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                    .tickValues(stop)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
+
+                hitchLines.append("g")			
+                    .attr("class", "startMemoryGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                    .tickValues(start)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
             }
 
             // Memory usage graph title
@@ -941,6 +979,25 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     ) 
+
+                // Add the hitch gridlines
+                hitchLines.append("g")			
+                    .attr("class", "stopCpuGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                    .tickValues(stop)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
+
+                hitchLines.append("g")			
+                    .attr("class", "startCpuGrid")
+                    .attr("transform", "translate(0," + Height + ")")
+                    .call(d3.axisBottom(x)
+                    .tickValues(start)
+                        .tickSize(-Height)
+                        .tickFormat("")
+                    )
             }
 
             // CPU usage graph title
