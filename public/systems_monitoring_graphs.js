@@ -223,7 +223,7 @@ class SystemGraphsController {
     
                     // Position the text
                     focus.select("text")
-                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(x0)} 
+                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
                             Used: ${d3.formatPrefix(".2", d.disk_usage.used)(d.disk_usage.used).replace("G", "GB")}`)
                         .transition() // slowly fade in the tooltip
                             .duration(100)
@@ -568,7 +568,7 @@ class SystemGraphsController {
     
                     // Position the text
                     focus.select("text")
-                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(x0)} 
+                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
                             Used: ${d3.formatPrefix(".2", d.memory_usage.used)(d.memory_usage.used).replace("G", "GB")}`)
                         .transition() // slowly fade in the tooltip
                             .duration(100)
@@ -909,7 +909,7 @@ class SystemGraphsController {
     
                     // Position the text
                     focus.select("text")
-                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(x0)} Used: ${d.cpu_percent} %`)
+                        .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} Used: ${d.cpu_percent} %`)
                         .transition() // slowly fade in the tooltip
                             .duration(100)
                             .style("opacity", 1);
