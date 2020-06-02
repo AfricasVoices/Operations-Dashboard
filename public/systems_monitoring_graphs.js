@@ -87,16 +87,14 @@ class SystemGraphsController {
             let stop = [], start = [], currentTime = new Date();
             data.forEach((d, i, n)=> {
                 if (i == (n.length-1)) {
-                    let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
-                    difference_minutes = Math.floor(difference_ms % 60);
-                    if (difference_minutes > 10) {
+                    let difference_minutes = (currentTime.getTime() - d.datetime.getTime()) / 60000;
+                    if (difference_minutes > 30) {
                         d.disk_usage.used = 0;
                         stop.push(d.datetime)
                     }
                 } else if (i>0) {
-                    let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
-                    difference_minutes = Math.floor(difference_ms % 60);
-                    if (difference_minutes > 10) {
+                    let difference_minutes = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000;
+                    if (difference_minutes > 30) {
                         n[i-1].disk_usage.used = 0;
                         d.disk_usage.used = 0;
                         stop.push(n[i-1].datetime)
@@ -438,16 +436,14 @@ class SystemGraphsController {
             let stop = [], start = [], currentTime = new Date();
             data.forEach((d, i, n)=> {
                 if (i == (n.length-1)) {
-                    let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
-                    difference_minutes = Math.floor(difference_ms % 60);
-                    if (difference_minutes > 10) {
+                    let difference_minutes = (currentTime.getTime() - d.datetime.getTime()) / 60000;
+                    if (difference_minutes > 30) {
                         d.memory_usage.used = 0;
                         stop.push(d.datetime)
                     }
                 } else if (i>0) {
-                    let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
-                    difference_minutes = Math.floor(difference_ms % 60);
-                    if (difference_minutes > 10) {
+                    let difference_minutes = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000;
+                    if (difference_minutes > 30) {
                         n[i-1].memory_usage.used = 0;
                         d.memory_usage.used = 0;
                         stop.push(n[i-1].datetime)
@@ -786,16 +782,14 @@ class SystemGraphsController {
             let stop = [], start = [], currentTime = new Date();
             data.forEach((d, i, n)=> {
                 if (i == (n.length-1)) {
-                    let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
-                    difference_minutes = Math.floor(difference_ms % 60);
-                    if (difference_minutes > 10) {
+                    let difference_minutes = (currentTime.getTime() - d.datetime.getTime()) / 60000;
+                    if (difference_minutes > 30) {
                         d.cpu_percent = 0;
                         stop.push(d.datetime)
                     }
                 } else if (i>0) {
-                    let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
-                    difference_minutes = Math.floor(difference_ms % 60);
-                    if (difference_minutes > 10) {
+                    let difference_minutes = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000;
+                    if (difference_minutes > 30) {
                         n[i-1].cpu_percent = 0;
                         d.cpu_percent = 0;
                         stop.push(n[i-1].datetime)
@@ -1081,8 +1075,7 @@ class SystemGraphsController {
         function setLastUpdatedAlert() {
             // Calculate time diff bw current and lastUpdateTimeStamp
             let currentTime = new Date(),
-                difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000,
-                difference_minutes = Math.floor(difference_ms % 60);
+                difference_minutes = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000;
             if (difference_minutes > 10) {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
             } else {
