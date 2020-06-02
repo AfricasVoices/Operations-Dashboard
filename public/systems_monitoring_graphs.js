@@ -291,6 +291,9 @@ class SystemGraphsController {
                     .attr("d", area)
 
                 d3.selectAll(".diskXGrid").remove();
+                d3.selectAll(".stopDiskGrid").remove();
+                d3.selectAll(".startDiskGrid").remove();
+
                 svg.append("g")			
                     .attr("class", "diskXGrid")
                     .attr("transform", "translate(0," + Height + ")")
@@ -610,6 +613,9 @@ class SystemGraphsController {
                     .attr("d", area)
 
                 d3.selectAll(".memoryXGrid").remove();
+                d3.selectAll(".stopMemoryGrid").remove();
+                d3.selectAll(".startMemoryGrid").remove();
+
                 svg.append("g")			
                     .attr("class", "memoryXGrid")
                     .attr("transform", "translate(0," + Height + ")")
@@ -925,6 +931,9 @@ class SystemGraphsController {
                     .attr("d", area)
 
                 d3.selectAll(".cpuXGrid").remove();
+                d3.selectAll(".stopCpuGrid").remove();
+                d3.selectAll(".startCpuGrid").remove();
+
                 svg.append("g")			
                     .attr("class", "cpuXGrid")
                     .attr("transform", "translate(0," + Height + ")")
