@@ -314,6 +314,9 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     )
+                    .attr("opacity", 0)	
+                    .transition().duration(1000).delay(400)
+                    .attr("opacity", 1)
 
                 outageLines.append("g")			
                     .attr("class", "startDiskGrid")
@@ -323,6 +326,9 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     )
+                    .attr("opacity", 0)	
+                    .transition().duration(1000).delay(400)
+                    .attr("opacity", 1)
             }
 
             // Disk usage graph title
@@ -658,6 +664,9 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     )
+                    .attr("opacity", 0)	
+                    .transition().duration(1000).delay(400)
+                    .attr("opacity", 1)
 
                 outageLines.append("g")			
                     .attr("class", "startMemoryGrid")
@@ -667,6 +676,9 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     )
+                    .attr("opacity", 0)	
+                    .transition().duration(1000).delay(400)
+                    .attr("opacity", 1)
             }
 
             // Memory usage graph title
@@ -998,6 +1010,9 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     )
+                    .attr("opacity", 0)	
+                    .transition().duration(1000).delay(400)
+                    .attr("opacity", 1)
 
                 outageLines.append("g")			
                     .attr("class", "startCpuGrid")
@@ -1007,6 +1022,9 @@ class SystemGraphsController {
                         .tickSize(-Height)
                         .tickFormat("")
                     )
+                    .attr("opacity", 0)	
+                    .transition().duration(1000).delay(400)
+                    .attr("opacity", 1)
             }
 
             // CPU usage graph title
