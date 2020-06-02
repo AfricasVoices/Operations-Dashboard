@@ -83,6 +83,25 @@ class SystemGraphsController {
                     .tickFormat("")
                 )
 
+            // Get time when the system stopped & when it was restarted
+            let stop = [], start = [], currentTime = new Date();
+            data.forEach((d, i, n)=> {
+                if (i == (n.length-1)) {
+                    let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
+                    difference_minutes = Math.floor(difference_ms % 60);
+                    if (difference_minutes > 10) {
+                        stop.push(d.datetime)
+                    }
+                } else if (i>0) {
+                    let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
+                    difference_minutes = Math.floor(difference_ms % 60);
+                    if (difference_minutes > 10) {
+                        stop.push(n[i-1].datetime)
+                        start.push(d.datetime)
+                    } 
+                }
+            })
+            
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
                 .attr("id", "clip")
@@ -353,6 +372,25 @@ class SystemGraphsController {
                     .tickFormat("")
                 )
 
+            // Get time when the system stopped & when it was restarted
+            let stop = [], start = [], currentTime = new Date();
+            data.forEach((d, i, n)=> {
+                if (i == (n.length-1)) {
+                    let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
+                    difference_minutes = Math.floor(difference_ms % 60);
+                    if (difference_minutes > 10) {
+                        stop.push(d.datetime)
+                    }
+                } else if (i>0) {
+                    let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
+                    difference_minutes = Math.floor(difference_ms % 60);
+                    if (difference_minutes > 10) {
+                        stop.push(n[i-1].datetime)
+                        start.push(d.datetime)
+                    } 
+                }
+            })
+
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
                 .attr("id", "clip")
@@ -619,6 +657,25 @@ class SystemGraphsController {
                     .tickSize(-Width)
                     .tickFormat("")
                 )
+
+            // Get time when the system stopped & when it was restarted
+            let stop = [], start = [], currentTime = new Date();
+            data.forEach((d, i, n)=> {
+                if (i == (n.length-1)) {
+                    let difference_ms = (currentTime.getTime() - d.datetime.getTime()) / 60000,
+                    difference_minutes = Math.floor(difference_ms % 60);
+                    if (difference_minutes > 10) {
+                        stop.push(d.datetime)
+                    }
+                } else if (i>0) {
+                    let difference_ms = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000,
+                    difference_minutes = Math.floor(difference_ms % 60);
+                    if (difference_minutes > 10) {
+                        stop.push(n[i-1].datetime)
+                        start.push(d.datetime)
+                    } 
+                }
+            })
 
             // Add a clipPath: everything out of this area won't be drawn.
             let clip = svg.append("defs").append("svg:clipPath")
