@@ -258,6 +258,32 @@ class SystemGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Disk Usage");
+
+            let keys = ["stop", "start"]
+            let color = d3.scaleOrdinal().domain(keys).range(["red", "green"]);
+
+            // Add one dot in the legend for each name.
+            svg.selectAll("myrect")
+                .data(keys)
+                .enter()
+                .append("rect")
+                    .attr("x", Width + 10)
+                    .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                    .attr("width", 30)
+                    .attr("height", 3)
+                    .style("fill", d => color(d))
+
+            // Add one dot in the legend for each name.
+            svg.selectAll("mylabels")
+                .data(keys)
+                .enter()
+                .append("text")
+                    .attr("x", Width + 45)
+                    .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                    .style("fill", d => color(d))
+                    .text(d => d)
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
         }
 
         function plotMemoryMetrics(data) {
@@ -501,6 +527,32 @@ class SystemGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Memory Utilization");
+
+            let keys = ["stop", "start"]
+            let color = d3.scaleOrdinal().domain(keys).range(["red", "green"]);
+
+            // Add one dot in the legend for each name.
+            svg.selectAll("myrect")
+                .data(keys)
+                .enter()
+                .append("rect")
+                    .attr("x", Width + 10)
+                    .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                    .attr("width", 30)
+                    .attr("height", 3)
+                    .style("fill", d => color(d))
+
+            // Add one dot in the legend for each name.
+            svg.selectAll("mylabels")
+                .data(keys)
+                .enter()
+                .append("text")
+                    .attr("x", Width + 45)
+                    .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                    .style("fill", d => color(d))
+                    .text(d => d)
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
         }
 
         function plotCPUMetrics(data) {       
@@ -740,6 +792,32 @@ class SystemGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("CPU Utilization");
+
+            let keys = ["stop", "start"]
+            let color = d3.scaleOrdinal().domain(keys).range(["red", "green"]);
+
+            // Add one dot in the legend for each name.
+            svg.selectAll("myrect")
+                .data(keys)
+                .enter()
+                .append("rect")
+                    .attr("x", Width + 10)
+                    .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                    .attr("width", 30)
+                    .attr("height", 3)
+                    .style("fill", d => color(d))
+
+            // Add one dot in the legend for each name.
+            svg.selectAll("mylabels")
+                .data(keys)
+                .enter()
+                .append("text")
+                    .attr("x", Width + 45)
+                    .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                    .style("fill", d => color(d))
+                    .text(d => d)
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
         }
 
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
