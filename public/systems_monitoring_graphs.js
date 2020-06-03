@@ -115,7 +115,7 @@ class SystemGraphsController {
             let outageLines = svg.append('g')
                 .attr("clip-path", "url(#clip-lines)")
 
-            // Add the hitch gridlines
+            // Add the outage gridlines
             outageLines.append("g")			
                 .attr("class", "stopDiskGrid")
                 .attr("transform", "translate(0," + Height + ")")
@@ -303,7 +303,7 @@ class SystemGraphsController {
                         .tickFormat("")
                     )
 
-                // Add the hitch gridlines
+                // Add the outage gridlines
                 outageLines.append("g")			
                     .attr("class", "stopDiskGrid")
                     .attr("transform", "translate(0," + Height + ")")
@@ -464,7 +464,7 @@ class SystemGraphsController {
             let outageLines = svg.append('g')
                 .attr("clip-path", "url(#clip-lines)")
 
-            // Add the hitch gridlines
+            // Add the outage gridlines
             outageLines.append("g")			
                 .attr("class", "stopMemoryGrid")
                 .attr("transform", "translate(0," + Height + ")")
@@ -651,7 +651,7 @@ class SystemGraphsController {
                         .tickFormat("")
                     ) 
 
-                // Add the hitch gridlines
+                // Add the outage gridlines
                 outageLines.append("g")			
                     .attr("class", "stopMemoryGrid")
                     .attr("transform", "translate(0," + Height + ")")
@@ -810,7 +810,7 @@ class SystemGraphsController {
             let outageLines = svg.append('g')
                 .attr("clip-path", "url(#clip-lines)")
 
-            // Add the hitch gridlines
+            // Add the outage gridlines
             outageLines.append("g")			
                 .attr("class", "stopCpuGrid")
                 .attr("transform", "translate(0," + Height + ")")
@@ -995,7 +995,7 @@ class SystemGraphsController {
                         .tickFormat("")
                     ) 
 
-                // Add the hitch gridlines
+                // Add the outage gridlines
                 outageLines.append("g")			
                     .attr("class", "stopCpuGrid")
                     .attr("transform", "translate(0," + Height + ")")
