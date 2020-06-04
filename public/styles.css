@@ -15,6 +15,7 @@
     cursor: pointer;
 }
 .traffics-link,
+.systems-link,
 .coding-progress-link {
     margin-left: -1px;
 }
@@ -203,7 +204,7 @@ td.integer, td.dash {
 .alert-stale-info {
     background-color: #f08080;
 }
-.tooltip{	
+.tooltip {	
     position: absolute;		
     text-align: center;			
     padding: 4px;				
@@ -228,4 +229,46 @@ th:hover {
     stroke: lightgrey;
     stroke-opacity: 0.5;
     shape-rendering: crispEdges;
+}
+.diskGrid line,
+.memoryGrid line,
+.cpuGrid line,
+.diskXGrid line,
+.memoryXGrid line,
+.cpuXGrid line  {
+    stroke: lightgrey;
+    stroke-opacity: 0.3;
+    shape-rendering: crispEdges;
+}
+.diskGrid path,
+.memoryGrid path,
+.cpuGrid path,
+.diskXGrid path,
+.memoryXGrid path,
+.cpuXGrid path  {
+    stroke: lightgrey;
+    stroke-opacity: 0.5;
+    shape-rendering: crispEdges;
+}
+.stopDiskGrid line,
+.stopMemoryGrid line,
+.stopCpuGrid line {
+    stroke: red;
+    stroke-opacity: 1;
+    shape-rendering: crispEdges;
+}
+.startDiskGrid line,
+.startMemoryGrid line,
+.startCpuGrid line {
+    stroke: green;
+    stroke-opacity: 1;
+    shape-rendering: crispEdges;
+}
+.stopDiskGrid path,
+.stopMemoryGrid path,
+.stopCpuGrid path,
+.startDiskGrid path,
+.startMemoryGrid path,
+.startCpuGrid path {
+    stroke-opacity: 0;
 }

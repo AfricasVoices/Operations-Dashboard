@@ -10,7 +10,8 @@ class UIController {
             logoutBtn: ".logout-btn",
             dropdownItem: ".dropdown-item",
             activeLinkClassName: "active-link",
-            activeLinks: "a.active-link"
+            activeLinks: "a.active-link",
+            systemsLinkSelector: ".systems-link"
         };
     }
 
@@ -183,5 +184,27 @@ class UIController {
         document
             .querySelector(DOMstrings.codingProgressContainer)
             .insertAdjacentHTML("beforeend", newHtml);
+    }
+
+    static addSystemsGraphs() {
+        let DOMstrings = UIController.getDOMstrings(),
+            html = `<div class="container"> 
+            <section class="d-flex justify-content-end">
+                <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
+                <div class="font-weight-bold mb-0" id="lastUpdated"></div>
+            </section>
+            <section>
+                <div class="card shadow disc-usage-chart my-1"></div>
+            </section> 
+            <section>
+                <div class="card shadow memory-utilization-chart my-1"></div>
+            </section> 
+            <section>
+                <div class="card shadow cpu-utilization-chart my-1"></div>
+            </section> 
+        </div> `;
+        document
+            .querySelector(DOMstrings.codingProgressContainer)
+            .insertAdjacentHTML("beforeend", html);
     }
 }

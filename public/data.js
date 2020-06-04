@@ -97,6 +97,20 @@ class DataController {
             }, error => console.log(error));
     }
 
+    static watchSystemsMetrics(onChange) {
+        let systemMetrics = [];
+        return mediadb.collection("pipeline_system_metrics").onSnapshot(res => {
+            DataController.updateData(res, systemMetrics);
+            // format the data
+            systemMetrics.forEach(function(d) {
+                d.datetime = new Date(d.datetime);
+            })
+            // Sort data by date
+            systemMetrics.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+            onChange(systemMetrics)
+        })
+    }
+
     static registerSnapshotListener(unsubscribeFunc) {
         if (unsubscribeFunc) {
             DataController.unsubscribeFunc = unsubscribeFunc;
