@@ -16,13 +16,19 @@ export class UIController {
     }
 
     static addDropdownMenu(data) {
-        let DOMstrings = UIController.getDOMstrings(),
-            html = `<a id="project" class="dropdown-item">%project_name%</a>`;
-        // Replace the placeholder text with some actual data
-        data.forEach(obj => {
-            let newHtml = html.replace("%project_name%", obj.project_name);
-            document.querySelector(DOMstrings.projectMenu).insertAdjacentHTML("beforeend", newHtml);
-        });
+        const DOMstrings = UIController.getDOMstrings(),
+            statusMenu = document.querySelector(DOMstrings.projectMenu);
+        if (statusMenu) {
+            while (statusMenu.firstChild) {
+                statusMenu.removeChild(statusMenu.firstChild);
+            }   
+            let html = `<a id="project" class="dropdown-item">%project_name%</a>`;
+            // Replace the placeholder text with some actual data
+            data.forEach(obj => {
+                let newHtml = html.replace("%project_name%", obj.project_name);
+                statusMenu.insertAdjacentHTML("beforeend", newHtml);
+            });
+        }
     }
 
     static addCodingProgressSection() {
