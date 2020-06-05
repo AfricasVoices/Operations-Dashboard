@@ -17,14 +17,20 @@ class Controller {
         document
             .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
+        document
+            .querySelector(Controller.DOMstrings.systemsLinkSelector)
+            .addEventListener("click", Controller.navigateToSystems);
     }
 
     static resetUI() {
         document.querySelector(Controller.DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(Controller.DOMstrings.graphContainer).innerHTML = "";
-        import("./graph.js").then(module => {
+        import("./traffic_monitoring_graphs.js").then(module => {
             module.GraphController.clearTimers();
-        })
+        });
+        import("./systems_monitoring_graphs.js").then(module => {
+            module.SystemGraphsController.clearTimers();
+        });
     }
 
     static resetActiveLink() {
@@ -57,10 +63,25 @@ class Controller {
             .querySelector(Controller.DOMstrings.trafficsLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
-        import("./graph.js").then(module => {
+        import("./traffic_monitoring_graphs.js").then(module => {
             let unsubscribeFunc = DataController.watchProjectTrafficData(
                 project,
                 module.GraphController.updateGraphs
+            );
+            DataController.registerSnapshotListener(unsubscribeFunc);
+        })
+    }
+
+    static displaySystems() {
+        UIController.addSystemsGraphs();
+        Controller.resetActiveLink();
+        document
+            .querySelector(Controller.DOMstrings.systemsLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
+        // Update and show the Graphs
+        import("./systems_monitoring_graphs.js").then(module => {
+            let unsubscribeFunc = DataController.watchSystemsMetrics(
+                module.SystemGraphsController.updateGraphs
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
         })
@@ -83,6 +104,15 @@ class Controller {
             let project = e.target.innerText;
             window.location.hash = `traffic-${project}`;
             Controller.displayProject(project);
+        }
+    }
+
+    static navigateToSystems(e) {
+        if (e.target && e.target.nodeName == "A") {
+            Controller.resetUI();
+            DataController.detachSnapshotListener();
+            window.location.hash = "systems";
+            Controller.displaySystems();
         }
     }
 
@@ -117,6 +147,8 @@ class Controller {
         if (page_route) {
             if (page_route == "coding_progress") {
                 Controller.displayCodingProgress();
+            } else if (page_route == "systems") {
+                Controller.displaySystems();
             } else if (page_route.startsWith("traffic-")) {
                 DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
             } else {
