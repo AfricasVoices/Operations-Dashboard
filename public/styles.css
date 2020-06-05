@@ -15,6 +15,7 @@
     cursor: pointer;
 }
 .traffics-link,
+.systems-link,
 .coding-progress-link {
     margin-left: -1px;
 }
@@ -70,6 +71,12 @@ a {
 }
 table > tbody > tr > td {
     border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+}
+td.float {
+    text-align: right
+}
+td.integer, td.dash {
+    text-align: center;
 }
 .coding-notstarted {
     background-color: #fc9f9f;
@@ -197,7 +204,7 @@ table > tbody > tr > td {
 .alert-stale-info {
     background-color: #f08080;
 }
-.tooltip{	
+.tooltip {	
     position: absolute;		
     text-align: center;			
     padding: 4px;				
@@ -205,4 +212,63 @@ table > tbody > tr > td {
     background: whitesmoke;	
     border-radius: 8px;			
     pointer-events: none;			
+}
+th:hover {
+    cursor: pointer;
+}
+.receivedGrid line,
+.sentGrid line,
+.failedGrid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.3;
+    shape-rendering: crispEdges;
+}
+.receivedGrid path,
+.sentGrid path,
+.failedGrid path {
+    stroke: lightgrey;
+    stroke-opacity: 0.5;
+    shape-rendering: crispEdges;
+}
+.diskGrid line,
+.memoryGrid line,
+.cpuGrid line,
+.diskXGrid line,
+.memoryXGrid line,
+.cpuXGrid line  {
+    stroke: lightgrey;
+    stroke-opacity: 0.3;
+    shape-rendering: crispEdges;
+}
+.diskGrid path,
+.memoryGrid path,
+.cpuGrid path,
+.diskXGrid path,
+.memoryXGrid path,
+.cpuXGrid path  {
+    stroke: lightgrey;
+    stroke-opacity: 0.5;
+    shape-rendering: crispEdges;
+}
+.stopDiskGrid line,
+.stopMemoryGrid line,
+.stopCpuGrid line {
+    stroke: red;
+    stroke-opacity: 1;
+    shape-rendering: crispEdges;
+}
+.startDiskGrid line,
+.startMemoryGrid line,
+.startCpuGrid line {
+    stroke: green;
+    stroke-opacity: 1;
+    shape-rendering: crispEdges;
+}
+.stopDiskGrid path,
+.stopMemoryGrid path,
+.stopCpuGrid path,
+.startDiskGrid path,
+.startMemoryGrid path,
+.startCpuGrid path {
+    stroke-opacity: 0;
 }

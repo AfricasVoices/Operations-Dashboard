@@ -582,7 +582,7 @@ class GraphController {
                     tip.show(d, n[i]).style("color", operatorColor)
                 })
                 .on("mouseout", (d, i, n) => {
-                    tip.hide(d, n[i])
+                    tip.hide()
                 })
 
             // "Add the X Axis for the total received sms graph
@@ -883,7 +883,7 @@ class GraphController {
                     tip.show(d, n[i]).style("color", operatorColor)
                 })
                 .on("mouseout", (d, i, n) => {
-                    tip.hide(d, n[i])
+                    tip.hide()
                 })
 
             //Add the X Axis for the total sent sms graph
@@ -1011,7 +1011,7 @@ class GraphController {
                     tip.show(d, n[i]).style("color", barColor)
                 })
                 .on("mouseout", (d, i, n) => {
-                    tip.hide(d, n[i])
+                    tip.hide()
                 })
 
             // Add the X Axis for the total failed sms graph
@@ -1272,8 +1272,7 @@ class GraphController {
         function setLastUpdatedAlert() {
             // Calculate time diff bw current and lastUpdateTimeStamp
             let currentTime = new Date(),
-                difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000,
-                difference_minutes = Math.floor(difference_ms % 60);
+                difference_minutes = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000;
             if (difference_minutes > 20) {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
             } else {

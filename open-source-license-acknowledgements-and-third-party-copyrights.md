@@ -11,15 +11,15 @@ License: Apache License 2.0<br/>
 https://github.com/susielu/d3-legend/blob/master/LICENSE<br/> 
 Copyright (c) 2015, Susie Lu
 
+### d3-tip d3 plugin
+License: MIT<br/> 
+https://github.com/caged/d3-tip/blob/master/LICENSE
+Copyright (c) 2013 Justin Palmer
+
 ### jQuery
 License: MIT<br/> 
 https://github.com/jquery/jquery/blob/master/LICENSE.txt<br/> 
 Copyright JS Foundation and other contributors, https://js.foundation/
-
-### tablesorter jQuery Plugin
-License: MIT<br/> 
-https://github.com/christianbach/tablesorter/blob/master/LICENSE<br/> 
-Copyright (c) 2014 Christian Bach
 
 ### Bootstrap - front-end framework
 License: MIT<br/> 
