@@ -6,34 +6,35 @@ class CodingProgressTableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
-        // Check the state of the column sorted 
-        if (!CodingProgressTableController.column) 
-            CodingProgressTableController.column = "Done";
+        // Default sorting information
+        if (!CodingProgressTableController.sortInfoArray)
+            CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "ascending"}];
 
-        // Save sorting information
-        let sortInfo = { column: CodingProgressTableController.column, order: "" };
+        // Latest sorting information
+        let sortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0] 
 
         // Invoke `transform` function with column to be sorted on page load
         transform(sortInfo.column);
         
         // Function used to generate coding progress table
-        function transform(column) {
-            // Toggle sorting state
-            if (sortInfo.order === "descending" && column === sortInfo.column)
-                sortInfo.order = "ascending";
-            else { sortInfo.order = "descending"; sortInfo.column = column }
-
-            // Keep the state of the column sorted to avoid its reset on update
-            CodingProgressTableController.column = sortInfo.column;
+        function transform(column, updatedSortInfo = "") {
+            if (typeof updatedSortInfo === "object")
+                sortInfo = updatedSortInfo;
 
             d3.select("tbody").selectAll("tr").remove();
+            d3.select("thead").selectAll('tr').remove();
 
             // Table Header
-            d3.select("thead").selectAll("th")
-                .data(CodingProgressTableController.jsonToArray(data[0]))
-                .enter().append("th")
+            d3.select("thead").append('tr')
                 .attr("class", "table-heading")
-                .on("click", (d) => transform(d[0]))
+                .selectAll('th')
+                .data(CodingProgressTableController.jsonToArray(data[0])).enter() 
+                .append('th')
+                .on("click", (d) => {
+                    CodingProgressTableController.saveSortInfo(d[0])
+                    let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0]
+                    transform(d[0], latestSortInfo)
+                })
                 .text(d => d[0])
 
             // Table Rows
@@ -50,8 +51,7 @@ class CodingProgressTableController {
             let td = tr.selectAll("td")
                 .data(d => CodingProgressTableController.jsonToArray(d))
                 .enter().append("td")
-                .on("click", (d) => transform(d[0]));
-
+            
             // Filter Dataset column from columns & append text to td
             td.filter((d, i) => d[0] !== "Dataset" && i !== 0)
             .attr('class', d => Number.isInteger(d[1]) ? "integer" : 
@@ -91,14 +91,31 @@ class CodingProgressTableController {
         };
     };
 
+    static saveSortInfo(column) {
+        let sortInfo = {}, previousColumnSorted, previousSortOrder;
+        sortInfo["column"] = column;
+        previousColumnSorted = CodingProgressTableController.sortInfoArray.slice(-1)[0].column;
+        previousSortOrder = CodingProgressTableController.sortInfoArray.slice(-1)[0].order;
+        if (column == previousColumnSorted) {
+            if (previousSortOrder == "ascending") {
+                sortInfo["order"] = "descending"
+            } else {
+                sortInfo["order"] = "ascending"
+            }
+        } else {
+            sortInfo["order"] = "ascending"
+        }
+        CodingProgressTableController.sortInfoArray.push(sortInfo);
+    }
+
     static stringCompare(a, b, order) {
-        if (order === "descending") 
+        if (order === "ascending") 
             return a.localeCompare(b, 'en', { sensitivity: 'base' });
         return b.localeCompare(a, 'en', { sensitivity: 'base' });
     };
 
     static sortNumber(a, b, order) {
-        if (order === "descending") 
+        if (order === "ascending") 
             return a-b || isNaN(a)-isNaN(b);
         return b-a || isNaN(b)-isNaN(a);
     } 
