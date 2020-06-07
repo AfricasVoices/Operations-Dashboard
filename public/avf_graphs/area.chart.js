@@ -11,6 +11,7 @@ export class AreaChart extends GraphLayout {
         this.title = "Area Chart";
         this.xAxisLabel = "X Axis";
         this.yAxisLabel = "Y Axis";
+        this.yLimit = 0;
 
         this.draw()
     }
@@ -22,15 +23,17 @@ export class AreaChart extends GraphLayout {
         vis.createScales();
         vis.addAxes();
         vis.addArea();
-        vis.watchOutage();
         vis.addLabels();
+        vis.addLegend();
     }
 
     createScales() {
         let vis = this
         // calculate max and min for data
-        const xExtent = d3.extent(vis.data, d => new Date(d.date));
-        const yExtent = d3.extent(vis.data, d => +d.value);
+        const xExtent = d3.extent(vis.data, d => new Date(d.datetime));
+        // const yExtent = d3.extent(vis.data, d => +d.value);
+        
+        const yExtent = vis.yLimit ? [0, vis.yLimit] : d3.extent(vis.data, d => +d.value);
 
         // force zero baseline if all data points are positive
         if (yExtent[0] > 0) { yExtent[0] = 0; };
@@ -43,11 +46,14 @@ export class AreaChart extends GraphLayout {
             .range([vis.height, 0])
             .domain(yExtent);
     }
-
+ 
     addAxes() {
+        this.dayTimeFormat = d3.timeFormat("%a %d (%H:%M)");
+        let decimalFormatter = d3.format(".2s");
         // create and append axis elements
-        const xAxis = d3.axisBottom(this.xScale)
-        const yAxis = d3.axisLeft(this.yScale)
+        const xAxis = d3.axisBottom(this.xScale).ticks(d3.timeDay.every(1)).tickFormat(this.dayTimeFormat);
+        const yAxis = this.id == "cpu" ? d3.axisLeft(this.yScale) :
+        d3.axisLeft(this.yScale).ticks(5).tickFormat((d) => decimalFormatter(d).replace('G', 'GB'))
 
         this.xAxis = this.plot.append("g")
             .attr("class", `${this.id}XAxis`)
@@ -87,31 +93,10 @@ export class AreaChart extends GraphLayout {
         )
     } 
 
-    prepareTooltip() {
-        // Prep the tooltip bits, initial display is hidden
-        this.tooltip = this.plot.append("g")
-            .attr("class", `${this.id}Tooltip`)
-            .style("opacity", 1.0)
-            .style("display", "none");
-
-        this.tooltip.append("rect")
-            .attr("width", 150)
-            .attr("height", 20)
-            .attr("fill", "white")
-            .style("opacity", 1.0);
-
-        this.tooltip.append("text")
-            .attr("x", 75)
-            .attr("dy", "1.2em")
-            .style("text-anchor", "middle")
-            .attr("font-size", "12px")
-            .attr("font-weight", "bold");
-    }
-
     drawFocus() {    
         // Create focus object
         this.focus = this.plot.append("g")
-            .attr("class", "focus")
+            .attr("class", `${this.id}focus`)
 
         // Append circle on the line path
         this.focus.append("circle")
@@ -136,7 +121,7 @@ export class AreaChart extends GraphLayout {
         let vis = this;
         // Create an overlay path to draw the above objects on top of
         this.area
-            .attr("class", "overlay")  
+            // .attr("class", `${this.id}overlay`)  
             .on("mouseover", () => this.focus.style("display", null))
             .on("mouseout", () => this.focus.style("display", "none"))
             .on("mousemove", function() {
@@ -145,21 +130,21 @@ export class AreaChart extends GraphLayout {
 
         // Make the overlay rectangle transparent,
         // So it only serves the purpose of detecting mouse events
-        d3.select(".overlay")
-            .style("fill", "none")
+        // d3.select(`.${this.id}overlay`)
+            // .style("fill", "none")
             // .style("pointer-events", "all");
 
         // Select focus objects and set opacity
-        d3.selectAll(".focus")
+        d3.selectAll(`.${this.id}focus`)
             .style("opacity", 0.9);
 
         // Select the circle and style it
-        d3.selectAll(".focus circle")
+        d3.selectAll(`.${this.id}focus circle`)
             .style("fill", "#068ca0")
             .style("opacity", 0)
 
         // Select the rect and style it
-        d3.selectAll(".focus rect")
+        d3.selectAll(`.${this.id}focus rect`)
             .style("fill", "whitesmoke")
             .style("opacity", 0)
 
@@ -192,11 +177,11 @@ export class AreaChart extends GraphLayout {
                 .style("opacity", 1);
 
         // Show the circle on the path
-        this.focus.selectAll(".focus circle")
+        this.focus.selectAll(`.${this.id}focus circle`)
             .style("opacity", 1)
 
         // Show the rect on the path
-        d3.selectAll(".focus rect")
+        d3.selectAll(`.${this.id}focus rect`)
             .style("opacity", 1)
     };
 
@@ -214,11 +199,11 @@ export class AreaChart extends GraphLayout {
         this.area = this.plot.append('g').attr("clip-path", "url(#clip)")
 
         this.areaGenerator = d3.area()
-            .x(d => this.xScale(new Date(d.date)))
+            .x(d => this.xScale(new Date(d.datetime)))
             .y0(this.yScale(0))
             .y1(d => this.yScale(d.value))
 
-        // this.watchOutage()
+        this.watchOutage()
 
         this.area.append("path")
             .datum(this.data)
@@ -240,12 +225,12 @@ export class AreaChart extends GraphLayout {
         this.drawFocus();
     }
 
-    idleTimeout;
+    // idleTimeout;
     // A function that set idleTimeOut to null
-    idled = () => { this.idleTimeout = null; }
+    idled() { this.idleTimeout = null; }
 
     updateChart() {
-        // var idleTimeout
+        // let idleTimeout;
         // // A function that set idleTimeOut to null
         // function idled() { idleTimeout = null; }
         // What are the selected boundaries?
@@ -253,17 +238,19 @@ export class AreaChart extends GraphLayout {
   
         // If no selection, back to initial coordinate. Otherwise, update X axis domain
         if (!this.extent) {
-            if (!this.idleTimeout) return this.idleTimeout = setTimeout(this.idled, 350);// This allows to wait a little bit
+            if (!this.idleTimeout) return this.idleTimeout = setTimeout(this.idled.bind(this), 350);// This allows to wait a little bit
             this.xScale.domain(d3.extent(this.data, d => d.datetime))
         } else {
             this.xScale.domain([ this.xScale.invert(this.extent[0]), this.xScale.invert(this.extent[1]) ])
             this.area.select(`.${this.id}Brush`).call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
         }
-        this.zoomChart()
+        this.zoomInChart()
+        this.adjustGridlines()
     }
 
-    zoomChart() {
-        this.xAxis.transition().duration(1000).call(d3.axisBottom(this.xScale))
+    zoomInChart() {
+        this.xAxis.transition().duration(1000).call(
+            d3.axisBottom(this.xScale).ticks(d3.timeDay.every(1)).tickFormat(this.dayTimeFormat))
         // Rotate X axis ticks
         this.xAxis.selectAll("text")
             .style("text-anchor", "end")
@@ -276,12 +263,14 @@ export class AreaChart extends GraphLayout {
             .transition()
             .duration(1000)
             .attr("d", this.areaGenerator)
-        
+    }
+
+    adjustGridlines() {
         d3.selectAll(`.${this.id}XGrid`).remove();
         d3.selectAll(`.stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`).remove();
         d3.selectAll(`.start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`).remove();
 
-        this.area.append("g")			
+        this.plot.append("g")			
             .attr("class", `${this.id}XGrid`)
             .attr("transform", "translate(0," + this.height + ")")
             .call(d3.axisBottom(this.xScale)
@@ -345,6 +334,34 @@ export class AreaChart extends GraphLayout {
             .text(this.yAxisLabel);
     }
 
+    addLegend() {
+        let keys = ["stop", "start"]
+        let color = d3.scaleOrdinal().domain(keys).range(["red", "green"]);
+
+        // Add one dot in the legend for each name.
+        this.plot.selectAll("myrect")
+            .data(keys)
+            .enter()
+            .append("rect")
+                .attr("x", this.width + 10)
+                .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                .attr("width", 30)
+                .attr("height", 3)
+                .style("fill", d => color(d))
+
+        // Add one dot in the legend for each name.
+        this.plot.selectAll("mylabels")
+            .data(keys)
+            .enter()
+            .append("text")
+                .attr("x", this.width + 45)
+                .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                .style("fill", d => color(d))
+                .text(d => d)
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
+    }
+
     watchOutage() {
         // Get time when the system stopped & when it was restarted
         this.stop = [], this.start = []; let currentTime = new Date();
@@ -368,6 +385,7 @@ export class AreaChart extends GraphLayout {
             }
         })
 
+    // addOutageGridlines
         // Add a clipPath: everything out of this area won't be drawn.
         this.plot.append("defs").append("svg:clipPath")
             .attr("id", "clip-lines")

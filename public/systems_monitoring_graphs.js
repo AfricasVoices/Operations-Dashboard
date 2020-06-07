@@ -1,5 +1,5 @@
 import { AreaChart } from "./avf_graphs/area.chart.js";
-import { StackedAreaChart } from "./avf_graphs/stacked_area.chart.js";
+// import { StackedAreaChart } from "./avf_graphs/stacked_area.chart.js";
 
 export class SystemGraphsController {
     static updateGraphs(data) {
@@ -16,13 +16,14 @@ export class SystemGraphsController {
             d.value = +d.cpu_percent;
         })
 
-        const area = new AreaChart({element: document.querySelector('.chart2'), data: data2 });
+        const area = new AreaChart({element: document.querySelector('.chart3'), data: data2 });
         area
             .setId("cpu")
             .setTitle("CPU Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
             .setYAxisLabel("CPU Utilization (%)")
             .setColorScheme("#0000CD")
+            .setYLimit(100)
             .draw();
 
 /*                         MEMORY  UTILIZATION GRAPH  
@@ -31,16 +32,17 @@ export class SystemGraphsController {
         db.forEach(function(d) {
             d.date = new Date(d.datetime);
             d.datetime = new Date(d.datetime);
-            d.value = +d.memory_usage.percent;
+            d.value = +d.memory_usage.used;
         })
 
-        const area2 = new AreaChart({element: document.querySelector('.chart3'), data: db });
+        const area2 = new AreaChart({element: document.querySelector('.chart2'), data: db });
         area2
             .setId("memory")
             .setTitle("Memory Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
             .setYAxisLabel("Memoru Utilization (%)")
             .setColorScheme("#000080")
+            .setYLimit(db[0].memory_usage.total)
             .draw();
 
 /*                         DISK UTILIZATION GRAPH
@@ -49,7 +51,7 @@ export class SystemGraphsController {
         db2.forEach(function(d) {
             d.date = new Date(d.datetime);
             d.datetime = new Date(d.datetime);
-            d.value = +d.memory_usage.percent;
+            d.value = +d.disk_usage.used;
         })
 
         const area3 = new AreaChart({element: document.querySelector('.chart'), data: db2 });
@@ -59,6 +61,7 @@ export class SystemGraphsController {
             .setXAxisLabel("Date (dd:hh:m)")
             .setYAxisLabel("Disk Usage (GB)")
             .setColorScheme("#0E86D4")
+            .setYLimit(db2[0].disk_usage.total)
             .draw();
 // let db2 = JSON.parse(JSON.stringify(data));
 //             db2.forEach(function(d) {
