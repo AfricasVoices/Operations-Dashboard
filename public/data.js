@@ -99,6 +99,24 @@ export class DataController {
             }, error => console.log(error));
     }
 
+    // static watchSystemsMetrics(onChange) {
+    //     let systemMetrics = [];
+    //     return mediadb.collection("pipeline_system_metrics").onSnapshot(res => {
+    //         DataController.updateData(res, systemMetrics);
+    //         // format the data
+    //         systemMetrics.forEach(function(d) {
+    //             d.datetime = new Date(d.datetime);
+    //             Object.keys(d.disk_usage)
+    //                 .sort()
+    //                 .forEach(metric => {
+    //                     d[`disk_${metric}`] = (+d.disk_usage[metric] / 1e9);
+    //                 });
+    //         })
+    //         // Sort data by date
+    //         systemMetrics.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+    //         onChange(systemMetrics)
+    //     })
+    // }
     static watchSystemsMetrics(onChange) {
         let systemMetrics = [];
         return mediadb.collection("pipeline_system_metrics").onSnapshot(res => {
@@ -106,11 +124,6 @@ export class DataController {
             // format the data
             systemMetrics.forEach(function(d) {
                 d.datetime = new Date(d.datetime);
-                Object.keys(d.disk_usage)
-                    .sort()
-                    .forEach(metric => {
-                        d[`disk_${metric}`] = (+d.disk_usage[metric] / 1e9);
-                    });
             })
             // Sort data by date
             systemMetrics.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));

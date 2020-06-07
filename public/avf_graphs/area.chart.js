@@ -22,6 +22,7 @@ export class AreaChart extends GraphLayout {
         vis.createScales();
         vis.addAxes();
         vis.addArea();
+        vis.watchOutage();
         vis.addLabels();
     }
 
@@ -107,6 +108,98 @@ export class AreaChart extends GraphLayout {
             .attr("font-weight", "bold");
     }
 
+    drawFocus() {    
+        // Create focus object
+        this.focus = this.plot.append("g")
+            .attr("class", "focus")
+
+        // Append circle on the line path
+        this.focus.append("circle")
+            .attr("r", 3.5)
+
+        // Add background rectangle behind the text tooltip
+        this.focus.append("rect")
+            .attr("x", -30)
+            .attr("y", "-32px")
+            .attr("rx", 6)
+            .attr("ry", 6)
+            .attr("width", 220)
+            .attr("height", 20);
+
+        // Add text annotation for tooltip
+        this.focus.append("text")
+            .attr("x", -20)
+            .attr("dy", "-18px")
+            .attr("font-size", "12px")
+            .style("fill", "#0E86D4");
+
+        let vis = this;
+        // Create an overlay path to draw the above objects on top of
+        this.area
+            .attr("class", "overlay")  
+            .on("mouseover", () => this.focus.style("display", null))
+            .on("mouseout", () => this.focus.style("display", "none"))
+            .on("mousemove", function() {
+                vis.tipMove(this)
+            });
+
+        // Make the overlay rectangle transparent,
+        // So it only serves the purpose of detecting mouse events
+        d3.select(".overlay")
+            .style("fill", "none")
+            // .style("pointer-events", "all");
+
+        // Select focus objects and set opacity
+        d3.selectAll(".focus")
+            .style("opacity", 0.9);
+
+        // Select the circle and style it
+        d3.selectAll(".focus circle")
+            .style("fill", "#068ca0")
+            .style("opacity", 0)
+
+        // Select the rect and style it
+        d3.selectAll(".focus rect")
+            .style("fill", "whitesmoke")
+            .style("opacity", 0)
+
+    }
+
+    // Function that adds tooltip on hover
+    tipMove(sel) {
+        // Below code finds the date by bisecting and
+        // Stores the x and y coordinate as variables
+        let x0 = this.xScale.invert(d3.mouse(sel)[0]);
+        // This will select the closest date on the x axiswhen a user hover over the chart
+        let bisectDate = d3.bisector(function(d) {return d.datetime;}).left;
+        let i = bisectDate(this.data, x0, 1);
+        let d0 = this.data[i - 1];
+        let d1 = this.data[i];
+        let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+        console.log(typeof d3.formatPrefix(".2", d.value)(d.value))
+        // Place the focus objects on the same path as the line
+        this.focus.attr("transform", `translate(${this.xScale(d.datetime)}, ${this.yScale(d.value)})`);  
+
+        // Position the text
+        this.focus.select("text")
+            .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+                Used: ${d3.formatPrefix(".2", d.value)(d.value).replace("G", "GB")} 
+                ${(d3.formatPrefix(".2", d.value)(d.value)).includes("G") ? "GB" : "%"}` // check if the value is in gb
+                )
+            .transition() // slowly fade in the tooltip
+                .duration(100)
+                .style("opacity", 1);
+
+        // Show the circle on the path
+        this.focus.selectAll(".focus circle")
+            .style("opacity", 1)
+
+        // Show the rect on the path
+        d3.selectAll(".focus rect")
+            .style("opacity", 1)
+    };
+
     addArea() {
         // Add a clipPath: everything out of this area won't be drawn.
         var clip = this.plot.append("defs").append("svg:clipPath")
@@ -120,18 +213,12 @@ export class AreaChart extends GraphLayout {
         // Create the area variable: where both the area and the brush take place
         this.area = this.plot.append('g').attr("clip-path", "url(#clip)")
 
-        // Add brushing
-        this.brush = d3.brushX()                   // Add the brush feature using the d3.brush function
-            .extent( [ [0,0], [this.width, this.height] ] )  // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-            .on("end", this.updateChart.bind(this))
-
         this.areaGenerator = d3.area()
             .x(d => this.xScale(new Date(d.date)))
             .y0(this.yScale(0))
             .y1(d => this.yScale(d.value))
 
-        // Add the brushing
-        this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
+        // this.watchOutage()
 
         this.area.append("path")
             .datum(this.data)
@@ -140,48 +227,39 @@ export class AreaChart extends GraphLayout {
             .attr("fill-opacity", .6)
             .attr("stroke", this.color)
             .attr("stroke-width", .1)
-            .attr("d", this.areaGenerator)
-            .on("mouseover", () => {
-                this.tooltip.style("display", null);
-            })
-            .on("mouseout", () => {
-                this.tooltip.style("display", "none");
-            })
-            .on("mousemove", (d, i, n) => {
-                var xPosition = d3.mouse(n[i])[0] - 15;//x position of tooltip
-                var yPosition = d3.mouse(n[i])[1] - 25;//y position of tooltip
-                this.tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
-                var x0 = this.xScale.invert(d3.mouse(n[i])[0]);//this will give the x for the mouse position on x
-                var y0 = this.yScale.invert(d3.mouse(n[i])[1]);//this will give the y for the mouse position on y
-                this.tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} %`);//show the text after formatting the date
-            });;
+            .attr("d", this.areaGenerator);
 
-            this.prepareTooltip();
+        // Add brushing
+        this.brush = d3.brushX()                   // Add the brush feature using the d3.brush function
+            .extent( [ [0,0], [this.width, this.height] ] )  // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+            .on("end", this.updateChart.bind(this))
+
+        // Add the brushing
+        this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
+
+        this.drawFocus();
     }
 
+    idleTimeout;
+    // A function that set idleTimeOut to null
+    idled = () => { this.idleTimeout = null; }
+
     updateChart() {
-        // A function that set idleTimeOut to null
-        var idleTimeout
-        // A function that set idleTimeOut to null
-        function idled() { idleTimeout = null; }
+        // var idleTimeout
+        // // A function that set idleTimeOut to null
+        // function idled() { idleTimeout = null; }
         // What are the selected boundaries?
         this.extent = d3.event.selection
   
         // If no selection, back to initial coordinate. Otherwise, update X axis domain
         if (!this.extent) {
-            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
-            this.xScale.domain([ 4,8])
+            if (!this.idleTimeout) return this.idleTimeout = setTimeout(this.idled, 350);// This allows to wait a little bit
+            this.xScale.domain(d3.extent(this.data, d => d.datetime))
         } else {
             this.xScale.domain([ this.xScale.invert(this.extent[0]), this.xScale.invert(this.extent[1]) ])
             this.area.select(`.${this.id}Brush`).call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
         }
         this.zoomChart()
-
-        // If user double click, reinitialize the chart
-        this.plot.on("dblclick", () => {
-            this.xScale.domain(d3.extent(this.data, function(d) { return new Date(d.date); }))
-            this.zoomChart()
-        });
     }
 
     zoomChart() {
@@ -200,6 +278,9 @@ export class AreaChart extends GraphLayout {
             .attr("d", this.areaGenerator)
         
         d3.selectAll(`.${this.id}XGrid`).remove();
+        d3.selectAll(`.stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`).remove();
+        d3.selectAll(`.start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`).remove();
+
         this.area.append("g")			
             .attr("class", `${this.id}XGrid`)
             .attr("transform", "translate(0," + this.height + ")")
@@ -207,6 +288,31 @@ export class AreaChart extends GraphLayout {
                 .tickSize(-this.height)
                 .tickFormat("")
             ) 
+
+        // Add the outage gridlines
+        this.outageLines.append("g")			
+            .attr("class", `stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+            .tickValues(this.stop)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
+            .attr("opacity", 0)	
+            .transition().duration(1000).delay(400)
+            .attr("opacity", 1)
+
+        this.outageLines.append("g")			
+            .attr("class", `start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+            .tickValues(this.start)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
+            .attr("opacity", 0)	
+            .transition().duration(1000).delay(400)
+            .attr("opacity", 1)
     }
 
     addLabels() {
@@ -237,6 +343,61 @@ export class AreaChart extends GraphLayout {
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text(this.yAxisLabel);
+    }
+
+    watchOutage() {
+        // Get time when the system stopped & when it was restarted
+        this.stop = [], this.start = []; let currentTime = new Date();
+        this.data.forEach((d, i, n)=> {
+            if (i == (n.length-1)) {
+                let difference_minutes = (currentTime.getTime() - d.datetime.getTime()) / 60000;
+                if (difference_minutes > 30) {
+                    d.cpu_percent = 0;
+                    d.value = 0;
+                    this.stop.push(d.datetime)
+                }
+            } else if (i>0) {
+                let difference_minutes = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000;
+                if (difference_minutes > 30) {
+                    n[i-1].cpu_percent = 0;
+                    d.cpu_percent = 0;
+                    n[i-1].value = 0; d.value = 0;
+                    this.stop.push(n[i-1].datetime)
+                    this.start.push(d.datetime)
+                } 
+            }
+        })
+
+        // Add a clipPath: everything out of this area won't be drawn.
+        this.plot.append("defs").append("svg:clipPath")
+            .attr("id", "clip-lines")
+            .append("svg:rect")
+            .attr("width", this.width )
+            .attr("height", this.height )
+            .attr("x", 1)
+            .attr("y", 0);
+
+        this.outageLines = this.plot.append('g')
+            .attr("clip-path", "url(#clip-lines)")
+
+        // Add the outage gridlines
+        this.outageLines.append("g")			
+            .attr("class", `stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+            .tickValues(this.stop)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
+
+        this.outageLines.append("g")			
+            .attr("class", `start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+            .tickValues(this.start)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
     }
 
 }

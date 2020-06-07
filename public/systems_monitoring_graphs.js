@@ -12,6 +12,7 @@ export class SystemGraphsController {
 */      let data2 = JSON.parse(JSON.stringify(data));
         data2.forEach(function(d) {
             d.date = new Date(d.datetime);
+            d.datetime = new Date(d.datetime);
             d.value = +d.cpu_percent;
         })
 
@@ -29,6 +30,7 @@ export class SystemGraphsController {
 */      let db = JSON.parse(JSON.stringify(data));
         db.forEach(function(d) {
             d.date = new Date(d.datetime);
+            d.datetime = new Date(d.datetime);
             d.value = +d.memory_usage.percent;
         })
 
@@ -43,40 +45,55 @@ export class SystemGraphsController {
 
 /*                         DISK UTILIZATION GRAPH
 /*        ==================================================================
-*/          let db2 = JSON.parse(JSON.stringify(data));
-            db2.forEach(function(d) {
-                d.date = new Date(d.datetime);
-            })
+*/      let db2 = JSON.parse(JSON.stringify(data));
+        db2.forEach(function(d) {
+            d.date = new Date(d.datetime);
+            d.datetime = new Date(d.datetime);
+            d.value = +d.memory_usage.percent;
+        })
 
-            let diskMetrics = ["used", "free"]
-            // Create keys to stack
-            let diskKeys = [],
-            diskStr = ""
+        const area3 = new AreaChart({element: document.querySelector('.chart'), data: db2 });
+        area3
+            .setId("disk")
+            .setTitle("Disk Utilization")
+            .setXAxisLabel("Date (dd:hh:m)")
+            .setYAxisLabel("Disk Usage (GB)")
+            .setColorScheme("#0E86D4")
+            .draw();
+// let db2 = JSON.parse(JSON.stringify(data));
+//             db2.forEach(function(d) {
+//                 d.date = new Date(d.datetime);
+//             })
 
-            for (let i = 0; i < diskMetrics.length; i++) {
-                diskStr =  "disk_" + diskMetrics[i];
-                diskKeys.push(diskStr);
-            }
+//             let diskMetrics = ["used", "free"]
+//             // Create keys to stack
+//             let diskKeys = [],
+//             diskStr = ""
 
-            let keys = diskKeys;
+//             for (let i = 0; i < diskMetrics.length; i++) {
+//                 diskStr =  "disk_" + diskMetrics[i];
+//                 diskKeys.push(diskStr);
+//             }
 
-            let colorsScheme = ["#0E86D4", "#bdefbd"]
-            // color palette
-            let color = d3.scaleOrdinal().domain(keys).range(colorsScheme);
+//             let keys = diskKeys;
 
-            //stack the data
-            let stackDisk = d3.stack().keys(keys),
-                    stackedData = stackDisk(db2);
+//             let colorsScheme = ["#0E86D4", "#bdefbd"]
+//             // color palette
+//             let color = d3.scaleOrdinal().domain(keys).range(colorsScheme);
 
-            const stackedArea = new StackedAreaChart({ element: document.querySelector('.chart'), data: db2 });
-            stackedArea
-                .setKeys(keys)
-                .setStackedData(stackedData)
-                .setId("disk")
-                .setTitle("Disk Utilization")
-                .setXAxisLabel("Date (dd:hh:m)")
-                .setYAxisLabel("Disk Utilization (%)")
-                .setColorScheme(color)
-                .draw();
+//             //stack the data
+//             let stackDisk = d3.stack().keys(keys),
+//                     stackedData = stackDisk(db2);
+
+            // const stackedArea = new StackedAreaChart({ element: document.querySelector('.chart'), data: db2 });
+            // stackedArea
+            //     .setKeys(keys)
+            //     .setStackedData(stackedData)
+            //     .setId("disk")
+            //     .setTitle("Disk Utilization")
+            //     .setXAxisLabel("Date (dd:hh:m)")
+            //     .setYAxisLabel("Disk Utilization (%)")
+            //     .setColorScheme(color)
+            //     .draw();
     }  
 }
