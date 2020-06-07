@@ -119,20 +119,12 @@ export class AreaChart extends GraphLayout {
             .style("fill", "#0E86D4");
 
         let vis = this;
-        // Create an overlay path to draw the above objects on top of
-        this.area
-            // .attr("class", `${this.id}overlay`)  
+        this.plot 
             .on("mouseover", () => this.focus.style("display", null))
             .on("mouseout", () => this.focus.style("display", "none"))
             .on("mousemove", function() {
                 vis.tipMove(this)
             });
-
-        // Make the overlay rectangle transparent,
-        // So it only serves the purpose of detecting mouse events
-        // d3.select(`.${this.id}overlay`)
-            // .style("fill", "none")
-            // .style("pointer-events", "all");
 
         // Select focus objects and set opacity
         d3.selectAll(`.${this.id}focus`)
@@ -162,7 +154,6 @@ export class AreaChart extends GraphLayout {
         let d1 = this.data[i];
         let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
-        console.log(typeof d3.formatPrefix(".2", d.value)(d.value))
         // Place the focus objects on the same path as the line
         this.focus.attr("transform", `translate(${this.xScale(d.datetime)}, ${this.yScale(d.value)})`);  
 
@@ -222,7 +213,7 @@ export class AreaChart extends GraphLayout {
         // Add the brushing
         this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
 
-        this.drawFocus();
+        this.drawFocus(this.area);
     }
 
     // idleTimeout;
