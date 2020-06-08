@@ -314,4 +314,59 @@ export class AreaChart extends GraphLayout {
                 .attr("text-anchor", "left")
                 .style("alignment-baseline", "middle")
     }
+
+    watchOutage() {
+        // Get time when the system stopped & when it was restarted
+        this.stop = [], this.start = []; let currentTime = new Date();
+        this.data.forEach((d, i, n)=> {
+            if (i == (n.length-1)) {
+                let difference_minutes = (currentTime.getTime() - d.datetime.getTime()) / 60000;
+                if (difference_minutes > 30) {
+                    d.cpu_percent = 0;
+                    d.value = 0;
+                    this.stop.push(d.datetime)
+                }
+            } else if (i>0) {
+                let difference_minutes = (d.datetime.getTime() - n[i-1].datetime.getTime()) / 60000;
+                if (difference_minutes > 30) {
+                    n[i-1].cpu_percent = 0;
+                    d.cpu_percent = 0;
+                    n[i-1].value = 0; d.value = 0;
+                    this.stop.push(n[i-1].datetime)
+                    this.start.push(d.datetime)
+                } 
+            }
+        })
+        
+        // Add a clipPath: everything out of this area won't be drawn.
+        this.plot.append("defs").append("svg:clipPath")
+            .attr("id", "clip-lines")
+            .append("svg:rect")
+            .attr("width", this.width )
+            .attr("height", this.height )
+            .attr("x", 1)
+            .attr("y", 0);
+
+        this.outageLines = this.plot.append('g')
+            .attr("clip-path", "url(#clip-lines)")
+
+        // Add the outage gridlines
+        this.outageLines.append("g")			
+            .attr("class", `stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+            .tickValues(this.stop)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
+
+        this.outageLines.append("g")			
+            .attr("class", `start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+            .tickValues(this.start)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
+    }
 }
