@@ -230,12 +230,6 @@ export class AreaChart extends GraphLayout {
             this.area.select(`.${this.id}Brush`).call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
         }
         this.zoomChart()
-
-        // If user double click, reinitialize the chart
-        this.plot.on("dblclick", () => {
-            this.xScale.domain(d3.extent(this.data, function(d) { return new Date(d.date); }))
-            this.zoomChart()
-        });
     }
 
     zoomChart() {
