@@ -1,6 +1,7 @@
 export class GraphLayout {
     constructor(el) {
         this.element = el;
+        // this.feature = "";
     }
 
     layout() {
@@ -18,7 +19,7 @@ export class GraphLayout {
         // set up parent element and SVG
         vis.element.innerHTML = '';
         const svg = d3.select(vis.element).append('svg');
-        svg.attr('width',  vis.width + vis.margin.left + vis.margin.right);
+        svg.attr('width',  vis.width + vis.margin.left + vis.margin.right + 120);
         svg.attr('height', vis.height +  vis.margin.top + vis.margin.bottom);
 
         // we'll actually be appending to a <g> element
@@ -52,7 +53,12 @@ export class GraphLayout {
     }
 
     setYLimit(yLimit) {
-        this.yLimit = yLimit
+        this.yLimit = yLimit;
+        return this;
+    }
+
+    setFeatureInAnalysis(feature) {
+        this.feature = feature;
         return this;
     }
 }

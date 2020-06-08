@@ -6,12 +6,11 @@ export class AreaChart extends GraphLayout {
         // load in arguments from config object
         super(opts.element)
         this.data = opts.data;
-        this.id = "id";
+        this.id = `defaultAreaChart`;
         this.color = "red";
         this.title = "Area Chart";
         this.xAxisLabel = "X Axis";
         this.yAxisLabel = "Y Axis";
-        this.yLimit = 0;
 
         this.draw()
     }
@@ -24,7 +23,8 @@ export class AreaChart extends GraphLayout {
         vis.addAxes();
         vis.addArea();
         vis.addLabels();
-        vis.addLegend();
+        if (this.feature == "system-metrics")
+            vis.addMetricsLegend();
     }
 
     createScales() {
@@ -52,8 +52,16 @@ export class AreaChart extends GraphLayout {
         let decimalFormatter = d3.format(".2s");
         // create and append axis elements
         const xAxis = d3.axisBottom(this.xScale).ticks(d3.timeDay.every(1)).tickFormat(this.dayTimeFormat);
-        const yAxis = this.id == "cpu" ? d3.axisLeft(this.yScale) :
-        d3.axisLeft(this.yScale).ticks(5).tickFormat((d) => decimalFormatter(d).replace('G', 'GB'))
+        let yAxis = d3.axisLeft(this.yScale) 
+
+        if (this.feature == "system-metrics") {
+            if (this.id == "disk" || this.id == "memory") {
+                yAxis = d3.axisLeft(this.yScale).ticks(5).tickFormat((d) => decimalFormatter(d).replace('G', 'GB'))
+            } 
+            if (this.id == "cpu") {
+                yAxis = d3.axisLeft(this.yScale)
+            } 
+        }
 
         this.xAxis = this.plot.append("g")
             .attr("class", `${this.id}XAxis`)
@@ -119,7 +127,7 @@ export class AreaChart extends GraphLayout {
             .style("fill", "#0E86D4");
 
         let vis = this;
-        this.plot 
+        this.plot
             .on("mouseover", () => this.focus.style("display", null))
             .on("mouseout", () => this.focus.style("display", "none"))
             .on("mousemove", function() {
@@ -152,17 +160,28 @@ export class AreaChart extends GraphLayout {
         let i = bisectDate(this.data, x0, 1);
         let d0 = this.data[i - 1];
         let d1 = this.data[i];
-        let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
 
         // Place the focus objects on the same path as the line
-        this.focus.attr("transform", `translate(${this.xScale(d.datetime)}, ${this.yScale(d.value)})`);  
+        this.focus.attr("transform", `translate(${this.xScale(d.datetime)}, ${this.yScale(d.value)})`); 
+
+        let tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+        Value: ${d3.formatPrefix(".2", d.value)(d.value)}`;
+
+        if (this.feature == "system-metrics") {
+            if (this.id == "disk" || this.id == "memory") {
+                tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+                        Used: ${d3.formatPrefix(".2", d.value)(d.value).replace("G", "GB")}`
+            } 
+            if (this.id == "cpu") {
+                tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+                        Used: ${d3.formatPrefix(".2", d.value)(d.value)}%`
+            } 
+        }
 
         // Position the text
         this.focus.select("text")
-            .text(`${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
-                Used: ${d3.formatPrefix(".2", d.value)(d.value).replace("G", "GB")} 
-                ${(d3.formatPrefix(".2", d.value)(d.value)).includes("G") ? "GB" : "%"}` // check if the value is in gb
-                )
+            .text(tooltipText)
             .transition() // slowly fade in the tooltip
                 .duration(100)
                 .style("opacity", 1);
@@ -194,7 +213,8 @@ export class AreaChart extends GraphLayout {
             .y0(this.yScale(0))
             .y1(d => this.yScale(d.value))
 
-        this.watchOutage()
+        if (this.feature == "system-metrics")
+            this.watchOutage()
 
         this.area.append("path")
             .datum(this.data)
@@ -213,7 +233,7 @@ export class AreaChart extends GraphLayout {
         // Add the brushing
         this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
 
-        this.drawFocus(this.area);
+        this.drawFocus();
     }
 
     // idleTimeout;
@@ -269,30 +289,32 @@ export class AreaChart extends GraphLayout {
                 .tickFormat("")
             ) 
 
-        // Add the outage gridlines
-        this.outageLines.append("g")			
-            .attr("class", `stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
-            .attr("transform", "translate(0," + this.height + ")")
-            .call(d3.axisBottom(this.xScale)
-            .tickValues(this.stop)
-                .tickSize(-this.height)
-                .tickFormat("")
-            )
-            .attr("opacity", 0)	
-            .transition().duration(1000).delay(400)
-            .attr("opacity", 1)
+        if (this.feature == "system-metrics") {
+            // Add the outage gridlines
+            this.outageLines.append("g")			
+                .attr("class", `stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+                .attr("transform", "translate(0," + this.height + ")")
+                .call(d3.axisBottom(this.xScale)
+                .tickValues(this.stop)
+                    .tickSize(-this.height)
+                    .tickFormat("")
+                )
+                .attr("opacity", 0)	
+                .transition().duration(1000).delay(400)
+                .attr("opacity", 1)
 
-        this.outageLines.append("g")			
-            .attr("class", `start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
-            .attr("transform", "translate(0," + this.height + ")")
-            .call(d3.axisBottom(this.xScale)
-            .tickValues(this.start)
-                .tickSize(-this.height)
-                .tickFormat("")
-            )
-            .attr("opacity", 0)	
-            .transition().duration(1000).delay(400)
-            .attr("opacity", 1)
+            this.outageLines.append("g")			
+                .attr("class", `start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+                .attr("transform", "translate(0," + this.height + ")")
+                .call(d3.axisBottom(this.xScale)
+                .tickValues(this.start)
+                    .tickSize(-this.height)
+                    .tickFormat("")
+                )
+                .attr("opacity", 0)	
+                .transition().duration(1000).delay(400)
+                .attr("opacity", 1)
+        }
     }
 
     addLabels() {
@@ -325,7 +347,7 @@ export class AreaChart extends GraphLayout {
             .text(this.yAxisLabel);
     }
 
-    addLegend() {
+    addMetricsLegend() {
         let keys = ["stop", "start"]
         let color = d3.scaleOrdinal().domain(keys).range(["red", "green"]);
 
@@ -375,8 +397,7 @@ export class AreaChart extends GraphLayout {
                 } 
             }
         })
-
-    // addOutageGridlines
+        
         // Add a clipPath: everything out of this area won't be drawn.
         this.plot.append("defs").append("svg:clipPath")
             .attr("id", "clip-lines")

@@ -24,6 +24,7 @@ export class SystemGraphsController {
             .setYAxisLabel("CPU Utilization (%)")
             .setColorScheme("#0000CD")
             .setYLimit(100)
+            .setFeatureInAnalysis("system-metrics")
             .draw();
 
 /*                         MEMORY  UTILIZATION GRAPH  
@@ -43,6 +44,7 @@ export class SystemGraphsController {
             .setYAxisLabel("Memoru Utilization (%)")
             .setColorScheme("#000080")
             .setYLimit(db[0].memory_usage.total)
+            .setFeatureInAnalysis("system-metrics")
             .draw();
 
 /*                         DISK UTILIZATION GRAPH
@@ -62,6 +64,7 @@ export class SystemGraphsController {
             .setYAxisLabel("Disk Usage (GB)")
             .setColorScheme("#0E86D4")
             .setYLimit(db2[0].disk_usage.total)
+            .setFeatureInAnalysis("system-metrics")
             .draw();
 // let db2 = JSON.parse(JSON.stringify(data));
 //             db2.forEach(function(d) {
