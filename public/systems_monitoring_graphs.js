@@ -3,6 +3,8 @@ import { AreaChart } from "./avf_graphs/area.chart.js";
 
 export class SystemGraphsController {
     static updateGraphs(data) {
+        // Clear previous graphs before redrawing
+        d3.selectAll("svg").remove();
 
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
