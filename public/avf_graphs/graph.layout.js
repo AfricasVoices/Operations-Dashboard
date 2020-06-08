@@ -49,4 +49,14 @@ export class GraphLayout {
         this.color = color;
         return this;
     }
+
+    setYLimit(yLimit) {
+        this.yLimit = yLimit;
+        return this;
+    }
+
+    setFeatureInAnalysis(feature) {
+        this.feature = feature;
+        return this;
+    }
 }
