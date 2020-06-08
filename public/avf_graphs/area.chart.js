@@ -73,6 +73,8 @@ export class AreaChart extends GraphLayout {
         this.plot.append("g")
             .attr("class", `${this.id}YAxis`)
             .call(yAxis)
+
+        this.addGridlines()
     }
 
     addGridlines() {
