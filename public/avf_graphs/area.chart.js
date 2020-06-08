@@ -229,7 +229,8 @@ export class AreaChart extends GraphLayout {
             this.xScale.domain([ this.xScale.invert(this.extent[0]), this.xScale.invert(this.extent[1]) ])
             this.area.select(`.${this.id}Brush`).call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
         }
-        this.zoomChart()
+        this.zoomInChart()
+        this.adjustGridlines()
     }
 
     zoomInChart() {
