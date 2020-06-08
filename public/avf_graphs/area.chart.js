@@ -224,7 +224,7 @@ export class AreaChart extends GraphLayout {
         if (!this.extent) {
             if (!idleTimeout) return idleTimeout = setTimeout(
                 this.resetIdleTimeout.bind(this), 350); // This allows to wait a little bit
-            this.xScale.domain([ 4,8])
+                this.xScale.domain(d3.extent(this.data, d => d.datetime))
         } else {
             this.xScale.domain([ this.xScale.invert(this.extent[0]), this.xScale.invert(this.extent[1]) ])
             this.area.select(`.${this.id}Brush`).call(this.brush.move, null) // This remove the grey brush area as soon as the selection has been done
