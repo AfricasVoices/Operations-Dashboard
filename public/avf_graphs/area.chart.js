@@ -21,6 +21,8 @@ export class AreaChart extends GraphLayout {
         this.addAxes();
         this.addArea();
         this.addLabels();
+        if (this.feature == "system-metrics")
+            vis.addMetricsLegend();
     }
 
     createScales() {
