@@ -238,7 +238,7 @@ export class AreaChart extends GraphLayout {
   
         // If no selection, back to initial coordinate. Otherwise, update X axis domain
         if (!this.extent) {
-            if (!idleTimeout) return idleTimeout = setTimeout(
+            if (!this.idleTimeout) return this.idleTimeout = setTimeout(
                 this.resetIdleTimeout.bind(this), 350); // This allows to wait a little bit
                 this.xScale.domain(d3.extent(this.data, d => d.datetime))
         } else {
