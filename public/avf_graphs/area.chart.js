@@ -257,6 +257,47 @@ export class AreaChart extends GraphLayout {
             ) 
     }
 
+    adjustGridlines() {
+        d3.selectAll(`.${this.id}XGrid`).remove();
+        d3.selectAll(`.stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`).remove();
+        d3.selectAll(`.start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`).remove();
+
+        this.plot.append("g")			
+            .attr("class", `${this.id}XGrid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+                .tickSize(-this.height)
+                .tickFormat("")
+            ) 
+
+        if (this.feature == "system-metrics") {
+            // Add the outage gridlines
+            this.outageLines.append("g")			
+                .attr("class", `stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+                .attr("transform", "translate(0," + this.height + ")")
+                .call(d3.axisBottom(this.xScale)
+                .tickValues(this.stop)
+                    .tickSize(-this.height)
+                    .tickFormat("")
+                )
+                .attr("opacity", 0)	
+                .transition().duration(1000).delay(400)
+                .attr("opacity", 1)
+
+            this.outageLines.append("g")			
+                .attr("class", `start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+                .attr("transform", "translate(0," + this.height + ")")
+                .call(d3.axisBottom(this.xScale)
+                .tickValues(this.start)
+                    .tickSize(-this.height)
+                    .tickFormat("")
+                )
+                .attr("opacity", 0)	
+                .transition().duration(1000).delay(400)
+                .attr("opacity", 1)
+        }
+    }
+
     addLabels() {
         // Graph title
         this.plot.append("text")
