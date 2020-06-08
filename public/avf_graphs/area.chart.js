@@ -252,8 +252,11 @@ export class AreaChart extends GraphLayout {
     }
 
     zoomInChart() {
-        this.xAxis.transition().duration(1000).call(
-            d3.axisBottom(this.xScale).ticks(d3.timeDay.every(1)).tickFormat(this.dayTimeFormat))
+        this.xAxis
+            .transition()
+            .duration(1000)
+            .call(d3.axisBottom(this.xScale).tickFormat(this.dayTimeFormat));
+
         // Rotate X axis ticks
         this.xAxis.selectAll("text")
             .style("text-anchor", "end")
