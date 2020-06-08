@@ -210,7 +210,7 @@ export class AreaChart extends GraphLayout {
             .attr("stroke-width", 0.1)
             .attr("d", this.areaGenerator);
 
-        this.prepareTooltip();
+        this.drawFocus();
     }
 
     updateChart() {
