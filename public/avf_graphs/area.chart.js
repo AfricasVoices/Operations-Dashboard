@@ -41,9 +41,20 @@ export class AreaChart extends GraphLayout {
     }
 
     addAxes() {
-        // Create and append axis elements
-        const xAxis = d3.axisBottom(this.xScale);
-        const yAxis = d3.axisLeft(this.yScale);
+        this.dayTimeFormat = d3.timeFormat("%a %d (%H:%M)");
+        let decimalFormatter = d3.format(".2s");
+        // create and append axis elements
+        const xAxis = d3.axisBottom(this.xScale).ticks(d3.timeDay.every(1)).tickFormat(this.dayTimeFormat);
+        let yAxis = d3.axisLeft(this.yScale); 
+
+        if (this.feature == "system-metrics") {
+            if (this.id == "disk" || this.id == "memory") {
+                yAxis = d3.axisLeft(this.yScale).ticks(5).tickFormat((d) => decimalFormatter(d).replace('G', 'GB'))
+            } 
+            if (this.id == "cpu") {
+                yAxis = d3.axisLeft(this.yScale)
+            } 
+        }
 
         this.xAxis = this.plot.append("g")
             .attr("class", `${this.id}XAxis`)
