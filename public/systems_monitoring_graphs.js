@@ -1,3 +1,6 @@
+  
+import { AreaChart } from "./avf_graphs/area.chart.js";
+
 export class SystemGraphsController {
     static updateGraphs(data) {
 
