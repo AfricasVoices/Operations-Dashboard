@@ -46,6 +46,26 @@ export class SystemGraphsController {
             .setFeatureInAnalysis("system-metrics")
             .draw();
 
+/*                         C P U  UTILIZATION GRAPH  
+/*      ==================================================================
+*/      let cpuUsageChartData = JSON.parse(JSON.stringify(data));
+        cpuUsageChartData.forEach(function(d) {
+            d.datetime = new Date(d.datetime);
+            d.value = +d.cpu_percent;
+        })
+
+        const area = new AreaChart(
+            {element: document.querySelector('.cpu-utilization-chart'), data: cpuUsageChartData });
+        area
+            .setId("cpu")
+            .setTitle("CPU Utilization")
+            .setXAxisLabel("Date (dd:hh:m)")
+            .setYAxisLabel("CPU Utilization (%)")
+            .setColorScheme("#0000CD")
+            .setYLimit(100)
+            .setFeatureInAnalysis("system-metrics")
+            .draw();
+
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
         let lastUpdateTimeStamp = new Date(
