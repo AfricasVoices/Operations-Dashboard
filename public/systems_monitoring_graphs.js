@@ -11,7 +11,6 @@ export class SystemGraphsController {
 /*      ==================================================================
 */      let data2 = JSON.parse(JSON.stringify(data));
         data2.forEach(function(d) {
-            d.date = new Date(d.datetime);
             d.datetime = new Date(d.datetime);
             d.value = +d.cpu_percent;
         })
@@ -31,7 +30,6 @@ export class SystemGraphsController {
 /*       ==================================================================
 */      let db = JSON.parse(JSON.stringify(data));
         db.forEach(function(d) {
-            d.date = new Date(d.datetime);
             d.datetime = new Date(d.datetime);
             d.value = +d.memory_usage.used;
         })
@@ -41,7 +39,7 @@ export class SystemGraphsController {
             .setId("memory")
             .setTitle("Memory Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
-            .setYAxisLabel("Memoru Utilization (%)")
+            .setYAxisLabel("Memoru Utilization (GB)")
             .setColorScheme("#000080")
             .setYLimit(db[0].memory_usage.total)
             .setFeatureInAnalysis("system-metrics")
@@ -51,7 +49,6 @@ export class SystemGraphsController {
 /*        ==================================================================
 */      let db2 = JSON.parse(JSON.stringify(data));
         db2.forEach(function(d) {
-            d.date = new Date(d.datetime);
             d.datetime = new Date(d.datetime);
             d.value = +d.disk_usage.used;
         })
