@@ -66,7 +66,9 @@ export class SystemGraphsController {
             .setFeatureInAnalysis("system-metrics")
             .draw();
 
-        let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
+/*                        COMPUTE LAST UPDATED TIMESTAMP 
+/*      ==================================================================
+*/      let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
         let lastUpdateTimeStamp = new Date(
             Math.max.apply(
