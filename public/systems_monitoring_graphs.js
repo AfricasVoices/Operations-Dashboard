@@ -26,6 +26,26 @@ export class SystemGraphsController {
             .setFeatureInAnalysis("system-metrics")
             .draw();
 
+/*                         MEMORY  UTILIZATION GRAPH  
+/*      ==================================================================
+*/      let memoryUsageChartData = JSON.parse(JSON.stringify(data));
+        memoryUsageChartData.forEach(function(d) {
+            d.datetime = new Date(d.datetime);
+            d.value = +d.memory_usage.used;
+        })
+
+        const area2 = new AreaChart(
+            {element: document.querySelector('.memory-utilization-chart'), data: memoryUsageChartData });
+        area2
+            .setId("memory")
+            .setTitle("Memory Utilization")
+            .setXAxisLabel("Date (dd:hh:m)")
+            .setYAxisLabel("Memoru Utilization (GB)")
+            .setColorScheme("#000080")
+            .setYLimit(memoryUsageChartData[0].memory_usage.total)
+            .setFeatureInAnalysis("system-metrics")
+            .draw();
+
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
         let lastUpdateTimeStamp = new Date(
