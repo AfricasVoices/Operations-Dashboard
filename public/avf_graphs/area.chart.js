@@ -81,26 +81,99 @@ export class AreaChart extends GraphLayout {
             )
     }
 
-    prepareTooltip() {
-        // Prep the tooltip bits, initial display is hidden
-        this.tooltip = this.plot.append("g")
-            .attr("class", `${this.id}Tooltip`)
-            .style("opacity", 1.0)
-            .style("display", "none");
+    drawFocus() {    
+        // Create focus object
+        this.focus = this.plot.append("g")
+            .attr("class", `${this.id}focus`)
 
-        this.tooltip.append("rect")
-            .attr("width", 150)
-            .attr("height", 20)
-            .attr("fill", "white")
-            .style("opacity", 1.0);
+        // Append circle on the line path
+        this.focus.append("circle")
+            .attr("r", 3.5)
 
-        this.tooltip.append("text")
-            .attr("x", 75)
-            .attr("dy", "1.2em")
-            .style("text-anchor", "middle")
+        // Add background rectangle behind the text tooltip
+        this.focus.append("rect")
+            .attr("x", -30)
+            .attr("y", "-32px")
+            .attr("rx", 6)
+            .attr("ry", 6)
+            .attr("width", 220)
+            .attr("height", 20);
+
+        // Add text annotation for tooltip
+        this.focus.append("text")
+            .attr("x", -20)
+            .attr("dy", "-18px")
             .attr("font-size", "12px")
-            .attr("font-weight", "bold");
+            .style("fill", "#0E86D4");
+
+        let vis = this;
+        this.plot
+            .on("mouseover", () => this.focus.style("display", null))
+            .on("mouseout", () => this.focus.style("display", "none"))
+            .on("mousemove", function() {
+                vis.tipMove(this)
+            });
+
+        // Select focus objects and set opacity
+        d3.selectAll(`.${this.id}focus`)
+            .style("opacity", 0.9);
+
+        // Select the circle and style it
+        d3.selectAll(`.${this.id}focus circle`)
+            .style("fill", this.color)
+            .style("opacity", 0)
+
+        // Select the rect and style it
+        d3.selectAll(`.${this.id}focus rect`)
+            .style("fill", "whitesmoke")
+            .style("opacity", 0)
+
     }
+
+    // Function that adds tooltip on hover
+    tipMove(sel) {
+        // Below code finds the date by bisecting and
+        // Stores the x and y coordinate as variables
+        let x0 = this.xScale.invert(d3.mouse(sel)[0]);
+        // This will select the closest date on the x axiswhen a user hover over the chart
+        let bisectDate = d3.bisector(function(d) {return d.datetime;}).left;
+        let i = bisectDate(this.data, x0, 1);
+        let d0 = this.data[i - 1];
+        let d1 = this.data[i];
+        let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
+
+        // Place the focus objects on the same path as the line
+        this.focus.attr("transform", `translate(${this.xScale(d.datetime)}, ${this.yScale(d.value)})`); 
+
+        let tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+        Value: ${d3.formatPrefix(".2", d.value)(d.value)}`;
+
+        if (this.feature == "system-metrics") {
+            if (this.id == "disk" || this.id == "memory") {
+                tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+                        Used: ${d3.formatPrefix(".2", d.value)(d.value).replace("G", "GB")}`
+            } 
+            if (this.id == "cpu") {
+                tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+                        Used: ${d3.formatPrefix(".2", d.value)(d.value)}%`
+            } 
+        }
+
+        // Position the text
+        this.focus.select("text")
+            .text(tooltipText)
+            .transition() // slowly fade in the tooltip
+                .duration(100)
+                .style("opacity", 1);
+
+        // Show the circle on the path
+        this.focus.selectAll(`.${this.id}focus circle`)
+            .style("opacity", 1)
+
+        // Show the rect on the path
+        d3.selectAll(`.${this.id}focus rect`)
+            .style("opacity", 1)
+    };
 
     addArea() {
         // Add a clipPath: everything out of this area won't be drawn.
@@ -135,21 +208,7 @@ export class AreaChart extends GraphLayout {
             .attr("fill-opacity", .6)
             .attr("stroke", this.color)
             .attr("stroke-width", 0.1)
-            .attr("d", this.areaGenerator)
-            .on("mouseover", () => {
-                this.tooltip.style("display", null);
-            })
-            .on("mouseout", () => {
-                this.tooltip.style("display", "none");
-            })
-            .on("mousemove", (d, i, n) => {
-                let xPosition = d3.mouse(n[i])[0] - 15;//x position of tooltip
-                let yPosition = d3.mouse(n[i])[1] - 25;//y position of tooltip
-                this.tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");//placing the tooltip
-                let x0 = this.xScale.invert(d3.mouse(n[i])[0]);//n[i] will give the x for the mouse position on x
-                let y0 = this.yScale.invert(d3.mouse(n[i])[1]);//n[i] will give the y for the mouse position on y
-                this.tooltip.select("text").text(`${d3.timeFormat('%Y-%m-%d')(x0)} Used: ${+Math.round(y0)} %`);//show the text after formatting the date
-            });;
+            .attr("d", this.areaGenerator);
 
         this.prepareTooltip();
     }
