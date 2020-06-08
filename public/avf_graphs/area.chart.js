@@ -286,4 +286,32 @@ export class AreaChart extends GraphLayout {
             .style("text-anchor", "middle")
             .text(this.yAxisLabel);
     }
+
+    addMetricsLegend() {
+        let keys = ["stop", "start"]
+        let color = d3.scaleOrdinal().domain(keys).range(["red", "green"]);
+
+        // Add one dot in the legend for each name.
+        this.plot.selectAll("myrect")
+            .data(keys)
+            .enter()
+            .append("rect")
+                .attr("x", this.width + 10)
+                .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                .attr("width", 30)
+                .attr("height", 3)
+                .style("fill", d => color(d))
+
+        // Add one dot in the legend for each name.
+        this.plot.selectAll("mylabels")
+            .data(keys)
+            .enter()
+            .append("text")
+                .attr("x", this.width + 45)
+                .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                .style("fill", d => color(d))
+                .text(d => d)
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
+    }
 }
