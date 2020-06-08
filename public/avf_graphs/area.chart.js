@@ -232,8 +232,9 @@ export class AreaChart extends GraphLayout {
         this.zoomChart()
     }
 
-    zoomChart() {
-        this.xAxis.transition().duration(1000).call(d3.axisBottom(this.xScale))
+    zoomInChart() {
+        this.xAxis.transition().duration(1000).call(
+            d3.axisBottom(this.xScale).ticks(d3.timeDay.every(1)).tickFormat(this.dayTimeFormat))
         // Rotate X axis ticks
         this.xAxis.selectAll("text")
             .style("text-anchor", "end")
@@ -246,15 +247,6 @@ export class AreaChart extends GraphLayout {
             .transition()
             .duration(1000)
             .attr("d", this.areaGenerator)
-        
-        d3.selectAll(`.${this.id}XGrid`).remove();
-        this.area.append("g")			
-            .attr("class", `${this.id}XGrid`)
-            .attr("transform", "translate(0," + this.height + ")")
-            .call(d3.axisBottom(this.xScale)
-                .tickSize(-this.height)
-                .tickFormat("")
-            ) 
     }
 
     adjustGridlines() {
