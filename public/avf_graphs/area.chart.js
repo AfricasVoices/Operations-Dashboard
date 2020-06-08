@@ -212,17 +212,18 @@ export class AreaChart extends GraphLayout {
 
         this.drawFocus();
     }
+    
+    // Will reset time set before subsequent brushing trigger `updateChart`
+    resetIdleTimeout() { this.idleTimeout = null; }
 
     updateChart() {
-        let idleTimeout
-        // A function that set idleTimeOut to null
-        function idled() { idleTimeout = null; }
         // What are the selected boundaries?
         this.extent = d3.event.selection
   
         // If no selection, back to initial coordinate. Otherwise, update X axis domain
         if (!this.extent) {
-            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+            if (!idleTimeout) return idleTimeout = setTimeout(
+                this.resetIdleTimeout.bind(this), 350); // This allows to wait a little bit
             this.xScale.domain([ 4,8])
         } else {
             this.xScale.domain([ this.xScale.invert(this.extent[0]), this.xScale.invert(this.extent[1]) ])
