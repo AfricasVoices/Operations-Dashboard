@@ -193,6 +193,9 @@ export class AreaChart extends GraphLayout {
             .y0(this.yScale(0))
             .y1(d => this.yScale(d.value))
 
+        if (this.feature == "system-metrics")
+            this.watchOutage()
+
         this.area.append("path")
             .datum(this.data)
             .classed('area',true)
