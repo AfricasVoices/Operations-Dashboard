@@ -26,7 +26,7 @@ export class AreaChart extends GraphLayout {
     createScales() {
         // Calculate max and min for data
         const xExtent = d3.extent(this.data, d => new Date(d.date));
-        const yExtent = d3.extent(this.data, d => +d.value);
+        const yExtent = vis.yLimit ? [0, vis.yLimit] : d3.extent(vis.data, d => +d.value);
 
         // Force zero baseline if all data points are positive
         if (yExtent[0] > 0) { yExtent[0] = 0; };
