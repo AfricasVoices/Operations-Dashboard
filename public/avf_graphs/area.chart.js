@@ -188,18 +188,10 @@ export class AreaChart extends GraphLayout {
         // Create the area variable: where both the area and the brush take place
         this.area = this.plot.append('g').attr("clip-path", "url(#clip)")
 
-        // Add brushing
-        this.brush = d3.brushX()                   // Add the brush feature using the d3.brush function
-            .extent( [ [0,0], [this.width, this.height] ] )  // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-            .on("end", this.updateChart.bind(this))
-
         this.areaGenerator = d3.area()
             .x(d => this.xScale(new Date(d.date)))
             .y0(this.yScale(0))
             .y1(d => this.yScale(d.value))
-
-        // Add the brushing
-        this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
 
         this.area.append("path")
             .datum(this.data)
@@ -209,6 +201,14 @@ export class AreaChart extends GraphLayout {
             .attr("stroke", this.color)
             .attr("stroke-width", 0.1)
             .attr("d", this.areaGenerator);
+
+        // Enable brushing
+        this.brush = d3.brushX()  // Add the brush feature using the d3.brush function
+            .extent( [ [0,0], [this.width, this.height] ] )  // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+            .on("end", this.updateChart.bind(this))
+
+        // Add the brushing
+        this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
 
         this.drawFocus();
     }
