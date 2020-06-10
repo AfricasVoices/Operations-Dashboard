@@ -1276,8 +1276,7 @@ class GraphController {
         function setLastUpdatedAlert() {
             // Calculate time diff bw current and lastUpdateTimeStamp
             let currentTime = new Date(),
-                difference_ms = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000,
-                difference_minutes = Math.floor(difference_ms % 60);
+                difference_minutes = (currentTime.getTime() - lastUpdateTimeStamp.getTime()) / 60000;
             if (difference_minutes > 20) {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", true);
             } else {

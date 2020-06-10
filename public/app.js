@@ -11,12 +11,16 @@ class Controller {
         document
             .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
+        document
+            .querySelector(Controller.DOMstrings.systemsLinkSelector)
+            .addEventListener("click", Controller.navigateToSystems);
     }
 
     static resetUI() {
         document.querySelector(Controller.DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(Controller.DOMstrings.graphContainer).innerHTML = "";
         GraphController.clearTimers();
+        SystemGraphsController.clearTimers();
     }
 
     static resetActiveLink() {
@@ -54,6 +58,17 @@ class Controller {
         DataController.registerSnapshotListener(unsubscribeFunc);
     }
 
+    static displaySystems() {
+        UIController.addSystemsGraphs();
+        Controller.resetActiveLink();
+        document
+            .querySelector(Controller.DOMstrings.systemsLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
+        // Update and show the Graphs
+        let unsubscribeFunc = DataController.watchSystemsMetrics(SystemGraphsController.updateGraphs);
+        DataController.registerSnapshotListener(unsubscribeFunc);
+    }
+
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.resetUI();
@@ -71,6 +86,15 @@ class Controller {
             let project = e.target.innerText;
             window.location.hash = `traffic-${project}`;
             Controller.displayProject(project);
+        }
+    }
+
+    static navigateToSystems(e) {
+        if (e.target && e.target.nodeName == "A") {
+            Controller.resetUI();
+            DataController.detachSnapshotListener();
+            window.location.hash = "systems";
+            Controller.displaySystems();
         }
     }
 
@@ -105,6 +129,8 @@ class Controller {
         if (page_route) {
             if (page_route == "coding_progress") {
                 Controller.displayCodingProgress();
+            } else if (page_route == "systems") {
+                Controller.displaySystems();
             } else if (page_route.startsWith("traffic-")) {
                 DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
             } else {

@@ -10,18 +10,25 @@ class UIController {
             logoutBtn: ".logout-btn",
             dropdownItem: ".dropdown-item",
             activeLinkClassName: "active-link",
-            activeLinks: "a.active-link"
+            activeLinks: "a.active-link",
+            systemsLinkSelector: ".systems-link"
         };
     }
 
     static addDropdownMenu(data) {
-        let DOMstrings = UIController.getDOMstrings(),
-            html = `<a id="project" class="dropdown-item">%project_name%</a>`;
-        // Replace the placeholder text with some actual data
-        data.forEach(obj => {
-            let newHtml = html.replace("%project_name%", obj.project_name);
-            document.querySelector(DOMstrings.projectMenu).insertAdjacentHTML("beforeend", newHtml);
-        });
+        const DOMstrings = UIController.getDOMstrings(),
+            statusMenu = document.querySelector(DOMstrings.projectMenu);
+        if (statusMenu) {
+            while (statusMenu.firstChild) {
+                statusMenu.removeChild(statusMenu.firstChild);
+            }   
+            let html = `<a id="project" class="dropdown-item">%project_name%</a>`;
+            // Replace the placeholder text with some actual data
+            data.forEach(obj => {
+                let newHtml = html.replace("%project_name%", obj.project_name);
+                statusMenu.insertAdjacentHTML("beforeend", newHtml);
+            });
+        }
     }
 
     static addCodingProgressSection() {
@@ -97,94 +104,6 @@ class UIController {
         document
             .querySelector(DOMstrings.codingProgressContainer)
             .insertAdjacentHTML("beforeend", html);
-    }
-
-    static updateProgressUI(data) {
-        console.log("update_ui: " + JSON.stringify(data));
-        let statusBody = document.getElementById("coding-status-body");
-        if (statusBody) {
-            while (statusBody.firstChild) {
-                statusBody.removeChild(statusBody.firstChild);
-            }
-            let lastUpdate = data["last_update"];
-            document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
-            for (let datasetID in data["coding_progress"]) {
-                let messagesCount = data["coding_progress"][datasetID]["messages_count"],
-                    messagesWithLabel = data["coding_progress"][datasetID]["messages_with_label"],
-                    wrongSchemeMessages =
-                        data["coding_progress"][datasetID]["wrong_scheme_messages"],
-                    notCodedMessages = data["coding_progress"][datasetID]["not_coded_messages"],
-                    datasetLink = document.createElement("a");
-                datasetLink.setAttribute(
-                    "href",
-                    `https://web-coda.firebaseapp.com/?dataset=${datasetID}`
-                );
-                datasetLink.setAttribute("target", "_blank");
-                datasetLink.innerText = datasetID;
-                let rw = statusBody.insertRow();
-                rw.insertCell().appendChild(datasetLink);
-                rw.insertCell().innerText = messagesCount;
-                rw.insertCell().innerText = messagesWithLabel;
-                rw.insertCell().innerText =
-                    ((100 * messagesWithLabel) / messagesCount).toFixed(2) + "%";
-                rw.insertCell().innerText = wrongSchemeMessages != null ? wrongSchemeMessages : "-";
-                rw.insertCell().innerText =
-                    wrongSchemeMessages != null
-                        ? ((100 * wrongSchemeMessages) / messagesCount).toFixed(2) + "%"
-                        : "-";
-                rw.insertCell().innerText = notCodedMessages != null ? notCodedMessages : "-";
-                rw.insertCell().innerText =
-                    notCodedMessages != null
-                        ? ((100 * notCodedMessages) / messagesCount).toFixed(2) + "%"
-                        : "-";
-                console.log(
-                    datasetID,
-                    messagesCount,
-                    messagesWithLabel,
-                    wrongSchemeMessages,
-                    notCodedMessages
-                );
-                //Table sorting using tablesorter plugin based on fraction of message labelling complete
-                $("#codingtable").tablesorter({
-                    //sorting on page load, column four in descending order i.e from least coded to most coded.
-                    sortList: [[3, 0]]
-                });
-                //Trigger sorting on table data update
-                $("#codingtable")
-                    .tablesorter()
-                    .trigger("update");
-                //Formating rows based on cell value
-                $("#codingtable td:nth-child(4)").each(function() {
-                    let Done = $(this).text();
-                    //Style the entire row conditionally based on the cell value
-                    if (parseFloat(Done) === 0) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-notstarted");
-                    } else if (parseFloat(Done) > 0 && parseFloat(Done) <= 25) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-below25");
-                    } else if (parseFloat(Done) > 25 && parseFloat(Done) <= 50) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-above25");
-                    } else if (parseFloat(Done) > 50 && parseFloat(Done) <= 75) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-above50");
-                    } else if (parseFloat(Done) > 75 && parseFloat(Done) < 100) {
-                        $(this)
-                            .parent()
-                            .addClass("coding-above75");
-                    } else {
-                        $(this)
-                            .parent()
-                            .addClass("coding-complete");
-                    }
-                });
-            }
-        }
     }
 
     static addGraphs(title) {
@@ -271,5 +190,27 @@ class UIController {
         document
             .querySelector(DOMstrings.codingProgressContainer)
             .insertAdjacentHTML("beforeend", newHtml);
+    }
+
+    static addSystemsGraphs() {
+        let DOMstrings = UIController.getDOMstrings(),
+            html = `<div class="container"> 
+            <section class="d-flex justify-content-end">
+                <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
+                <div class="font-weight-bold mb-0" id="lastUpdated"></div>
+            </section>
+            <section>
+                <div class="card shadow disc-usage-chart my-1"></div>
+            </section> 
+            <section>
+                <div class="card shadow memory-utilization-chart my-1"></div>
+            </section> 
+            <section>
+                <div class="card shadow cpu-utilization-chart my-1"></div>
+            </section> 
+        </div> `;
+        document
+            .querySelector(DOMstrings.codingProgressContainer)
+            .insertAdjacentHTML("beforeend", html);
     }
 }
