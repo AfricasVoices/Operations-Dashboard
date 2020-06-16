@@ -1,5 +1,6 @@
 import { UIController } from "./UI.js";
 import { DataController } from "./data.js";
+import { AuthController } from "./auth.js";
 
 // GLOBAL APP CONTROLLER
 class Controller {
@@ -7,10 +8,7 @@ class Controller {
         Controller.DOMstrings = UIController.getDOMstrings();
         document
             .querySelector(Controller.DOMstrings.logoutBtn)
-            .addEventListener("click", () => {import("./auth.js").then(module => {
-                    module.AuthController.logout();
-                })
-            });
+            .addEventListener("click", AuthController.logout);
         document
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .addEventListener("click", Controller.navigateToCodingProgress);
@@ -136,7 +134,7 @@ class Controller {
     static init() {
         console.log("Application has started.");
         // Authorize user
-        import("./auth.js").then(module => { module.AuthController.getUser(); })
+        AuthController.getUser()
         // set up event listeners
         Controller.setupEventListeners();
         // Add the dropdown menu to the UI
