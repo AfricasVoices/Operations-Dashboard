@@ -1,5 +1,5 @@
 // UI CONTROLLER
-class UIController {
+export class UIController {
     static getDOMstrings() {
         return {
             projectMenu: ".project-menu",

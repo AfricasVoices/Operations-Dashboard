@@ -1,4 +1,4 @@
-class AuthController {
+export class AuthController {
     // Authentication state listener
     static getUser() {
         firebase.auth().onAuthStateChanged(user => {
