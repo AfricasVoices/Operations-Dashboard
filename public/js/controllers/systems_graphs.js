@@ -1,4 +1,4 @@
-import { AreaChart } from "../../libs/area.chart.js";
+import { AreaChart } from "../libs/area.chart.js";
 
 export class SystemsGraphsController {
     static updateGraphs(data) {

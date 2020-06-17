@@ -34,7 +34,7 @@ export class UIController {
     static addCodingProgressSection() {
         let DOMstrings = UIController.getDOMstrings(),
             script = document.createElement('script');
-        script.setAttribute('src','libs/scroll.js'); 
+        script.setAttribute('src','js/libs/scroll.js'); 
         document.head.appendChild(script);
         let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
@@ -109,7 +109,7 @@ export class UIController {
     static addGraphs(title) {
         let DOMstrings = UIController.getDOMstrings(),
             script = document.createElement('script');
-        script.setAttribute('src','libs/scroll.js');
+        script.setAttribute('src','js/libs/scroll.js');
         document.head.appendChild(script);
         let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
