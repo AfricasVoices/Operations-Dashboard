@@ -5,7 +5,7 @@ export class SystemsGraphsController {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-        // Disk Utilization graph
+        // Draw disk utilization graph
         let diskUsageChartData = JSON.parse(JSON.stringify(data));
         diskUsageChartData.forEach(function(d) {
             d.datetime = new Date(d.datetime);
@@ -24,7 +24,7 @@ export class SystemsGraphsController {
             .setFeatureInAnalysis("system-metrics")
             .draw();
 
-        // Memory Utilization graph  
+        // Draw memory utilization graph  
         let memoryUsageChartData = JSON.parse(JSON.stringify(data));
         memoryUsageChartData.forEach(function(d) {
             d.datetime = new Date(d.datetime);
@@ -43,7 +43,7 @@ export class SystemsGraphsController {
             .setFeatureInAnalysis("system-metrics")
             .draw();
 
-        // CPU Utilization graph 
+        // Draw cpu utilization graph 
         let cpuUsageChartData = JSON.parse(JSON.stringify(data));
         cpuUsageChartData.forEach(function(d) {
             d.datetime = new Date(d.datetime);
