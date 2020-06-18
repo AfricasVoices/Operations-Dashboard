@@ -13,7 +13,7 @@ export class SystemsGraphsController {
             d.value = +d.disk_usage.used;
         })
 
-        const area3 = new AreaChart(
+        const diskUsageChart = new AreaChart(
             {element: document.querySelector('.disc-usage-chart'), data: diskUsageChartData });
         area3
             .setId("disk")
