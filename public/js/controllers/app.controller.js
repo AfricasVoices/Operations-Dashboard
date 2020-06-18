@@ -1,6 +1,6 @@
-import { UIController } from "./UI.js";
-import { DataController } from "./data.js";
-import { AuthController } from "./auth.js";
+import { UIController } from "./UI.controller.js";
+import { DataController } from "./data.controller.js";
+import { AuthController } from "./auth.controller.js";
 
 // GLOBAL APP CONTROLLER
 class Controller {
@@ -23,10 +23,10 @@ class Controller {
     static resetUI() {
         document.querySelector(Controller.DOMstrings.codingProgressContainer).innerHTML = "";
         document.querySelector(Controller.DOMstrings.graphContainer).innerHTML = "";
-        import("./traffic_graphs.js").then(module => {
+        import("./traffic.graphs.controller.js").then(module => {
             module.TrafficGraphsController.clearTimers();
         });
-        import("./systems_graphs.js").then(module => {
+        import("./systems.graphs.controller.js").then(module => {
             module.SystemsGraphsController.clearTimers();
         });
     }
@@ -46,7 +46,7 @@ class Controller {
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Get data for coding progress table
-        import("./coding_progress_table.js").then(module => {
+        import("./coding_progress.table.controller.js").then(module => {
             let unsubscribeFunc = DataController.watchCodingProgress(
                 module.CodingProgressTableController.updateCodingProgressTable);
                 DataController.registerSnapshotListener(unsubscribeFunc);
@@ -61,7 +61,7 @@ class Controller {
             .querySelector(Controller.DOMstrings.trafficsLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
-        import("./traffic_graphs.js").then(module => {
+        import("./traffic.graphs.controller.js").then(module => {
             let unsubscribeFunc = DataController.watchProjectTrafficData(
                 project,
                 module.TrafficGraphsController.updateGraphs
@@ -77,7 +77,7 @@ class Controller {
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
-        import("./systems_graphs.js").then(module => {
+        import("./systems.graphs.controller.js").then(module => {
             let unsubscribeFunc = DataController.watchSystemsMetrics(
                 module.SystemsGraphsController.updateGraphs
             );
