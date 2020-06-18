@@ -1,4 +1,4 @@
-import { AreaChart } from "../libs/area.chart.js";
+import { AreaChart } from "../libs/area_chart.js";
 
 export class SystemsGraphsController {
     static updateGraphs(data) {
@@ -15,7 +15,7 @@ export class SystemsGraphsController {
 
         const diskUsageChart = new AreaChart(
             {element: document.querySelector('.disc-usage-chart'), data: diskUsageChartData });
-        area3
+        diskUsageChart
             .setId("disk")
             .setTitle("Disk Utilization")
             .setXAxisLabel("Date (dd:hh:m)")

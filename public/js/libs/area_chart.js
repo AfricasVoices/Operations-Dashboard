@@ -1,4 +1,4 @@
-import { GraphLayout } from "./graph.layout.js";
+import { GraphLayout } from "./graph_layout.js";
 
 export class AreaChart extends GraphLayout {
 
