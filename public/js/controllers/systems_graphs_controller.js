@@ -5,9 +5,8 @@ export class SystemsGraphsController {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-/*                         DISK UTILIZATION GRAPH
-/*      ==================================================================
-*/      let diskUsageChartData = JSON.parse(JSON.stringify(data));
+        // Disk Utilization graph
+        let diskUsageChartData = JSON.parse(JSON.stringify(data));
         diskUsageChartData.forEach(function(d) {
             d.datetime = new Date(d.datetime);
             d.value = +d.disk_usage.used;
@@ -25,9 +24,8 @@ export class SystemsGraphsController {
             .setFeatureInAnalysis("system-metrics")
             .draw();
 
-/*                         MEMORY  UTILIZATION GRAPH  
-/*      ==================================================================
-*/      let memoryUsageChartData = JSON.parse(JSON.stringify(data));
+        // Memory Utilization graph  
+        let memoryUsageChartData = JSON.parse(JSON.stringify(data));
         memoryUsageChartData.forEach(function(d) {
             d.datetime = new Date(d.datetime);
             d.value = +d.memory_usage.used;
@@ -45,9 +43,8 @@ export class SystemsGraphsController {
             .setFeatureInAnalysis("system-metrics")
             .draw();
 
-/*                         C P U  UTILIZATION GRAPH  
-/*      ==================================================================
-*/      let cpuUsageChartData = JSON.parse(JSON.stringify(data));
+        // CPU Utilization graph 
+        let cpuUsageChartData = JSON.parse(JSON.stringify(data));
         cpuUsageChartData.forEach(function(d) {
             d.datetime = new Date(d.datetime);
             d.value = +d.cpu_percent;
@@ -65,9 +62,7 @@ export class SystemsGraphsController {
             .setFeatureInAnalysis("system-metrics")
             .draw();
 
-/*                        COMPUTE LAST UPDATED TIMESTAMP 
-/*      ==================================================================
-*/      let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
+        let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
         let lastUpdateTimeStamp = new Date(
             Math.max.apply(
