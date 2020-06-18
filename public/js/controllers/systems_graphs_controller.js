@@ -31,9 +31,9 @@ export class SystemsGraphsController {
             d.value = +d.memory_usage.used;
         })
 
-        const area2 = new AreaChart(
+        const memoryUsageChart = new AreaChart(
             {element: document.querySelector('.memory-utilization-chart'), data: memoryUsageChartData });
-        area2
+        memoryUsageChart
             .setId("memory")
             .setTitle("Memory Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
@@ -50,9 +50,9 @@ export class SystemsGraphsController {
             d.value = +d.cpu_percent;
         })
 
-        const area = new AreaChart(
+        const cpuUsageChart = new AreaChart(
             {element: document.querySelector('.cpu-utilization-chart'), data: cpuUsageChartData });
-        area
+        cpuUsageChart
             .setId("cpu")
             .setTitle("CPU Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
