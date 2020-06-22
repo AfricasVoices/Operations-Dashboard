@@ -1,4 +1,6 @@
-class DataController {
+import { mediadb } from "./app.js";
+
+export class DataController {
     static updateData(snapshot, data) {
         // Update data every time it changes in firestore
         snapshot.docChanges().forEach(change => {
@@ -98,13 +100,22 @@ class DataController {
     }
 
     static watchSystemsMetrics(onChange) {
-        let systemMetrics = [];
-        return mediadb.collection("pipeline_system_metrics").onSnapshot(res => {
-            DataController.updateData(res, systemMetrics);
-            // format the data
-            systemMetrics.forEach(function(d) {
-                d.datetime = new Date(d.datetime);
-            })
+        const TIMERANGE = 30;
+        let offset = new Date();
+        offset.setDate(offset.getDate() - TIMERANGE);
+        let systemMetrics = [],
+            iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L"),
+            offsetString = iso(offset);
+        return mediadb
+            .collection("pipeline_system_metrics")
+            .where("datetime", ">", offsetString)
+            .onSnapshot(res => {
+                // Update data every time it changes in firestore
+                DataController.updateData(res, systemMetrics);
+                // format the data
+                systemMetrics.forEach(function(d) {
+                    d.datetime = new Date(d.datetime);
+            }, error => console.log(error));
             // Sort data by date
             systemMetrics.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
             onChange(systemMetrics)

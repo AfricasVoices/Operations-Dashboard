@@ -1,4 +1,4 @@
-class CodingProgressTableController {
+export class CodingProgressTableController {
     static updateCodingProgressTable(codingProgressData) {
         let data = codingProgressData.data,
             lastUpdate = codingProgressData.lastUpdate; 
