@@ -11,6 +11,15 @@ export class AreaChart extends GraphLayout {
         this.title = "Area Chart";
         this.xAxisLabel = "X Axis";
         this.yAxisLabel = "Y Axis";
+        this.config = {
+            // Sys Metrics configurations
+            appendGBToTooltipText: false, 
+            appendPercentageToTooltipText: false,
+            watchOutage: false, 
+            adjustSysMetricsGridlines: false,
+            formatYAxisValuesAsGB: false,
+            addMetricsLegend: false 
+        }
 
         this.draw()
     }
