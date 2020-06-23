@@ -1,5 +1,5 @@
 // GRAPH CONTROLLER
-export class GraphController {
+export class TrafficGraphsController {
     static addOneDayToDate(date) {
         let newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
@@ -7,12 +7,12 @@ export class GraphController {
     }
 
     static updateGraphs(data, projectName, MNOColors) {
-        if (!(GraphController.TIMEFRAME_WEEK && GraphController.TIMEFRAME_MONTH)) {
-            GraphController.TIMEFRAME_WEEK = 7; 
-            GraphController.TIMEFRAME_MONTH = 30;
+        if (!(TrafficGraphsController.TIMEFRAME_WEEK && TrafficGraphsController.TIMEFRAME_MONTH)) {
+            TrafficGraphsController.TIMEFRAME_WEEK = 7; 
+            TrafficGraphsController.TIMEFRAME_MONTH = 30;
         }
-        if (!GraphController.chartTimeUnit) 
-            GraphController.chartTimeUnit = "10min";   
+        if (!TrafficGraphsController.chartTimeUnit) 
+            TrafficGraphsController.chartTimeUnit = "10min";   
        
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
@@ -50,8 +50,8 @@ export class GraphController {
         let offsetWeek = new Date(),
             offsetMonth = new Date();
 
-        offsetWeek.setDate(offsetWeek.getDate() - GraphController.TIMEFRAME_WEEK);
-        offsetMonth.setDate(offsetMonth.getDate() - GraphController.TIMEFRAME_MONTH);
+        offsetWeek.setDate(offsetWeek.getDate() - TrafficGraphsController.TIMEFRAME_WEEK);
+        offsetMonth.setDate(offsetMonth.getDate() - TrafficGraphsController.TIMEFRAME_MONTH);
         // Set date offsets to nearest midnight in the past 
         /* The offset dates sometime don't begin at the start of the day; thus they leave 
             the rest of the day messages not to be included in the first bar of graph when
@@ -230,9 +230,9 @@ export class GraphController {
             yLimitFailedFiltered = d3.max(dataFilteredWeek, d => d.total_errored); 
 
         // Draw graphs according to selected time unit
-        if (GraphController.chartTimeUnit == "1day") {
+        if (TrafficGraphsController.chartTimeUnit == "1day") {
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
-        } else if (GraphController.chartTimeUnit == "10min") {
+        } else if (TrafficGraphsController.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         }
 
@@ -489,7 +489,7 @@ export class GraphController {
             }
 
             let xMin = d3.min(dailyReceivedTotal, d => new Date(d.day)),
-                xMax = d3.max(dailyReceivedTotal, d => GraphController.addOneDayToDate(d.day));
+                xMax = d3.max(dailyReceivedTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             if (yLimitReceived > 0)
@@ -792,7 +792,7 @@ export class GraphController {
             }
 
             let xMin = d3.min(dailySentTotal, d => new Date(d.day)),
-                xMax = d3.max(dailySentTotal, d => GraphController.addOneDayToDate(d.day));
+                xMax = d3.max(dailySentTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
             if (yLimitSent > 0)
@@ -937,7 +937,7 @@ export class GraphController {
 
             // set scale domain for failed graph
             let xMin = d3.min(dailyFailedTotal, d => new Date(d.day)),
-                xMax = d3.max(dailyFailedTotal, d => GraphController.addOneDayToDate(d.day));
+                xMax = d3.max(dailyFailedTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
             failed_messages_x_axis_range.domain([xMin, xMax]);
             if (yLimitFailed > 0)
                 y_total_failed_sms_range.domain([0, yLimitFailed]);
@@ -1197,34 +1197,34 @@ export class GraphController {
 
         // Update chart time unit on user selection
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
-            GraphController.chartTimeUnit = "10min";
+            TrafficGraphsController.chartTimeUnit = "10min";
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
-            GraphController.chartTimeUnit = "1day";
+            TrafficGraphsController.chartTimeUnit = "1day";
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
         });
 
         d3.select("#timeFrame").on("change", function() {
             let timeFrame = this.options[this.selectedIndex].value;
             if (timeFrame == "default") {
-                GraphController.TIMEFRAME_WEEK = 7; 
-                GraphController.TIMEFRAME_MONTH = 30;
-                GraphController.updateGraphs(data, projectName, MNOColors)
+                TrafficGraphsController.TIMEFRAME_WEEK = 7; 
+                TrafficGraphsController.TIMEFRAME_MONTH = 30;
+                TrafficGraphsController.updateGraphs(data, projectName, MNOColors)
             } else {
-                GraphController.TIMEFRAME_WEEK = GraphController.TIMEFRAME_MONTH = timeFrame;
-                GraphController.updateGraphs(data, projectName, MNOColors)
+                TrafficGraphsController.TIMEFRAME_WEEK = TrafficGraphsController.TIMEFRAME_MONTH = timeFrame;
+                TrafficGraphsController.updateGraphs(data, projectName, MNOColors)
             }
         })
 
         // Draw received graph with user-selected y-axis limit
         d3.select("#buttonYLimitReceived").on("input", function() {
             isYLimitReceivedManuallySet = true;
-            if (GraphController.chartTimeUnit == "1day") {
+            if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitReceived = this.value;
                 drawOneDayReceivedGraph(yLimitReceived);
-            } else if (GraphController.chartTimeUnit == "10min") {
+            } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = this.value;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
             }
@@ -1233,10 +1233,10 @@ export class GraphController {
         // Draw sent graph with user-selected y-axis limit
         d3.select("#buttonYLimitSent").on("input", function() {
             isYLimitSentManuallySet = true;
-            if (GraphController.chartTimeUnit == "1day") {
+            if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitSent = this.value;
                 drawOneDaySentGraph(yLimitSent);
-            } else if (GraphController.chartTimeUnit == "10min") {
+            } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitSentFiltered = this.value;
                 draw10MinSentGraph(yLimitSentFiltered);
             }
@@ -1245,10 +1245,10 @@ export class GraphController {
         // Draw failed graph with user-selected y-axis limit
         d3.select("#buttonYLimitFailed").on("input", function() {
             isYLimitFailedManuallySet = true;
-            if (GraphController.chartTimeUnit == "1day") {
+            if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitFailed = this.value;
                 drawOneDayFailedGraph(yLimitFailed);
-            }  else if (GraphController.chartTimeUnit == "10min") {
+            }  else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitFailedFiltered = this.value;
                 draw10MinFailedGraph(yLimitFailedFiltered);
             }
@@ -1279,15 +1279,15 @@ export class GraphController {
                 d3.select("#lastUpdated").classed("text-stale-info alert alert-stale-info", false);
             }
         }
-        if (GraphController.lastUpdateTimer) {
-            clearInterval(GraphController.lastUpdateTimer);
+        if (TrafficGraphsController.lastUpdateTimer) {
+            clearInterval(TrafficGraphsController.lastUpdateTimer);
         }
-        GraphController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
+        TrafficGraphsController.lastUpdateTimer = setInterval(setLastUpdatedAlert, 1000);
     }
     static clearTimers() {
-        if (GraphController.lastUpdateTimer) {
-            clearInterval(GraphController.lastUpdateTimer);
-            GraphController.lastUpdateTimer = null;
+        if (TrafficGraphsController.lastUpdateTimer) {
+            clearInterval(TrafficGraphsController.lastUpdateTimer);
+            TrafficGraphsController.lastUpdateTimer = null;
         }
     }
 }
