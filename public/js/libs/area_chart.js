@@ -309,32 +309,35 @@ export class AreaChart extends GraphLayout {
                 .tickFormat("")
             ) 
 
-        if (this.feature == "system-metrics") {
-            // Add the outage gridlines
-            this.outageLines.append("g")			
-                .attr("class", `stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
-                .attr("transform", "translate(0," + this.height + ")")
-                .call(d3.axisBottom(this.xScale)
-                .tickValues(this.stop)
-                    .tickSize(-this.height)
-                    .tickFormat("")
-                )
-                .attr("opacity", 0)	
-                .transition().duration(1000).delay(400)
-                .attr("opacity", 1)
+        if (this.config.adjustSysMetricsGridlines) 
+            this.adjustSysMetricsGridlines()
+    }
 
-            this.outageLines.append("g")			
-                .attr("class", `start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
-                .attr("transform", "translate(0," + this.height + ")")
-                .call(d3.axisBottom(this.xScale)
-                .tickValues(this.start)
-                    .tickSize(-this.height)
-                    .tickFormat("")
-                )
-                .attr("opacity", 0)	
-                .transition().duration(1000).delay(400)
-                .attr("opacity", 1)
-        }
+    adjustSysMetricsGridlines() {
+        // Add the outage gridlines
+        this.outageLines.append("g")			
+            .attr("class", `stop${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+            .tickValues(this.stop)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
+            .attr("opacity", 0)	
+            .transition().duration(1000).delay(400)
+            .attr("opacity", 1)
+
+        this.outageLines.append("g")			
+            .attr("class", `start${this.id.charAt(0).toUpperCase()}${this.id.slice(1)}Grid`)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(d3.axisBottom(this.xScale)
+            .tickValues(this.start)
+                .tickSize(-this.height)
+                .tickFormat("")
+            )
+            .attr("opacity", 0)	
+            .transition().duration(1000).delay(400)
+            .attr("opacity", 1)
     }
 
     addLabels() {
