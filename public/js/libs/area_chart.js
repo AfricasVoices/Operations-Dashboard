@@ -30,8 +30,6 @@ export class AreaChart extends GraphLayout {
         this.addAxes();
         this.addArea();
         this.addLabels();
-        if (this.feature == "system-metrics")
-            this.addMetricsLegend();
     }
 
     createScales() {
@@ -59,19 +57,12 @@ export class AreaChart extends GraphLayout {
 
     addAxes() {
         this.dayTimeFormat = d3.timeFormat("%a %d (%H:%M)");
-        let decimalFormatter = d3.format(".2s");
         // create and append axis elements
         const xAxis = d3.axisBottom(this.xScale).ticks(d3.timeDay.every(1)).tickFormat(this.dayTimeFormat);
-        let yAxis = d3.axisLeft(this.yScale); 
+        this.yAxis = d3.axisLeft(this.yScale); 
 
-        if (this.feature == "system-metrics") {
-            if (this.id == "disk" || this.id == "memory") {
-                yAxis = d3.axisLeft(this.yScale).ticks(5).tickFormat((d) => decimalFormatter(d).replace('G', 'GB'))
-            } 
-            if (this.id == "cpu") {
-                yAxis = d3.axisLeft(this.yScale)
-            } 
-        }
+        if (this.config.formatYAxisValuesAsGB)
+            this.formatYAxisValuesAsGB()
 
         this.xAxis = this.plot.append("g")
             .attr("class", `${this.id}XAxis`)
@@ -87,7 +78,7 @@ export class AreaChart extends GraphLayout {
 
         this.plot.append("g")
             .attr("class", `${this.id}YAxis`)
-            .call(yAxis)
+            .call(this.yAxis)
 
         this.addGridlines()
     }
@@ -161,10 +152,10 @@ export class AreaChart extends GraphLayout {
     }
 
     // Function that adds tooltip on hover
-    tipMove(sel) {
+    tipMove(selection) {
         // Below code finds the date by bisecting and
         // Stores the x and y coordinate as variables
-        let x0 = this.xScale.invert(d3.mouse(sel)[0]);
+        let x0 = this.xScale.invert(d3.mouse(selection)[0]);
         // This will select the closest date on the x axiswhen a user hover over the chart
         let bisectDate = d3.bisector(function(d) {return d.datetime;}).left;
         let i = bisectDate(this.data, x0, 1);
@@ -175,23 +166,18 @@ export class AreaChart extends GraphLayout {
         // Place the focus objects on the same path as the line
         this.focus.attr("transform", `translate(${this.xScale(d.datetime)}, ${this.yScale(d.value)})`); 
 
-        let tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+        this.tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
         Value: ${d3.formatPrefix(".2", d.value)(d.value)}`;
 
-        if (this.feature == "system-metrics") {
-            if (this.id == "disk" || this.id == "memory") {
-                tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
-                        Used: ${d3.formatPrefix(".2", d.value)(d.value).replace("G", "GB")}`
-            } 
-            if (this.id == "cpu") {
-                tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
-                        Used: ${d3.formatPrefix(".2", d.value)(d.value)}%`
-            } 
-        }
+        if (this.config.appendGBToTooltipText)
+            this.appendGBToTooltipText(d);
+
+        if (this.config.appendPercentageToTooltipText)
+            this.appendPercentageToTooltipText(d)
 
         // Position the text
         this.focus.select("text")
-            .text(tooltipText)
+            .text(this.tooltipText)
             .transition() // slowly fade in the tooltip
                 .duration(100)
                 .style("opacity", 1);
@@ -233,7 +219,7 @@ export class AreaChart extends GraphLayout {
             .y0(this.yScale(0))
             .y1(d => this.yScale(d.value))
 
-        if (this.feature == "system-metrics")
+        if (this.config.watchOutage)
             this.watchOutage()
 
         this.area.append("path")
@@ -254,6 +240,9 @@ export class AreaChart extends GraphLayout {
         this.area.append("g").attr("class", `${this.id}Brush`).call(this.brush);
 
         this.drawFocus();
+
+        if (this.config.addMetricsLegend)
+            this.addMetricsLegend();
     }
     
     // Will reset time set before subsequent brushing trigger `updateChart`
