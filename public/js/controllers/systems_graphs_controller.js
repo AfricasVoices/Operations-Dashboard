@@ -15,13 +15,19 @@ export class SystemsGraphsController {
         const diskUsageChart = new AreaChart(
             {element: document.querySelector('.disc-usage-chart'), data: diskUsageChartData });
         diskUsageChart
-            .setId("disk")
+            .setId("disk") 
             .setTitle("Disk Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
             .setYAxisLabel("Disk Usage (GB)")
             .setColorScheme("#0E86D4")
             .setYLimit(diskUsageChartData[0].disk_usage.total)
-            .setFeatureInAnalysis("system-metrics")
+            .setConfig({ 
+                appendGBToTooltipText: true, 
+                watchOutage: true, 
+                adjustSysMetricsGridlines: true,
+                formatYAxisValuesAsGB: true,
+                addMetricsLegend: true
+            })
             .draw();
 
         // Draw memory utilization graph  
@@ -40,7 +46,13 @@ export class SystemsGraphsController {
             .setYAxisLabel("Memoru Utilization (GB)")
             .setColorScheme("#000080")
             .setYLimit(memoryUsageChartData[0].memory_usage.total)
-            .setFeatureInAnalysis("system-metrics")
+            .setConfig({
+                appendGBToTooltipText: true, 
+                watchOutage: true, 
+                adjustSysMetricsGridlines: true,
+                formatYAxisValuesAsGB: true,
+                addMetricsLegend: true
+            })
             .draw();
 
         // Draw cpu utilization graph 
@@ -59,7 +71,12 @@ export class SystemsGraphsController {
             .setYAxisLabel("CPU Utilization (%)")
             .setColorScheme("#0000CD")
             .setYLimit(100)
-            .setFeatureInAnalysis("system-metrics")
+            .setConfig({ 
+                appendPercentageToTooltipText: true, 
+                watchOutage: true, 
+                adjustSysMetricsGridlines: true,
+                addMetricsLegend: true
+            })
             .draw();
 
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
