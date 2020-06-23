@@ -54,9 +54,4 @@ export class GraphLayout {
         this.yLimit = yLimit;
         return this;
     }
-
-    setFeatureInAnalysis(feature) {
-        this.feature = feature;
-        return this;
-    }
 }
