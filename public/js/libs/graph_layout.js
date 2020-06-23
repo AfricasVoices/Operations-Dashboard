@@ -54,4 +54,9 @@ export class GraphLayout {
         this.yLimit = yLimit;
         return this;
     }
+
+    setConfig(config) {
+        this.config = config;
+        return this;
+    }
 }
