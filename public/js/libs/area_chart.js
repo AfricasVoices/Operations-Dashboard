@@ -205,6 +205,16 @@ export class AreaChart extends GraphLayout {
             .style("opacity", 1)
     };
 
+    appendGBToTooltipText(d) {
+        this.tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+                Used: ${d3.formatPrefix(".2", d.value)(d.value).replace("G", "GB")}`
+    }
+
+    appendPercentageToTooltipText(d) {
+        this.tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)} 
+                Used: ${d3.formatPrefix(".2", d.value)(d.value)}%`
+    }
+
     addArea() {
         // Add a clipPath: everything out of this area won't be drawn.
         let clip = this.plot.append("defs").append("svg:clipPath")
