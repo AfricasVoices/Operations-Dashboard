@@ -39,7 +39,7 @@ export class SystemsGraphsController {
             d.value = +d.memory_usage.used;
         })
 
-        memoryUsageChartConfig = {
+        let memoryUsageChartConfig = {
             appendGBToTooltipText: true, 
             watchOutage: true, 
             adjustSysMetricsGridlines: true,
