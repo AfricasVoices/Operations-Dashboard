@@ -1,4 +1,4 @@
-import { mediadb } from "./app_controller.js";
+import { mediadb } from "./app.js";
 
 export class DataController {
     static updateData(snapshot, data) {
