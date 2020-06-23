@@ -51,6 +51,12 @@ export class AreaChart extends GraphLayout {
             .domain(yExtent);
     }
 
+    formatYAxisValuesAsGB() {
+        let decimalFormatter = d3.format(".2s");
+        this.yAxis = d3.axisLeft(this.yScale).ticks(5).tickFormat(
+            (d) => decimalFormatter(d).replace('G', 'GB')) 
+    }
+
     addAxes() {
         this.dayTimeFormat = d3.timeFormat("%a %d (%H:%M)");
         let decimalFormatter = d3.format(".2s");
