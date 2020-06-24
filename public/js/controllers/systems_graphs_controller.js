@@ -12,6 +12,14 @@ export class SystemsGraphsController {
             d.value = +d.disk_usage.used;
         })
 
+        let diskUsageChartConfig = {
+            appendGBToTooltipText: true, 
+            watchOutage: true, 
+            adjustSysMetricsGridlines: true,
+            formatYAxisValuesAsGB: true,
+            addMetricsLegend: true
+        }
+
         const diskUsageChart = new AreaChart(
             {element: document.querySelector('.disc-usage-chart'), data: diskUsageChartData });
         diskUsageChart
@@ -21,13 +29,7 @@ export class SystemsGraphsController {
             .setYAxisLabel("Disk Usage (GB)")
             .setColorScheme("#0E86D4")
             .setYLimit(diskUsageChartData[0].disk_usage.total)
-            .setConfig({ 
-                appendGBToTooltipText: true, 
-                watchOutage: true, 
-                adjustSysMetricsGridlines: true,
-                formatYAxisValuesAsGB: true,
-                addMetricsLegend: true
-            })
+            .setConfig(diskUsageChartConfig)
             .draw();
 
         // Draw memory utilization graph  
@@ -36,6 +38,14 @@ export class SystemsGraphsController {
             d.datetime = new Date(d.datetime);
             d.value = +d.memory_usage.used;
         })
+
+        let memoryUsageChartConfig = {
+            appendGBToTooltipText: true, 
+            watchOutage: true, 
+            adjustSysMetricsGridlines: true,
+            formatYAxisValuesAsGB: true,
+            addMetricsLegend: true
+        }
 
         const memoryUsageChart = new AreaChart(
             {element: document.querySelector('.memory-utilization-chart'), data: memoryUsageChartData });
@@ -46,13 +56,7 @@ export class SystemsGraphsController {
             .setYAxisLabel("Memoru Utilization (GB)")
             .setColorScheme("#000080")
             .setYLimit(memoryUsageChartData[0].memory_usage.total)
-            .setConfig({
-                appendGBToTooltipText: true, 
-                watchOutage: true, 
-                adjustSysMetricsGridlines: true,
-                formatYAxisValuesAsGB: true,
-                addMetricsLegend: true
-            })
+            .setConfig(memoryUsageChartConfig)
             .draw();
 
         // Draw cpu utilization graph 
@@ -61,6 +65,13 @@ export class SystemsGraphsController {
             d.datetime = new Date(d.datetime);
             d.value = +d.cpu_percent;
         })
+
+        let cpuUsageChartConfig = { 
+            appendPercentageToTooltipText: true, 
+            watchOutage: true, 
+            adjustSysMetricsGridlines: true,
+            addMetricsLegend: true
+        }
 
         const cpuUsageChart = new AreaChart(
             {element: document.querySelector('.cpu-utilization-chart'), data: cpuUsageChartData });
@@ -71,12 +82,7 @@ export class SystemsGraphsController {
             .setYAxisLabel("CPU Utilization (%)")
             .setColorScheme("#0000CD")
             .setYLimit(100)
-            .setConfig({ 
-                appendPercentageToTooltipText: true, 
-                watchOutage: true, 
-                adjustSysMetricsGridlines: true,
-                addMetricsLegend: true
-            })
+            .setConfig(cpuUsageChartConfig)
             .draw();
 
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
