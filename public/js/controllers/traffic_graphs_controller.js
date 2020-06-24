@@ -6,7 +6,7 @@ export class TrafficGraphsController {
         return newDate;
     }
 
-    static updateGraphs(data, projectName, MNOColors) {
+    static updateGraphs(data, projectName, operators,  MNOColors) {
         if (!(TrafficGraphsController.TIMEFRAME_WEEK && TrafficGraphsController.TIMEFRAME_MONTH)) {
             TrafficGraphsController.TIMEFRAME_WEEK = 7; 
             TrafficGraphsController.TIMEFRAME_MONTH = 30;
@@ -17,35 +17,11 @@ export class TrafficGraphsController {
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
-            dayDateFormat = d3.timeFormat("%Y-%m-%d"),
             dayTimeFormat = d3.timeFormat("%H:%M %p"),
-            dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a"),
-            operators = new Set();
+            dayDateFormatWithWeekdayName = d3.timeFormat("%Y-%m-%d:%a");
 
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
-
-        // format the data
-        data.forEach(function(d) {
-            d.datetime = new Date(d.datetime);
-            d.day = dayDateFormat(new Date(d.datetime));
-            d.total_received = +d.total_received;
-            d.total_sent = +d.total_sent;
-            d.total_pending = +d.total_pending;
-            d.total_errored = +d.total_errored;
-            Object.keys(d.operators)
-                .sort()
-                .forEach(operator => {
-                    if (!(operator in operators)) {
-                        operators.add(operator);
-                        d[`${operator}_received`] = +d.operators[operator]["received"];
-                        d[`${operator}_sent`] = +d.operators[operator]["sent"];
-                    }
-                });
-        });
-
-        // Sort data by date
-        data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
         let offsetWeek = new Date(),
             offsetMonth = new Date();
