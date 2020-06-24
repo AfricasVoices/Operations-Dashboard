@@ -34,7 +34,7 @@ export class UIController {
     static addCodingProgressSection() {
         let DOMstrings = UIController.getDOMstrings(),
             script = document.createElement('script');
-        script.setAttribute('src','scroll.js');
+        script.setAttribute('src', 'js/libs/scroll.js');
         document.head.appendChild(script);
         let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
@@ -46,7 +46,7 @@ export class UIController {
                     <div class="card">
                         <div id="headingOne">
                             <h2 class="mb-0">
-                                <button class="btn btn-brown" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <button class="btn btn-brown shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 Message Coding Table Header Definitions
                                 </button>
                             </h2>
@@ -109,7 +109,7 @@ export class UIController {
     static addGraphs(title) {
         let DOMstrings = UIController.getDOMstrings(),
             script = document.createElement('script');
-        script.setAttribute('src','scroll.js');
+        script.setAttribute('src', 'js/libs/scroll.js');
         document.head.appendChild(script);
         let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
@@ -118,10 +118,10 @@ export class UIController {
                 </div>
                 <div class="d-md-flex">
                     <span class="align-content-end font-weight-bold mr-1 p-1">Timescale</span>
-                    <input class="mr-2 btn btn-sm btn-brown form-control" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                    <input class="btn btn-sm btn-brown form-control" type="button" id="buttonUpdateViewOneDay" value="1 day">
+                    <input class="mr-2 btn btn-sm btn-brown form-control shadow-none" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
+                    <input class="btn btn-sm btn-brown form-control shadow-none" type="button" id="buttonUpdateViewOneDay" value="1 day">
                     <span class="align-content-end font-weight-bold ml-3 mr-1 p-1">TimeFrame</span>
-                    <select class="btn-brown btn-sm form-control col-3" id="timeFrame">
+                    <select class="btn-brown btn-sm form-control shadow-none col-3" id="timeFrame">
                         <option value="default">Default</option>
                         <option value="1">48 Hours</option>
                         <option value="6">7 days</option>
@@ -158,7 +158,7 @@ export class UIController {
             <div class="accordion" id="accordionExample">
                 <div id="headingOne">
                     <h2 class="mb-2">
-                        <button class="btn btn-brown" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <button class="btn btn-brown shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         Threats to Validity
                         </button>
                     </h2>
