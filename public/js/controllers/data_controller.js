@@ -95,7 +95,29 @@ export class DataController {
             .onSnapshot(res => {
                 // Update data every time it changes in firestore
                 DataController.updateData(res, data);
-                onChange(data, projectName, DataController.mno_colors);
+                // format the data
+                let dayDateFormat = d3.timeFormat("%Y-%m-%d"),
+                operators = new Set();
+                data.forEach(d => {
+                    d.datetime = new Date(d.datetime);
+                    d.day = dayDateFormat(new Date(d.datetime));
+                    d.total_received = +d.total_received;
+                    d.total_sent = +d.total_sent;
+                    d.total_pending = +d.total_pending;
+                    d.total_errored = +d.total_errored;
+                    Object.keys(d.operators)
+                        .sort()
+                        .forEach(operator => {
+                            if (!(operator in operators)) {
+                                operators.add(operator);
+                                d[`${operator}_received`] = +d.operators[operator]["received"];
+                                d[`${operator}_sent`] = +d.operators[operator]["sent"];
+                            }
+                        });
+                });
+                // Sort data by date
+                data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+                onChange(data, projectName, operators, DataController.mno_colors);
             }, error => console.log(error));
     }
 
