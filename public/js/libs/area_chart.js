@@ -125,7 +125,7 @@ export class AreaChart extends GraphLayout {
             .attr("x", -20)
             .attr("dy", "-18px")
             .attr("font-size", "12px")
-            .style("fill", "#0E86D4");
+            .style("fill", this.color);
 
         let vis = this;
         this.plot
