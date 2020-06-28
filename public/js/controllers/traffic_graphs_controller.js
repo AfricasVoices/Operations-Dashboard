@@ -1187,10 +1187,10 @@ export class TrafficGraphsController {
             if (timeFrame == "default") {
                 TrafficGraphsController.TIMEFRAME_WEEK = 7; 
                 TrafficGraphsController.TIMEFRAME_MONTH = 30;
-                TrafficGraphsController.updateGraphs(data, projectName, MNOColors)
+                TrafficGraphsController.updateGraphs(data, projectName, operators, MNOColors)
             } else {
                 TrafficGraphsController.TIMEFRAME_WEEK = TrafficGraphsController.TIMEFRAME_MONTH = timeFrame;
-                TrafficGraphsController.updateGraphs(data, projectName, MNOColors)
+                TrafficGraphsController.updateGraphs(data, projectName, operators, MNOColors)
             }
         })
 
