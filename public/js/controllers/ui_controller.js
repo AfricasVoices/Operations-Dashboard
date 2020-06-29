@@ -111,9 +111,7 @@ export class UIController {
             </div>
         </div> `;
         // Insert the HTML into the DOM
-        document
-            .querySelector(DOMstrings.codingProgressContainer)
-            .insertAdjacentHTML("beforeend", html);
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
 
     static addGraphs(title) {
@@ -192,12 +190,9 @@ export class UIController {
                     </div>
                 </div>
             </div>
-        </div> `,
-            // Insert the HTML into the DOM
-            newHtml = html.replace("%collection%", title);
-        document
-            .querySelector(DOMstrings.codingProgressContainer)
-            .insertAdjacentHTML("beforeend", newHtml);
+        </div> `;
+        // Insert the HTML into the DOM
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
 
     static addSystemsGraphs() {
@@ -217,8 +212,6 @@ export class UIController {
                 <div class="card shadow cpu-utilization-chart my-1"></div>
             </section> 
         </div> `;
-        document
-            .querySelector(DOMstrings.codingProgressContainer)
-            .insertAdjacentHTML("beforeend", html);
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
 }
