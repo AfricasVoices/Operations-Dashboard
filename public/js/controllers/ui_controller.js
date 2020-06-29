@@ -120,7 +120,7 @@ export class UIController {
         let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
                 <div>
-                    <span class="txt-brown my-auto title"><b>%collection%</b></span>
+                    <span class="txt-brown my-auto title"><b>${title}</b></span>
                 </div>
                 <div class="d-md-flex">
                     <span class="align-content-end font-weight-bold mr-1 p-1">Timescale</span>
