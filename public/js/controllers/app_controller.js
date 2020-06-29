@@ -84,7 +84,9 @@ class Controller {
 
     static navigateToSelectedProject(e) {
         if (e.target && e.target.nodeName == "A") {
-            Controller.resetUI();
+            import("./traffic_graphs_controller.js").then(module => {
+                module.TrafficGraphsController.clearTimers();
+            });
             DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
@@ -95,7 +97,9 @@ class Controller {
 
     static navigateToSystems(e) {
         if (e.target && e.target.nodeName == "A") {
-            Controller.resetUI();
+            import("./systems_graphs_controller.js").then(module => {
+                module.SystemsGraphsController.clearTimers();
+            });
             DataController.detachSnapshotListener();
             window.location.hash = "systems";
             Controller.displaySystems();
