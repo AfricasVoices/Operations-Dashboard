@@ -4,14 +4,12 @@ export class UIController {
         return {
             projectMenu: ".project-menu",
             codingProgressLinkSelector: ".coding-progress-link",
-            codingProgressContainer: ".coding-progress-container",
             trafficsLinkSelector: ".traffics-link",
-            graphContainer: ".graph-container",
+            systemsLinkSelector: ".systems-link",
             logoutBtn: ".logout-btn",
-            dropdownItem: ".dropdown-item",
             activeLinkClassName: "active-link",
             activeLinks: "a.active-link",
-            systemsLinkSelector: ".systems-link"
+            mainContainer: ".main-container"
         };
     }
 
