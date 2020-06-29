@@ -87,7 +87,6 @@ class Controller {
 
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
-            Controller.resetUI();
             DataController.detachSnapshotListener();
             window.location.hash = "coding_progress";
             Controller.displayCodingProgress();
