@@ -29,11 +29,23 @@ export class UIController {
         }
     }
 
-    static addCodingProgressSection() {
-        let DOMstrings = UIController.getDOMstrings(),
-            script = document.createElement('script');
+    static resetUI() {
+        const DOMstrings = UIController.getDOMstrings();
+        UIController.statusBody = document.querySelector(DOMstrings.mainContainer);
+        while (UIController.statusBody.firstChild) {
+            UIController.statusBody.removeChild(UIController.statusBody.firstChild);
+        }
+    }
+
+    static getScrollJsScript() {
+        let script = document.createElement('script');
         script.setAttribute('src', 'js/libs/scroll.js');
-        document.head.appendChild(script);
+        return script;
+    }
+
+    static addCodingProgressSection() {
+        UIController.resetUI();
+        document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
                     <thead></thead>
@@ -105,10 +117,8 @@ export class UIController {
     }
 
     static addGraphs(title) {
-        let DOMstrings = UIController.getDOMstrings(),
-            script = document.createElement('script');
-        script.setAttribute('src', 'js/libs/scroll.js');
-        document.head.appendChild(script);
+        UIController.resetUI();
+        document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
                 <div>
@@ -191,8 +201,8 @@ export class UIController {
     }
 
     static addSystemsGraphs() {
-        let DOMstrings = UIController.getDOMstrings(),
-            html = `<div class="container"> 
+        UIController.resetUI();
+        let html = `<div class="container"> 
             <section class="d-flex justify-content-end">
                 <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
                 <div class="font-weight-bold mb-0" id="lastUpdated"></div>
