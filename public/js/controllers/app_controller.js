@@ -20,17 +20,6 @@ class Controller {
             .addEventListener("click", Controller.navigateToSystems);
     }
 
-    static resetUI() {
-        document.querySelector(Controller.DOMstrings.codingProgressContainer).innerHTML = "";
-        document.querySelector(Controller.DOMstrings.graphContainer).innerHTML = "";
-        import("./traffic_graphs_controller.js").then(module => {
-            module.TrafficGraphsController.clearTimers();
-        });
-        import("./systems_graphs_controller.js").then(module => {
-            module.SystemsGraphsController.clearTimers();
-        });
-    }
-
     static resetActiveLink() {
         let elements = document.querySelectorAll(Controller.DOMstrings.activeLinks);
         elements.forEach(element => {
