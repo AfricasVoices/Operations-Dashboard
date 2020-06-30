@@ -5,12 +5,7 @@ export class GraphLayout {
 
     layout() {
         // Define width, height and margin
-        this.margin = {
-            top: 40,
-            right: 100,
-            bottom: 105,
-            left: 70
-        };
+        this.margin = { top: 40, right: 100, bottom: 105, left: 70 };
         this.width = 960 - this.margin.left - this.margin.right;
         this.height = 500 - this.margin.top - this.margin.bottom;
 
