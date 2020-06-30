@@ -120,6 +120,16 @@ export class CodingProgressTableController {
         return b-a || isNaN(b)-isNaN(a);
     } 
 
+    static sortingTieBreakers(a, b, a1, b1, order) {
+/*      Sort Coding table by number, then alphabetically (as a tie-breaker)
+        The `Dataset` column is the second & only column that is to be sorted alphabetically 
+*/      if (order === "ascending") {
+            return CodingProgressTableController.sortNumber(
+                a, b, order) || CodingProgressTableController.stringCompare(a1, b1, order)};
+        return CodingProgressTableController.sortNumber(
+            a, b, order) || CodingProgressTableController.stringCompare(a1, b1, order);
+    }
+
     static jsonKeyValueToArray(k, v) {return [k, v];}
 
     static jsonToArray(json) {
