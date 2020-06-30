@@ -121,7 +121,7 @@ export class CodingProgressTableController {
     } 
 
     static sortingTieBreakers(a, b, a1, b1, order) {
-/*      Sort Coding table by number, then alphabetically (as a tie-breaker)
+/*      Sort table by number, then alphabetically (as a tie-breaker)
         The `Dataset` column is the second & only column that is to be sorted alphabetically 
 */      if (order === "ascending") {
             return CodingProgressTableController.sortNumber(
