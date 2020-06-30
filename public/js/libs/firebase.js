@@ -5,6 +5,6 @@ let config = {
     projectId: "avf-dashboards",
     storageBucket: "avf-dashboards.appspot.com",
     messagingSenderId: "1063777163571",
-    appId: "1:1063777163571:web:57361756b9ecb959"
+    appId: "1:1063777163571:web:57361756b9ecb959",
 };
 firebase.initializeApp(config);
