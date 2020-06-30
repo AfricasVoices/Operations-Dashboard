@@ -213,6 +213,7 @@ export class TrafficGraphsController {
         let firstOperatorWithoutColorIdentity = operators.filter(
             x => !operatorsWithColorIdentity.includes(x))[0];
         let firstOperatorsWithoutColorIdentityIndex = operators.indexOf(firstOperatorWithoutColorIdentity);
+        // Assign the value of `other` property of MNOColors to the first operator without color identity
         mnoColorScheme[firstOperatorsWithoutColorIdentityIndex] = MNOColors.other;
 
         // Generate color scheme based on operators identity
