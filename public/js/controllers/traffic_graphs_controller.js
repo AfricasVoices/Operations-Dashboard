@@ -210,7 +210,8 @@ export class TrafficGraphsController {
         let mno_color_scheme = [],
             operators_with_color_identity = Object.keys(MNOColors);
 
-        let operators_without_color_identity = operators.filter(x => !operators_with_color_identity.includes(x))[0];
+        let operators_without_color_identity = operators.filter(
+            x => !operators_with_color_identity.includes(x))[0];
         let difference_index = operators.indexOf(operators_without_color_identity);
         mno_color_scheme[difference_index] = MNOColors.other;
 
