@@ -183,19 +183,25 @@ export class TrafficGraphsController {
                 .style("text-anchor", "middle")
                 .text("No. of Failed Message (s)");
 
-        let mno_color_scheme = [],
-            operators_with_color_identity = Object.keys(MNOColors);
+        let mnoColorScheme = [],
+            operatorsWithColorIdentity = Object.keys(MNOColors);
+
+        let firstOperatorWithoutColorIdentity = operators.filter(
+            x => !operatorsWithColorIdentity.includes(x))[0];
+        let firstOperatorsWithoutColorIdentityIndex = operators.indexOf(firstOperatorWithoutColorIdentity);
+        // Assign the value of `other` property of MNOColors to the first operator without color identity
+        mnoColorScheme[firstOperatorsWithoutColorIdentityIndex] = MNOColors.other;
 
         // Generate color scheme based on operators identity
         operators.forEach((operator, index) => {
-            if (operators_with_color_identity.includes(operator)) {
-                mno_color_scheme[index] = MNOColors[operator];
+            if (operatorsWithColorIdentity.includes(operator)) {
+                mnoColorScheme[index] = MNOColors[operator];
             }
         });
 
-        let color = d3.scaleOrdinal(mno_color_scheme),
-            colorReceived = d3.scaleOrdinal(mno_color_scheme).domain(receivedKeys),
-            colorSent = d3.scaleOrdinal(mno_color_scheme).domain(sentKeys),
+        let color = d3.scaleOrdinal(mnoColorScheme),
+            colorReceived = d3.scaleOrdinal(mnoColorScheme).domain(receivedKeys),
+            colorSent = d3.scaleOrdinal(mnoColorScheme).domain(sentKeys),
             colorFailed = d3.scaleOrdinal(["#ff0000"]).domain(["total_errored"]);
 
         let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
