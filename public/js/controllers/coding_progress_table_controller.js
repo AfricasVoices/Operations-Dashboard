@@ -1,41 +1,41 @@
 export class CodingProgressTableController {
     static updateCodingProgressTable(codingProgressData) {
         let data = codingProgressData.data,
-            lastUpdate = codingProgressData.lastUpdate; 
+            lastUpdate = codingProgressData.lastUpdate;
 
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
         // Default sorting information
         if (!CodingProgressTableController.sortInfoArray)
-            CodingProgressTableController.sortInfoArray = [{"column": "Done", "order": "ascending"}];
+            CodingProgressTableController.sortInfoArray = [{ column: "Done", order: "ascending" }];
 
         // Latest sorting information
-        let sortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0] 
+        let sortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0];
 
         // Invoke `transform` function with column to be sorted on page load
         transform(sortInfo.column);
-        
+
         // Function used to generate coding progress table
         function transform(column, updatedSortInfo = "") {
-            if (typeof updatedSortInfo === "object")
-                sortInfo = updatedSortInfo;
+            if (typeof updatedSortInfo === "object") sortInfo = updatedSortInfo;
 
             d3.select("tbody").selectAll("tr").remove();
-            d3.select("thead").selectAll('tr').remove();
+            d3.select("thead").selectAll("tr").remove();
 
             // Table Header
             d3.select("thead").append('tr')
                 .attr("class", "table-heading")
-                .selectAll('th')
-                .data(CodingProgressTableController.jsonToArray(data[0])).enter() 
-                .append('th')
+                .selectAll("th")
+                .data(CodingProgressTableController.jsonToArray(data[0]))
+                .enter()
+                .append("th")
                 .on("click", (d) => {
-                    CodingProgressTableController.saveSortInfo(d[0])
-                    let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0]
-                    transform(d[0], latestSortInfo)
+                    CodingProgressTableController.saveSortInfo(d[0]);
+                    let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0];
+                    transform(d[0], latestSortInfo);
                 })
-                .text(d => d[0])
+                .text((d) => d[0]);
 
             // Table Rows
             let tr = d3.select("tbody").selectAll("tr")
@@ -66,71 +66,77 @@ export class CodingProgressTableController {
                 .append("a")
                 .attr("href", d => `https://web-coda.firebaseapp.com/?dataset=${d[1]}`)
                 .attr("target", "_blank")
-                .text(d => d[1])
+                .text((d) => d[1]);
 
             // Filter table to remain with "Done" column
-            td.filter((d, i) => d[0] === "Done" && i === 3)
-            .each((d, i, n) => {
+            td.filter((d, i) => d[0] === "Done" && i === 3).each((d, i, n) => {
                 // Select Table Row
-                let parentNode = d3.select(n[i].parentNode)
+                let parentNode = d3.select(n[i].parentNode);
                 // Select Table Data and access data bound to the node
-                let tableData = d3.select(n[i]).data()[0][1]
+                let tableData = d3.select(n[i]).data()[0][1];
                 if (parseFloat(tableData) === 0) {
-                    parentNode.attr('class', "coding-notstarted");
+                    parentNode.attr("class", "coding-notstarted");
                 } else if (parseFloat(tableData) > 0 && parseFloat(tableData) <= 25) {
-                    parentNode.attr('class', "coding-below25");
+                    parentNode.attr("class", "coding-below25");
                 } else if (parseFloat(tableData) > 25 && parseFloat(tableData) <= 50) {
-                    parentNode.attr('class', "coding-above25");
+                    parentNode.attr("class", "coding-above25");
                 } else if (parseFloat(tableData) > 50 && parseFloat(tableData) <= 75) {
-                    parentNode.attr('class', "coding-above50");   
+                    parentNode.attr("class", "coding-above50");
                 } else if (parseFloat(tableData) > 75 && parseFloat(tableData) < 100) {
-                    parentNode.attr('class', "coding-above75");  
+                    parentNode.attr("class", "coding-above75");
                 } else {
-                    parentNode.attr('class', "coding-complete");
+                    parentNode.attr("class", "coding-complete");
                 }
-            })
-        };
-    };
+            });
+        }
+    }
 
     static saveSortInfo(column) {
-        let sortInfo = {}, previousColumnSorted, previousSortOrder;
+        let sortInfo = {},
+            previousColumnSorted,
+            previousSortOrder;
         sortInfo["column"] = column;
         previousColumnSorted = CodingProgressTableController.sortInfoArray.slice(-1)[0].column;
         previousSortOrder = CodingProgressTableController.sortInfoArray.slice(-1)[0].order;
         if (column == previousColumnSorted) {
             if (previousSortOrder == "ascending") {
-                sortInfo["order"] = "descending"
+                sortInfo["order"] = "descending";
             } else {
-                sortInfo["order"] = "ascending"
+                sortInfo["order"] = "ascending";
             }
         } else {
-            sortInfo["order"] = "ascending"
+            sortInfo["order"] = "ascending";
         }
         CodingProgressTableController.sortInfoArray.push(sortInfo);
     }
 
     static stringCompare(a, b, order) {
-        if (order === "ascending") 
-            return a.localeCompare(b, 'en', { sensitivity: 'base' });
-        return b.localeCompare(a, 'en', { sensitivity: 'base' });
-    };
+        if (order === "ascending") return a.localeCompare(b, "en", { sensitivity: "base" });
+        return b.localeCompare(a, "en", { sensitivity: "base" });
+    }
 
     static sortNumber(a, b, order) {
-        if (order === "ascending") 
-            return a-b || isNaN(a)-isNaN(b);
-        return b-a || isNaN(b)-isNaN(a);
-    } 
+        if (order === "ascending") return a - b || isNaN(a) - isNaN(b);
+        return b - a || isNaN(b) - isNaN(a);
+    }
 
     static sortingTieBreakers(a, b, a1, b1, order) {
         // Sort table by number, then alphabetically (as a tie-breaker)
         if (order === "ascending") {
-            return CodingProgressTableController.sortNumber(
-                a, b, order) || CodingProgressTableController.stringCompare(a1, b1, order);}
-        return CodingProgressTableController.sortNumber(
-            a, b, order) || CodingProgressTableController.stringCompare(a1, b1, order);
+            return (
+                CodingProgressTableController.sortNumber(a, b, order) ||
+                CodingProgressTableController.stringCompare(a1, b1, order)
+            );
+        }
+        return (
+            CodingProgressTableController.sortNumber(a, b, order) ||
+            CodingProgressTableController.stringCompare(a1, b1, order)
+        );
     }
 
-    static jsonKeyValueToArray(k, v) {return [k, v];}
+    static jsonKeyValueToArray(k, v) {
+        return [k, v];
+    }
 
     static jsonToArray(json) {
         let arr = [];
@@ -140,5 +146,5 @@ export class CodingProgressTableController {
             }
         }
         return arr;
-    };
+    }
 }
