@@ -126,7 +126,7 @@ export class CodingProgressTableController {
         The `Dataset` column is the second & only column that is to be sorted alphabetically 
 */      if (order === "ascending") {
             return CodingProgressTableController.sortNumber(
-                a, b, order) || CodingProgressTableController.stringCompare(a1, b1, order)};
+                a, b, order) || CodingProgressTableController.stringCompare(a1, b1, order);}
         return CodingProgressTableController.sortNumber(
             a, b, order) || CodingProgressTableController.stringCompare(a1, b1, order);
     }
