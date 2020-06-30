@@ -44,7 +44,8 @@ export class CodingProgressTableController {
                 .sort((a, b, order = sortInfo.order) => a == null || b == null ? 0 : 
                     typeof a[column] === "string" && typeof b[column] === "string" ? 
                         CodingProgressTableController.stringCompare(a[column], b[column], order) :
-                        CodingProgressTableController.sortNumber(a[column], b[column], order)
+                        CodingProgressTableController.sortingTieBreakers(
+                            a[column], b[column], a["Dataset"], b["Dataset"], order)
                 );
 
             // Table Cells
