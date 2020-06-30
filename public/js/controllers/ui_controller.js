@@ -11,7 +11,7 @@ export class UIController {
             dropdownItem: ".dropdown-item",
             activeLinkClassName: "active-link",
             activeLinks: "a.active-link",
-            systemsLinkSelector: ".systems-link"
+            systemsLinkSelector: ".systems-link",
         };
     }
 
@@ -21,10 +21,10 @@ export class UIController {
         if (statusMenu) {
             while (statusMenu.firstChild) {
                 statusMenu.removeChild(statusMenu.firstChild);
-            }   
+            }
             let html = `<a id="project" class="dropdown-item">%project_name%</a>`;
             // Replace the placeholder text with some actual data
-            data.forEach(obj => {
+            data.forEach((obj) => {
                 let newHtml = html.replace("%project_name%", obj.project_name);
                 statusMenu.insertAdjacentHTML("beforeend", newHtml);
             });
@@ -33,8 +33,8 @@ export class UIController {
 
     static addCodingProgressSection() {
         let DOMstrings = UIController.getDOMstrings(),
-            script = document.createElement('script');
-        script.setAttribute('src', 'js/libs/scroll.js');
+            script = document.createElement("script");
+        script.setAttribute("src", "js/libs/scroll.js");
         document.head.appendChild(script);
         let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
@@ -108,8 +108,8 @@ export class UIController {
 
     static addGraphs(title) {
         let DOMstrings = UIController.getDOMstrings(),
-            script = document.createElement('script');
-        script.setAttribute('src', 'js/libs/scroll.js');
+            script = document.createElement("script");
+        script.setAttribute("src", "js/libs/scroll.js");
         document.head.appendChild(script);
         let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
