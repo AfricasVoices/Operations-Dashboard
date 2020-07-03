@@ -11,10 +11,6 @@ export class BarChart extends GraphLayout {
         this.title = "Bar Chart";
         this.xAxisLabel = "X Axis";
         this.yAxisLabel = "Y Axis";
-        this.config = {
-            // Traffic Monitoring configurations
-            addOneDayToDate: false, 
-        }
 
         this.draw()
     }
