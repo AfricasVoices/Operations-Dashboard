@@ -218,14 +218,14 @@ th:hover {
 }
 .receivedGrid line,
 .sentGrid line,
-.failedGrid line {
+#failedGrid line {
     stroke: lightgrey;
     stroke-opacity: 0.3;
     shape-rendering: crispEdges;
 }
 .receivedGrid path,
 .sentGrid path,
-.failedGrid path {
+#failedGrid path {
     stroke: lightgrey;
     stroke-opacity: 0.5;
     shape-rendering: crispEdges;
