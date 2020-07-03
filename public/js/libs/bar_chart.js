@@ -1,43 +1,42 @@
 import { GraphLayout } from "./graph_layout.js";
 
 export class BarChart extends GraphLayout {
+
     constructor(opts) {
+        // Load in arguments from config object
         super(opts.element)
-        // load in arguments from config object
         this.data = opts.data;
-        this.stackedData = opts.stackedData;
-        this.color = opts.color;
-        // this.keys = opts.keys; 
-        // this.element = opts.element;
-        // create the chart
-        this.draw();
+        this.id = "id";
+        this.color = "red";
+        this.title = "Bar Chart";
+        this.xAxisLabel = "X Axis";
+        this.yAxisLabel = "Y Axis";
+
+        this.draw()
     }
 
     draw() {
-        let vis = this;
-        vis.layout()
-        // create the other stuff
-        vis.createScales();
-        vis.addAxes();
-        vis.addArea();
+        this.layout();
+        this.createScales();
+        this.addAxes();
+        this.addBars();
+        this.addLabels();
     }
 
     createScales() {
-        let vis = this;
-        // calculate max and min for data
-        const xExtent = d3.range(this.data.length);
-        const yExtent = [0, d3.max( this.data, function(d){ return d.pigeons + d.doves + d.eagles;})];
+        // Calculate max and min for data
+        const xExtent = d3.extent(this.data, d => new Date(d.datetime));
+        const yExtent = this.yLimit ? [0, this.yLimit] : d3.extent(this.data, d => +d.value);
 
-        // force zero baseline if all data points are positive
+        // Force zero baseline if all data points are positive
         if (yExtent[0] > 0) { yExtent[0] = 0; };
 
-        vis.xScale = d3.scaleBand()
-            .range([0, vis.width])
-            .paddingInner(0.05)
+        this.xScale = d3.scaleTime()
+            .range([1, this.width])
             .domain(xExtent);
 
-        vis.yScale = d3.scaleLinear()
-            .range([vis.height, 0])
+        this.yScale = d3.scaleLinear()
+            .range([this.height, 0])
             .domain(yExtent);
     }
 
@@ -75,34 +74,130 @@ export class BarChart extends GraphLayout {
             .tickFormat("")
         )
 
-        // Add the X gridlines
-        this.plot.append("g")			
-        .attr("class", "memoryXGrid")
-        .attr("transform", "translate(0," + this.height + ")")
-        .call(d3.axisBottom(this.xScale)
+        let xGridlinesAttr;
+        if (this.tickValuesForXAxis) {
+            xGridlinesAttr = d3.axisBottom(this.xScale)
+            .tickValues(this.tickValuesForXAxis)
             .tickSize(-this.height)
             .tickFormat("")
-        )
+        } else {
+            xGridlinesAttr = d3.axisBottom(this.xScale)
+            .tickSize(-this.height)
+            .tickFormat("")
+        }
+
+        // Add the X gridlines
+        this.plot.append("g")			
+            .attr("class", "memoryXGrid")
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(xGridlinesAttr)
     }
 
-    addArea() {
-        // Groups
-        let groups = this.plot.selectAll(".layers")
-            .attr("class", "layers")
-            .data( this.stackedData )
-            .enter()
-            .append( 'g' )
-            .style( 'fill', ( d, i ) => this.color( i ));
-
-        // Rectangles
-        groups.selectAll( 'rect' )
-            .data( d => d)
+    addBars() {
+        // Values to adjust x and width attributes
+        let rightPadding = -2, shiftBarsToRight = 1;
+        // Create bars
+        this.plot
+            .selectAll("rect")
+            .data(this.data)
             .enter()
             .append("rect")
-            .attr("x", (d, i) =>  this.xScale(i))
-            .attr("y", d => this.yScale(d[1]))
-            .attr("height", d => this.yScale(d[0]) - this.yScale(d[1]))
-            .attr("width", this.xScale.bandwidth());
+            .attr("id", "failedBarChart")
+            /* Shift bars to the right 
+                - prevents first bar of graph from overlapping y axis path */
+            .attr("x", d => this.xScale(new Date(d.datetime)) + shiftBarsToRight)
+            .attr("y", d => this.yScale(d.value))
+            .attr("height", d => this.height - this.yScale(d.value))
+            .attr("fill", "#ff0000")
+            /* Reduce the right padding of bars 
+                - Accomodates the shift of the bars to the right so that they don't overlap */
+            // .attr("width", (this.width / Object.keys(this.data).length) + rightPadding);
+            .attr("width", (this.width / Object.keys(this.data).length));
+
+        this.addTooltip();
+    }
+
+    addTooltip() {
+        // Add tooltip for the total failed sms graph
+        let tip;
+        this.plot
+            .selectAll("rect")
+            .on("mouseover", (d, i, n) => {
+                let barColor = d3.select(n[i]).style("fill");
+                tip = d3.tip()
+                    .attr("class", "tooltip")
+                    .attr("id", "tooltip")
+                    .html(d => {
+                        let totalFiledMessages = d.value,
+                            // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+                            tooltipContent = `<div>${totalFiledMessages} Failed
+                            Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
+                        return tooltipContent;
+                    })
+                this.plot.call(tip)
+                tip.show(d, n[i]).style("color", barColor)
+            })
+            .on("mouseout", (d, i, n) => {
+                tip.hide()
+            })
+    }
+
+    // addLabels() {
+    //     // Graph title
+    //     this.plot.append("text")
+    //         .attr("x", this.width / 2)
+    //         .attr("y", 0 - this.margin.top / 2)
+    //         .attr("text-anchor", "middle")
+    //         .style("font-size", "20px")
+    //         .style("text-decoration", "bold")
+    //         .text(this.title);
+
+    //     // Add X axis label
+    //     this.plot.append("text")
+    //         .attr("text-anchor", "end")
+    //         .attr(
+    //             "transform",
+    //             "translate(" + this.width / 2 + " ," + (this.height + this.margin.top + 50) + ")"
+    //         )
+    //         .style("text-anchor", "middle")
+    //         .text(this.xAxisLabel);
+
+    //     // Add Y axis label
+    //     this.plot.append("text")
+    //         .attr("transform", "rotate(-90)")
+    //         .attr("y", 0 - this.margin.left)
+    //         .attr("x", 0 - this.height / 2)
+    //         .attr("dy", "1em")
+    //         .style("text-anchor", "middle")
+    //         .text(this.yAxisLabel);
+    // }
+
+    addMetricsLegend() {
+        let keys = ["stop", "start"]
+        let color = d3.scaleOrdinal().domain(keys).range(["red", "green"]);
+
+        // Add one dot in the legend for each name.
+        this.plot.selectAll("myrect")
+            .data(keys)
+            .enter()
+            .append("rect")
+                .attr("x", this.width + 10)
+                .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                .attr("width", 30)
+                .attr("height", 3)
+                .style("fill", d => color(d))
+
+        // Add one dot in the legend for each name.
+        this.plot.selectAll("mylabels")
+            .data(keys)
+            .enter()
+            .append("text")
+                .attr("x", this.width + 45)
+                .attr("y", (d,i) => 10 + i*25) // 10 is where the first dot appears. 25 is the distance between dots
+                .style("fill", d => color(d))
+                .text(d => d)
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
     }
 
 }

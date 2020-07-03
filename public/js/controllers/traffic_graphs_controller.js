@@ -1,3 +1,4 @@
+import { BarChart } from "../libs/bar_chart.js";
 // GRAPH CONTROLLER
 export class TrafficGraphsController {
     static addOneDayToDate(date) {
@@ -910,148 +911,165 @@ export class TrafficGraphsController {
         }
 
         function drawOneDayFailedGraph(yLimitFailed) {
+            // Draw disk utilization graph
+            let oneDayFailedChartData = JSON.parse(JSON.stringify(dailyFailedTotal));
+            oneDayFailedChartData.forEach(function(d) {
+                d.datetime = new Date(d.day);
+                d.value = +d.total_errored;
+            })
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            let yLimitFailedTotal = d3.max(dailyFailedTotal, d => d.total_errored);
-
+            let yLimitFailedTotal = d3.max(oneDayFailedChartData, d => d.value);
             if (isYLimitFailedManuallySet != true) {
                 yLimitFailed = yLimitFailedTotal;
             }
 
-            // set scale domain for failed graph
-            let xMin = d3.min(dailyFailedTotal, d => new Date(d.day)),
-                xMax = d3.max(dailyFailedTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
-            failed_messages_x_axis_range.domain([xMin, xMax]);
-            if (yLimitFailed > 0)
-                y_total_failed_sms_range.domain([0, yLimitFailed]);
+            // Tick Values for X axis
+            const tickValuesForXAxis = oneDayFailedChartData.map(d => new Date(d.datetime));
 
-            d3.selectAll(".redrawElementFailed").remove();
-            d3.selectAll("#failedBarChart").remove();
-            d3.selectAll("#failedBarChart10min").remove();
-            d3.selectAll(".failedGrid").remove();
+            const oneDayFailedChart = new BarChart(
+                {element: document.querySelector('.total_failed_sms_graph'), data: oneDayFailedChartData });
+            oneDayFailedChart
+                .setId("disk") 
+                .setTitle("Total Failed Message(s) / day")
+                .setXAxisLabel("Date (dd:hh:m)")
+                .setYAxisLabel("Disk Usage (GB)")
+                .setColorScheme("#0E86D4")
+                .setYLimit(yLimitFailed)
+                .setTickValuesForXAxis(tickValuesForXAxis)
+                // .setConfig(diskUsageChartConfig)
+                .draw();
 
-            const tickValuesForXAxis = dailyFailedTotal.map(d => new Date(d.day));
-            total_failed_sms_graph.append("g")			
-                .attr("class", "failedGrid")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .tickValues(tickValuesForXAxis)
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
+            // // set scale domain for failed graph
+            // let xMin = d3.min(dailyFailedTotal, d => new Date(d.day)),
+            //     xMax = d3.max(dailyFailedTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
+            // failed_messages_x_axis_range.domain([xMin, xMax]);
+            // if (yLimitFailed > 0)
+            //     y_total_failed_sms_range.domain([0, yLimitFailed]);
 
-            // Add the Y gridlines
-            total_failed_sms_graph.append("g")			
-                .attr("class", "failedGrid")
-                .call(d3.axisLeft(y_total_failed_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
+            // d3.selectAll(".redrawElementFailed").remove();
+            // d3.selectAll("#failedBarChart").remove();
+            // d3.selectAll("#failedBarChart10min").remove();
+            // d3.selectAll(".failedGrid").remove();
 
-            // Add the Y Axis for the total failed sms graph
-            total_failed_sms_graph
-                .append("g")
-                .attr("class", "axisSteelBrown")
-                .attr("class", "redrawElementFailed")
-                .call(d3.axisLeft(y_total_failed_sms_range));
+            // const tickValuesForXAxis = dailyFailedTotal.map(d => new Date(d.day));
+            // total_failed_sms_graph.append("g")			
+            //     .attr("class", "failedGrid")
+            //     .attr("transform", "translate(0," + Height + ")")
+            //     .call(d3.axisBottom(x)
+            //         .tickValues(tickValuesForXAxis)
+            //         .tickSize(-Height)
+            //         .tickFormat("")
+            //     )
 
-            // Values to adjust x and width attributes
-            let rightPadding = -2, shiftBarsToRight = 1;
-            // Create bars
-            total_failed_sms_graph
-                .selectAll("rect")
-                .data(dailyFailedTotal)
-                .enter()
-                .append("rect")
-                .attr("id", "failedBarChart")
-                /* Shift bars to the right 
-                 - prevents first bar of graph from overlapping y axis path */
-                .attr("x", d => x(new Date(d.day)) + shiftBarsToRight)
-                .attr("y", d => y_total_failed_sms_range(d.total_errored))
-                .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
-                .attr("fill", "#ff0000")
-                /* Reduce the right padding of bars 
-                 - Accomodates the shift of the bars to the right so that they don't overlap */
-                .attr("width", (Width / Object.keys(dailyFailedTotal).length) + rightPadding);
+            // // Add the Y gridlines
+            // total_failed_sms_graph.append("g")			
+            //     .attr("class", "failedGrid")
+            //     .call(d3.axisLeft(y_total_failed_sms_range)
+            //         .tickSize(-Width)
+            //         .tickFormat("")
+            //     )
 
-            // Add tooltip for the total failed sms graph
-            let tip;
-            total_failed_sms_graph
-                .selectAll("rect")
-                .on("mouseover", (d, i, n) => {
-                    let barColor = d3.select(n[i]).style("fill");
-                    tip = d3.tip()
-                        .attr("class", "tooltip")
-                        .attr("id", "tooltip")
-                        .html(d => {
-                            let totalFiledMessages = d.total_errored,
-                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
-                                tooltipContent = `<div>${totalFiledMessages} Failed
-                                Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
-                            return tooltipContent;
-                        })
-                    total_failed_sms_graph.call(tip)
-                    tip.show(d, n[i]).style("color", barColor)
-                })
-                .on("mouseout", (d, i, n) => {
-                    tip.hide()
-                })
+            // // Add the Y Axis for the total failed sms graph
+            // total_failed_sms_graph
+            //     .append("g")
+            //     .attr("class", "axisSteelBrown")
+            //     .attr("class", "redrawElementFailed")
+            //     .call(d3.axisLeft(y_total_failed_sms_range));
 
-            // Add the X Axis for the total failed sms graph
-            total_failed_sms_graph
-                .append("g")
-                .attr("class", "redrawElementFailed")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(
-                    d3
-                        .axisBottom(failed_messages_x_axis_range)
-                        .tickValues(tickValuesForXAxis)
-                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
-                )
-                // Rotate axis labels
-                .selectAll("text")
-                .style("text-anchor", "end")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)");
+            // // Values to adjust x and width attributes
+            // let rightPadding = -2, shiftBarsToRight = 1;
+            // // Create bars
+            // total_failed_sms_graph
+            //     .selectAll("rect")
+            //     .data(dailyFailedTotal)
+            //     .enter()
+            //     .append("rect")
+            //     .attr("id", "failedBarChart")
+            //     /* Shift bars to the right 
+            //      - prevents first bar of graph from overlapping y axis path */
+            //     .attr("x", d => x(new Date(d.day)) + shiftBarsToRight)
+            //     .attr("y", d => y_total_failed_sms_range(d.total_errored))
+            //     .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
+            //     .attr("fill", "#ff0000")
+            //     /* Reduce the right padding of bars 
+            //      - Accomodates the shift of the bars to the right so that they don't overlap */
+            //     .attr("width", (Width / Object.keys(dailyFailedTotal).length) + rightPadding);
 
-            // Add X axis label for the total failed sms graph
-            total_failed_sms_graph
-                .append("text")
-                .attr("class", "redrawElementFailed")
-                .attr(
-                    "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
-                )
-                .style("text-anchor", "middle")
-                .text("Date (Y-M-D)");
+            // // Add tooltip for the total failed sms graph
+            // let tip;
+            // total_failed_sms_graph
+            //     .selectAll("rect")
+            //     .on("mouseover", (d, i, n) => {
+            //         let barColor = d3.select(n[i]).style("fill");
+            //         tip = d3.tip()
+            //             .attr("class", "tooltip")
+            //             .attr("id", "tooltip")
+            //             .html(d => {
+            //                 let totalFiledMessages = d.total_errored,
+            //                     // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+            //                     tooltipContent = `<div>${totalFiledMessages} Failed
+            //                     Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
+            //                 return tooltipContent;
+            //             })
+            //         total_failed_sms_graph.call(tip)
+            //         tip.show(d, n[i]).style("color", barColor)
+            //     })
+            //     .on("mouseout", (d, i, n) => {
+            //         tip.hide()
+            //     })
 
-            // Total Sms(s) graph title
-            total_failed_sms_graph
-                .append("text")
-                .attr("class", "redrawElementFailed")
-                .attr("x", Width / 2)
-                .attr("y", 0 - Margin.top / 2)
-                .attr("text-anchor", "middle")
-                .style("font-size", "20px")
-                .style("text-decoration", "bold")
-                .text("Total Failed Message(s) / day");
+            // // Add the X Axis for the total failed sms graph
+            // total_failed_sms_graph
+            //     .append("g")
+            //     .attr("class", "redrawElementFailed")
+            //     .attr("transform", "translate(0," + Height + ")")
+            //     .call(
+            //         d3
+            //             .axisBottom(failed_messages_x_axis_range)
+            //             .tickValues(tickValuesForXAxis)
+            //             .tickFormat(d => dayDateFormatWithWeekdayName(d))
+            //     )
+            //     // Rotate axis labels
+            //     .selectAll("text")
+            //     .style("text-anchor", "end")
+            //     .attr("dx", "-.8em")
+            //     .attr("dy", ".15em")
+            //     .attr("transform", "rotate(-65)");
+
+            // // Add X axis label for the total failed sms graph
+            // total_failed_sms_graph
+            //     .append("text")
+            //     .attr("class", "redrawElementFailed")
+            //     .attr(
+            //         "transform",
+            //         "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
+            //     )
+            //     .style("text-anchor", "middle")
+            //     .text("Date (Y-M-D)");
+
+            // // Total Sms(s) graph title
+            // total_failed_sms_graph
+            //     .append("text")
+            //     .attr("class", "redrawElementFailed")
+            //     .attr("x", Width / 2)
+            //     .attr("y", 0 - Margin.top / 2)
+            //     .attr("text-anchor", "middle")
+            //     .style("font-size", "20px")
+            //     .style("text-decoration", "bold")
+            //     .text("Total Failed Message(s) / day");
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
+            // Draw disk utilization graph
+            let _10minDayFailedChartData = JSON.parse(JSON.stringify(dataFilteredWeek));
+            _10minDayFailedChartData.forEach(function(d) {
+                d.datetime = new Date(d.datetime);
+                d.value = +d.total_errored;
+            })
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitFailedManuallySet == false) {
-                yLimitFailed = d3.max(dataFilteredWeek, d => d.total_errored);
+                yLimitFailed = d3.max(_10minDayFailedChartData, d => d.value);
             }
-
-            // Set scale domain for failed graph
-            failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-            if (yLimitFailed > 0)
-                y_total_failed_sms_range.domain([0, yLimitFailed]);
-
-            d3.selectAll(".redrawElementFailed").remove();
-            d3.selectAll("#failedBarChart").remove();
-            d3.selectAll("#failedBarChart10min").remove();
-            d3.selectAll(".failedGrid").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -1060,7 +1078,7 @@ export class TrafficGraphsController {
                     firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
                     return firstTimestampOfDay
                 })
-                .entries(dataFilteredWeek);
+                .entries(_10minDayFailedChartData);
 
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
@@ -1073,108 +1091,150 @@ export class TrafficGraphsController {
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
-            // Add the X gridlines
-            total_failed_sms_graph.append("g")			
-                .attr("class", "failedGrid")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .tickValues(tickValuesForXAxis)
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
+            const _10minDayFailedChart = new BarChart(
+                {element: document.querySelector('.total_failed_sms_graph'), data: _10minDayFailedChartData });
+            _10minDayFailedChart
+                .setTitle("Total Failed Message(s) / day")
+                .setXAxisLabel("Date (Y-M-D)")
+                .setYAxisLabel("Disk Usage (GB)")
+                .setColorScheme("#0E86D4")
+                .setYLimit(yLimitFailed)
+                .setTickValuesForXAxis(tickValuesForXAxis)
+                // .setConfig(diskUsageChartConfig)
+                .draw();
+
+            // // Set scale domain for failed graph
+            // failed_messages_x_axis_range.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+            // if (yLimitFailed > 0)
+            //     y_total_failed_sms_range.domain([0, yLimitFailed]);
+
+            // d3.selectAll(".redrawElementFailed").remove();
+            // d3.selectAll("#failedBarChart").remove();
+            // d3.selectAll("#failedBarChart10min").remove();
+            // d3.selectAll(".failedGrid").remove();
+
+            // // Group data filtered by week daily and generate tick values for x axis
+            // let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
+            //     .rollup(v => {
+            //         let firstTimestampOfDay = {}
+            //         firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
+            //         return firstTimestampOfDay
+            //     })
+            //     .entries(dataFilteredWeek);
+
+            // // Flatten nested data
+            // for (let entry in dataFilteredWeekGroupedDaily) {
+            //     let valueList = dataFilteredWeekGroupedDaily[entry].value;
+            //     for (let key in valueList) {
+            //         dataFilteredWeekGroupedDaily[entry][key] = valueList[key];
+            //     }
+            //     delete dataFilteredWeekGroupedDaily[entry]["value"];
+            //     delete dataFilteredWeekGroupedDaily[entry]["key"];
+            // }
+            // const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+
+            // // Add the X gridlines
+            // total_failed_sms_graph.append("g")			
+            //     .attr("class", "failedGrid")
+            //     .attr("transform", "translate(0," + Height + ")")
+            //     .call(d3.axisBottom(x)
+            //         .tickValues(tickValuesForXAxis)
+            //         .tickSize(-Height)
+            //         .tickFormat("")
+            //     )
                 
-            // Add the Y gridlines
-            total_failed_sms_graph.append("g")			
-                .attr("class", "failedGrid")
-                .call(d3.axisLeft(y_total_failed_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
+            // // Add the Y gridlines
+            // total_failed_sms_graph.append("g")			
+            //     .attr("class", "failedGrid")
+            //     .call(d3.axisLeft(y_total_failed_sms_range)
+            //         .tickSize(-Width)
+            //         .tickFormat("")
+            //     )
 
-            // Add the Y Axis for the total failed sms graph
-            total_failed_sms_graph
-                .append("g")
-                .attr("id", "axisSteelBrown")
-                .attr("class", "redrawElementFailed")
-                .call(d3.axisLeft(y_total_failed_sms_range));
+            // // Add the Y Axis for the total failed sms graph
+            // total_failed_sms_graph
+            //     .append("g")
+            //     .attr("id", "axisSteelBrown")
+            //     .attr("class", "redrawElementFailed")
+            //     .call(d3.axisLeft(y_total_failed_sms_range));
 
-            // Create bars
-            total_failed_sms_graph
-                .selectAll("rect")
-                .data(dataFilteredWeek)
-                .enter()
-                .append("rect")
-                .attr("id", "failedBarChart10min")
-                .attr("x", d => failed_messages_x_axis_range(new Date(d.datetime)))
-                .attr("y", d => y_total_failed_sms_range(d.total_errored))
-                .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
-                .attr("fill", "#ff0000")
-                .attr("width", Width / Object.keys(dataFilteredWeek).length)
+            // // Create bars
+            // total_failed_sms_graph
+            //     .selectAll("rect")
+            //     .data(dataFilteredWeek)
+            //     .enter()
+            //     .append("rect")
+            //     .attr("id", "failedBarChart10min")
+            //     .attr("x", d => failed_messages_x_axis_range(new Date(d.datetime)))
+            //     .attr("y", d => y_total_failed_sms_range(d.total_errored))
+            //     .attr("height", d => Height - y_total_failed_sms_range(d.total_errored))
+            //     .attr("fill", "#ff0000")
+            //     .attr("width", Width / Object.keys(dataFilteredWeek).length)
             
-            // Add tooltip for the total failed sms graph
-            let tip;
-            total_failed_sms_graph
-                .selectAll("rect")
-                .on("mouseover", (d, i, n) => {
-                    let barColor = d3.select(n[i]).style("fill");
-                    tip = d3.tip()
-                        .attr("class", "tooltip")
-                        .attr("id", "tooltip")
-                        .html(d => {
-                            let totalFailedMessages = d.total_errored,
-                                failedDay = d.datetime,
-                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
-                                tooltipContent = `<div>${totalFailedMessages} Failed
-                                Message${totalFailedMessages !== 1 ? 's': ''} at 
-                                ${dayTimeFormat(new Date(failedDay))}</div>`;
-                            return tooltipContent;
-                        })
-                    total_failed_sms_graph.call(tip)
-                    tip.show(d, n[i]).style("color", barColor)
-                })
-                .on("mouseout", (d, i, n) => {
-                    tip.hide()
-                })
+            // // Add tooltip for the total failed sms graph
+            // let tip;
+            // total_failed_sms_graph
+            //     .selectAll("rect")
+            //     .on("mouseover", (d, i, n) => {
+            //         let barColor = d3.select(n[i]).style("fill");
+            //         tip = d3.tip()
+            //             .attr("class", "tooltip")
+            //             .attr("id", "tooltip")
+            //             .html(d => {
+            //                 let totalFailedMessages = d.total_errored,
+            //                     failedDay = d.datetime,
+            //                     // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+            //                     tooltipContent = `<div>${totalFailedMessages} Failed
+            //                     Message${totalFailedMessages !== 1 ? 's': ''} at 
+            //                     ${dayTimeFormat(new Date(failedDay))}</div>`;
+            //                 return tooltipContent;
+            //             })
+            //         total_failed_sms_graph.call(tip)
+            //         tip.show(d, n[i]).style("color", barColor)
+            //     })
+            //     .on("mouseout", (d, i, n) => {
+            //         tip.hide()
+            //     })
 
-            // Add the X Axis for the total failed sms graph
-            total_failed_sms_graph
-                .append("g")
-                .attr("class", "redrawElementFailed")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(
-                    d3
-                        .axisBottom(x)
-                        .tickValues(tickValuesForXAxis)
-                        .tickFormat(timeFormat)
-                )
-                // Rotate axis labels
-                .selectAll("text")
-                .style("text-anchor", "end")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)");
+            // // Add the X Axis for the total failed sms graph
+            // total_failed_sms_graph
+            //     .append("g")
+            //     .attr("class", "redrawElementFailed")
+            //     .attr("transform", "translate(0," + Height + ")")
+            //     .call(
+            //         d3
+            //             .axisBottom(x)
+            //             .tickValues(tickValuesForXAxis)
+            //             .tickFormat(timeFormat)
+            //     )
+            //     // Rotate axis labels
+            //     .selectAll("text")
+            //     .style("text-anchor", "end")
+            //     .attr("dx", "-.8em")
+            //     .attr("dy", ".15em")
+            //     .attr("transform", "rotate(-65)");
 
-            // Add X axis label for the total failed sms graph
-            total_failed_sms_graph
-                .append("text")
-                .attr("class", "redrawElementFailed")
-                .attr(
-                    "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
-                )
-                .style("text-anchor", "middle")
-                .text("Date (Y-M-D)");
+            // // Add X axis label for the total failed sms graph
+            // total_failed_sms_graph
+            //     .append("text")
+            //     .attr("class", "redrawElementFailed")
+            //     .attr(
+            //         "transform",
+            //         "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+            //     )
+            //     .style("text-anchor", "middle")
+            //     .text("Date (Y-M-D)");
 
-            // Total Sms(s) graph title
-            total_failed_sms_graph
-                .append("text")
-                .attr("class", "redrawElementFailed")
-                .attr("x", Width / 2)
-                .attr("y", 0 - Margin.top / 2)
-                .attr("text-anchor", "middle")
-                .style("font-size", "20px")
-                .style("text-decoration", "bold")
-                .text("Total Failed Message(s) / 10 minutes");
+            // // Total Sms(s) graph title
+            // total_failed_sms_graph
+            //     .append("text")
+            //     .attr("class", "redrawElementFailed")
+            //     .attr("x", Width / 2)
+            //     .attr("y", 0 - Margin.top / 2)
+            //     .attr("text-anchor", "middle")
+            //     .style("font-size", "20px")
+            //     .style("text-decoration", "bold")
+            //     .text("Total Failed Message(s) / 10 minutes");
         }
 
         // Update chart time unit on user selection
