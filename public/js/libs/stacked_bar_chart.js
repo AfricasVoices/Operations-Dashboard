@@ -1,51 +1,89 @@
 import { GraphLayout } from "./graph_layout.js";
 
 export class StackedBarChart extends GraphLayout {
+
     constructor(opts) {
+        // Load in arguments from config object
         super(opts.element)
-        // load in arguments from config object
         this.data = opts.data;
-        this.stackedData = opts.stackedData;
-        this.color = opts.color;
-        // this.keys = opts.keys; 
-        // this.element = opts.element;
-        // create the chart
-        this.draw();
+        this.id = "id";
+        this.color = "red";
+        this.title = "Bar Chart";
+        this.xAxisLabel = "X Axis";
+        this.yAxisLabel = "Y Axis";
+        this.config = {
+            // Failed Messages Graph Configuration
+            setFailedMsgGraphTooltipText: false
+        }
+
+        this.draw()
     }
 
     draw() {
-        let vis = this;
-        vis.layout()
-        // create the other stuff
-        vis.createScales();
-        vis.addAxes();
-        vis.addArea();
+        this.layout();
+        this.createScales();
+        this.addAxes();
+        this.addBars();
+        this.addLabels();
+        this.addLegend();
+    }
+
+    setXAxisTickFormat(tickFormat) {
+        this.tickFormat = tickFormat;
+        return this;
+    }
+
+    setLegendLabel(legendLabel) {
+        this.legendLabel = legendLabel;
+        return this;
+    }
+
+    setGridLinesId(gridLinesId) {
+        this.gridLinesId = gridLinesId;
+        return this;
+    }
+
+    setBarsRightPadding(rightPadding = -2) {
+        this.rightPadding = rightPadding;
+        return this;
+    }
+
+    setFactorToShiftBarsToRight(shiftBarsToRight = 1) {
+        this.shiftBarsToRight = shiftBarsToRight;
+        return this;
+    }
+
+    setXLimitByAddingOneDayDate(xLimit) {
+        this.xLimit = xLimit;
+        return this;
     }
 
     createScales() {
-        let vis = this;
-        // calculate max and min for data
-        const xExtent = d3.range(this.data.length);
-        const yExtent = [0, d3.max( this.data, function(d){ return d.pigeons + d.doves + d.eagles;})];
+        // Calculate max and min for data
+        const xExtent = d3.extent(this.data, d => new Date(d.datetime));
+        const yExtent = this.yLimit ? [0, this.yLimit] : d3.extent(this.data, d => +d.value);
 
-        // force zero baseline if all data points are positive
+        // Force zero baseline if all data points are positive
         if (yExtent[0] > 0) { yExtent[0] = 0; };
 
-        vis.xScale = d3.scaleBand()
-            .range([0, vis.width])
-            .paddingInner(0.05)
+        if (this.xLimit) { xExtent[1] = this.xLimit; }
+
+        this.xScale = d3.scaleTime()
+            .range([1, this.width])
             .domain(xExtent);
 
-        vis.yScale = d3.scaleLinear()
-            .range([vis.height, 0])
-            .domain(yExtent);
+        this.yScale = d3.scaleLinear()
+            .range([this.height, 0]);
+
+        if (yExtent[1] > 0) { this.yScale.domain(yExtent) };
     }
 
     addAxes() {
         // create and append axis elements
-        // this is all pretty straightforward D3 stuff
-        const xAxis = d3.axisBottom(this.xScale)
-        const yAxis = d3.axisLeft(this.yScale).ticks(5)
+        const xAxis = d3.axisBottom(this.xScale);
+        if (this.tickFormat) { xAxis.tickFormat(this.tickFormat); }
+        if (this.tickValuesForXAxis) { xAxis.tickValues(this.tickValuesForXAxis); }
+        const yAxis = d3.axisLeft(this.yScale);
 
         this.xAxis = this.plot.append("g")
             .attr("class", "x axis")
@@ -63,46 +101,108 @@ export class StackedBarChart extends GraphLayout {
             .attr("class", "y axis")
             .call(yAxis)
 
-        this.addGridlines()
+        this.addGridlines();
     }
 
     addGridlines() {
         // Add the Y gridlines
         this.plot.append("g")			
-        .attr("class", "memoryGrid")
+        .attr("id", this.gridLinesId)
         .call(d3.axisLeft(this.yScale)
             .tickSize(-this.width)
             .tickFormat("")
         )
 
-        // Add the X gridlines
-        this.plot.append("g")			
-        .attr("class", "memoryXGrid")
-        .attr("transform", "translate(0," + this.height + ")")
-        .call(d3.axisBottom(this.xScale)
+        let xGridlinesAttr;
+        if (this.tickValuesForXAxis) {
+            xGridlinesAttr = d3.axisBottom(this.xScale)
+            .tickValues(this.tickValuesForXAxis)
             .tickSize(-this.height)
             .tickFormat("")
-        )
+        } else {
+            xGridlinesAttr = d3.axisBottom(this.xScale)
+            .tickSize(-this.height)
+            .tickFormat("")
+        }
+
+        // Add the X gridlines
+        this.plot.append("g")			
+            .attr("id", this.gridLinesId)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(xGridlinesAttr)
     }
 
-    addArea() {
-        // Groups
-        let groups = this.plot.selectAll(".layers")
-            .attr("class", "layers")
-            .data( this.stackedData )
-            .enter()
-            .append( 'g' )
-            .style( 'fill', ( d, i ) => this.color( i ));
-
-        // Rectangles
-        groups.selectAll( 'rect' )
-            .data( d => d)
+    addBars() {
+        // Values to adjust x and width attributes
+        if (!this.rightPadding) { this.rightPadding = 0; }
+        if (!this.shiftBarsToRight) { this.shiftBarsToRight = 0; }
+        // Create bars
+        this.plot
+            .selectAll("rect")
+            .data(this.data)
             .enter()
             .append("rect")
-            .attr("x", (d, i) =>  this.xScale(i))
-            .attr("y", d => this.yScale(d[1]))
-            .attr("height", d => this.yScale(d[0]) - this.yScale(d[1]))
-            .attr("width", this.xScale.bandwidth());
+            .attr("class", this.barChartId)
+            /* Shift bars to the right 
+                - prevents first bar of graph from overlapping y axis path */
+            .attr("x", d => this.xScale(new Date(d.datetime)) + this.shiftBarsToRight)
+            .attr("y", d => this.yScale(d.value))
+            .attr("height", d => this.height - this.yScale(d.value))
+            .attr("fill", this.color)
+            /* Reduce the right padding of bars 
+                - Accomodates the shift of the bars to the right so that they don't overlap */
+            .attr("width", (this.width / Object.keys(this.data).length) + this.rightPadding);
+
+        this.addTooltip();
+    }
+
+    setFailedMsgGraphTooltipText(d) {
+        let totalFiledMessages = d.value,
+            // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+            tooltipContent = `<div>${totalFiledMessages} Failed
+            Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
+        return tooltipContent;
+    }
+
+    addTooltip() {
+        // Add tooltip for the total failed sms graph
+        let tip;
+        this.plot
+            .selectAll("rect")
+            .on("mouseover", (d, i, n) => {
+                let barColor = d3.select(n[i]).style("fill");
+                tip = d3.tip()
+                    .attr("class", "tooltip")
+                    .html(d => {
+                        let toolTipText = d.value;
+                        if (this.config.setFailedMsgGraphTooltipText) 
+                            toolTipText = this.setFailedMsgGraphTooltipText(d);
+                        return toolTipText;
+                    } )
+                this.plot.call(tip)
+                tip.show(d, n[i]).style("color", barColor)
+            })
+            .on("mouseout", (d, i, n) => {
+                tip.hide(d, n[i])
+            })
+    }
+
+    addLegend() {
+        this.legendColor = d3.scaleOrdinal([this.color]).domain([this.legendLabel]);
+        let legend = this.plot
+            .append("g")
+            .attr(
+                "transform",
+                `translate(${this.width - this.margin.right + 110},${this.margin.top - 30})`
+            );
+        let legendSettings = d3
+            .legendColor()
+            .shapeWidth(12)
+            .orient("vertical")
+            .scale(this.legendColor)
+            .labels([this.legendLabel]);
+
+        legend.call(legendSettings);
     }
 
 }
