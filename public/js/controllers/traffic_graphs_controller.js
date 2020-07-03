@@ -931,7 +931,7 @@ export class TrafficGraphsController {
             // d3.selectAll("#failedBarChart10min").remove();
             // d3.selectAll("#failedGrid").remove();
 
-            let oneDayFailedChartConfig = { addOneDayToDate: true }
+            let xMax = d3.max(oneDayFailedChartData, d => TrafficGraphsController.addOneDayToDate(d.datetime));
             const oneDayFailedChart = new BarChart(
                 {element: document.querySelector('.total_failed_sms_graph'), data: oneDayFailedChartData });
             oneDayFailedChart
@@ -943,11 +943,11 @@ export class TrafficGraphsController {
                 .setYLimit(yLimitFailed)
                 .setXAxisTickFormat(dayDateFormatWithWeekdayName)
                 .setTickValuesForXAxis(tickValuesForXAxis)
+                .setXLimitByAddingOneDayDate(xMax)
                 .setGridLinesId("failedGrid")
                 .setBarchartId("failedBarChart")
                 .setBarsRightPadding()
                 .setFactorToShiftBarsToRight()
-                .setConfig(oneDayFailedChartConfig)
                 .draw();
         }
 

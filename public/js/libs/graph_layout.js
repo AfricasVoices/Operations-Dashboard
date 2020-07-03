@@ -50,12 +50,6 @@ export class GraphLayout {
             .text(this.yAxisLabel);
     }
 
-    addOneDayToDate(date) {
-        let newDate = new Date(date);
-        newDate.setDate(newDate.getDate() + 1);
-        return newDate;
-    }
-
     setTitle(title) {
         this.title = title;
         return this;
