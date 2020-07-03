@@ -926,11 +926,6 @@ export class TrafficGraphsController {
             // Tick Values for X axis
             const tickValuesForXAxis = oneDayFailedChartData.map(d => new Date(d.datetime));
 
-            // d3.selectAll(".redrawElementFailed").remove();
-            // d3.selectAll("#failedBarChart").remove();
-            // d3.selectAll("#failedBarChart10min").remove();
-            // d3.selectAll("#failedGrid").remove();
-
             let xMax = d3.max(oneDayFailedChartData, d => TrafficGraphsController.addOneDayToDate(d.datetime));
             const oneDayFailedChart = new BarChart(
                 {element: document.querySelector('.total_failed_sms_graph'), data: oneDayFailedChartData });
@@ -945,7 +940,6 @@ export class TrafficGraphsController {
                 .setTickValuesForXAxis(tickValuesForXAxis)
                 .setXLimitByAddingOneDayDate(xMax)
                 .setGridLinesId("failedGrid")
-                .setBarchartId("failedBarChart")
                 .setBarsRightPadding()
                 .setFactorToShiftBarsToRight()
                 .draw();
@@ -983,11 +977,6 @@ export class TrafficGraphsController {
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
-            // d3.selectAll(".redrawElementFailed").remove();
-            // d3.selectAll("failedBarChart").remove();
-            // d3.selectAll("failedBarChart10min").remove();
-            // d3.selectAll("failedGrid").remove();
-
             const _10minDayFailedChart = new BarChart(
                 {element: document.querySelector('.total_failed_sms_graph'), data: _10minDayFailedChartData });
             _10minDayFailedChart
@@ -1000,7 +989,6 @@ export class TrafficGraphsController {
                 .setXAxisTickFormat(timeFormat)
                 .setTickValuesForXAxis(tickValuesForXAxis)
                 .setGridLinesId("failedGrid")
-                .setBarchartId("failedBarChart10min")
                 .setFactorToShiftBarsToRight()
                 .draw();
         }

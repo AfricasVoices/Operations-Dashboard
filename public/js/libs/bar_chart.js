@@ -29,11 +29,6 @@ export class BarChart extends GraphLayout {
         return this;
     }
 
-    setBarchartId(barChartId) {
-        this.barChartId = barChartId;
-        return this;
-    }
-
     setLegendLabel(legendLabel) {
         this.legendLabel = legendLabel;
         return this;
