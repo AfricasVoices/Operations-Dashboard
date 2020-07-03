@@ -11,6 +11,10 @@ export class BarChart extends GraphLayout {
         this.title = "Bar Chart";
         this.xAxisLabel = "X Axis";
         this.yAxisLabel = "Y Axis";
+        this.config = {
+            // Failed Messages Graph Configuration
+            setFailedMsgGraphTooltipText: false
+        }
 
         this.draw()
     }
@@ -142,16 +146,22 @@ export class BarChart extends GraphLayout {
             /* Shift bars to the right 
                 - prevents first bar of graph from overlapping y axis path */
             .attr("x", d => this.xScale(new Date(d.datetime)) + this.shiftBarsToRight)
-            // .attr("x", d => this.xScale(new Date(d.datetime)))
             .attr("y", d => this.yScale(d.value))
             .attr("height", d => this.height - this.yScale(d.value))
             .attr("fill", this.color)
             /* Reduce the right padding of bars 
                 - Accomodates the shift of the bars to the right so that they don't overlap */
             .attr("width", (this.width / Object.keys(this.data).length) + this.rightPadding);
-            // .attr("width", (this.width / Object.keys(this.data).length));
 
         this.addTooltip();
+    }
+
+    setFailedMsgGraphTooltipText(d) {
+        let totalFiledMessages = d.value,
+            // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+            tooltipContent = `<div>${totalFiledMessages} Failed
+            Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
+        return tooltipContent;
     }
 
     addTooltip() {
@@ -163,19 +173,17 @@ export class BarChart extends GraphLayout {
                 let barColor = d3.select(n[i]).style("fill");
                 tip = d3.tip()
                     .attr("class", "tooltip")
-                    .attr("id", "tooltip")
                     .html(d => {
-                        let totalFiledMessages = d.value,
-                            // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
-                            tooltipContent = `<div>${totalFiledMessages} Failed
-                            Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
-                        return tooltipContent;
-                    })
+                        let toolTipText = d.value;
+                        if (this.config.setFailedMsgGraphTooltipText) 
+                            toolTipText = this.setFailedMsgGraphTooltipText(d);
+                        return toolTipText;
+                    } )
                 this.plot.call(tip)
                 tip.show(d, n[i]).style("color", barColor)
             })
             .on("mouseout", (d, i, n) => {
-                tip.hide()
+                tip.hide(d, n[i])
             })
     }
 
@@ -192,7 +200,7 @@ export class BarChart extends GraphLayout {
             .shapeWidth(12)
             .orient("vertical")
             .scale(this.legendColor)
-            .labels(["total failed"]);
+            .labels([this.legendLabel]);
 
         legend.call(legendSettings);
     }

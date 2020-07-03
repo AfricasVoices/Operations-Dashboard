@@ -926,6 +926,7 @@ export class TrafficGraphsController {
             // Tick Values for X axis
             const tickValuesForXAxis = oneDayFailedChartData.map(d => new Date(d.datetime));
 
+            let oneDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
             let xMax = d3.max(oneDayFailedChartData, d => TrafficGraphsController.addOneDayToDate(d.datetime));
             const oneDayFailedChart = new BarChart(
                 {element: document.querySelector('.total_failed_sms_graph'), data: oneDayFailedChartData });
@@ -942,6 +943,7 @@ export class TrafficGraphsController {
                 .setGridLinesId("failedGrid")
                 .setBarsRightPadding()
                 .setFactorToShiftBarsToRight()
+                .setConfig(oneDayFailedChartConfig)
                 .draw();
         }
 
@@ -977,6 +979,7 @@ export class TrafficGraphsController {
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
+            let _10minDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
             const _10minDayFailedChart = new BarChart(
                 {element: document.querySelector('.total_failed_sms_graph'), data: _10minDayFailedChartData });
             _10minDayFailedChart
@@ -990,6 +993,7 @@ export class TrafficGraphsController {
                 .setTickValuesForXAxis(tickValuesForXAxis)
                 .setGridLinesId("failedGrid")
                 .setFactorToShiftBarsToRight()
+                .setConfig(_10minDayFailedChartConfig)
                 .draw();
         }
 
