@@ -7,7 +7,6 @@ export class StackedBarChart extends GraphLayout {
         super(opts.element)
         this.data = opts.data;
         this.id = "id";
-        this.color = "red";
         this.title = "Bar Chart";
         this.xAxisLabel = "X Axis";
         this.yAxisLabel = "Y Axis";
@@ -16,16 +15,26 @@ export class StackedBarChart extends GraphLayout {
             setFailedMsgGraphTooltipText: false
         }
 
-        this.draw()
+        // this.draw()
     }
 
     draw() {
         this.layout();
         this.createScales();
         this.addAxes();
-        this.addBars();
         this.addLabels();
         this.addLegend();
+        this.addStackedBars();
+    }
+
+    setStackedData(stackedData) {
+        this.stackedData = stackedData;
+        return this;
+    }
+
+    setKeys(receivedKeys) {
+        this.receivedKeys = receivedKeys;
+        return this;
     }
 
     setXAxisTickFormat(tickFormat) {
@@ -132,55 +141,68 @@ export class StackedBarChart extends GraphLayout {
             .call(xGridlinesAttr)
     }
 
-    addBars() {
+    addStackedBars() {
         // Values to adjust x and width attributes
         if (!this.rightPadding) { this.rightPadding = 0; }
         if (!this.shiftBarsToRight) { this.shiftBarsToRight = 0; }
-        // Create bars
-        this.plot
+        // Create Stacked bars
+        this.receivedLayer = this.plot
+            .selectAll("#receivedStack")
+            .data(this.stackedData)
+            .enter()
+            .append("g")
+            .attr("id", "receivedStack")
+            .attr("class", (d, i) => this.receivedKeys[i])
+            .style("fill", (d, i) => this.color(i));
+
+        this.receivedLayer
             .selectAll("rect")
-            .data(this.data)
+            .data(d => d)
             .enter()
             .append("rect")
-            .attr("class", this.barChartId)
             /* Shift bars to the right 
                 - prevents first bar of graph from overlapping y axis path */
-            .attr("x", d => this.xScale(new Date(d.datetime)) + this.shiftBarsToRight)
-            .attr("y", d => this.yScale(d.value))
-            .attr("height", d => this.height - this.yScale(d.value))
-            .attr("fill", this.color)
+            .attr("x", d => this.xScale(new Date(d.data.day)) + this.shiftBarsToRight)
+            .attr("y", d => this.yScale(d[1]))
+            .attr(
+                "height",
+                d => this.yScale(d[0]) - this.yScale(d[1])
+            )
             /* Reduce the right padding of bars 
                 - Accomodates the shift of the bars to the right so that they don't overlap */
             .attr("width", (this.width / Object.keys(this.data).length) + this.rightPadding);
+       
 
         this.addTooltip();
-    }
-
-    setFailedMsgGraphTooltipText(d) {
-        let totalFiledMessages = d.value,
-            // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
-            tooltipContent = `<div>${totalFiledMessages} Failed
-            Message${totalFiledMessages !== 1 ? 's': ''} </div>`;
-        return tooltipContent;
     }
 
     addTooltip() {
         // Add tooltip for the total failed sms graph
         let tip;
-        this.plot
+        this.receivedLayer
             .selectAll("rect")
             .on("mouseover", (d, i, n) => {
-                let barColor = d3.select(n[i]).style("fill");
+                // Get key of stacked data from the selection
+                let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
+                    // Get operator name from the key
+                    operatorName = operatorNameWithMessageDirection.replace('_received',''),
+                    // Get color of hovered rect
+                    operatorColor = d3.select(n[i]).style("fill");
                 tip = d3.tip()
                     .attr("class", "tooltip")
-                    .html(d => {
-                        let toolTipText = d.value;
-                        if (this.config.setFailedMsgGraphTooltipText) 
-                            toolTipText = this.setFailedMsgGraphTooltipText(d);
-                        return toolTipText;
-                    } )
+                    .attr("id", "tooltip")
+                    .html(d => { 
+                        let receivedMessages = d.data[operatorNameWithMessageDirection],
+                            totalReceivedMessages = d.data.total_received,
+                            // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+                            tooltipContent = `<div>${receivedMessages} 
+                            (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
+                            ${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
+                            Message${receivedMessages !== 1 ? 's': ''} </div>`;
+                        return tooltipContent;
+                })
                 this.plot.call(tip)
-                tip.show(d, n[i]).style("color", barColor)
+                tip.show(d, n[i]).style("color", operatorColor)
             })
             .on("mouseout", (d, i, n) => {
                 tip.hide(d, n[i])
@@ -188,9 +210,11 @@ export class StackedBarChart extends GraphLayout {
     }
 
     addLegend() {
-        this.legendColor = d3.scaleOrdinal([this.color]).domain([this.legendLabel]);
+        d3.selectAll(".legend").remove();
+        // this.legendColor = d3.scaleOrdinal([this.color]).domain([this.legendLabel]);
         let legend = this.plot
             .append("g")
+            .attr("class", "legend")
             .attr(
                 "transform",
                 `translate(${this.width - this.margin.right + 110},${this.margin.top - 30})`
@@ -199,8 +223,8 @@ export class StackedBarChart extends GraphLayout {
             .legendColor()
             .shapeWidth(12)
             .orient("vertical")
-            .scale(this.legendColor)
-            .labels([this.legendLabel]);
+            .scale(this.color)
+            .labels(this.legendLabel);
 
         legend.call(legendSettings);
     }

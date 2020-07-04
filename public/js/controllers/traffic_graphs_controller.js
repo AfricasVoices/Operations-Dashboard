@@ -1,4 +1,6 @@
 import { BarChart } from "../libs/bar_chart.js";
+import { StackedBarChart } from "../libs/stacked_bar_chart.js";
+
 // GRAPH CONTROLLER
 export class TrafficGraphsController {
     static addOneDayToDate(date) {
@@ -268,23 +270,21 @@ export class TrafficGraphsController {
         }
 
         function draw10MinReceivedGraph(yLimitReceived) {
+            // Draw disk utilization graph
+            let _10MinReceivedChartData = JSON.parse(JSON.stringify(dataFilteredWeek));
+
+            _10MinReceivedChartData.forEach(function(d) {
+                d.datetime = new Date(d.datetime);
+                d.value = +d.total_received;
+            })
+
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitReceivedManuallySet == false) {
                 yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
             }
 
             let stackReceived = d3.stack().keys(receivedKeys),
-                receivedDataStacked = stackReceived(dataFilteredWeek);
-
-            // set scale domains
-            x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
-            if (yLimitReceived > 0)
-                y_total_received_sms_range.domain([0, yLimitReceived]);
-
-            d3.selectAll(".redrawElementReceived").remove();
-            d3.selectAll("#receivedStack").remove();
-            d3.selectAll("#receivedStack10min").remove();
-            d3.selectAll(".receivedGrid").remove();
+                receivedDataStacked = stackReceived(_10MinReceivedChartData);
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -293,7 +293,7 @@ export class TrafficGraphsController {
                     firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
                     return firstTimestampOfDay
                 })
-                .entries(dataFilteredWeek);
+                .entries(_10MinReceivedChartData);
 
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
@@ -306,269 +306,365 @@ export class TrafficGraphsController {
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
-            // Add the X gridlines
-            total_received_sms_graph.append("g")			
-                .attr("class", "receivedGrid")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .tickValues(tickValuesForXAxis)
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
+            // let xMax = d3.max(oneDayReceivedChartData, d => TrafficGraphsController.addOneDayToDate(d.datetime));
+            const _10MinReceivedChart = new StackedBarChart(
+                {
+                    element: document.querySelector('.total_received_sms_graph'), 
+                    data: _10MinReceivedChartData,
+                });
+            _10MinReceivedChart
+                .setTitle("Total Incoming Message(s) / day")
+                .setXAxisLabel("Date (Y-M-D)")
+                .setYAxisLabel("No. of Incoming Message (s)")
+                .setLegendLabel(operators)
+                .setYLimit(yLimitReceived)
+                .setXAxisTickFormat(timeFormat)
+                .setTickValuesForXAxis(tickValuesForXAxis)
+                .setStackedData(receivedDataStacked)
+                .setKeys(receivedKeys)
+                .setColorScheme(colorReceived)
+                // .setXLimitByAddingOneDayDate(xMax)
+                .setGridLinesId("receivedGrid")
+                // .setBarsRightPadding()
+                // .setFactorToShiftBarsToRight()
+                .draw();
+            // // Set Y axis limit to max of daily values or to the value inputted by the user
+            // if (isYLimitReceivedManuallySet == false) {
+            //     yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
+            // }
+
+            // let stackReceived = d3.stack().keys(receivedKeys),
+            //     receivedDataStacked = stackReceived(dataFilteredWeek);
+
+            // // set scale domains
+            // x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+            // if (yLimitReceived > 0)
+            //     y_total_received_sms_range.domain([0, yLimitReceived]);
+
+            // d3.selectAll(".redrawElementReceived").remove();
+            // d3.selectAll("#receivedStack").remove();
+            // d3.selectAll("#receivedStack10min").remove();
+            // d3.selectAll(".receivedGrid").remove();
+
+            // // Group data filtered by week daily and generate tick values for x axis
+            // let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
+            //     .rollup(v => {
+            //         let firstTimestampOfDay = {}
+            //         firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
+            //         return firstTimestampOfDay
+            //     })
+            //     .entries(dataFilteredWeek);
+
+            // // Flatten nested data
+            // for (let entry in dataFilteredWeekGroupedDaily) {
+            //     let valueList = dataFilteredWeekGroupedDaily[entry].value;
+            //     for (let key in valueList) {
+            //         dataFilteredWeekGroupedDaily[entry][key] = valueList[key];
+            //     }
+            //     delete dataFilteredWeekGroupedDaily[entry]["value"];
+            //     delete dataFilteredWeekGroupedDaily[entry]["key"];
+            // }
+            // const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+
+            // // Add the X gridlines
+            // total_received_sms_graph.append("g")			
+            //     .attr("class", "receivedGrid")
+            //     .attr("transform", "translate(0," + Height + ")")
+            //     .call(d3.axisBottom(x)
+            //         .tickValues(tickValuesForXAxis)
+            //         .tickSize(-Height)
+            //         .tickFormat("")
+            //     )
                 
-            // Add the Y gridlines
-            total_received_sms_graph.append("g")			
-                .attr("class", "receivedGrid")
-                .call(d3.axisLeft(y_total_received_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
+            // // Add the Y gridlines
+            // total_received_sms_graph.append("g")			
+            //     .attr("class", "receivedGrid")
+            //     .call(d3.axisLeft(y_total_received_sms_range)
+            //         .tickSize(-Width)
+            //         .tickFormat("")
+            //     )
 
-            // Add the Y Axis for the total received sms graph
-            total_received_sms_graph
-                .append("g")
-                .attr("id", "axisSteelBlue")
-                .attr("class", "redrawElementReceived")
-                .call(d3.axisLeft(y_total_received_sms_range));
+            // // Add the Y Axis for the total received sms graph
+            // total_received_sms_graph
+            //     .append("g")
+            //     .attr("id", "axisSteelBlue")
+            //     .attr("class", "redrawElementReceived")
+            //     .call(d3.axisLeft(y_total_received_sms_range));
 
-            let receivedLayer10min = total_received_sms_graph
-                .selectAll("#receivedStack10min")
-                .data(receivedDataStacked)
-                .enter()
-                .append("g")
-                .attr("id", "receivedStack10min")
-                .attr("class", (d, i) => receivedKeys[i])
-                .style("fill", (d, i) => color(i));
+            // let receivedLayer10min = total_received_sms_graph
+            //     .selectAll("#receivedStack10min")
+            //     .data(receivedDataStacked)
+            //     .enter()
+            //     .append("g")
+            //     .attr("id", "receivedStack10min")
+            //     .attr("class", (d, i) => receivedKeys[i])
+            //     .style("fill", (d, i) => color(i));
 
-            receivedLayer10min
-                .selectAll("rect")
-                .data(dataFilteredWeek => dataFilteredWeek)
-                .enter()
-                .append("rect")
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
-                )
-                .attr("width", Width / Object.keys(dataFilteredWeek).length);
+            // receivedLayer10min
+            //     .selectAll("rect")
+            //     .data(dataFilteredWeek => dataFilteredWeek)
+            //     .enter()
+            //     .append("rect")
+            //     .attr("x", d => x(d.data.datetime))
+            //     .attr("y", d => y_total_received_sms_range(d[1]))
+            //     .attr(
+            //         "height",
+            //         d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
+            //     )
+            //     .attr("width", Width / Object.keys(dataFilteredWeek).length);
 
-            // Add tooltip for the total received sms graph
-            let tip;
-            receivedLayer10min
-                .selectAll("rect")
-                .on("mouseover", (d, i, n) => {
-                    // Get key of stacked data from the selection
-                    let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
-                        // Get operator name from the key
-                        operatorName = operatorNameWithMessageDirection.replace('_received',''),
-                        // Get color of hovered rect
-                        operatorColor = d3.select(n[i]).style("fill");
-                    tip = d3.tip()
-                        .attr("class", "tooltip")
-                        .attr("id", "tooltip")
-                        .html(d => { 
-                            let receivedMessages = d.data[operatorNameWithMessageDirection],
-                                totalReceivedMessages = d.data.total_received,
-                                receivedDay = d.data.datetime,
-                                // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
-                                tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
-                            return tooltipContent += `<div>${receivedMessages} 
-                                (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
-                                Message${receivedMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(receivedDay))}</div>`;
-                    })
-                    total_received_sms_graph.call(tip)
-                    tip.show(d, n[i]).style("color", operatorColor)
-                })
-                .on("mouseout", (d, i, n) => {
-                    tip.hide()
-                })
+            // // Add tooltip for the total received sms graph
+            // let tip;
+            // receivedLayer10min
+            //     .selectAll("rect")
+            //     .on("mouseover", (d, i, n) => {
+            //         // Get key of stacked data from the selection
+            //         let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
+            //             // Get operator name from the key
+            //             operatorName = operatorNameWithMessageDirection.replace('_received',''),
+            //             // Get color of hovered rect
+            //             operatorColor = d3.select(n[i]).style("fill");
+            //         tip = d3.tip()
+            //             .attr("class", "tooltip")
+            //             .attr("id", "tooltip")
+            //             .html(d => { 
+            //                 let receivedMessages = d.data[operatorNameWithMessageDirection],
+            //                     totalReceivedMessages = d.data.total_received,
+            //                     receivedDay = d.data.datetime,
+            //                     // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
+            //                     tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
+            //                 return tooltipContent += `<div>${receivedMessages} 
+            //                     (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
+            //                     Message${receivedMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(receivedDay))}</div>`;
+            //         })
+            //         total_received_sms_graph.call(tip)
+            //         tip.show(d, n[i]).style("color", operatorColor)
+            //     })
+            //     .on("mouseout", (d, i, n) => {
+            //         tip.hide()
+            //     })
 
-            //Add the X Axis for the total received sms graph
-            total_received_sms_graph
-                .append("g")
-                .attr("class", "redrawElementReceived")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(
-                    d3
-                        .axisBottom(x)
-                        .tickValues(tickValuesForXAxis)
-                        .tickFormat(timeFormat)
-                )
-                // Rotate axis labels
-                .selectAll("text")
-                .style("text-anchor", "end")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)");
+            // //Add the X Axis for the total received sms graph
+            // total_received_sms_graph
+            //     .append("g")
+            //     .attr("class", "redrawElementReceived")
+            //     .attr("transform", "translate(0," + Height + ")")
+            //     .call(
+            //         d3
+            //             .axisBottom(x)
+            //             .tickValues(tickValuesForXAxis)
+            //             .tickFormat(timeFormat)
+            //     )
+            //     // Rotate axis labels
+            //     .selectAll("text")
+            //     .style("text-anchor", "end")
+            //     .attr("dx", "-.8em")
+            //     .attr("dy", ".15em")
+            //     .attr("transform", "rotate(-65)");
 
-            // Add X axis label for the total received sms graph
-            total_received_sms_graph
-                .append("text")
-                .attr("class", "redrawElementReceived")
-                .attr(
-                    "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
-                )
-                .style("text-anchor", "middle")
-                .text("Date (Y-M-D)");
+            // // Add X axis label for the total received sms graph
+            // total_received_sms_graph
+            //     .append("text")
+            //     .attr("class", "redrawElementReceived")
+            //     .attr(
+            //         "transform",
+            //         "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
+            //     )
+            //     .style("text-anchor", "middle")
+            //     .text("Date (Y-M-D)");
 
-            // Total Sms(s) graph title
-            total_received_sms_graph
-                .append("text")
-                .attr("class", "redrawElementReceived")
-                .attr("x", Width / 2)
-                .attr("y", 0 - Margin.top / 2)
-                .attr("text-anchor", "middle")
-                .style("font-size", "20px")
-                .style("text-decoration", "bold")
-                .text("Total Incoming Message(s) / 10 minutes");
+            // // Total Sms(s) graph title
+            // total_received_sms_graph
+            //     .append("text")
+            //     .attr("class", "redrawElementReceived")
+            //     .attr("x", Width / 2)
+            //     .attr("y", 0 - Margin.top / 2)
+            //     .attr("text-anchor", "middle")
+            //     .style("font-size", "20px")
+            //     .style("text-decoration", "bold")
+            //     .text("Total Incoming Message(s) / 10 minutes");
         }
 
         function drawOneDayReceivedGraph(yLimitReceived) {
+            // Draw disk utilization graph
+            let oneDayReceivedChartData = JSON.parse(JSON.stringify(dailyReceivedTotal));
+            let receivedKeys2 = JSON.parse(JSON.stringify(receivedKeys));
+
+            oneDayReceivedChartData.forEach(function(d) {
+                d.datetime = new Date(d.day);
+                d.value = +d.total_received;
+            })
+        
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            let yLimitReceivedTotal = d3.max(dailyReceivedTotal, d => d.total_received);
+            let yLimitReceivedTotal = d3.max(oneDayReceivedChartData, d => d.value);
 
             if (isYLimitReceivedManuallySet == false) {
                 yLimitReceived = yLimitReceivedTotal;
             }
 
-            let xMin = d3.min(dailyReceivedTotal, d => new Date(d.day)),
-                xMax = d3.max(dailyReceivedTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
-            // set scale domains
-            x.domain([xMin, xMax]);
-            if (yLimitReceived > 0)
-                y_total_received_sms_range.domain([0, yLimitReceived]);
+            // Tick Values for X axis
+            const tickValuesForXAxis = oneDayReceivedChartData.map(d => new Date(d.datetime));
 
-            d3.selectAll(".redrawElementReceived").remove();
-            d3.selectAll("#receivedStack10min").remove();
-            d3.selectAll("#receivedStack").remove();
-            d3.selectAll(".receivedGrid").remove();
+            // let oneDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
+            let xMax = d3.max(oneDayReceivedChartData, d => TrafficGraphsController.addOneDayToDate(d.datetime));
+            const oneDayReceivedChart = new StackedBarChart(
+                {
+                    element: document.querySelector('.total_received_sms_graph'), 
+                    data: oneDayReceivedChartData,
+                });
+            oneDayReceivedChart
+                .setTitle("Total Incoming Message(s) / day")
+                .setXAxisLabel("Date (Y-M-D)")
+                .setYAxisLabel("No. of Incoming Message (s)")
+                .setLegendLabel(operators)
+                .setYLimit(yLimitReceived)
+                .setXAxisTickFormat(dayDateFormatWithWeekdayName)
+                .setTickValuesForXAxis(tickValuesForXAxis)
+                .setStackedData(receivedDataStackedDaily)
+                .setKeys(receivedKeys2)
+                .setColorScheme(colorReceived)
+                .setXLimitByAddingOneDayDate(xMax)
+                .setGridLinesId("receivedGrid")
+                .setBarsRightPadding()
+                .setFactorToShiftBarsToRight()
+                .draw();
 
-            const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
-            // Add the X gridlines
-            total_received_sms_graph.append("g")			
-                .attr("class", "receivedGrid")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .tickValues(tickValuesForXAxis)
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
+            // let xMin = d3.min(dailyReceivedTotal, d => new Date(d.day)),
+            //     xMax = d3.max(dailyReceivedTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
+            // // set scale domains
+            // x.domain([xMin, xMax]);
+            // if (yLimitReceived > 0)
+            //     y_total_received_sms_range.domain([0, yLimitReceived]);
 
-            // Add the Y gridlines
-            total_received_sms_graph.append("g")			
-                .attr("class", "receivedGrid")
-                .call(d3.axisLeft(y_total_received_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
+            // d3.selectAll(".redrawElementReceived").remove();
+            // d3.selectAll("#receivedStack10min").remove();
+            // d3.selectAll("#receivedStack").remove();
+            // d3.selectAll(".receivedGrid").remove();
 
-            // Add the Y Axis for the total received sms graph
-            total_received_sms_graph
-                .append("g")
-                .attr("class", "axisSteelBlue")
-                .attr("class", "redrawElementReceived")
-                .call(d3.axisLeft(y_total_received_sms_range));
+            // const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
+            // // Add the X gridlines
+            // total_received_sms_graph.append("g")			
+            //     .attr("class", "receivedGrid")
+            //     .attr("transform", "translate(0," + Height + ")")
+            //     .call(d3.axisBottom(x)
+            //         .tickValues(tickValuesForXAxis)
+            //         .tickSize(-Height)
+            //         .tickFormat("")
+            //     )
 
-            let receivedLayer = total_received_sms_graph
-                .selectAll("#receivedStack")
-                .data(receivedDataStackedDaily)
-                .enter()
-                .append("g")
-                .attr("id", "receivedStack")
-                .attr("class", (d, i) => receivedKeys[i])
-                .style("fill", (d, i) => color(i));
+            // // Add the Y gridlines
+            // total_received_sms_graph.append("g")			
+            //     .attr("class", "receivedGrid")
+            //     .call(d3.axisLeft(y_total_received_sms_range)
+            //         .tickSize(-Width)
+            //         .tickFormat("")
+            //     )
 
-            // Values to adjust x and width attributes
-            let rightPadding = -2, shiftBarsToRight = 1;
-            receivedLayer
-                .selectAll("rect")
-                .data(d => d)
-                .enter()
-                .append("rect")
-                /* Shift bars to the right 
-                 - prevents first bar of graph from overlapping y axis path */
-                .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
-                .attr("y", d => y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
-                )
-                /* Reduce the right padding of bars 
-                 - Accomodates the shift of the bars to the right so that they don't overlap */
-                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) + rightPadding);
+            // // Add the Y Axis for the total received sms graph
+            // total_received_sms_graph
+            //     .append("g")
+            //     .attr("class", "axisSteelBlue")
+            //     .attr("class", "redrawElementReceived")
+            //     .call(d3.axisLeft(y_total_received_sms_range));
 
-            // Add tooltip for the total received sms graph
-            let tip;
-            receivedLayer
-                .selectAll("rect")
-                .on("mouseover", (d, i, n) => {
-                    // Get key of stacked data from the selection
-                    let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
-                        // Get operator name from the key
-                        operatorName = operatorNameWithMessageDirection.replace('_received',''),
-                        // Get color of hovered rect
-                        operatorColor = d3.select(n[i]).style("fill");
-                    tip = d3.tip()
-                        .attr("class", "tooltip")
-                        .attr("id", "tooltip")
-                        .html(d => { 
-                            let receivedMessages = d.data[operatorNameWithMessageDirection],
-                                totalReceivedMessages = d.data.total_received,
-                                // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
-                                tooltipContent = `<div>${receivedMessages} 
-                                (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
-                                ${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
-                                Message${receivedMessages !== 1 ? 's': ''} </div>`;
-                            return tooltipContent;
-                    })
-                    total_received_sms_graph.call(tip)
-                    tip.show(d, n[i]).style("color", operatorColor)
-                })
-                .on("mouseout", (d, i, n) => {
-                    tip.hide()
-                })
+            // let receivedLayer = total_received_sms_graph
+            //     .selectAll("#receivedStack")
+            //     .data(receivedDataStackedDaily)
+            //     .enter()
+            //     .append("g")
+            //     .attr("id", "receivedStack")
+            //     .attr("class", (d, i) => receivedKeys[i])
+            //     .style("fill", (d, i) => color(i));
 
-            // "Add the X Axis for the total received sms graph
-            total_received_sms_graph
-                .append("g")
-                .attr("class", "redrawElementReceived")
-                .attr("transform", "translate(0," + Height + ")")
-                .call(
-                    d3
-                        .axisBottom(x)
-                        .tickValues(tickValuesForXAxis)
-                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
-                )
-                // Rotate axis labels
-                .selectAll("text")
-                .style("text-anchor", "end")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .attr("transform", "rotate(-65)");
+            // // Values to adjust x and width attributes
+            // let rightPadding = -2, shiftBarsToRight = 1;
+            // receivedLayer
+            //     .selectAll("rect")
+            //     .data(d => d)
+            //     .enter()
+            //     .append("rect")
+            //     /* Shift bars to the right 
+            //      - prevents first bar of graph from overlapping y axis path */
+            //     .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
+            //     .attr("y", d => y_total_received_sms_range(d[1]))
+            //     .attr(
+            //         "height",
+            //         d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
+            //     )
+            //     /* Reduce the right padding of bars 
+            //      - Accomodates the shift of the bars to the right so that they don't overlap */
+            //     .attr("width", (Width / Object.keys(dailyReceivedTotal).length) + rightPadding);
 
-            // Add X axis label for the total received sms graph
-            total_received_sms_graph
-                .append("text")
-                .attr("class", "redrawElementReceived")
-                .attr(
-                    "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
-                )
-                .style("text-anchor", "middle")
-                .text("Date (Y-M-D)");
+            // // Add tooltip for the total received sms graph
+            // let tip;
+            // receivedLayer
+            //     .selectAll("rect")
+            //     .on("mouseover", (d, i, n) => {
+            //         // Get key of stacked data from the selection
+            //         let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
+            //             // Get operator name from the key
+            //             operatorName = operatorNameWithMessageDirection.replace('_received',''),
+            //             // Get color of hovered rect
+            //             operatorColor = d3.select(n[i]).style("fill");
+            //         tip = d3.tip()
+            //             .attr("class", "tooltip")
+            //             .attr("id", "tooltip")
+            //             .html(d => { 
+            //                 let receivedMessages = d.data[operatorNameWithMessageDirection],
+            //                     totalReceivedMessages = d.data.total_received,
+            //                     // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+            //                     tooltipContent = `<div>${receivedMessages} 
+            //                     (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
+            //                     ${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
+            //                     Message${receivedMessages !== 1 ? 's': ''} </div>`;
+            //                 return tooltipContent;
+            //         })
+            //         total_received_sms_graph.call(tip)
+            //         tip.show(d, n[i]).style("color", operatorColor)
+            //     })
+            //     .on("mouseout", (d, i, n) => {
+            //         tip.hide()
+            //     })
 
-            // Total Sms(s) graph title
-            total_received_sms_graph
-                .append("text")
-                .attr("class", "redrawElementReceived")
-                .attr("x", Width / 2)
-                .attr("y", 0 - Margin.top / 2)
-                .attr("text-anchor", "middle")
-                .style("font-size", "20px")
-                .style("text-decoration", "bold")
-                .text("Total Incoming Message(s) / day");
+            // // "Add the X Axis for the total received sms graph
+            // total_received_sms_graph
+            //     .append("g")
+            //     .attr("class", "redrawElementReceived")
+            //     .attr("transform", "translate(0," + Height + ")")
+            //     .call(
+            //         d3
+            //             .axisBottom(x)
+            //             .tickValues(tickValuesForXAxis)
+            //             .tickFormat(d => dayDateFormatWithWeekdayName(d))
+            //     )
+            //     // Rotate axis labels
+            //     .selectAll("text")
+            //     .style("text-anchor", "end")
+            //     .attr("dx", "-.8em")
+            //     .attr("dy", ".15em")
+            //     .attr("transform", "rotate(-65)");
+
+            // // Add X axis label for the total received sms graph
+            // total_received_sms_graph
+            //     .append("text")
+            //     .attr("class", "redrawElementReceived")
+            //     .attr(
+            //         "transform",
+            //         "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
+            //     )
+            //     .style("text-anchor", "middle")
+            //     .text("Date (Y-M-D)");
+
+            // // Total Sms(s) graph title
+            // total_received_sms_graph
+            //     .append("text")
+            //     .attr("class", "redrawElementReceived")
+            //     .attr("x", Width / 2)
+            //     .attr("y", 0 - Margin.top / 2)
+            //     .attr("text-anchor", "middle")
+            //     .style("font-size", "20px")
+            //     .style("text-decoration", "bold")
+            //     .text("Total Incoming Message(s) / day");
         }
 
         function draw10MinSentGraph(yLimitSent) {

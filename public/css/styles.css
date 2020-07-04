@@ -216,14 +216,14 @@ td.integer, td.dash {
 th:hover {
     cursor: pointer;
 }
-.receivedGrid line,
+#receivedGrid line,
 .sentGrid line,
 #failedGrid line {
     stroke: lightgrey;
     stroke-opacity: 0.3;
     shape-rendering: crispEdges;
 }
-.receivedGrid path,
+#receivedGrid path,
 .sentGrid path,
 #failedGrid path {
     stroke: lightgrey;
