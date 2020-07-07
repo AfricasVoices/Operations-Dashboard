@@ -898,6 +898,23 @@ export class TrafficGraphsController {
 
             let oneDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
             let xMax = d3.max(oneDayFailedChartData, d => TrafficGraphsController.addOneDayToDate(d.datetime));
+            const oneDayFailedChart = new BarChart(
+                { element: document.querySelector('.total_failed_sms_graph'), data: oneDayFailedChartData });
+            oneDayFailedChart
+                .setTitle("Total Failed Message(s) / day")
+                .setXAxisLabel("Date (Y-M-D)")
+                .setYAxisLabel("No. of Failed Message (s)")
+                .setLegendLabel("total_errored")
+                .setColorScheme("red")
+                .setYLimit(yLimitFailed)
+                .setXAxisTickFormat(dayDateFormatWithWeekdayName)
+                .setTickValuesForXAxis(tickValuesForXAxis)
+                // .setXLimitByAddingOneDayDate(xMax)
+                .setGridLinesId("failedGrid")
+                .setBarsRightPadding()
+                .setFactorToShiftBarsToRight()
+                .setConfig(oneDayFailedChartConfig)
+                .draw();
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
@@ -931,6 +948,21 @@ export class TrafficGraphsController {
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
             let _10minDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
+            const _10minDayFailedChart = new BarChart(
+                {element: document.querySelector('.total_failed_sms_graph'), data: _10minDayFailedChartData });
+            _10minDayFailedChart
+                .setTitle("Total Failed Message(s) / 10 minutes")
+                .setXAxisLabel("Date (Y-M-D)")
+                .setYAxisLabel("No. of Failed Message (s)")
+                .setLegendLabel("total_errored")
+                .setColorScheme("red")
+                .setYLimit(yLimitFailed)
+                .setXAxisTickFormat(timeFormat)
+                .setTickValuesForXAxis(tickValuesForXAxis)
+                .setGridLinesId("failedGrid")
+                .setFactorToShiftBarsToRight()
+                .setConfig(_10minDayFailedChartConfig)
+                .draw();
         }
 
         // Update chart time unit on user selection
