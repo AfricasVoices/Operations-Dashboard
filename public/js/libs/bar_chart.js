@@ -32,4 +32,9 @@ export class BarChart extends GraphLayout {
         this.gridLinesId = gridLinesId;
         return this;
     }
+
+    setBarsRightPadding(rightPadding = -2) {
+        this.rightPadding = rightPadding;
+        return this;
+    }
 }
