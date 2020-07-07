@@ -893,6 +893,8 @@ export class TrafficGraphsController {
             }
             // Tick Values for X axis
             const tickValuesForXAxis = oneDayFailedChartData.map(d => new Date(d.datetime));
+
+            let oneDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
@@ -913,7 +915,7 @@ export class TrafficGraphsController {
                     return firstTimestampOfDay
                 })
                 .entries(_10minDayFailedChartData);
-                
+
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
                 let valueList = dataFilteredWeekGroupedDaily[entry].value;
@@ -924,6 +926,8 @@ export class TrafficGraphsController {
                 delete dataFilteredWeekGroupedDaily[entry]["key"];
             }
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+
+            let _10minDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
         }
 
         // Update chart time unit on user selection
