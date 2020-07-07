@@ -22,4 +22,9 @@ export class BarChart extends GraphLayout {
         this.tickFormat = tickFormat;
         return this;
     }
+
+    setLegendLabel(legendLabel) {
+        this.legendLabel = legendLabel;
+        return this;
+    }
 }
