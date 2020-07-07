@@ -4,14 +4,12 @@ export class UIController {
         return {
             projectMenu: ".project-menu",
             codingProgressLinkSelector: ".coding-progress-link",
-            codingProgressContainer: ".coding-progress-container",
             trafficsLinkSelector: ".traffics-link",
-            graphContainer: ".graph-container",
+            systemsLinkSelector: ".systems-link",
             logoutBtn: ".logout-btn",
-            dropdownItem: ".dropdown-item",
             activeLinkClassName: "active-link",
             activeLinks: "a.active-link",
-            systemsLinkSelector: ".systems-link",
+            mainContainer: ".main-container"
         };
     }
 
@@ -31,11 +29,23 @@ export class UIController {
         }
     }
 
+    static resetUI() {
+        const DOMstrings = UIController.getDOMstrings();
+        UIController.statusBody = document.querySelector(DOMstrings.mainContainer);
+        while (UIController.statusBody.firstChild) {
+            UIController.statusBody.removeChild(UIController.statusBody.firstChild);
+        }
+    }
+
+    static getScrollJsScript() {
+        let scrollScript = document.createElement('script');
+        scrollScript.setAttribute('src', 'js/libs/scroll.js');
+        return scrollScript;
+    }
+
     static addCodingProgressSection() {
-        let DOMstrings = UIController.getDOMstrings(),
-            script = document.createElement("script");
-        script.setAttribute("src", "js/libs/scroll.js");
-        document.head.appendChild(script);
+        UIController.resetUI();
+        document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container container-fluid table-responsive">
                 <table id='codingtable' class='table'>
                     <thead></thead>
@@ -101,20 +111,16 @@ export class UIController {
             </div>
         </div> `;
         // Insert the HTML into the DOM
-        document
-            .querySelector(DOMstrings.codingProgressContainer)
-            .insertAdjacentHTML("beforeend", html);
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
 
     static addGraphs(title) {
-        let DOMstrings = UIController.getDOMstrings(),
-            script = document.createElement("script");
-        script.setAttribute("src", "js/libs/scroll.js");
-        document.head.appendChild(script);
+        UIController.resetUI();
+        document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1">
                 <div>
-                    <span class="txt-brown my-auto title"><b>%collection%</b></span>
+                    <span class="txt-brown my-auto title"><b>${title}</b></span>
                 </div>
                 <div class="d-md-flex">
                     <span class="align-content-end font-weight-bold mr-1 p-1">Timescale</span>
@@ -137,21 +143,21 @@ export class UIController {
             <section>
                 <div class="d-md-flex justify-content-start my-2">
                     <span class="font-weight-bold" type="text">Set the maximum number of incoming messages you want to see</span> 
-                    <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitReceived" step="100" min="10"></div>
+                    <div class="col-md-2"><input class="form-control form-control-sm shadow-none" type="number" id="buttonYLimitReceived" step="100" min="10"></div>
                 </div>
                 <div class="card shadow total_received_sms_graph"></div>
             </section> 
             <section>
                 <div class="d-md-flex justify-content-start mt-4 mb-3">
                     <span class="font-weight-bold" type="text">Set the maximum number of outgoing messages you want to see</span> 
-                    <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitSent" step="500" min="10"></div>
+                    <div class="col-md-2"><input class="form-control form-control-sm shadow-none" type="number" id="buttonYLimitSent" step="500" min="10"></div>
                 </div>
                 <div class="card shadow total_sent_sms_graph"></div>
             </section> 
             <section>
                 <div class="d-md-flex justify-content-start mt-4 mb-3">
                     <span class="font-weight-bold" type="text">Set the maximum number of failed messages you want to see</span> 
-                    <div class="col-md-2"><input class="form-control form-control-sm" type="number" id="buttonYLimitFailed" step="50" min="10"></div>
+                    <div class="col-md-2"><input class="form-control form-control-sm shadow-none" type="number" id="buttonYLimitFailed" step="50" min="10"></div>
                 </div>
                 <div class="card shadow total_failed_sms_graph my-4"></div> 
             </section>
@@ -184,17 +190,14 @@ export class UIController {
                     </div>
                 </div>
             </div>
-        </div> `,
-            // Insert the HTML into the DOM
-            newHtml = html.replace("%collection%", title);
-        document
-            .querySelector(DOMstrings.codingProgressContainer)
-            .insertAdjacentHTML("beforeend", newHtml);
+        </div> `;
+        // Insert the HTML into the DOM
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
 
     static addSystemsGraphs() {
-        let DOMstrings = UIController.getDOMstrings(),
-            html = `<div class="container"> 
+        UIController.resetUI();
+        let html = `<div class="container"> 
             <section class="d-flex justify-content-end">
                 <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
                 <div class="font-weight-bold mb-0" id="lastUpdated"></div>
@@ -209,8 +212,6 @@ export class UIController {
                 <div class="card shadow cpu-utilization-chart my-1"></div>
             </section> 
         </div> `;
-        document
-            .querySelector(DOMstrings.codingProgressContainer)
-            .insertAdjacentHTML("beforeend", html);
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
 }
