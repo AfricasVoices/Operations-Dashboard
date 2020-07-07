@@ -895,6 +895,7 @@ export class TrafficGraphsController {
             const tickValuesForXAxis = oneDayFailedChartData.map(d => new Date(d.datetime));
 
             let oneDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
+            let xMax = d3.max(oneDayFailedChartData, d => TrafficGraphsController.addOneDayToDate(d.datetime));
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
