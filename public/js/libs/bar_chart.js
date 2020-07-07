@@ -87,4 +87,28 @@ export class BarChart extends GraphLayout {
 
         this.addGridlines();
     }
+
+    addGridlines() {
+        // Add the Y gridlines
+        this.plot
+            .append("g")
+            .attr("id", this.gridLinesId)
+            .call(d3.axisLeft(this.yScale).tickSize(-this.width).tickFormat(""));
+
+        let xGridlinesAttributes = d3.axisBottom(this.xScale).tickSize(-this.height).tickFormat("");
+        if (this.tickValuesForXAxis) {
+            xGridlinesAttributes = d3
+                .axisBottom(this.xScale)
+                .tickValues(this.tickValuesForXAxis)
+                .tickSize(-this.height)
+                .tickFormat("");
+        }
+
+        // Add the X gridlines
+        this.plot
+            .append("g")
+            .attr("id", this.gridLinesId)
+            .attr("transform", "translate(0," + this.height + ")")
+            .call(xGridlinesAttributes);
+    }
 }
