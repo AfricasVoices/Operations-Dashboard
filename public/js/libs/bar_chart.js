@@ -17,4 +17,9 @@ export class BarChart extends GraphLayout {
 
         this.draw();
     }
+
+    setXAxisTickFormat(tickFormat) {
+        this.tickFormat = tickFormat;
+        return this;
+    }
 }
