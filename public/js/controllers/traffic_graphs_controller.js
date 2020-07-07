@@ -1,3 +1,5 @@
+import { BarChart } from "../libs/bar_chart.js";
+
 // GRAPH CONTROLLER
 export class TrafficGraphsController {
     static addOneDayToDate(date) {
