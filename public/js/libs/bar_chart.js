@@ -60,8 +60,7 @@ export class BarChart extends GraphLayout {
     createScales() {
         const xExtent = d3.extent(this.data, (d) => new Date(d.datetime));
         if (this.xLimit) { xExtent[1] = this.xLimit; }
-        const yExtent = d3.extent(this.data, (d) => +d.value);
-        if (this.yLimit) { xExtent[1] = this.yLimit; }
+        const yExtent = this.yLimit ? [0, this.yLimit] : d3.extent(this.data, (d) => +d.value);
 
         // Force zero baseline if all data points are positive
         if (yExtent[0] > 0) yExtent[0] = 0;
