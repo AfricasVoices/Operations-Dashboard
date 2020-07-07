@@ -141,10 +141,8 @@ export class TrafficGraphsController {
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
             x = d3.scaleTime().range([0, Width]),
-            failed_messages_x_axis_range = d3.scaleTime().range([0, Width]),
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
-            y_total_sent_sms_range = d3.scaleLinear().range([Height, 0]),
-            y_total_failed_sms_range = d3.scaleLinear().range([Height, 0]);
+            y_total_sent_sms_range = d3.scaleLinear().range([Height, 0]);
 
         // Append total received sms graph to svg
         let total_received_sms_graph = d3
@@ -257,23 +255,6 @@ export class TrafficGraphsController {
             .labels(operators);
 
         d3.select(".sentLegend").call(sentLegend);
-
-        // Total failed graph legend
-        total_failed_sms_graph
-            .append("g")
-            .attr("class", "failedLegend")
-            .attr(
-                "transform",
-                `translate(${Width - Margin.right + 110},${Margin.top - 30})`
-            );
-        let failedLegend = d3
-            .legendColor()
-            .shapeWidth(12)
-            .orient("vertical")
-            .scale(colorFailed)
-            .labels(["total failed"]);
-
-        d3.select(".failedLegend").call(failedLegend);
 
         // Set y-axis control button value and draw graphs
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
