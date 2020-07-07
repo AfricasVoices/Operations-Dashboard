@@ -37,4 +37,9 @@ export class BarChart extends GraphLayout {
         this.rightPadding = rightPadding;
         return this;
     }
+
+    setFactorToShiftBarsToRight(shiftBarsToRight = 1) {
+        this.shiftBarsToRight = shiftBarsToRight;
+        return this;
+    }
 }
