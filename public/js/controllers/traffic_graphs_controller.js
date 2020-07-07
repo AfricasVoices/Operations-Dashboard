@@ -886,6 +886,11 @@ export class TrafficGraphsController {
                 d.datetime = new Date(d.day);
                 d.value = +d.total_errored;
             })
+            // Set Y axis limit to max of daily values or to the value inputted by the user
+            let yLimitFailedTotal = d3.max(oneDayFailedChartData, d => d.value);
+            if (isYLimitFailedManuallySet != true) {
+                yLimitFailed = yLimitFailedTotal;
+            }
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
@@ -894,6 +899,10 @@ export class TrafficGraphsController {
                 d.datetime = new Date(d.datetime);
                 d.value = +d.total_errored;
             })  
+            // Set Y axis limit to max of daily values or to the value inputted by the user
+            if (isYLimitFailedManuallySet == false) {
+                yLimitFailed = d3.max(_10minDayFailedChartData, d => d.value);
+            }
         }
 
         // Update chart time unit on user selection
