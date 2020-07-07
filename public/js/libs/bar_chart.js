@@ -27,4 +27,9 @@ export class BarChart extends GraphLayout {
         this.legendLabel = legendLabel;
         return this;
     }
+
+    setGridLinesId(gridLinesId) {
+        this.gridLinesId = gridLinesId;
+        return this;
+    }
 }
