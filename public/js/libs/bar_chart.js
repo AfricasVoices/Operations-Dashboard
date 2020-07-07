@@ -49,7 +49,9 @@ export class BarChart extends GraphLayout {
     }
 
     createScales() {
-        const xExtent = this.xLimit ? [0, this.xLimit] : d3.extent(this.data, (d) => new Date(d.datetime));
+        const xExtent = this.xLimit
+            ? [0, this.xLimit]
+            : d3.extent(this.data, (d) => new Date(d.datetime));
         const yExtent = this.yLimit ? [0, this.yLimit] : d3.extent(this.data, (d) => +d.value);
 
         // Force zero baseline if all data points are positive
@@ -60,5 +62,29 @@ export class BarChart extends GraphLayout {
 
         // Set y axis domain if y extent is above zero
         if (yExtent[1] > 0) this.yScale.domain(yExtent);
+    }
+
+    addAxes() {
+        // create and append axis elements
+        const xAxis = d3.axisBottom(this.xScale);
+        if (this.tickFormat) xAxis.tickFormat(this.tickFormat);
+        if (this.tickValuesForXAxis) xAxis.tickValues(this.tickValuesForXAxis);
+        this.xAxis = this.plot
+            .append("g")
+            .attr("class", "x axis")
+            .attr("transform", `translate(0, ${this.height})`)
+            .call(xAxis);
+        // Rotate axis ticks
+        this.plot
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
+
+        const yAxis = d3.axisLeft(this.yScale);
+        this.plot.append("g").attr("class", "y axis").call(yAxis);
+
+        this.addGridlines();
     }
 }
