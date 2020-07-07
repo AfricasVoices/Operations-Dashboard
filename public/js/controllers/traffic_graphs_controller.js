@@ -909,7 +909,7 @@ export class TrafficGraphsController {
                 .setYLimit(yLimitFailed)
                 .setXAxisTickFormat(dayDateFormatWithWeekdayName)
                 .setTickValuesForXAxis(tickValuesForXAxis)
-                // .setXLimitByAddingOneDayDate(xMax)
+                .setXLimitByAddingOneDayDate(xMax)
                 .setGridLinesId("failedGrid")
                 .setBarsRightPadding()
                 .setFactorToShiftBarsToRight()
