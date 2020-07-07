@@ -49,7 +49,6 @@ export class BarChart extends GraphLayout {
     }
 
     createScales() {
-        // Calculate max and min for data
         const xExtent = d3.extent(this.data, d => new Date(d.datetime));
         const yExtent = this.yLimit ? [0, this.yLimit] : d3.extent(this.data, d => +d.value);
 
