@@ -42,4 +42,9 @@ export class BarChart extends GraphLayout {
         this.shiftBarsToRight = shiftBarsToRight;
         return this;
     }
+
+    setXLimitByAddingOneDayDate(xLimit) {
+        this.xLimit = xLimit;
+        return this;
+    }
 }
