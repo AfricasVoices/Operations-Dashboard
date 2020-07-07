@@ -881,11 +881,19 @@ export class TrafficGraphsController {
         }
 
         function drawOneDayFailedGraph(yLimitFailed) {
-        
+            let oneDayFailedChartData = JSON.parse(JSON.stringify(dailyFailedTotal));
+            oneDayFailedChartData.forEach(function(d) {
+                d.datetime = new Date(d.day);
+                d.value = +d.total_errored;
+            })
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
-                  
+            let _10minDayFailedChartData = JSON.parse(JSON.stringify(dataFilteredWeek));
+            _10minDayFailedChartData.forEach(function(d) {
+                d.datetime = new Date(d.datetime);
+                d.value = +d.total_errored;
+            })  
         }
 
         // Update chart time unit on user selection
