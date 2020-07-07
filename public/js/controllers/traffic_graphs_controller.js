@@ -144,19 +144,10 @@ export class TrafficGraphsController {
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
             x = d3.scaleTime().range([0, Width]),
-            y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
             y_total_sent_sms_range = d3.scaleLinear().range([Height, 0]);
 
-        // Append total received sms graph to svg
-        let total_received_sms_graph = d3
-                .select(".total_received_sms_graph")
-                .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Append total sent sms graph to svg
-            total_sent_sms_graph = d3
+        // Append total sent sms graph to svg
+        let  total_sent_sms_graph = d3
                 .select(".total_sent_sms_graph")
                 .append("svg")
                 .attr("width", Width + Margin.left + Margin.right + 120)
@@ -200,16 +191,6 @@ export class TrafficGraphsController {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
         }
 
-        // Y axis Label for the total received sms graph
-        total_received_sms_graph
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - Margin.left)
-            .attr("x", 0 - Height / 2)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("No. of Incoming Message (s)");
-
         // Y axis Label for the total sent sms graph
         total_sent_sms_graph
             .append("text")
@@ -219,21 +200,6 @@ export class TrafficGraphsController {
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("No. of Outgoing Message (s)");
-
-        // Total received graph legend
-        total_received_sms_graph
-            .append("g")
-            .attr("class", "receivedLegend")
-            .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
-
-        let receivedLegend = d3
-            .legendColor()
-            .shapeWidth(12)
-            .orient("vertical")
-            .scale(colorReceived)
-            .labels(operators);
-
-        d3.select(".receivedLegend").call(receivedLegend);
 
         // Total sent graph legend
         total_sent_sms_graph
@@ -311,23 +277,27 @@ export class TrafficGraphsController {
                 {
                     element: document.querySelector('.total_received_sms_graph'), 
                     data: _10MinReceivedChartData,
+                    receivedKeys: receivedKeys,
+                    legendLabel: operators,
+                    stackedData: receivedDataStacked
                 });
             _10MinReceivedChart
                 .setTitle("Total Incoming Message(s) / day")
                 .setXAxisLabel("Date (Y-M-D)")
                 .setYAxisLabel("No. of Incoming Message (s)")
-                .setLegendLabel(operators)
+                // .setLegendLabel(operators)
                 .setYLimit(yLimitReceived)
                 .setXAxisTickFormat(timeFormat)
                 .setTickValuesForXAxis(tickValuesForXAxis)
-                .setStackedData(receivedDataStacked)
-                .setKeys(receivedKeys)
+                // .setStackedData(receivedDataStacked)
+                // .setKeys(receivedKeys)
                 .setColorScheme(colorReceived)
                 // .setXLimitByAddingOneDayDate(xMax)
                 .setGridLinesId("receivedGrid")
                 // .setBarsRightPadding()
                 // .setFactorToShiftBarsToRight()
                 .draw();
+
             // // Set Y axis limit to max of daily values or to the value inputted by the user
             // if (isYLimitReceivedManuallySet == false) {
             //     yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
@@ -488,7 +458,6 @@ export class TrafficGraphsController {
         function drawOneDayReceivedGraph(yLimitReceived) {
             // Draw disk utilization graph
             let oneDayReceivedChartData = JSON.parse(JSON.stringify(dailyReceivedTotal));
-            let receivedKeys2 = JSON.parse(JSON.stringify(receivedKeys));
 
             oneDayReceivedChartData.forEach(function(d) {
                 d.datetime = new Date(d.day);
@@ -511,17 +480,20 @@ export class TrafficGraphsController {
                 {
                     element: document.querySelector('.total_received_sms_graph'), 
                     data: oneDayReceivedChartData,
+                    receivedKeys: receivedKeys,
+                    legendLabel: operators,
+                    stackedData: receivedDataStackedDaily
                 });
             oneDayReceivedChart
                 .setTitle("Total Incoming Message(s) / day")
                 .setXAxisLabel("Date (Y-M-D)")
                 .setYAxisLabel("No. of Incoming Message (s)")
-                .setLegendLabel(operators)
+                // .setLegendLabel(operators)
                 .setYLimit(yLimitReceived)
                 .setXAxisTickFormat(dayDateFormatWithWeekdayName)
                 .setTickValuesForXAxis(tickValuesForXAxis)
-                .setStackedData(receivedDataStackedDaily)
-                .setKeys(receivedKeys2)
+                // .setStackedData(receivedDataStackedDaily)
+                // .setKeys(receivedKeys)
                 .setColorScheme(colorReceived)
                 .setXLimitByAddingOneDayDate(xMax)
                 .setGridLinesId("receivedGrid")

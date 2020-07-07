@@ -6,6 +6,9 @@ export class StackedBarChart extends GraphLayout {
         // Load in arguments from config object
         super(opts.element)
         this.data = opts.data;
+        this.receivedKeys = opts.receivedKeys;
+        this.legendLabel = opts.legendLabel;
+        this.stackedData = opts.stackedData;
         this.id = "id";
         this.title = "Bar Chart";
         this.xAxisLabel = "X Axis";
@@ -27,25 +30,25 @@ export class StackedBarChart extends GraphLayout {
         this.addStackedBars();
     }
 
-    setStackedData(stackedData) {
-        this.stackedData = stackedData;
-        return this;
-    }
+    // setStackedData(stackedData) {
+    //     this.stackedData = stackedData;
+    //     return this;
+    // }
 
-    setKeys(receivedKeys) {
-        this.receivedKeys = receivedKeys;
-        return this;
-    }
+    // setKeys(receivedKeys) {
+    //     this.receivedKeys = receivedKeys;
+    //     return this;
+    // }
 
     setXAxisTickFormat(tickFormat) {
         this.tickFormat = tickFormat;
         return this;
     }
 
-    setLegendLabel(legendLabel) {
-        this.legendLabel = legendLabel;
-        return this;
-    }
+    // setLegendLabel(legendLabel) {
+    //     this.legendLabel = legendLabel;
+    //     return this;
+    // }
 
     setGridLinesId(gridLinesId) {
         this.gridLinesId = gridLinesId;
@@ -210,7 +213,7 @@ export class StackedBarChart extends GraphLayout {
     }
 
     addLegend() {
-        d3.selectAll(".legend").remove();
+        // d3.selectAll(".legend").remove();
         // this.legendColor = d3.scaleOrdinal([this.color]).domain([this.legendLabel]);
         let legend = this.plot
             .append("g")
