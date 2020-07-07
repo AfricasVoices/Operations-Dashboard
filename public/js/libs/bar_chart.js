@@ -144,4 +144,28 @@ export class BarChart extends GraphLayout {
             Message${totalFiledMessages !== 1 ? "s" : ""} </div>`;
         return tooltipContent;
     }
+
+    addTooltip() {
+        // Add tooltip for the total failed sms graph
+        let tip;
+        this.plot
+            .selectAll("rect")
+            .on("mouseover", (d, i, n) => {
+                let barColor = d3.select(n[i]).style("fill");
+                tip = d3
+                    .tip()
+                    .attr("class", "tooltip")
+                    .html((d) => {
+                        let toolTipText = d.value;
+                        if (this.config.setFailedMsgGraphTooltipText)
+                            toolTipText = this.setFailedMsgGraphTooltipText(d);
+                        return toolTipText;
+                    });
+                this.plot.call(tip);
+                tip.show(d, n[i]).style("color", barColor);
+            })
+            .on("mouseout", (d, i, n) => {
+                tip.hide(d, n[i]);
+            });
+    }
 }
