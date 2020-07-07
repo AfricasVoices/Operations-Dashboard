@@ -38,9 +38,9 @@ export class UIController {
     }
 
     static getScrollJsScript() {
-        let ScrollScript = document.createElement('script');
-        script.setAttribute('src', 'js/libs/scroll.js');
-        return script;
+        let scrollScript = document.createElement('script');
+        scrollScript.setAttribute('src', 'js/libs/scroll.js');
+        return scrollScript;
     }
 
     static addCodingProgressSection() {
