@@ -111,4 +111,29 @@ export class BarChart extends GraphLayout {
             .attr("transform", "translate(0," + this.height + ")")
             .call(xGridlinesAttributes);
     }
+
+    addBars() {
+        // Values to adjust x and width attributes
+        if (!this.rightPadding) this.rightPadding = 0;
+        if (!this.shiftBarsToRight) this.shiftBarsToRight = 0;
+
+        // Create bars
+        this.plot
+            .selectAll("rect")
+            .data(this.data)
+            .enter()
+            .append("rect")
+            .attr("class", this.barChartId)
+            /* Shift bars to the right 
+                - prevents first bar of graph from overlapping y axis path */
+            .attr("x", (d) => this.xScale(new Date(d.datetime)) + this.shiftBarsToRight)
+            .attr("y", (d) => this.yScale(d.value))
+            .attr("height", (d) => this.height - this.yScale(d.value))
+            .attr("fill", this.color)
+            /* Reduce the right padding of bars 
+                - Accomodates the shift of the bars to the right so that they don't overlap */
+            .attr("width", this.width / Object.keys(this.data).length + this.rightPadding);
+
+        this.addTooltip();
+    }
 }
