@@ -136,4 +136,12 @@ export class BarChart extends GraphLayout {
 
         this.addTooltip();
     }
+
+    setFailedMsgGraphTooltipText(d) {
+        let totalFiledMessages = d.value,
+            // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
+            tooltipContent = `<div>${totalFiledMessages} Failed
+            Message${totalFiledMessages !== 1 ? "s" : ""} </div>`;
+        return tooltipContent;
+    }
 }
