@@ -168,4 +168,22 @@ export class BarChart extends GraphLayout {
                 tip.hide(d, n[i]);
             });
     }
+
+    addLegend() {
+        this.legendColor = d3.scaleOrdinal([this.color]).domain([this.legendLabel]);
+        let legend = this.plot
+            .append("g")
+            .attr(
+                "transform",
+                `translate(${this.width - this.margin.right + 110},${this.margin.top - 30})`
+            );
+        let legendSettings = d3
+            .legendColor()
+            .shapeWidth(12)
+            .orient("vertical")
+            .scale(this.legendColor)
+            .labels([this.legendLabel]);
+
+        legend.call(legendSettings);
+    }
 }
