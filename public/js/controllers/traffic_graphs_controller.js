@@ -891,6 +891,8 @@ export class TrafficGraphsController {
             if (isYLimitFailedManuallySet != true) {
                 yLimitFailed = yLimitFailedTotal;
             }
+            // Tick Values for X axis
+            const tickValuesForXAxis = oneDayFailedChartData.map(d => new Date(d.datetime));
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
@@ -903,6 +905,25 @@ export class TrafficGraphsController {
             if (isYLimitFailedManuallySet == false) {
                 yLimitFailed = d3.max(_10minDayFailedChartData, d => d.value);
             }
+            // Group data filtered by week daily and generate tick values for x axis
+            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
+                .rollup(v => {
+                    let firstTimestampOfDay = {}
+                    firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
+                    return firstTimestampOfDay
+                })
+                .entries(_10minDayFailedChartData);
+                
+            // Flatten nested data
+            for (let entry in dataFilteredWeekGroupedDaily) {
+                let valueList = dataFilteredWeekGroupedDaily[entry].value;
+                for (let key in valueList) {
+                    dataFilteredWeekGroupedDaily[entry][key] = valueList[key];
+                }
+                delete dataFilteredWeekGroupedDaily[entry]["value"];
+                delete dataFilteredWeekGroupedDaily[entry]["key"];
+            }
+            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
         }
 
         // Update chart time unit on user selection
