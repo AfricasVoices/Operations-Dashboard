@@ -38,7 +38,7 @@ export class UIController {
     }
 
     static getScrollJsScript() {
-        let script = document.createElement('script');
+        let ScrollScript = document.createElement('script');
         script.setAttribute('src', 'js/libs/scroll.js');
         return script;
     }
