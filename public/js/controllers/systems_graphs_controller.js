@@ -7,23 +7,25 @@ export class SystemsGraphsController {
 
         // Draw disk utilization graph
         let diskUsageChartData = JSON.parse(JSON.stringify(data));
-        diskUsageChartData.forEach(function(d) {
+        diskUsageChartData.forEach((d) => {
             d.datetime = new Date(d.datetime);
             d.value = +d.disk_usage.used;
-        })
+        });
 
         let diskUsageChartConfig = {
-            appendGBToTooltipText: true, 
-            watchOutage: true, 
+            appendGBToTooltipText: true,
+            watchOutage: true,
             adjustSysMetricsGridlines: true,
             formatYAxisValuesAsGB: true,
-            addMetricsLegend: true
-        }
+            addMetricsLegend: true,
+        };
 
-        const diskUsageChart = new AreaChart(
-            {element: document.querySelector('.disc-usage-chart'), data: diskUsageChartData });
+        const diskUsageChart = new AreaChart({
+            element: document.querySelector(".disc-usage-chart"),
+            data: diskUsageChartData,
+        });
         diskUsageChart
-            .setId("disk") 
+            .setId("disk")
             .setTitle("Disk Utilization")
             .setXAxisLabel("Date (dd:hh:m)")
             .setYAxisLabel("Disk Usage (GB)")
@@ -32,23 +34,25 @@ export class SystemsGraphsController {
             .setConfig(diskUsageChartConfig)
             .draw();
 
-        // Draw memory utilization graph  
+        // Draw memory utilization graph
         let memoryUsageChartData = JSON.parse(JSON.stringify(data));
-        memoryUsageChartData.forEach(function(d) {
+        memoryUsageChartData.forEach((d) => {
             d.datetime = new Date(d.datetime);
             d.value = +d.memory_usage.used;
-        })
+        });
 
         let memoryUsageChartConfig = {
-            appendGBToTooltipText: true, 
-            watchOutage: true, 
+            appendGBToTooltipText: true,
+            watchOutage: true,
             adjustSysMetricsGridlines: true,
             formatYAxisValuesAsGB: true,
-            addMetricsLegend: true
-        }
+            addMetricsLegend: true,
+        };
 
-        const memoryUsageChart = new AreaChart(
-            {element: document.querySelector('.memory-utilization-chart'), data: memoryUsageChartData });
+        const memoryUsageChart = new AreaChart({
+            element: document.querySelector(".memory-utilization-chart"),
+            data: memoryUsageChartData,
+        });
         memoryUsageChart
             .setId("memory")
             .setTitle("Memory Utilization")
@@ -59,22 +63,24 @@ export class SystemsGraphsController {
             .setConfig(memoryUsageChartConfig)
             .draw();
 
-        // Draw cpu utilization graph 
+        // Draw cpu utilization graph
         let cpuUsageChartData = JSON.parse(JSON.stringify(data));
-        cpuUsageChartData.forEach(function(d) {
+        cpuUsageChartData.forEach((d) => {
             d.datetime = new Date(d.datetime);
             d.value = +d.cpu_percent;
-        })
+        });
 
-        let cpuUsageChartConfig = { 
-            appendPercentageToTooltipText: true, 
-            watchOutage: true, 
+        let cpuUsageChartConfig = {
+            appendPercentageToTooltipText: true,
+            watchOutage: true,
             adjustSysMetricsGridlines: true,
-            addMetricsLegend: true
-        }
+            addMetricsLegend: true,
+        };
 
-        const cpuUsageChart = new AreaChart(
-            {element: document.querySelector('.cpu-utilization-chart'), data: cpuUsageChartData });
+        const cpuUsageChart = new AreaChart({
+            element: document.querySelector(".cpu-utilization-chart"),
+            data: cpuUsageChartData,
+        });
         cpuUsageChart
             .setId("cpu")
             .setTitle("CPU Utilization")
@@ -90,7 +96,7 @@ export class SystemsGraphsController {
         let lastUpdateTimeStamp = new Date(
             Math.max.apply(
                 null,
-                data.map(d => new Date(d.datetime))
+                data.map((d) => new Date(d.datetime))
             )
         );
         lastUpdateTimeStamp.setMinutes(lastUpdateTimeStamp.getMinutes());

@@ -20,20 +20,9 @@ class Controller {
             .addEventListener("click", Controller.navigateToSystems);
     }
 
-    static resetUI() {
-        document.querySelector(Controller.DOMstrings.codingProgressContainer).innerHTML = "";
-        document.querySelector(Controller.DOMstrings.graphContainer).innerHTML = "";
-        import("./traffic_graphs_controller.js").then(module => {
-            module.TrafficGraphsController.clearTimers();
-        });
-        import("./systems_graphs_controller.js").then(module => {
-            module.SystemsGraphsController.clearTimers();
-        });
-    }
-
     static resetActiveLink() {
         let elements = document.querySelectorAll(Controller.DOMstrings.activeLinks);
-        elements.forEach(element => {
+        elements.forEach((element) => {
             element.classList.remove(Controller.DOMstrings.activeLinkClassName);
         });
     }
@@ -46,10 +35,11 @@ class Controller {
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Get data for coding progress table
-        import("./coding_progress_table_controller.js").then(module => {
+        import("./coding_progress_table_controller.js").then((module) => {
             let unsubscribeFunc = DataController.watchCodingProgress(
-                module.CodingProgressTableController.updateCodingProgressTable);
-                DataController.registerSnapshotListener(unsubscribeFunc);
+                module.CodingProgressTableController.updateCodingProgressTable
+            );
+            DataController.registerSnapshotListener(unsubscribeFunc);
         });
     }
 
@@ -61,13 +51,13 @@ class Controller {
             .querySelector(Controller.DOMstrings.trafficsLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
-        import("./traffic_graphs_controller.js").then(module => {
+        import("./traffic_graphs_controller.js").then((module) => {
             let unsubscribeFunc = DataController.watchProjectTrafficData(
                 project,
                 module.TrafficGraphsController.updateGraphs
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
-        })
+        });
     }
 
     static displaySystems() {
@@ -77,17 +67,16 @@ class Controller {
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
-        import("./systems_graphs_controller.js").then(module => {
+        import("./systems_graphs_controller.js").then((module) => {
             let unsubscribeFunc = DataController.watchSystemsMetrics(
                 module.SystemsGraphsController.updateGraphs
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
-        })
+        });
     }
 
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
-            Controller.resetUI();
             DataController.detachSnapshotListener();
             window.location.hash = "coding_progress";
             Controller.displayCodingProgress();
@@ -96,7 +85,9 @@ class Controller {
 
     static navigateToSelectedProject(e) {
         if (e.target && e.target.nodeName == "A") {
-            Controller.resetUI();
+            import("./traffic_graphs_controller.js").then(module => {
+                module.TrafficGraphsController.clearTimers();
+            });
             DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
@@ -107,7 +98,9 @@ class Controller {
 
     static navigateToSystems(e) {
         if (e.target && e.target.nodeName == "A") {
-            Controller.resetUI();
+            import("./systems_graphs_controller.js").then(module => {
+                module.SystemsGraphsController.clearTimers();
+            });
             DataController.detachSnapshotListener();
             window.location.hash = "systems";
             Controller.displaySystems();
@@ -117,7 +110,7 @@ class Controller {
     static displayDeepLinkedTrafficPage(activeProjectsData) {
         let activeProjects = [],
             page_route = window.location.hash.substring(1);
-        activeProjectsData.forEach(project => {
+        activeProjectsData.forEach((project) => {
             activeProjects.push(project.project_name);
         });
         let project = page_route.split("traffic-")[1];
@@ -134,7 +127,7 @@ class Controller {
     static init() {
         console.log("Application has started.");
         // Authorize user
-        AuthController.getUser()
+        AuthController.getUser();
         // set up event listeners
         Controller.setupEventListeners();
         // Add the dropdown menu to the UI
