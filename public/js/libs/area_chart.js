@@ -26,6 +26,7 @@ export class AreaChart extends GraphLayout {
     draw() {
         this.layout();
         this.createScales();
+        this.addGridlines();
         this.addAxes();
         this.addArea();
         this.addLabels();
@@ -79,8 +80,6 @@ export class AreaChart extends GraphLayout {
             .attr("transform", "rotate(-65)");
 
         this.plot.append("g").attr("class", `${this.id}YAxis`).call(this.yAxis);
-
-        this.addGridlines();
     }
 
     addGridlines() {
