@@ -27,6 +27,7 @@ export class AreaChart extends GraphLayout {
         this.layout();
         this.createScales();
         this.addAxes();
+        this.displayYLimit();
         this.addArea();
         this.addLabels();
     }
@@ -96,6 +97,23 @@ export class AreaChart extends GraphLayout {
             .attr("class", `${this.id}XGrid`)
             .attr("transform", "translate(0," + this.height + ")")
             .call(d3.axisBottom(this.xScale).tickSize(-this.height).tickFormat(""));
+    }
+
+    displayYLimit() {
+        if (this.yLimit) {
+            this.yLimitLabel = this.plot.append("text")
+            .attr("transform", "translate("+(0 - this.margin.left + 40)+","+(this.yScale(this.yLimit) - 10)+")")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "start")
+            .style("fill", "gray")
+            .text(`Total: ${this.yLimit}`);
+
+            if (this.config.formatYAxisValuesAsGB)
+                this.yLimitLabel.text(`Total: ${d3.formatPrefix(".2", this.yLimit)(this.yLimit).replace("G", "GB")}`);
+
+            if (this.config.appendPercentageToTooltipText)
+                this.yLimitLabel.text(`Total: ${d3.formatPrefix(".0", this.yLimit)(this.yLimit)}%`);
+        }
     }
 
     drawFocus() {
