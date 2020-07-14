@@ -85,4 +85,9 @@ export class GraphLayout {
         this.config = config;
         return this;
     }
+
+    setTickValuesForXAxis(tickValuesForXAxis) {
+        this.tickValuesForXAxis = tickValuesForXAxis;
+        return this;
+    }
 }
