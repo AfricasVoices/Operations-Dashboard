@@ -102,11 +102,11 @@ export class AreaChart extends GraphLayout {
     displayYLimit() {
         if (this.yLimit) {
             this.yLimitLabel = this.plot.append("text")
-            .attr("transform", "translate("+(0 - this.margin.left + 40)+","+(this.yScale(this.yLimit) - 10)+")")
-            .attr("dy", ".35em")
-            .attr("text-anchor", "start")
-            .style("fill", "gray")
-            .text(`Total: ${this.yLimit}`);
+                .attr("transform", "translate("+(0 - this.margin.left + 40)+","+(this.yScale(this.yLimit) - 10)+")")
+                .attr("dy", ".35em")
+                .attr("text-anchor", "start")
+                .style("fill", "gray")
+                .text(`Total: ${this.yLimit}`);
 
             if (this.config.formatYAxisValuesAsGB)
                 this.yLimitLabel.text(`Total: ${d3.formatPrefix(".2", this.yLimit)(this.yLimit).replace("G", "GB")}`);
