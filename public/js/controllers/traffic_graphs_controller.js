@@ -918,14 +918,14 @@ export class TrafficGraphsController {
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
-            let _10minDayFailedChartData = JSON.parse(JSON.stringify(dataFilteredWeek));
-            _10minDayFailedChartData.forEach(function(d) {
+            let _10minFailedChartData = JSON.parse(JSON.stringify(dataFilteredWeek));
+            _10minFailedChartData.forEach(function(d) {
                 d.datetime = new Date(d.datetime);
                 d.value = +d.total_errored;
             })  
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitFailedManuallySet == false) {
-                yLimitFailed = d3.max(_10minDayFailedChartData, d => d.value);
+                yLimitFailed = d3.max(_10minFailedChartData, d => d.value);
             }
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
@@ -934,7 +934,7 @@ export class TrafficGraphsController {
                     firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
                     return firstTimestampOfDay
                 })
-                .entries(_10minDayFailedChartData);
+                .entries(_10minFailedChartData);
 
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
@@ -948,9 +948,9 @@ export class TrafficGraphsController {
             const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
 
             let _10minDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
-            const _10minDayFailedChart = new BarChart(
-                {element: document.querySelector('.total_failed_sms_graph'), data: _10minDayFailedChartData });
-            _10minDayFailedChart
+            const _10minFailedChart = new BarChart(
+                {element: document.querySelector('.total_failed_sms_graph'), data: _10minFailedChartData });
+            _10minFailedChart
                 .setTitle("Total Failed Message(s) / 10 minutes")
                 .setXAxisLabel("Date (Y-M-D)")
                 .setYAxisLabel("No. of Failed Message (s)")
