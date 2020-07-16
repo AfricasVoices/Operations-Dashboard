@@ -47,6 +47,73 @@ export class UIController {
         UIController.resetUI();
         document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container container-fluid table-responsive">
+                <div class="d-flex m-2">
+                filter
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Columns
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div class="form-check dropdown-item">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    Unique Texts
+                                </label>
+                            </div>
+                            <a class="dropdown-item" href="#">Unique Texts with a label</a>
+                            <a class="dropdown-item" href="#">Done</a>
+                            <a class="dropdown-item" href="#">Wrong Scheme messages</a>
+                            <a class="dropdown-item" href="#">WS %</a>
+                            <a class="dropdown-item" href="#">Not Coded messages</a>
+                            <a class="dropdown-item" href="#">NC %</a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Timeline
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Now</a>
+                            <a class="dropdown-item" href="#">Yesterday</a>
+                            <a class="dropdown-item" href="#">2 days ago</a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Done Column Range
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Now</a>
+                            <a class="dropdown-item" href="#">Yesterday</a>
+                            <a class="dropdown-item" href="#">2 days ago</a>
+                        </div>
+                    </div>
+
+                search
+                    <div><button class="btn btn-outline-primary btn-sm"> Show All</button></div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Keyword Search
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">COVID</a>
+                            <a class="dropdown-item" href="#">WUSC</a>
+                            <a class="dropdown-item" href="#">IMAQAL</a>
+                            <a class="dropdown-item" href="#">WORLD VISION</a>
+                            <a class="dropdown-item" href="#">UNICEF</a>
+                            <a class="dropdown-item" href="#">IOM</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group mx-sm-3 mb-0">
+                        <label for="inputPassword2" class="sr-only">Password</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="search...">
+                    </div>
+                </div>
+            
                 <table id='codingtable' class='table'>
                     <thead></thead>
                     <tbody id="coding-status-body"></tbody>
