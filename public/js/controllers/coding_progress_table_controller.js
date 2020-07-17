@@ -6,9 +6,14 @@ export class CodingProgressTableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
-        // Default sorting information
-        if (!CodingProgressTableController.sortInfoArray)
+        // Default sorting and column filter information
+        if (!CodingProgressTableController.sortInfoArray) {
             CodingProgressTableController.sortInfoArray = [{ column: "Done", order: "ascending" }];
+
+            // Default state where no column filtered
+            CodingProgressTableController.arr = []
+            d3.selectAll("input[type=checkbox]").property("checked", true)
+        }
 
         // Latest sorting information
         let sortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0];
@@ -69,7 +74,7 @@ export class CodingProgressTableController {
                 .text((d) => d[1]);
 
             // Filter table to remain with "Done" column
-            td.filter((d, i) => d[0] === "Done" && i === 3).each((d, i, n) => {
+            td.filter((d, i) => d[0] === "Done" ).each((d, i, n) => {
                 // Select Table Row
                 let parentNode = d3.select(n[i].parentNode);
                 // Select Table Data and access data bound to the node
@@ -87,6 +92,19 @@ export class CodingProgressTableController {
                 } else {
                     parentNode.attr("class", "coding-complete");
                 }
+            });
+
+            d3.selectAll("input[type=checkbox]").each(function(d, i, n) {
+                d3.select(this).on("change", function() {
+                    if (d3.select(this).property("checked")) {
+                        CodingProgressTableController.arr = CodingProgressTableController.arr.filter(e => e !== this.nextElementSibling.innerText);
+                        transform(column, sortInfo.order)
+                    } else {
+                        CodingProgressTableController.arr.push(this.nextElementSibling.innerText)
+                        transform(column, sortInfo.order)
+                    }
+                    console.log(CodingProgressTableController.arr)
+                })
             });
         }
     }
@@ -141,6 +159,7 @@ export class CodingProgressTableController {
     static jsonToArray(json) {
         let arr = [];
         for (const key in json) {
+            if (CodingProgressTableController.arr.includes(key)) { continue }
             if (json.hasOwnProperty(key)) {
                 arr.push(CodingProgressTableController.jsonKeyValueToArray(key, json[key]));
             }
