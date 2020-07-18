@@ -180,7 +180,13 @@ export class CodingProgressTableController {
     static jsonToArray(json, tableSection="") {
         let arr = [];
         for (const key in json) {
+            // Filter columns
             if (CodingProgressTableController.arr.includes(key)) { continue }
+            // Filter rows
+            if (tableSection == "td") {
+                if (CodingProgressTableController.keyword != "")
+                    if (!json["Dataset"].includes(CodingProgressTableController.keyword)) { continue }
+            }
             if (json.hasOwnProperty(key)) {
                 arr.push(CodingProgressTableController.jsonKeyValueToArray(key, json[key]));
             }
