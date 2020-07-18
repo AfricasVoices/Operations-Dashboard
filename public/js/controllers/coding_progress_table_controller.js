@@ -114,6 +114,16 @@ export class CodingProgressTableController {
                     console.log(CodingProgressTableController.arr)
                 })
             });
+
+            d3.select("#keyword").on("change", function() {
+                CodingProgressTableController.keyword = this.options[this.selectedIndex].innerText.trim(); 
+                transform(column, sortInfo.order);
+            });
+
+            d3.select("button#reset").on("click", () => {
+                CodingProgressTableController.keyword = "";
+                transform(column, sortInfo.order);
+            });
         }
     }
 
