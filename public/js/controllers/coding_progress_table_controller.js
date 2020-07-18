@@ -10,6 +10,9 @@ export class CodingProgressTableController {
         if (!CodingProgressTableController.sortInfoArray)
             CodingProgressTableController.sortInfoArray = [{ column: "Done", order: "ascending" }];
 
+        if (!CodingProgressTableController.keyword)
+            CodingProgressTableController.keyword = "";
+
         // Track checkbox state
         if (!CodingProgressTableController.arr) {
             CodingProgressTableController.arr = []
