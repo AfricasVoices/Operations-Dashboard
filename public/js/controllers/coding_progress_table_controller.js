@@ -66,7 +66,7 @@ export class CodingProgressTableController {
 
             // Table Cells
             let td = tr.selectAll("td")
-                .data(d => CodingProgressTableController.jsonToArray(d))
+                .data(d => CodingProgressTableController.jsonToArray(d, "td"))
                 .enter().append("td")
             
             // Filter Dataset column from columns & append text to td
