@@ -7,12 +7,20 @@ export class CodingProgressTableController {
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
         // Default sorting and column filter information
-        if (!CodingProgressTableController.sortInfoArray) {
+        if (!CodingProgressTableController.sortInfoArray)
             CodingProgressTableController.sortInfoArray = [{ column: "Done", order: "ascending" }];
 
-            // Default state where no column filtered
+        // Track checkbox state
+        if (!CodingProgressTableController.arr) {
             CodingProgressTableController.arr = []
             d3.selectAll("input[type=checkbox]").property("checked", true)
+        } else {
+            d3.selectAll(".form-check-label").each(function(d, i, n) {
+                let text = this.innerText.trim();
+                if (!CodingProgressTableController.arr.includes(text)) {
+                    d3.select(this.previousElementSibling).property("checked", true)
+                }
+            })
         }
 
         // Latest sorting information
