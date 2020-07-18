@@ -177,7 +177,7 @@ export class CodingProgressTableController {
         return [k, v];
     }
 
-    static jsonToArray(json) {
+    static jsonToArray(json, tableSection="") {
         let arr = [];
         for (const key in json) {
             if (CodingProgressTableController.arr.includes(key)) { continue }
