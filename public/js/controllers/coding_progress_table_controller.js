@@ -213,7 +213,7 @@ export class CodingProgressTableController {
             // Filter rows
             if (tableSection == "td") {
                 if (CodingProgressTableController.keyword != "")
-                    if (!json["Dataset"].includes(CodingProgressTableController.keyword)) { continue }
+                    if (!json["Dataset"].toLowerCase().includes(CodingProgressTableController.keyword.toLowerCase())) { continue }
             }
             if (json.hasOwnProperty(key)) {
                 arr.push(CodingProgressTableController.jsonKeyValueToArray(key, json[key]));
