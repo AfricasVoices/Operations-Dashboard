@@ -123,6 +123,29 @@ export class CodingProgressTableController {
                 transform(column, sortInfo.order);
             });
 
+            let searchInputNode = document.getElementById("input-keyword");
+            d3.select("button#search").on("click", () => {
+                let value = searchInputNode.value.trim();
+                if (value) {
+                    CodingProgressTableController.keyword = value; 
+                    transform(column, sortInfo.order);
+                } else {
+                    alert("Enter keyword...")
+                }
+            })
+
+            searchInputNode.addEventListener("keydown", function onEvent(event) {
+                if (event.key === "Enter") {
+                    let value = searchInputNode.value.trim();
+                    if (value) {
+                        CodingProgressTableController.keyword = value; 
+                        transform(column, sortInfo.order);
+                    } else {
+                        alert("Enter keyword...")
+                    }
+                }
+            });
+
             d3.select("button#reset").on("click", () => {
                 CodingProgressTableController.keyword = "";
                 transform(column, sortInfo.order);
