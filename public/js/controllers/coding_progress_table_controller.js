@@ -114,7 +114,6 @@ export class CodingProgressTableController {
                         CodingProgressTableController.arr.push(this.nextElementSibling.innerText.trim())
                         transform(column, sortInfo.order)
                     }
-                    console.log(CodingProgressTableController.arr)
                 })
             });
 
