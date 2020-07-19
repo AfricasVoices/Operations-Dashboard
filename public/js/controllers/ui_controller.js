@@ -48,79 +48,59 @@ export class UIController {
         document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container container-fluid table-responsive">
                 <div class="d-flex justify-content-start m-2">
-                
                     <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle btn-sm mr-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-brown shadow-none dropdown-toggle btn-sm mr-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Columns
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <form>
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="defaultCheck1">
-                                        Unique Texts
-                                    </label>
+                                    <label class="form-check-label">Unique Texts</label>
                                 </div>
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="defaultCheck1">
-                                        Unique Texts with a label
-                                    </label>
+                                    <label class="form-check-label">Unique Texts with a label</label>
                                 </div>
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="defaultCheck1">
-                                        Done
-                                    </label>
+                                    <label class="form-check-label">Done</label>
                                 </div>
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="defaultCheck1">
-                                        Wrong Scheme messages
-                                    </label>
+                                    <label class="form-check-label">Wrong Scheme messages</label>
                                 </div>
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="defaultCheck1">
-                                        WS %
-                                    </label>
+                                    <label class="form-check-label">WS %</label>
                                 </div>
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="defaultCheck1">
-                                        Not Coded messages
-                                    </label>
+                                    <label class="form-check-label">Not Coded messages</label>
                                 </div>
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label" for="defaultCheck1">
-                                        NC %
-                                    </label>
+                                    <label class="form-check-label">NC %</label>
                                 </div>
                             </form>
                         </div>
                     </div>
-                
-               
-                    <div class="ml-auto"><button class="btn btn-outline-primary btn-sm"> Show All</button></div>
-
-                    <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle btn-sm ml-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Keyword Search
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">COVID</a>
-                            <a class="dropdown-item" href="#">WUSC</a>
-                            <a class="dropdown-item" href="#">IMAQAL</a>
-                            <a class="dropdown-item" href="#">WORLD VISION</a>
-                            <a class="dropdown-item" href="#">UNICEF</a>
-                            <a class="dropdown-item" href="#">IOM</a>
+            
+                    <div class="ml-auto"><button class="btn btn-sm btn-brown shadow-none" id="reset"> Show All</button></div>
+                    <select class="btn-brown form-control form-control-sm shadow-none col-2 ml-2" id="keyword">
+                        <option disabled selected>Keyword Search</option>
+                        <option>COVID</option>
+                        <option>WUSC</option>
+                        <option>IMAQAL</option>
+                        <option>WorldVision</option>
+                        <option>UNICEF</option>
+                        <option>IOM</option>
+                    </select>
+                    <div class="input-group col-3">
+                        <input type="text" class="form-control form-control-sm shadow-none" id="input-keyword" value="" placeholder="Enter keyword...">
+                        <div class="input-group-append">
+                            <button class="btn btn-brown btn-sm form-control form-control-sm shadow-none" type="button" id="search">search</button>
                         </div>
-                    </div>
-
-                    <div class="form-group mx-sm-3 mb-0">
-                        <label for="inputPassword2" class="sr-only">Password</label>
-                        <input type="text" class="form-control form-control-sm" placeholder="search...">
                     </div>
                 </div>
             
