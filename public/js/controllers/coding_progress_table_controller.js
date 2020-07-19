@@ -127,6 +127,12 @@ export class CodingProgressTableController {
                 CodingProgressTableController.keyword = "";
                 transform(column, sortInfo.order);
             });
+
+            if (CodingProgressTableController.keyword) {
+                d3.select("button#reset").style('display', 'block');
+            } else if (CodingProgressTableController.keyword == "") {
+                d3.select("button#reset").style('display', 'none');
+            }
         }
     }
 
