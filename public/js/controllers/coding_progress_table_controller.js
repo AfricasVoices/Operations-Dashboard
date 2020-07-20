@@ -14,13 +14,13 @@ export class CodingProgressTableController {
             CodingProgressTableController.keyword = "";
 
         // Track checkbox state
-        if (!CodingProgressTableController.arr) {
-            CodingProgressTableController.arr = []
+        if (!CodingProgressTableController.selectedColumns) {
+            CodingProgressTableController.selectedColumns = []
             d3.selectAll("input[type=checkbox]").property("checked", true)
         } else {
             d3.selectAll(".form-check-label").each(function(d, i, n) {
                 let text = this.innerText.trim();
-                if (!CodingProgressTableController.arr.includes(text)) {
+                if (!CodingProgressTableController.selectedColumns.includes(text)) {
                     d3.select(this.previousElementSibling).property("checked", true)
                 }
             })
@@ -109,10 +109,10 @@ export class CodingProgressTableController {
             d3.selectAll("input[type=checkbox]").each(function(d, i, n) {
                 d3.select(this).on("change", function() {
                     if (d3.select(this).property("checked")) {
-                        CodingProgressTableController.arr = CodingProgressTableController.arr.filter(e => e !== this.nextElementSibling.innerText.trim());
+                        CodingProgressTableController.selectedColumns = CodingProgressTableController.selectedColumns.filter(e => e !== this.nextElementSibling.innerText.trim());
                         transform(column, sortInfo.order)
                     } else {
-                        CodingProgressTableController.arr.push(this.nextElementSibling.innerText.trim())
+                        CodingProgressTableController.selectedColumns.push(this.nextElementSibling.innerText.trim())
                         transform(column, sortInfo.order)
                     }
                 })
@@ -213,7 +213,7 @@ export class CodingProgressTableController {
         let arr = [];
         for (const key in json) {
             // Filter columns
-            if (CodingProgressTableController.arr.includes(key)) { continue }
+            if (CodingProgressTableController.selectedColumns.includes(key)) { continue }
             // Filter rows
             if (tableSection == "td") {
                 if (CodingProgressTableController.keyword != "")
