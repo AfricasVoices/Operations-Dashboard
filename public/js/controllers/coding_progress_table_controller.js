@@ -105,6 +105,7 @@ export class CodingProgressTableController {
                 }
             });
 
+            // Attach event listeners to columns' checkbox & ability to filter table
             d3.selectAll("input[type=checkbox]").each(function(d, i, n) {
                 d3.select(this).on("change", function() {
                     if (d3.select(this).property("checked")) {
@@ -117,11 +118,13 @@ export class CodingProgressTableController {
                 })
             });
 
+            // Enable the ability to filter table by selected keyword in dropdown menu 
             d3.select("#keyword").on("change", function() {
                 CodingProgressTableController.keyword = this.options[this.selectedIndex].innerText.trim(); 
                 transform(column, sortInfo.order);
             });
 
+             // Enable the ability to filter table by user's keyword input
             let searchInputNode = document.getElementById("input-keyword");
             d3.select("button#search").on("click", () => {
                 let value = searchInputNode.value.trim();
@@ -132,7 +135,6 @@ export class CodingProgressTableController {
                     alert("Enter keyword...")
                 }
             })
-
             searchInputNode.addEventListener("keydown", function onEvent(event) {
                 if (event.key === "Enter") {
                     let value = searchInputNode.value.trim();
@@ -145,11 +147,13 @@ export class CodingProgressTableController {
                 }
             });
 
+            // View all datasets on clicking `view all` button
             d3.select("button#reset").on("click", () => {
                 CodingProgressTableController.keyword = "";
                 transform(column, sortInfo.order);
             });
 
+            // Hide `view all` button if all datasets are being displayed
             if (CodingProgressTableController.keyword) {
                 d3.select("button#reset").style('display', 'block');
             } else if (CodingProgressTableController.keyword == "") {
