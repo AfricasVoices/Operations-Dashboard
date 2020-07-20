@@ -86,7 +86,7 @@ export class UIController {
                         </div>
                     </div>
             
-                    <div class="ml-auto"><button class="btn btn-sm btn-brown shadow-none" id="reset"> Show All</button></div>
+                    <div class="ml-auto"><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
                     <select class="btn-brown form-control form-control-sm shadow-none col-2 ml-2" id="keyword">
                         <option disabled selected>Keyword Search</option>
                         <option>COVID</option>
