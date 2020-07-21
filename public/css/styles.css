@@ -247,7 +247,7 @@ th:hover {
 .memoryXGrid path,
 .cpuXGrid path  {
     stroke: lightgrey;
-    stroke-opacity: 0.5;
+    stroke-opacity: 0.3;
     shape-rendering: crispEdges;
 }
 .stopDiskGrid line,
