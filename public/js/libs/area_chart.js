@@ -26,6 +26,7 @@ export class AreaChart extends GraphLayout {
     draw() {
         this.layout();
         this.createScales();
+        this.addGridlines();
         this.addAxes();
         this.displayYLimit();
         this.addArea();
@@ -50,7 +51,6 @@ export class AreaChart extends GraphLayout {
         let decimalFormatter = d3.format(".2s");
         this.yAxis = d3
             .axisLeft(this.yScale)
-            .ticks(5)
             .tickFormat((d) => decimalFormatter(d).replace("G", "GB"));
     }
 
@@ -80,8 +80,6 @@ export class AreaChart extends GraphLayout {
             .attr("transform", "rotate(-65)");
 
         this.plot.append("g").attr("class", `${this.id}YAxis`).call(this.yAxis);
-
-        this.addGridlines();
     }
 
     addGridlines() {
