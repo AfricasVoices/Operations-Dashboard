@@ -88,11 +88,6 @@ export class AreaChart extends GraphLayout {
             .attr("class", `${this.id}Grid`)
             .call(d3.axisLeft(this.yScale).tickSize(-this.width).tickFormat(""));
 
-        // this.plot
-        //     .append("g")
-        //     .attr("class", `${this.id}Grid`)
-        //     .call(d3.axisLeft(this.yScale).tickSize(-this.width).tickFormat("").tickValues([this.yLimit]));
-
         // Add the X axis gridlines
         this.plot
             .append("g")
