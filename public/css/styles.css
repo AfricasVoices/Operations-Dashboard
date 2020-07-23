@@ -30,6 +30,16 @@
 .dropdown-item:hover {
     cursor: pointer;
 }
+.form-check.dropdown-item:hover {
+    cursor: auto;
+}
+.form-check.dropdown-item:active {
+    color: #212529;
+    background-color: transparent;
+}
+.form-check-input:hover {
+    cursor: pointer;
+}
 .active-link {
     border-bottom: 2px #8d3538 solid;
     padding-bottom: 6px;
