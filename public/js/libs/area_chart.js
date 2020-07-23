@@ -127,7 +127,7 @@ export class AreaChart extends GraphLayout {
             if (this.config.formatYAxisValuesAsGB) {
                 this.yLimitFocus.select("text")
                     .text(`${d3.formatPrefix(".2", this.yLimit)(this.yLimit).replace("G", "GB")}`)
-                    .attr("x", -54); // Tweak label's x axis position according to its length
+                    .attr("x", -56); // Tweak label's x axis position according to its length
             }
 
             if (this.config.appendPercentageToTooltipText) {
