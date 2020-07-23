@@ -21,6 +21,7 @@ export class BarChart extends GraphLayout {
     draw() {
         this.layout();
         this.createScales();
+        this.addGridlines();
         this.addAxes();
         this.addBars();
         this.addLabels();
@@ -92,8 +93,6 @@ export class BarChart extends GraphLayout {
 
         const yAxis = d3.axisLeft(this.yScale);
         this.plot.append("g").attr("class", "y axis").call(yAxis);
-
-        this.addGridlines();
     }
 
     addGridlines() {
