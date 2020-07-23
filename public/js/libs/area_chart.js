@@ -28,6 +28,7 @@ export class AreaChart extends GraphLayout {
         this.createScales();
         this.addGridlines();
         this.addAxes();
+        this.displayYLimit();
         this.addArea();
         this.addLabels();
     }
@@ -94,6 +95,47 @@ export class AreaChart extends GraphLayout {
             .attr("class", `${this.id}XGrid`)
             .attr("transform", "translate(0," + this.height + ")")
             .call(d3.axisBottom(this.xScale).tickSize(-this.height).tickFormat(""));
+    }
+
+    displayYLimit() {
+        if (this.yLimit) {
+            // Create focus object
+            this.yLimitFocus = this.plot.append("g");
+            // Add background rectangle behind the text label
+            this.yLimitFocus
+                .append("rect")
+                .attr("x", -78)
+                .attr("y", "-10px")
+                .attr("rx", 6)
+                .attr("ry", 6)
+                .attr("width", 70)
+                .attr("height", 20)
+                .style("fill", "white");
+            
+            // Add text annotation for label
+            this.yLimitFocus
+                .append("text")
+                .attr("x", -32)
+                .attr("dy", "4px")
+                .attr("font-size", "10px")
+                .style("fill", "#212529")
+                .style("font-weight", "bold"); 
+
+            // Position the text
+            this.yLimitFocus.select("text").text(this.yLimit);
+
+            if (this.config.formatYAxisValuesAsGB) {
+                this.yLimitFocus.select("text")
+                    .text(`${d3.formatPrefix(".2", this.yLimit)(this.yLimit).replace("G", "GB")}`)
+                    .attr("x", -56); // Tweak label's x axis position according to its length
+            }
+
+            if (this.config.appendPercentageToTooltipText) {
+                this.yLimitFocus.select("text")
+                    .text(`${d3.formatPrefix(".0", this.yLimit)(this.yLimit)}`)
+                    .attr("x", -27);
+            }
+        }
     }
 
     drawFocus() {
