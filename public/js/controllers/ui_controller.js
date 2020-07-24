@@ -47,7 +47,7 @@ export class UIController {
         UIController.resetUI();
         document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container container-fluid table-responsive">
-                <div class="d-flex justify-content-start m-2">
+                <div class="d-flex justify-content-start m-1">
                     <div class="dropdown">
                         <button class="btn btn-brown shadow-none dropdown-toggle btn-sm mr-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Columns
@@ -86,7 +86,7 @@ export class UIController {
                         </div>
                     </div>
             
-                    <div class="ml-auto"><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
+                    <div><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
                     <select class="btn-brown form-control form-control-sm shadow-none col-2 ml-2" id="keyword">
                         <option disabled selected>Keyword Search</option>
                         <option>COVID</option>
