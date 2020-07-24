@@ -87,15 +87,7 @@ export class UIController {
                     </div>
             
                     <div><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
-                    <select class="btn-brown form-control form-control-sm shadow-none col-2 ml-2" id="keyword">
-                        <option disabled selected>Keyword Search</option>
-                        <option>COVID</option>
-                        <option>WUSC</option>
-                        <option>IMAQAL</option>
-                        <option>WorldVision</option>
-                        <option>UNICEF</option>
-                        <option>IOM</option>
-                    </select>
+                    <select class="btn-brown form-control form-control-sm shadow-none col-2 ml-2" id="keyword"></select>
                     <div class="input-group col-3">
                         <input type="text" class="form-control form-control-sm shadow-none" id="input-keyword" value="" placeholder="Enter keyword...">
                         <div class="input-group-append">
@@ -169,6 +161,23 @@ export class UIController {
         </div> `;
         // Insert the HTML into the DOM
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
+    }
+
+    static addkeywordOptions(data) {
+        const statusMenu = document.getElementById("keyword");
+        if (statusMenu) {
+            while (statusMenu.firstChild) {
+                statusMenu.removeChild(statusMenu.firstChild);
+            }
+            let firstChildElement = `<option disabled selected>Keyword Search</option>`
+            let html = `<option>%project_name%</option>`;
+            // Replace the placeholder text with some actual data
+            data.forEach((obj) => {
+                let newHtml = html.replace("%project_name%", obj.project_name);
+                statusMenu.insertAdjacentHTML("beforeend", newHtml);
+            });
+            statusMenu.insertAdjacentHTML("afterbegin", firstChildElement);
+        }
     }
 
     static addGraphs(title) {
