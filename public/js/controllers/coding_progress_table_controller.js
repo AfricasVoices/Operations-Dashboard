@@ -216,8 +216,12 @@ export class CodingProgressTableController {
             if (CodingProgressTableController.selectedColumns.includes(key)) { continue }
             // Filter rows
             if (tableSection == "td") {
-                if (CodingProgressTableController.keyword != "")
-                    if (!json["Dataset"].toLowerCase().includes(CodingProgressTableController.keyword.toLowerCase())) { continue }
+                if (CodingProgressTableController.keyword != "") {
+                    const terms = CodingProgressTableController.keyword.split(/_|-/).map(v => v.toLowerCase()),
+                        str = json["Dataset"].toLowerCase(),
+                        result = terms.every(term => str.includes(term));
+                    if (!result) continue
+                }
             }
             if (json.hasOwnProperty(key)) {
                 arr.push(CodingProgressTableController.jsonKeyValueToArray(key, json[key]));
