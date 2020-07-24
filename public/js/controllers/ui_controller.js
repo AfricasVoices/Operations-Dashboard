@@ -86,7 +86,6 @@ export class UIController {
                         </div>
                     </div>
             
-                    <div><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
                     <select class="btn-brown form-control form-control-sm shadow-none col-2 ml-2" id="keyword"></select>
                     <div class="input-group col-3">
                         <input type="text" class="form-control form-control-sm shadow-none" id="input-keyword" value="" placeholder="Enter keyword...">
@@ -94,6 +93,7 @@ export class UIController {
                             <button class="btn btn-brown btn-sm form-control form-control-sm shadow-none" type="button" id="search">search</button>
                         </div>
                     </div>
+                    <div><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
                 </div>
             
                 <table id='codingtable' class='table'>
