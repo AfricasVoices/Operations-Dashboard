@@ -55,32 +55,32 @@ export class UIController {
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <form>
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">Unique Texts</label>
+                                    <input id="unique-texts" class="form-check-input" type="checkbox">
+                                    <label for="unique-texts" class="form-check-label">Unique Texts</label>
                                 </div>
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">Unique Texts with a label</label>
+                                    <input id="unique-texts-labels" class="form-check-input" type="checkbox">
+                                    <label for="unique-texts-labels" class="form-check-label">Unique Texts with a label</label>
                                 </div>
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">Done</label>
+                                    <input id="done" class="form-check-input" type="checkbox">
+                                    <label for="done" class="form-check-label">Done</label>
                                 </div>
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">Wrong Scheme messages</label>
+                                    <input id="wrong-scheme-messages" class="form-check-input" type="checkbox">
+                                    <label for="wrong-scheme-messages" class="form-check-label">Wrong Scheme messages</label>
                                 </div>
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">WS %</label>
+                                    <input id="ws" class="form-check-input" type="checkbox">
+                                    <label for="ws" class="form-check-label">WS %</label>
                                 </div>
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">Not Coded messages</label>
+                                    <input id="not-coded-messages" class="form-check-input" type="checkbox">
+                                    <label for="not-coded-messages" class="form-check-label">Not Coded messages</label>
                                 </div>
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">NC %</label>
+                                    <input id="NC" class="form-check-input" type="checkbox">
+                                    <label for="NC" class="form-check-label">NC %</label>
                                 </div>
                             </form>
                         </div>
