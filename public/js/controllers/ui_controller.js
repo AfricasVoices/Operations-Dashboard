@@ -169,7 +169,7 @@ export class UIController {
             while (statusMenu.firstChild) {
                 statusMenu.removeChild(statusMenu.firstChild);
             }
-            let firstChildElement = `<option disabled selected>Active Projects</option>`
+            let firstChildElement = `<option disabled selected>Filter By Active Projects</option>`
             let html = `<option>%project_name%</option>`;
             // Replace the placeholder text with some actual data
             data.forEach((obj) => {
