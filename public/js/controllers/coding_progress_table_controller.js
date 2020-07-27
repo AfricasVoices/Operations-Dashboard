@@ -218,9 +218,9 @@ export class CodingProgressTableController {
             if (tableSection == "td") {
                 if (CodingProgressTableController.keyword != "") {
                     const terms = CodingProgressTableController.keyword.split(/_|-| /).map(v => v.toLowerCase()),
-                        str = json["Dataset"].toLowerCase(),
-                        filter_result = terms.every(term => str.includes(term));
-                    if (!result) continue
+                        dataset = json["Dataset"].toLowerCase(),
+                        filter_result = terms.every(term => dataset.includes(term));
+                    if (!filter_result) continue
                 }
             }
             if (json.hasOwnProperty(key)) {
