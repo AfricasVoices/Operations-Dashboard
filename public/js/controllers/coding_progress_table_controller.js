@@ -219,7 +219,7 @@ export class CodingProgressTableController {
                 if (CodingProgressTableController.keyword != "") {
                     const terms = CodingProgressTableController.keyword.split(/_|-| /).map(v => v.toLowerCase()),
                         str = json["Dataset"].toLowerCase(),
-                        result = terms.every(term => str.includes(term));
+                        filter_result = terms.every(term => str.includes(term));
                     if (!result) continue
                 }
             }
