@@ -151,6 +151,11 @@ export class CodingProgressTableController {
             d3.select("button#reset").on("click", () => {
                 CodingProgressTableController.keyword = "";
                 transform(column, sortInfo.order);
+                // Reset select value to default
+                let options = document.querySelectorAll('#keyword option');
+                for (const option of options) {
+                    option.selected = option.defaultSelected;
+                }
             });
 
             // Hide `view all` button if all datasets are being displayed
