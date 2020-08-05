@@ -30,6 +30,9 @@
 .dropdown-item:hover {
     cursor: pointer;
 }
+.dropdown-item:active {
+    background-color: #a2c0d9;
+}
 .active-link {
     border-bottom: 2px #8d3538 solid;
     padding-bottom: 6px;
