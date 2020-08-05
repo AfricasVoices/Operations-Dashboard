@@ -241,7 +241,7 @@ th:hover {
 .sentGrid path,
 #failedGrid path {
     stroke: lightgrey;
-    stroke-opacity: 0.5;
+    stroke-opacity: 0.3;
     shape-rendering: crispEdges;
 }
 .diskGrid line,
