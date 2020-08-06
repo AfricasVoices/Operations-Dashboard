@@ -50,7 +50,7 @@ export class UIController {
                 <div class="d-flex justify-content-start m-1">
                     <div class="dropdown">
                         <button class="btn btn-brown shadow-none dropdown-toggle btn-sm mr-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Columns
+                            Filter by Columns
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <form>
