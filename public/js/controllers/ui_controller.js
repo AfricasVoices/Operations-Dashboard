@@ -47,6 +47,55 @@ export class UIController {
         UIController.resetUI();
         document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container container-fluid table-responsive">
+                <div class="d-flex justify-content-start m-1">
+                    <div class="dropdown">
+                        <button class="btn btn-brown shadow-none dropdown-toggle btn-sm mr-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Filter by Columns
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <form>
+                                <div class="form-check dropdown-item">
+                                    <input id="unique-texts" class="form-check-input" type="checkbox">
+                                    <label for="unique-texts" class="form-check-label">Unique Texts</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input id="unique-texts-labels" class="form-check-input" type="checkbox">
+                                    <label for="unique-texts-labels" class="form-check-label">Unique Texts with a label</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input id="done" class="form-check-input" type="checkbox">
+                                    <label for="done" class="form-check-label">Done</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input id="wrong-scheme-messages" class="form-check-input" type="checkbox">
+                                    <label for="wrong-scheme-messages" class="form-check-label">Wrong Scheme messages</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input id="ws" class="form-check-input" type="checkbox">
+                                    <label for="ws" class="form-check-label">WS %</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input id="not-coded-messages" class="form-check-input" type="checkbox">
+                                    <label for="not-coded-messages" class="form-check-label">Not Coded messages</label>
+                                </div>
+                                <div class="form-check dropdown-item">
+                                    <input id="NC" class="form-check-input" type="checkbox">
+                                    <label for="NC" class="form-check-label">NC %</label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+            
+                    <select class="btn-brown form-control form-control-sm shadow-none col-2 ml-2" id="keyword"></select>
+                    <div class="input-group col-3">
+                        <input type="text" class="form-control form-control-sm shadow-none" id="input-keyword" value="" placeholder="Enter keyword...">
+                        <div class="input-group-append">
+                            <button class="btn btn-brown btn-sm form-control form-control-sm shadow-none" type="button" id="search">search</button>
+                        </div>
+                    </div>
+                    <div><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
+                </div>
+            
                 <table id='codingtable' class='table'>
                     <thead></thead>
                     <tbody id="coding-status-body"></tbody>
@@ -112,6 +161,23 @@ export class UIController {
         </div> `;
         // Insert the HTML into the DOM
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
+    }
+
+    static addkeywordOptions(data) {
+        const statusMenu = document.getElementById("keyword");
+        if (statusMenu) {
+            while (statusMenu.firstChild) {
+                statusMenu.removeChild(statusMenu.firstChild);
+            }
+            let firstChildElement = `<option disabled selected>Filter By Active Projects</option>`
+            let html = `<option>%project_name%</option>`;
+            // Replace the placeholder text with some actual data
+            data.forEach((obj) => {
+                let newHtml = html.replace("%project_name%", obj.project_name);
+                statusMenu.insertAdjacentHTML("beforeend", newHtml);
+            });
+            statusMenu.insertAdjacentHTML("afterbegin", firstChildElement);
+        }
     }
 
     static addGraphs(title) {

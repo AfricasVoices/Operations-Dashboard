@@ -6,9 +6,25 @@ export class CodingProgressTableController {
         // Set last updated timestamp in UI
         document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
 
-        // Default sorting information
+        // Default sorting and column filter information
         if (!CodingProgressTableController.sortInfoArray)
             CodingProgressTableController.sortInfoArray = [{ column: "Done", order: "ascending" }];
+
+        if (!CodingProgressTableController.keyword)
+            CodingProgressTableController.keyword = "";
+
+        // Track checkbox state
+        if (!CodingProgressTableController.selectedColumns) {
+            CodingProgressTableController.selectedColumns = []
+            d3.selectAll("input[type=checkbox]").property("checked", true)
+        } else {
+            d3.selectAll(".form-check-label").each(function(d, i, n) {
+                let text = this.innerText.trim();
+                if (!CodingProgressTableController.selectedColumns.includes(text)) {
+                    d3.select(this.previousElementSibling).property("checked", true)
+                }
+            })
+        }
 
         // Latest sorting information
         let sortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0];
@@ -50,7 +66,7 @@ export class CodingProgressTableController {
 
             // Table Cells
             let td = tr.selectAll("td")
-                .data(d => CodingProgressTableController.jsonToArray(d))
+                .data(d => CodingProgressTableController.jsonToArray(d, "td"))
                 .enter().append("td")
             
             // Filter Dataset column from columns & append text to td
@@ -69,7 +85,7 @@ export class CodingProgressTableController {
                 .text((d) => d[1]);
 
             // Filter table to remain with "Done" column
-            td.filter((d, i) => d[0] === "Done" && i === 3).each((d, i, n) => {
+            td.filter((d, i) => d[0] === "Done" ).each((d, i, n) => {
                 // Select Table Row
                 let parentNode = d3.select(n[i].parentNode);
                 // Select Table Data and access data bound to the node
@@ -88,6 +104,66 @@ export class CodingProgressTableController {
                     parentNode.attr("class", "coding-complete");
                 }
             });
+
+            // Attach event listeners to columns' checkbox & ability to filter table
+            d3.selectAll("input[type=checkbox]").each(function(d, i, n) {
+                d3.select(this).on("change", function() {
+                    if (d3.select(this).property("checked")) {
+                        CodingProgressTableController.selectedColumns = CodingProgressTableController.selectedColumns.filter(e => e !== this.nextElementSibling.innerText.trim());
+                        transform(column, sortInfo.order)
+                    } else {
+                        CodingProgressTableController.selectedColumns.push(this.nextElementSibling.innerText.trim())
+                        transform(column, sortInfo.order)
+                    }
+                })
+            });
+
+            // Enable the ability to filter table by selected keyword in dropdown menu 
+            d3.select("#keyword").on("change", function() {
+                CodingProgressTableController.keyword = this.options[this.selectedIndex].innerText.trim(); 
+                transform(column, sortInfo.order);
+            });
+
+             // Enable the ability to filter table by user's keyword input
+            let searchInputNode = document.getElementById("input-keyword");
+            d3.select("button#search").on("click", () => {
+                let value = searchInputNode.value.trim();
+                if (value) {
+                    CodingProgressTableController.keyword = value; 
+                    transform(column, sortInfo.order);
+                } else {
+                    alert("Enter keyword...")
+                }
+            })
+            searchInputNode.addEventListener("keydown", function onEvent(event) {
+                if (event.key === "Enter") {
+                    let value = searchInputNode.value.trim();
+                    if (value) {
+                        CodingProgressTableController.keyword = value; 
+                        transform(column, sortInfo.order);
+                    } else {
+                        alert("Enter keyword...")
+                    }
+                }
+            });
+
+            // View all datasets on clicking `view all` button
+            d3.select("button#reset").on("click", () => {
+                CodingProgressTableController.keyword = "";
+                transform(column, sortInfo.order);
+                // Reset select value to default
+                let options = document.querySelectorAll('#keyword option');
+                for (const option of options) {
+                    option.selected = option.defaultSelected;
+                }
+            });
+
+            // Hide `view all` button if all datasets are being displayed
+            if (CodingProgressTableController.keyword) {
+                d3.select("button#reset").style('display', 'block');
+            } else if (CodingProgressTableController.keyword == "") {
+                d3.select("button#reset").style('display', 'none');
+            }
         }
     }
 
@@ -138,9 +214,20 @@ export class CodingProgressTableController {
         return [k, v];
     }
 
-    static jsonToArray(json) {
+    static jsonToArray(json, tableSection="") {
         let arr = [];
         for (const key in json) {
+            // Filter columns
+            if (CodingProgressTableController.selectedColumns.includes(key)) { continue }
+            // Filter rows
+            if (tableSection == "td") {
+                if (CodingProgressTableController.keyword != "") {
+                    const terms = CodingProgressTableController.keyword.split(/_|-| /).map(v => v.toLowerCase()),
+                        dataset = json["Dataset"].toLowerCase(),
+                        filter_result = terms.every(term => dataset.includes(term));
+                    if (!filter_result) continue
+                }
+            }
             if (json.hasOwnProperty(key)) {
                 arr.push(CodingProgressTableController.jsonKeyValueToArray(key, json[key]));
             }

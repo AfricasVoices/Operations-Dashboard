@@ -30,6 +30,7 @@ class Controller {
     static displayCodingProgress() {
         // Add the coding progress section to the UI
         UIController.addCodingProgressSection();
+        DataController.watchActiveProjects(UIController.addkeywordOptions);
         Controller.resetActiveLink();
         document
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
