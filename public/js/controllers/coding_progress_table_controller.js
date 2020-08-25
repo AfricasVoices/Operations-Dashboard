@@ -17,7 +17,7 @@ export class CodingProgressTableController {
             CodingProgressTableController.selectedColumns = [];
             d3.selectAll("input[type=checkbox]").property("checked", true);
         } else {
-            d3.selectAll(".form-check-label").each(function(d, i, n) {
+            d3.selectAll(".form-check-label").each(function (d, i, n) {
                 let text = this.innerText.trim();
                 if (!CodingProgressTableController.selectedColumns.includes(text)) {
                     d3.select(this.previousElementSibling).property("checked", true);
@@ -84,7 +84,7 @@ export class CodingProgressTableController {
                 .text((d) => d[1]);
 
             // Filter table to remain with "Done" column
-            td.filter((d, i) => d[0] === "Done" ).each((d, i, n) => {
+            td.filter((d, i) => d[0] === "Done").each((d, i, n) => {
                 // Select Table Row
                 let parentNode = d3.select(n[i].parentNode);
                 // Select Table Data and access data bound to the node
@@ -124,12 +124,12 @@ export class CodingProgressTableController {
                 transform(column, sortInfo.order);
             });
 
-             // Enable the ability to filter table by user's keyword input
+            // Enable the ability to filter table by user's keyword input
             let searchInputNode = document.getElementById("input-keyword");
             d3.select("button#search").on("click", () => {
                 let value = searchInputNode.value.trim();
                 if (value) {
-                    CodingProgressTableController.keyword = value; 
+                    CodingProgressTableController.keyword = value;
                     transform(column, sortInfo.order);
                 } else {
                     alert("Enter keyword...");
@@ -139,7 +139,7 @@ export class CodingProgressTableController {
                 if (event.key === "Enter") {
                     let value = searchInputNode.value.trim();
                     if (value) {
-                        CodingProgressTableController.keyword = value; 
+                        CodingProgressTableController.keyword = value;
                         transform(column, sortInfo.order);
                     } else {
                         alert("Enter keyword...");
@@ -214,7 +214,7 @@ export class CodingProgressTableController {
         return [k, v];
     }
 
-    static jsonToArray(json, tableSection="") {
+    static jsonToArray(json, tableSection = "") {
         let arr = [];
         for (const key in json) {
             // Filter columns
