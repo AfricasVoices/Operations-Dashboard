@@ -153,7 +153,7 @@ export class CodingProgressTableController {
                 CodingProgressTableController.keyword = "";
                 transform(column, sortInfo.order);
                 // Reset select value to default
-                let options = document.querySelectorAll('#keyword option');
+                let options = document.querySelectorAll("#keyword option");
                 for (const option of options) {
                     option.selected = option.defaultSelected;
                 }
@@ -161,9 +161,9 @@ export class CodingProgressTableController {
 
             // Hide `view all` button if all datasets are being displayed
             if (CodingProgressTableController.keyword) {
-                d3.select("button#reset").style('display', 'block');
+                d3.select("button#reset").style("display", "block");
             } else if (CodingProgressTableController.keyword == "") {
-                d3.select("button#reset").style('display', 'none');
+                d3.select("button#reset").style("display", "none");
             }
         }
     }
