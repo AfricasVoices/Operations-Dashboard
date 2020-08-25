@@ -15,15 +15,15 @@ export class CodingProgressTableController {
 
         // Track checkbox state
         if (!CodingProgressTableController.selectedColumns) {
-            CodingProgressTableController.selectedColumns = []
-            d3.selectAll("input[type=checkbox]").property("checked", true)
+            CodingProgressTableController.selectedColumns = [];
+            d3.selectAll("input[type=checkbox]").property("checked", true);
         } else {
             d3.selectAll(".form-check-label").each(function(d, i, n) {
                 let text = this.innerText.trim();
                 if (!CodingProgressTableController.selectedColumns.includes(text)) {
-                    d3.select(this.previousElementSibling).property("checked", true)
+                    d3.select(this.previousElementSibling).property("checked", true);
                 }
-            })
+            });
         }
 
         // Latest sorting information
@@ -116,7 +116,7 @@ export class CodingProgressTableController {
                         CodingProgressTableController.selectedColumns.push(this.nextElementSibling.innerText.trim())
                         transform(column, sortInfo.order)
                     }
-                })
+                });
             });
 
             // Enable the ability to filter table by selected keyword in dropdown menu 
@@ -133,9 +133,9 @@ export class CodingProgressTableController {
                     CodingProgressTableController.keyword = value; 
                     transform(column, sortInfo.order);
                 } else {
-                    alert("Enter keyword...")
+                    alert("Enter keyword...");
                 }
-            })
+            });
             searchInputNode.addEventListener("keydown", function onEvent(event) {
                 if (event.key === "Enter") {
                     let value = searchInputNode.value.trim();
@@ -143,7 +143,7 @@ export class CodingProgressTableController {
                         CodingProgressTableController.keyword = value; 
                         transform(column, sortInfo.order);
                     } else {
-                        alert("Enter keyword...")
+                        alert("Enter keyword...");
                     }
                 }
             });
