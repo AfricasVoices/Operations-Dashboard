@@ -109,7 +109,8 @@ export class CodingProgressTableController {
             d3.selectAll("input[type=checkbox]").each(function(d, i, n) {
                 d3.select(this).on("change", function() {
                     if (d3.select(this).property("checked")) {
-                        CodingProgressTableController.selectedColumns = CodingProgressTableController.selectedColumns.filter(e => e !== this.nextElementSibling.innerText.trim());
+                        CodingProgressTableController.selectedColumns = CodingProgressTableController.selectedColumns.filter(
+                            e => e !== this.nextElementSibling.innerText.trim());
                         transform(column, sortInfo.order)
                     } else {
                         CodingProgressTableController.selectedColumns.push(this.nextElementSibling.innerText.trim())
