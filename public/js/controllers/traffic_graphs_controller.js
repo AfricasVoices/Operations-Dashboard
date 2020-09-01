@@ -162,14 +162,6 @@ export class TrafficGraphsController {
                 .attr("height", Height + Margin.top + Margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Append total sent sms graph to svg
-            total_failed_sms_graph = d3
-                .select(".total_failed_sms_graph")
-                .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
             // Format TimeStamp
             timeFormat = d3.timeFormat("%Y-%m-%d");
 
@@ -191,8 +183,7 @@ export class TrafficGraphsController {
 
         let color = d3.scaleOrdinal(mnoColorScheme),
             colorReceived = d3.scaleOrdinal(mnoColorScheme).domain(receivedKeys),
-            colorSent = d3.scaleOrdinal(mnoColorScheme).domain(sentKeys),
-            colorFailed = d3.scaleOrdinal(["#ff0000"]).domain(["total_errored"]);
+            colorSent = d3.scaleOrdinal(mnoColorScheme).domain(sentKeys);
 
         let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
             yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),

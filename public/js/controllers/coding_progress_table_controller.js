@@ -10,20 +10,19 @@ export class CodingProgressTableController {
         if (!CodingProgressTableController.sortInfoArray)
             CodingProgressTableController.sortInfoArray = [{ column: "Done", order: "ascending" }];
 
-        if (!CodingProgressTableController.keyword)
-            CodingProgressTableController.keyword = "";
+        if (!CodingProgressTableController.keyword) CodingProgressTableController.keyword = "";
 
         // Track checkbox state
         if (!CodingProgressTableController.selectedColumns) {
-            CodingProgressTableController.selectedColumns = []
-            d3.selectAll("input[type=checkbox]").property("checked", true)
+            CodingProgressTableController.selectedColumns = [];
+            d3.selectAll("input[type=checkbox]").property("checked", true);
         } else {
-            d3.selectAll(".form-check-label").each(function(d, i, n) {
+            d3.selectAll(".form-check-label").each(function (d, i, n) {
                 let text = this.innerText.trim();
                 if (!CodingProgressTableController.selectedColumns.includes(text)) {
-                    d3.select(this.previousElementSibling).property("checked", true)
+                    d3.select(this.previousElementSibling).property("checked", true);
                 }
-            })
+            });
         }
 
         // Latest sorting information
@@ -85,7 +84,7 @@ export class CodingProgressTableController {
                 .text((d) => d[1]);
 
             // Filter table to remain with "Done" column
-            td.filter((d, i) => d[0] === "Done" ).each((d, i, n) => {
+            td.filter((d, i) => d[0] === "Done").each((d, i, n) => {
                 // Select Table Row
                 let parentNode = d3.select(n[i].parentNode);
                 // Select Table Data and access data bound to the node
@@ -109,13 +108,14 @@ export class CodingProgressTableController {
             d3.selectAll("input[type=checkbox]").each(function(d, i, n) {
                 d3.select(this).on("change", function() {
                     if (d3.select(this).property("checked")) {
-                        CodingProgressTableController.selectedColumns = CodingProgressTableController.selectedColumns.filter(e => e !== this.nextElementSibling.innerText.trim());
+                        CodingProgressTableController.selectedColumns = CodingProgressTableController.selectedColumns.filter(
+                            e => e !== this.nextElementSibling.innerText.trim());
                         transform(column, sortInfo.order)
                     } else {
                         CodingProgressTableController.selectedColumns.push(this.nextElementSibling.innerText.trim())
                         transform(column, sortInfo.order)
                     }
-                })
+                });
             });
 
             // Enable the ability to filter table by selected keyword in dropdown menu 
@@ -124,25 +124,25 @@ export class CodingProgressTableController {
                 transform(column, sortInfo.order);
             });
 
-             // Enable the ability to filter table by user's keyword input
+            // Enable the ability to filter table by user's keyword input
             let searchInputNode = document.getElementById("input-keyword");
             d3.select("button#search").on("click", () => {
                 let value = searchInputNode.value.trim();
                 if (value) {
-                    CodingProgressTableController.keyword = value; 
+                    CodingProgressTableController.keyword = value;
                     transform(column, sortInfo.order);
                 } else {
-                    alert("Enter keyword...")
+                    alert("Enter keyword...");
                 }
-            })
+            });
             searchInputNode.addEventListener("keydown", function onEvent(event) {
                 if (event.key === "Enter") {
                     let value = searchInputNode.value.trim();
                     if (value) {
-                        CodingProgressTableController.keyword = value; 
+                        CodingProgressTableController.keyword = value;
                         transform(column, sortInfo.order);
                     } else {
-                        alert("Enter keyword...")
+                        alert("Enter keyword...");
                     }
                 }
             });
@@ -152,7 +152,7 @@ export class CodingProgressTableController {
                 CodingProgressTableController.keyword = "";
                 transform(column, sortInfo.order);
                 // Reset select value to default
-                let options = document.querySelectorAll('#keyword option');
+                let options = document.querySelectorAll("#keyword option");
                 for (const option of options) {
                     option.selected = option.defaultSelected;
                 }
@@ -160,9 +160,9 @@ export class CodingProgressTableController {
 
             // Hide `view all` button if all datasets are being displayed
             if (CodingProgressTableController.keyword) {
-                d3.select("button#reset").style('display', 'block');
+                d3.select("button#reset").style("display", "block");
             } else if (CodingProgressTableController.keyword == "") {
-                d3.select("button#reset").style('display', 'none');
+                d3.select("button#reset").style("display", "none");
             }
         }
     }
@@ -214,7 +214,7 @@ export class CodingProgressTableController {
         return [k, v];
     }
 
-    static jsonToArray(json, tableSection="") {
+    static jsonToArray(json, tableSection = "") {
         let arr = [];
         for (const key in json) {
             // Filter columns
