@@ -20,6 +20,15 @@ class Controller {
             .addEventListener("click", Controller.navigateToSystems);
     }
 
+    static clearAllTimers() {
+        import("./traffic_graphs_controller.js").then(module => {
+            module.TrafficGraphsController.clearTimers();
+        });
+        import("./systems_graphs_controller.js").then(module => {
+            module.SystemsGraphsController.clearTimers();
+        });
+    }
+
     static resetActiveLink() {
         let elements = document.querySelectorAll(Controller.DOMstrings.activeLinks);
         elements.forEach((element) => {
