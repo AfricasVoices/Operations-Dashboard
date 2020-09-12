@@ -20,6 +20,15 @@ class Controller {
             .addEventListener("click", Controller.navigateToSystems);
     }
 
+    static clearAllTimers() {
+        import("./traffic_graphs_controller.js").then(module => {
+            module.TrafficGraphsController.clearTimers();
+        });
+        import("./systems_graphs_controller.js").then(module => {
+            module.SystemsGraphsController.clearTimers();
+        });
+    }
+
     static resetActiveLink() {
         let elements = document.querySelectorAll(Controller.DOMstrings.activeLinks);
         elements.forEach((element) => {
@@ -78,6 +87,7 @@ class Controller {
 
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
+            Controller.clearAllTimers();
             DataController.detachSnapshotListener();
             window.location.hash = "coding_progress";
             Controller.displayCodingProgress();
@@ -86,9 +96,7 @@ class Controller {
 
     static navigateToSelectedProject(e) {
         if (e.target && e.target.nodeName == "A") {
-            import("./traffic_graphs_controller.js").then(module => {
-                module.TrafficGraphsController.clearTimers();
-            });
+            Controller.clearAllTimers();
             DataController.detachSnapshotListener();
             console.log(e.target.innerText);
             let project = e.target.innerText;
@@ -99,9 +107,7 @@ class Controller {
 
     static navigateToSystems(e) {
         if (e.target && e.target.nodeName == "A") {
-            import("./systems_graphs_controller.js").then(module => {
-                module.SystemsGraphsController.clearTimers();
-            });
+            Controller.clearAllTimers();
             DataController.detachSnapshotListener();
             window.location.hash = "systems";
             Controller.displaySystems();
