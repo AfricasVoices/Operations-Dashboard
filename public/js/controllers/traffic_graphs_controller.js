@@ -9,9 +9,11 @@ export class TrafficGraphsController {
     }
 
     static updateGraphs(data, projectName, operators,  MNOColors) {
-        if (!(TrafficGraphsController.TIMEFRAME_WEEK && TrafficGraphsController.TIMEFRAME_MONTH)) {
-            TrafficGraphsController.TIMEFRAME_WEEK = 7; 
-            TrafficGraphsController.TIMEFRAME_MONTH = 30;
+        const TIMEFRAME_WEEK = 7;
+        const TIMEFRAME_MONTH = 30;
+        if (!(TrafficGraphsController.tenMinGraphTimeframe && TrafficGraphsController.oneDayGraphTimeframe)) {
+            TrafficGraphsController.tenMinGraphTimeframe = TIMEFRAME_WEEK; 
+            TrafficGraphsController.oneDayGraphTimeframe = TIMEFRAME_MONTH;
         }
         if (!TrafficGraphsController.chartTimeUnit) 
             TrafficGraphsController.chartTimeUnit = "10min";   
