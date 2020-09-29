@@ -41,7 +41,7 @@ export class TrafficGraphsController {
 
         // Set default y-axis limits
         let tenMinGraphFilteredData = data.filter(a => a.datetime > offsetTenMinGraph),
-            dataFilteredMonth = data.filter(a => a.datetime > offsetOneDayGraph);
+            oneDayGraphFilteredData = data.filter(a => a.datetime > offsetOneDayGraph);
 
         // Group received data by day
         let dailyReceivedTotal = d3
@@ -58,7 +58,7 @@ export class TrafficGraphsController {
                 receivedData["total_received"] = d3.sum(v, d => d.total_received);
                 return receivedData;
             })
-            .entries(dataFilteredMonth);
+            .entries(oneDayGraphFilteredData);
 
         // Flatten nested data for stacking
         for (let entry in dailyReceivedTotal) {
@@ -83,7 +83,7 @@ export class TrafficGraphsController {
                 sentData["total_sent"] = d3.sum(v, d => d.total_sent);
                 return sentData;
             })
-            .entries(dataFilteredMonth);
+            .entries(oneDayGraphFilteredData);
 
         // Flatten nested data for stacking
         for (let entry in dailySentTotal) {
@@ -105,7 +105,7 @@ export class TrafficGraphsController {
                 failedData["total_errored"] = d3.sum(v,d => d.total_errored);
                 return failedData;
             })
-            .entries(dataFilteredMonth);
+            .entries(oneDayGraphFilteredData);
 
         // Flatten nested data
         for (let entry in dailyFailedTotal) {
