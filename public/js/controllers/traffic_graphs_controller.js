@@ -27,17 +27,17 @@ export class TrafficGraphsController {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-        let offsetWeek = new Date(),
-            offsetMonth = new Date();
+        let offsetTenMinGraph = new Date(),
+            offsetOneDayGraph = new Date();
 
-        offsetWeek.setDate(offsetWeek.getDate() - TrafficGraphsController.TIMEFRAME_WEEK);
-        offsetMonth.setDate(offsetMonth.getDate() - TrafficGraphsController.TIMEFRAME_MONTH);
+        offsetTenMinGraph.setDate(offsetTenMinGraph.getDate() - TrafficGraphsController.tenMinGraphTimeframe);
+        offsetOneDayGraph.setDate(offsetOneDayGraph.getDate() - TrafficGraphsController.oneDayGraphTimeframe);
         // Set date offsets to nearest midnight in the past 
         /* The offset dates sometime don't begin at the start of the day; thus they leave 
             the rest of the day messages not to be included in the first bar of graph when
             plotting one day view graphs */
-        offsetWeek.setHours(0,0,0,0)
-        offsetMonth.setHours(0,0,0,0)
+        offsetTenMinGraph.setHours(0,0,0,0)
+        offsetOneDayGraph.setHours(0,0,0,0)
 
         // Set default y-axis limits
         let dataFilteredWeek = data.filter(a => a.datetime > offsetWeek),
