@@ -9,9 +9,11 @@ export class TrafficGraphsController {
     }
 
     static updateGraphs(data, projectName, operators,  MNOColors) {
-        if (!(TrafficGraphsController.TIMEFRAME_WEEK && TrafficGraphsController.TIMEFRAME_MONTH)) {
-            TrafficGraphsController.TIMEFRAME_WEEK = 7; 
-            TrafficGraphsController.TIMEFRAME_MONTH = 30;
+        const TIMEFRAME_WEEK = 7;
+        const TIMEFRAME_MONTH = 30;
+        if (!(TrafficGraphsController.tenMinGraphTimeframe && TrafficGraphsController.oneDayGraphTimeframe)) {
+            TrafficGraphsController.tenMinGraphTimeframe = TIMEFRAME_WEEK; 
+            TrafficGraphsController.oneDayGraphTimeframe = TIMEFRAME_MONTH;
         }
         if (!TrafficGraphsController.chartTimeUnit) 
             TrafficGraphsController.chartTimeUnit = "10min";   
@@ -25,21 +27,21 @@ export class TrafficGraphsController {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
-        let offsetWeek = new Date(),
-            offsetMonth = new Date();
+        let offsetTenMinGraph = new Date(),
+            offsetOneDayGraph = new Date();
 
-        offsetWeek.setDate(offsetWeek.getDate() - TrafficGraphsController.TIMEFRAME_WEEK);
-        offsetMonth.setDate(offsetMonth.getDate() - TrafficGraphsController.TIMEFRAME_MONTH);
+        offsetTenMinGraph.setDate(offsetTenMinGraph.getDate() - TrafficGraphsController.tenMinGraphTimeframe);
+        offsetOneDayGraph.setDate(offsetOneDayGraph.getDate() - TrafficGraphsController.oneDayGraphTimeframe);
         // Set date offsets to nearest midnight in the past 
         /* The offset dates sometime don't begin at the start of the day; thus they leave 
             the rest of the day messages not to be included in the first bar of graph when
             plotting one day view graphs */
-        offsetWeek.setHours(0,0,0,0)
-        offsetMonth.setHours(0,0,0,0)
+        offsetTenMinGraph.setHours(0,0,0,0)
+        offsetOneDayGraph.setHours(0,0,0,0)
 
         // Set default y-axis limits
-        let dataFilteredWeek = data.filter(a => a.datetime > offsetWeek),
-            dataFilteredMonth = data.filter(a => a.datetime > offsetMonth);
+        let tenMinGraphFilteredData = data.filter(a => a.datetime > offsetTenMinGraph),
+            oneDayGraphFilteredData = data.filter(a => a.datetime > offsetOneDayGraph);
 
         // Group received data by day
         let dailyReceivedTotal = d3
@@ -56,7 +58,7 @@ export class TrafficGraphsController {
                 receivedData["total_received"] = d3.sum(v, d => d.total_received);
                 return receivedData;
             })
-            .entries(dataFilteredMonth);
+            .entries(oneDayGraphFilteredData);
 
         // Flatten nested data for stacking
         for (let entry in dailyReceivedTotal) {
@@ -81,7 +83,7 @@ export class TrafficGraphsController {
                 sentData["total_sent"] = d3.sum(v, d => d.total_sent);
                 return sentData;
             })
-            .entries(dataFilteredMonth);
+            .entries(oneDayGraphFilteredData);
 
         // Flatten nested data for stacking
         for (let entry in dailySentTotal) {
@@ -103,7 +105,7 @@ export class TrafficGraphsController {
                 failedData["total_errored"] = d3.sum(v,d => d.total_errored);
                 return failedData;
             })
-            .entries(dataFilteredMonth);
+            .entries(oneDayGraphFilteredData);
 
         // Flatten nested data
         for (let entry in dailyFailedTotal) {
@@ -186,11 +188,11 @@ export class TrafficGraphsController {
             colorSent = d3.scaleOrdinal(mnoColorScheme).domain(sentKeys);
 
         let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
-            yLimitReceivedFiltered = d3.max(dataFilteredWeek, d => d.total_received),
+            yLimitReceivedFiltered = d3.max(tenMinGraphFilteredData, d => d.total_received),
             yLimitSent = d3.max(dailySentTotal, d => d.total_sent),
-            yLimitSentFiltered = d3.max(dataFilteredWeek, d => d.total_sent),
+            yLimitSentFiltered = d3.max(tenMinGraphFilteredData, d => d.total_sent),
             yLimitFailed = d3.max(dailyFailedTotal, d => d.total_errored),
-            yLimitFailedFiltered = d3.max(dataFilteredWeek, d => d.total_errored); 
+            yLimitFailedFiltered = d3.max(tenMinGraphFilteredData, d => d.total_errored); 
 
         // Draw graphs according to selected time unit
         if (TrafficGraphsController.chartTimeUnit == "1day") {
@@ -271,14 +273,14 @@ export class TrafficGraphsController {
         function draw10MinReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitReceivedManuallySet == false) {
-                yLimitReceived = d3.max(dataFilteredWeek, d => d.total_received);
+                yLimitReceived = d3.max(tenMinGraphFilteredData, d => d.total_received);
             }
 
             let stackReceived = d3.stack().keys(receivedKeys),
-                receivedDataStacked = stackReceived(dataFilteredWeek);
+                receivedDataStacked = stackReceived(tenMinGraphFilteredData);
 
             // set scale domains
-            x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+            x.domain(d3.extent(tenMinGraphFilteredData, d => new Date(d.datetime)));
             if (yLimitReceived > 0)
                 y_total_received_sms_range.domain([0, yLimitReceived]);
 
@@ -294,7 +296,7 @@ export class TrafficGraphsController {
                     firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
                     return firstTimestampOfDay
                 })
-                .entries(dataFilteredWeek);
+                .entries(tenMinGraphFilteredData);
 
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
@@ -343,7 +345,7 @@ export class TrafficGraphsController {
 
             receivedLayer10min
                 .selectAll("rect")
-                .data(dataFilteredWeek => dataFilteredWeek)
+                .data(tenMinGraphFilteredData => tenMinGraphFilteredData)
                 .enter()
                 .append("rect")
                 .attr("x", d => x(d.data.datetime))
@@ -352,7 +354,7 @@ export class TrafficGraphsController {
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(dataFilteredWeek).length);
+                .attr("width", Width / Object.keys(tenMinGraphFilteredData).length);
 
             // Add tooltip for the total received sms graph
             let tip;
@@ -575,14 +577,14 @@ export class TrafficGraphsController {
         function draw10MinSentGraph(yLimitSent) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitSentManuallySet == false) {
-                yLimitSent = d3.max(dataFilteredWeek, d => d.total_sent);
+                yLimitSent = d3.max(tenMinGraphFilteredData, d => d.total_sent);
             }
 
             let stackSent = d3.stack().keys(sentKeys),
-                sentDataStacked = stackSent(dataFilteredWeek);
+                sentDataStacked = stackSent(tenMinGraphFilteredData);
 
             // set scale domains
-            x.domain(d3.extent(dataFilteredWeek, d => new Date(d.datetime)));
+            x.domain(d3.extent(tenMinGraphFilteredData, d => new Date(d.datetime)));
             if (yLimitSent > 0)
                 y_total_sent_sms_range.domain([0, yLimitSent]);
 
@@ -599,7 +601,7 @@ export class TrafficGraphsController {
                     firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
                     return firstTimestampOfDay
                 })
-                .entries(dataFilteredWeek);
+                .entries(tenMinGraphFilteredData);
 
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
@@ -649,13 +651,13 @@ export class TrafficGraphsController {
 
             sentLayer10min
                 .selectAll("rect")
-                .data(dataFilteredWeek => dataFilteredWeek)
+                .data(tenMinGraphFilteredData => tenMinGraphFilteredData)
                 .enter()
                 .append("rect")
                 .attr("x", d => x(d.data.datetime))
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", Width / Object.keys(dataFilteredWeek).length);
+                .attr("width", Width / Object.keys(tenMinGraphFilteredData).length);
 
             // Add tooltip for the total received sms graph
             let tip;
@@ -909,7 +911,7 @@ export class TrafficGraphsController {
         }
 
         function draw10MinFailedGraph(yLimitFailed) {
-            let _10minFailedChartData = JSON.parse(JSON.stringify(dataFilteredWeek));
+            let _10minFailedChartData = JSON.parse(JSON.stringify(tenMinGraphFilteredData));
             _10minFailedChartData.forEach(function(d) {
                 d.datetime = new Date(d.datetime);
                 d.value = +d.total_errored;
@@ -970,11 +972,11 @@ export class TrafficGraphsController {
         d3.select("#timeFrame").on("change", function() {
             let timeFrame = this.options[this.selectedIndex].value;
             if (timeFrame == "default") {
-                TrafficGraphsController.TIMEFRAME_WEEK = 7; 
-                TrafficGraphsController.TIMEFRAME_MONTH = 30;
+                TrafficGraphsController.tenMinGraphTimeframe = TIMEFRAME_WEEK; 
+                TrafficGraphsController.oneDayGraphTimeframe = TIMEFRAME_MONTH;
                 TrafficGraphsController.updateGraphs(data, projectName, operators, MNOColors)
             } else {
-                TrafficGraphsController.TIMEFRAME_WEEK = TrafficGraphsController.TIMEFRAME_MONTH = timeFrame;
+                TrafficGraphsController.tenMinGraphTimeframe = TrafficGraphsController.oneDayGraphTimeframe = timeFrame;
                 TrafficGraphsController.updateGraphs(data, projectName, operators, MNOColors)
             }
         })
