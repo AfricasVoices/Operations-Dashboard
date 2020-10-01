@@ -45,7 +45,7 @@ export class CodingProgressTableController {
                 .data(CodingProgressTableController.jsonToArray(data[0]))
                 .enter()
                 .append("th")
-                .on("click", (d) => {
+                .on("click", (event, d) => {
                     CodingProgressTableController.saveSortInfo(d[0]);
                     let latestSortInfo = CodingProgressTableController.sortInfoArray.slice(-1)[0];
                     transform(d[0], latestSortInfo);
@@ -105,22 +105,20 @@ export class CodingProgressTableController {
             });
 
             // Attach event listeners to columns' checkbox & ability to filter table
-            d3.selectAll("input[type=checkbox]").each(function(d, i, n) {
-                d3.select(this).on("change", function() {
-                    if (d3.select(this).property("checked")) {
-                        CodingProgressTableController.selectedColumns = CodingProgressTableController.selectedColumns.filter(
-                            e => e !== this.nextElementSibling.innerText.trim());
-                        transform(column, sortInfo.order)
-                    } else {
-                        CodingProgressTableController.selectedColumns.push(this.nextElementSibling.innerText.trim())
-                        transform(column, sortInfo.order)
-                    }
-                });
+            d3.selectAll("input[type=checkbox]").on("change", (event, d) => {
+                if (d3.select(event.currentTarget).property("checked")) {
+                    CodingProgressTableController.selectedColumns = CodingProgressTableController.selectedColumns.filter(
+                        e => e !== event.currentTarget.nextElementSibling.innerText.trim());
+                    transform(column, sortInfo.order)
+                } else {
+                    CodingProgressTableController.selectedColumns.push(event.currentTarget.nextElementSibling.innerText.trim())
+                    transform(column, sortInfo.order)
+                }
             });
 
             // Enable the ability to filter table by selected keyword in dropdown menu 
-            d3.select("#keyword").on("change", function() {
-                CodingProgressTableController.keyword = this.options[this.selectedIndex].innerText.trim(); 
+            d3.select("#keyword").on("change", (event, d) => {
+                CodingProgressTableController.keyword = event.currentTarget.options[event.currentTarget.selectedIndex].innerText.trim(); 
                 transform(column, sortInfo.order);
             });
 
