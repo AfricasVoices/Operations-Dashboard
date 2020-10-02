@@ -288,9 +288,9 @@ export class AreaChart extends GraphLayout {
         this.idleTimeout = null;
     }
 
-    updateChart() {
+    updateChart(event) {
         // What are the selected boundaries?
-        this.extent = d3.event.selection;
+        this.extent = event.selection;
 
         // If no selection, back to initial coordinate. Otherwise, update X axis domain
         if (!this.extent) {
