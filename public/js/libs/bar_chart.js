@@ -154,26 +154,41 @@ export class BarChart extends GraphLayout {
 
     addTooltip() {
         // Add tooltip for the total failed sms graph
-        let tip;
+        const tip = d3
+            .select("body")
+            .append("div")
+            .attr("class", "card")
+            .style("padding", "4px") // Add some padding so the tooltip content doesn't touch the border of the tooltip
+            .style("position", "absolute") // Absolutely position the tooltip to the body. Later we'll use transform to adjust the position of the tooltip
+            .style("left", 0)
+            .style("top", 0)
+            .style("background", "whitesmoke")
+            .style("border-radius", "8px")
+            .style("visibility", "hidden");
         this.plot
             .selectAll("rect")
-            .on("mouseover", (d, i, n) => {
-                let barColor = d3.select(n[i]).style("fill");
-                tip = d3
-                    .tip()
-                    .attr("class", "tooltip")
-                    .html((d) => {
-                        let toolTipText = d.value;
-                        if (this.config.setFailedMsgGraphTooltipText)
-                            toolTipText = this.setFailedMsgGraphTooltipText(d);
-                        return toolTipText;
-                    });
-                this.plot.call(tip);
-                tip.show(d, n[i]).style("color", barColor);
+            .on("mouseover", (event, d) => {
+                let barColor = d3.select(event.currentTarget).style("fill");
+                let tooltipContent = d.value;
+                if (this.config.setFailedMsgGraphTooltipText) {
+                    tooltipContent = this.setFailedMsgGraphTooltipText(d);
+                }
+                tip.html(tooltipContent)
+                    .style("color", barColor)
+                    .style("font-size", "12px")
+                    .style("font-weight", "600")
+                    .style("font-family", "'Montserrat', sans-serif")
+                    .style("box-shadow", `2px 2px 4px -1px ${barColor}`)
+                    .style("visibility", "visible");
+                d3.select(event.currentTarget).transition().duration(10).attr("opacity", 0.8);
             })
-            .on("mouseout", (d, i, n) => {
-                tip.hide(d, n[i]);
-            });
+            .on("mouseout", (event, d) => {
+                tip.style("visibility", "hidden");
+                d3.select(event.currentTarget).transition().duration(10).attr("opacity", 1);
+            })
+            .on("mousemove", (event, d) => {
+                tip.style("transform", `translate(${event.pageX}px, ${event.pageY - 40}px)`); // We can calculate the mouse's position relative the whole page by using event.pageX and event.pageY.
+            })
     }
 
     addLegend() {
