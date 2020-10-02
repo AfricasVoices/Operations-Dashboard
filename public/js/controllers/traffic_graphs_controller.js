@@ -45,9 +45,7 @@ export class TrafficGraphsController {
 
         // Group received data by day
         let dailyReceivedTotal = d3
-            .nest()
-            .key(d => d.day)
-            .rollup(v => {
+            .rollup(oneDayGraphFilteredData, v => {
                 let receivedData = {};
                 operators.forEach(operator => {
                     receivedData[`${operator}_received`] = d3.sum(
@@ -57,8 +55,9 @@ export class TrafficGraphsController {
                 });
                 receivedData["total_received"] = d3.sum(v, d => d.total_received);
                 return receivedData;
-            })
-            .entries(oneDayGraphFilteredData);
+            }, d => d.day)
+        // Convert Map to array of object
+        dailyReceivedTotal = Array.from(dailyReceivedTotal, ([key, value]) => ({ key, value }));
 
         // Flatten nested data for stacking
         for (let entry in dailyReceivedTotal) {
@@ -73,17 +72,16 @@ export class TrafficGraphsController {
 
         // Group sent data by day
         let dailySentTotal = d3
-            .nest()
-            .key(d => d.day)
-            .rollup(v => {
+            .rollup(oneDayGraphFilteredData, v => {
                 let sentData = {};
                 operators.forEach(operator => {
                     sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
                 });
                 sentData["total_sent"] = d3.sum(v, d => d.total_sent);
                 return sentData;
-            })
-            .entries(oneDayGraphFilteredData);
+            }, d => d.day)
+        // Convert Map to array of object
+        dailySentTotal = Array.from(dailySentTotal, ([key, value]) => ({ key, value }));
 
         // Flatten nested data for stacking
         for (let entry in dailySentTotal) {
@@ -98,14 +96,13 @@ export class TrafficGraphsController {
 
         // Group failed data by day
         let dailyFailedTotal = d3
-            .nest()
-            .key(d => d.day)
-            .rollup(v => {
+            .rollup(oneDayGraphFilteredData, v => {
                 let failedData = {};
                 failedData["total_errored"] = d3.sum(v,d => d.total_errored);
                 return failedData;
-            })
-            .entries(oneDayGraphFilteredData);
+            }, d => d.day)
+        // Convert Map to array of object
+        dailyFailedTotal = Array.from(dailyFailedTotal, ([key, value]) => ({ key, value }));
 
         // Flatten nested data
         for (let entry in dailyFailedTotal) {
@@ -302,13 +299,14 @@ export class TrafficGraphsController {
             d3.selectAll(".receivedGrid").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
-            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
-                .rollup(v => {
+            let dataFilteredWeekGroupedDaily = d3
+                .rollup(tenMinGraphFilteredData, v => {
                     let firstTimestampOfDay = {}
                     firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
                     return firstTimestampOfDay
-                })
-                .entries(tenMinGraphFilteredData);
+                }, d => d.day)
+            // Convert Map to array of object
+            dataFilteredWeekGroupedDaily = Array.from(dataFilteredWeekGroupedDaily, ([key, value]) => ({ key, value }));
 
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
@@ -614,13 +612,14 @@ export class TrafficGraphsController {
             d3.selectAll(".sentGrid").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
-            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
-                .rollup(v => {
+            let dataFilteredWeekGroupedDaily = d3
+                .rollup(tenMinGraphFilteredData, v => {
                     let firstTimestampOfDay = {}
                     firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
                     return firstTimestampOfDay
-                })
-                .entries(tenMinGraphFilteredData);
+                }, d => d.day)
+            // Convert Map to array of object
+            dataFilteredWeekGroupedDaily = Array.from(dataFilteredWeekGroupedDaily, ([key, value]) => ({ key, value }));
 
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
@@ -945,13 +944,14 @@ export class TrafficGraphsController {
                 yLimitFailed = d3.max(_10minFailedChartData, d => d.value);
             }
             // Group data filtered by week daily and generate tick values for x axis
-            let dataFilteredWeekGroupedDaily  = d3.nest().key(d => d.day)
-                .rollup(v => {
+            let dataFilteredWeekGroupedDaily = d3
+                .rollup(_10minFailedChartData, v => {
                     let firstTimestampOfDay = {}
                     firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
                     return firstTimestampOfDay
-                })
-                .entries(_10minFailedChartData);
+                }, d => d.day)
+            // Convert Map to array of object
+            dataFilteredWeekGroupedDaily = Array.from(dataFilteredWeekGroupedDaily, ([key, value]) => ({ key, value }));
 
             // Flatten nested data
             for (let entry in dataFilteredWeekGroupedDaily) {
