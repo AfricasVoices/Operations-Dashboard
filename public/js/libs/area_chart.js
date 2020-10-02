@@ -166,9 +166,7 @@ export class AreaChart extends GraphLayout {
         this.plot
             .on("mouseover", () => this.focus.style("display", null))
             .on("mouseout", () => this.focus.style("display", "none"))
-            .on("mousemove", function () {
-                vis.tipMove(this);
-            });
+            .on("mousemove", (event) => this.tipMove(event));
 
         // Select focus objects and set opacity
         d3.selectAll(`.${this.id}focus`).style("opacity", 0.9);
