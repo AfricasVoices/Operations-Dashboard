@@ -182,7 +182,7 @@ export class AreaChart extends GraphLayout {
     tipMove(event) {
         // Below code finds the date by bisecting and
         // Stores the x and y coordinate as variables
-        let x0 = this.xScale.invert(d3.pointer(selection)[0]);
+        let x0 = this.xScale.invert(d3.pointer(event)[0]);
         // This will select the closest date on the x axiswhen a user hover over the chart
         let bisectDate = d3.bisector(function (d) {
             return d.datetime;
