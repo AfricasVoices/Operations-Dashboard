@@ -179,7 +179,7 @@ export class AreaChart extends GraphLayout {
     }
 
     // Function that adds tooltip on hover
-    tipMove(selection) {
+    tipMove(event) {
         // Below code finds the date by bisecting and
         // Stores the x and y coordinate as variables
         let x0 = this.xScale.invert(d3.pointer(selection)[0]);
