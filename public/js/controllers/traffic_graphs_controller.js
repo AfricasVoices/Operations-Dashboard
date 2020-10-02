@@ -148,6 +148,18 @@ export class TrafficGraphsController {
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
             y_total_sent_sms_range = d3.scaleLinear().range([Height, 0]);
 
+        const tip = d3
+            .select("body")
+            .append("div")
+            .attr("class", "card")
+            .style("padding", "4px") // Add some padding so the tooltip content doesn't touch the border of the tooltip
+            .style("position", "absolute") // Absolutely position the tooltip to the body. Later we'll use transform to adjust the position of the tooltip
+            .style("left", 0)
+            .style("top", 0)
+            .style("background", "whitesmoke")
+            .style("border-radius", "8px")
+            .style("visibility", "hidden");
+
         // Append total received sms graph to svg
         let total_received_sms_graph = d3
                 .select(".total_received_sms_graph")
