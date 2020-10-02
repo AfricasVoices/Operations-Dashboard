@@ -163,7 +163,6 @@ export class AreaChart extends GraphLayout {
             .attr("font-size", "12px")
             .style("fill", this.color);
 
-        let vis = this;
         this.plot
             .on("mouseover", () => this.focus.style("display", null))
             .on("mouseout", () => this.focus.style("display", "none"))
