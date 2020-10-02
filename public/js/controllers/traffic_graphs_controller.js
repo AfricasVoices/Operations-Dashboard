@@ -369,34 +369,38 @@ export class TrafficGraphsController {
                 .attr("width", Width / Object.keys(tenMinGraphFilteredData).length);
 
             // Add tooltip for the total received sms graph
-            let tip;
             receivedLayer10min
                 .selectAll("rect")
-                .on("mouseover", (d, i, n) => {
+                .on("mouseover", (event, d) => {
                     // Get key of stacked data from the selection
-                    let operatorNameWithMessageDirection = d3.select(n[i].parentNode).datum().key,
+                    let operatorNameWithMessageDirection = d3.select(event.currentTarget.parentNode).datum().key,
                         // Get operator name from the key
                         operatorName = operatorNameWithMessageDirection.replace('_received',''),
                         // Get color of hovered rect
-                        operatorColor = d3.select(n[i]).style("fill");
-                    tip = d3.tip()
-                        .attr("class", "tooltip")
-                        .attr("id", "tooltip")
-                        .html(d => { 
-                            let receivedMessages = d.data[operatorNameWithMessageDirection],
-                                totalReceivedMessages = d.data.total_received,
-                                receivedDay = d.data.datetime,
-                                // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
-                                tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
-                            return tooltipContent += `<div>${receivedMessages} 
-                                (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
-                                Message${receivedMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(receivedDay))}</div>`;
-                    })
-                    total_received_sms_graph.call(tip)
-                    tip.show(d, n[i]).style("color", operatorColor)
+                        operatorColor = d3.select(event.currentTarget).style("fill");
+                    let receivedMessages = d.data[operatorNameWithMessageDirection],
+                        totalReceivedMessages = d.data.total_received,
+                        receivedDay = d.data.datetime,
+                        // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
+                        tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
+                        tooltipContent += `<div>${receivedMessages} 
+                        (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
+                        Message${receivedMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(receivedDay))}</div>`;
+                    tip.html(tooltipContent)
+                        .style("color", operatorColor)
+                        .style("font-size", "12px")
+                        .style("font-weight", "600")
+                        .style("font-family", "'Montserrat', sans-serif")
+                        .style("box-shadow", `2px 2px 4px -1px ${operatorColor}`)
+                        .style("visibility", "visible");
+                    d3.select(event.currentTarget).transition().duration(10).attr("opacity", 0.8);
                 })
-                .on("mouseout", (d, i, n) => {
-                    tip.hide()
+                .on("mouseout", (event, d) => {
+                    tip.style("visibility", "hidden");
+                    d3.select(event.currentTarget).transition().duration(10).attr("opacity", 1);
+                })
+                .on("mousemove", (event, d) => {
+                    tip.style("transform", `translate(${event.pageX}px, ${event.pageY - 60}px)`); // We can calculate the mouse's position relative the whole page by using event.pageX and event.pageY.
                 })
 
             //Add the X Axis for the total received sms graph
