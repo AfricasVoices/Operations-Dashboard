@@ -220,7 +220,7 @@ export class CodingProgressTableController {
             // Filter rows
             if (tableSection == "td") {
                 if (CodingProgressTableController.keyword != "") {
-                    const terms = CodingProgressTableController.keyword.split(/_|-| /).map(v => v.toLowerCase()),
+                    const terms = CodingProgressTableController.keyword.split(/_|-|[+]| /).map(v => v.toLowerCase()),
                         dataset = json["Dataset"].toLowerCase(),
                         filter_result = terms.every(term => dataset.includes(term));
                     if (!filter_result) continue
