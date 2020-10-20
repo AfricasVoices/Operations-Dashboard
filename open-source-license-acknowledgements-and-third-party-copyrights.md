@@ -16,12 +16,6 @@ License: MIT<br/>
 https://github.com/jquery/jquery/blob/master/LICENSE.txt<br/> 
 Copyright JS Foundation and other contributors, https://js.foundation/
 
-### Bootstrap - front-end framework
-License: MIT<br/> 
-https://github.com/twbs/bootstrap/blob/master/LICENSE<br/> 
-Copyright (c) 2011-2019 Twitter, Inc.<br/> 
-Copyright (c) 2011-2019 The Bootstrap Authors
-
 ### Font awesome
 License: Font Awesome Free License<br/> 
 https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt
