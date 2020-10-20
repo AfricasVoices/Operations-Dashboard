@@ -11,11 +11,6 @@ License: Apache License 2.0<br/>
 https://github.com/susielu/d3-legend/blob/master/LICENSE<br/> 
 Copyright (c) 2015, Susie Lu
 
-### jQuery
-License: MIT<br/> 
-https://github.com/jquery/jquery/blob/master/LICENSE.txt<br/> 
-Copyright JS Foundation and other contributors, https://js.foundation/
-
 ### Font awesome
 License: Font Awesome Free License<br/> 
 https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt
