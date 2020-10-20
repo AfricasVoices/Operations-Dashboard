@@ -18,7 +18,7 @@ export class GraphLayout {
         // We'll actually be appending to a <g> element
         this.plot = svg
             .append("g")
-            .attr("transform", `translate(${this.margin.left},${this.margin.top})`);
+            .attr("transform", `translate(${this.margin.left + 50},${this.margin.top})`);
     }
 
     addLabels() {
