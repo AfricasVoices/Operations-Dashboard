@@ -266,8 +266,10 @@ export class UIController {
         let html = `<section> 
             <div class="system-metrics">
                 <ul class="system-metrics__items">
-                    <li class="traffic-metrics__label">Last Updated:</li>
-                    <li class="traffic-metrics__text" id="lastUpdated"></li>
+                    <div class="system-metrics__group">
+                        <div class="system-metrics__label">Last Updated:</div>
+                        <div class="system-metrics__text" id="lastUpdated"></div>
+                    </div>
                 </ul>
             </div> 
             <div class="system-metrics__charts">
