@@ -263,21 +263,19 @@ export class UIController {
 
     static addSystemsGraphs() {
         UIController.resetUI();
-        let html = `<div class="container"> 
-            <section class="d-flex justify-content-end">
-                <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
-                <div class="font-weight-bold mb-0" id="lastUpdated"></div>
-            </section>
-            <section>
-                <div class="card shadow disc-usage-chart my-1"></div>
-            </section> 
-            <section>
-                <div class="card shadow memory-utilization-chart my-1"></div>
-            </section> 
-            <section>
-                <div class="card shadow cpu-utilization-chart my-1"></div>
-            </section> 
-        </div> `;
+        let html = `<section> 
+            <div class="system-metrics">
+                <ul class="system-metrics__items">
+                    <li class="traffic-metrics__label">Last Updated:</li>
+                    <li class="traffic-metrics__text" id="lastUpdated"></li>
+                </ul>
+            </div> 
+            <div class="system-metrics__charts">
+                <div class="disc-usage-chart"></div>
+                <div class="memory-utilization-chart"></div>
+                <div class="cpu-utilization-chart"></div> 
+            </div>
+        </section> `;
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
 }
