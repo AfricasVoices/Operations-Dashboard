@@ -11,9 +11,12 @@ export class GraphLayout {
 
         // Set up parent element and SVG
         this.element.innerHTML = "";
-        const svg = d3.select(this.element).append("svg");
-        svg.attr("width", this.width + this.margin.left + this.margin.right + 120);
-        svg.attr("height", this.height + this.margin.top + this.margin.bottom);
+        const svg = d3.select(this.element).append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox","0 0 1080 500")
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g");
 
         // We'll actually be appending to a <g> element
         this.plot = svg
