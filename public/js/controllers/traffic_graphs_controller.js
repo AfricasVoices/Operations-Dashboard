@@ -158,23 +158,23 @@ export class TrafficGraphsController {
             .style("visibility", "hidden");
 
         // Append total received sms graph to svg
-        let total_received_sms_graph = d3
-                .select(".total_received_sms_graph")
-                .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Append total sent sms graph to svg
-            total_sent_sms_graph = d3
-                .select(".total_sent_sms_graph")
-                .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Format TimeStamp
-            timeFormat = d3.timeFormat("%Y-%m-%d");
+        let total_received_sms_graph = d3.select(".total_received_sms_graph").append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", "-95 -40 1080 500")
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g");
+
+        // Append total sent sms graph to svg
+        let total_sent_sms_graph = d3.select(".total_sent_sms_graph").append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", "-95 -40 1080 500")
+            .attr('preserveAspectRatio','xMinYMin')
+            .append("g");
+
+        // Format TimeStamp
+        let timeFormat = d3.timeFormat("%Y-%m-%d");
 
         let mnoColorScheme = [],
             operatorsWithColorIdentity = Object.keys(MNOColors);
