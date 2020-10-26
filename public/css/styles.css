@@ -225,6 +225,14 @@ body {
     display: none;
 }
 
+.responsive-container {
+    overflow-x:auto;
+}
+
+.main-container {
+    padding: .5rem 0;
+}
+
 .navbar {
     box-shadow: 0 2px 2px -2px steelblue;
 }
@@ -518,5 +526,9 @@ th:hover {
 
     .main-header__brand--logo-2, .toggle-button {
         display: none;
+    }
+
+    .main-container {
+        padding: .5rem 4rem;
     }
 }
