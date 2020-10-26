@@ -233,45 +233,10 @@ body {
     padding: .5rem 0;
 }
 
-.navbar {
-    box-shadow: 0 2px 2px -2px steelblue;
-}
-.navbar-brown {
-    color: #8d3538;
-}
-.nav-link {
-    color: #8d3538;
-}
-.nav-link:hover {
-    color: steelblue;
-    cursor: pointer;
-}
-.traffics-link,
-.systems-link,
-.coding-progress-link {
-    margin-left: -1px;
-}
-.dropdown-menu {
-    padding: 0px;
-    border: 1px solid steelblue;
-    border-bottom: none;
-}
-.dropdown-item {
-    border-bottom: 1px solid steelblue;
-}
-.dropdown-item:hover {
-    cursor: pointer;
-}
-.form-check.dropdown-item:hover {
-    cursor: auto;
-}
-.form-check.dropdown-item:active {
-    color: #212529;
-    background-color: transparent;
-}
-.form-check-input:hover {
-    cursor: pointer;
-}
+
+
+
+
 .active-link {
     border-bottom: 2px #8d3538 solid;
     padding-bottom: 6px;
