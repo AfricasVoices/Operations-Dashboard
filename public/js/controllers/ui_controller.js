@@ -46,69 +46,68 @@ export class UIController {
     static addCodingProgressSection() {
         UIController.resetUI();
         document.head.appendChild(UIController.getScrollJsScript());
-        let html = `<div class="container container-fluid table-responsive">
-                <div class="d-flex justify-content-start m-1">
-                    <div class="dropdown">
-                        <button class="btn btn-brown shadow-none dropdown-toggle btn-sm mr-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Filter by Columns
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <form>
-                                <div class="form-check dropdown-item">
-                                    <input id="unique-texts" class="form-check-input" type="checkbox">
-                                    <label for="unique-texts" class="form-check-label">Unique Texts</label>
-                                </div>
-                                <div class="form-check dropdown-item">
-                                    <input id="unique-texts-labels" class="form-check-input" type="checkbox">
-                                    <label for="unique-texts-labels" class="form-check-label">Unique Texts with a label</label>
-                                </div>
-                                <div class="form-check dropdown-item">
-                                    <input id="done" class="form-check-input" type="checkbox">
-                                    <label for="done" class="form-check-label">Done</label>
-                                </div>
-                                <div class="form-check dropdown-item">
-                                    <input id="wrong-scheme-messages" class="form-check-input" type="checkbox">
-                                    <label for="wrong-scheme-messages" class="form-check-label">Wrong Scheme messages</label>
-                                </div>
-                                <div class="form-check dropdown-item">
-                                    <input id="ws" class="form-check-input" type="checkbox">
-                                    <label for="ws" class="form-check-label">WS %</label>
-                                </div>
-                                <div class="form-check dropdown-item">
-                                    <input id="not-coded-messages" class="form-check-input" type="checkbox">
-                                    <label for="not-coded-messages" class="form-check-label">Not Coded messages</label>
-                                </div>
-                                <div class="form-check dropdown-item">
-                                    <input id="NC" class="form-check-input" type="checkbox">
-                                    <label for="NC" class="form-check-label">NC %</label>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-            
-                    <select class="btn-brown form-control form-control-sm shadow-none col-2 ml-2" id="keyword"></select>
-                    <div class="input-group col-3">
-                        <input type="text" class="form-control form-control-sm shadow-none" id="input-keyword" value="" placeholder="Enter keyword...">
-                        <div class="input-group-append">
-                            <button class="btn btn-brown btn-sm form-control form-control-sm shadow-none" type="button" id="search">search</button>
-                        </div>
-                    </div>
-                    <div><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
+        let html = `<div>
+                <div class="coding-progress-bar">
+                    <ul class="coding-progress-bar__items">
+                        <li class="coding-progress-bar__item filter-columns">
+                            <a class="btn" href="#">Filter by Columns <i class="fas fa-caret-down"></i></a>
+                            <ul class="coding-progress-bar__dropdown-menu">
+                                <li class="coding-progress-bar__dropdown-item">
+                                    <input id="unique-texts" class="coding-progress-bar__check-input" type="checkbox">
+                                    <label for="unique-texts" class="coding-progress-bar__check-label">Unique Texts</label>
+                                </li>
+                                <li class="coding-progress-bar__dropdown-item">
+                                    <input id="unique-texts-labels" class="coding-progress-bar__check-input" type="checkbox">
+                                    <label for="unique-texts-labels" class="coding-progress-bar__check-label">Unique Texts with a label</label>
+                                </li>
+                                <li class="coding-progress-bar__dropdown-item">
+                                    <input id="done" class="coding-progress-bar__check-input" type="checkbox">
+                                    <label for="done" class="coding-progress-bar__check-label">Done</label>
+                                </li>
+                                <li class="coding-progress-bar__dropdown-item">
+                                    <input id="wrong-scheme-messages" class="coding-progress-bar__check-input" type="checkbox">
+                                    <label for="wrong-scheme-messages" class="coding-progress-bar__check-label">Wrong Scheme messages</label>
+                                </li>
+                                <li class="coding-progress-bar__dropdown-item">
+                                    <input id="ws" class="coding-progress-bar__check-input" type="checkbox">
+                                    <label for="ws" class="coding-progress-bar__check-label">WS %</label>
+                                </li>
+                                <li class="coding-progress-bar__dropdown-item">
+                                    <input id="not-coded-messages" class="coding-progress-bar__check-input" type="checkbox">
+                                    <label for="not-coded-messages" class="coding-progress-bar__check-label">Not Coded messages</label>
+                                </li>
+                                <li class="coding-progress-bar__dropdown-item">
+                                    <input id="NC" class="coding-progress-bar__check-input" type="checkbox">
+                                    <label for="NC" class="coding-progress-bar__check-label">NC %</label>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="coding-progress-bar__item">
+                            <select id="keyword"></select>
+                        </li>
+                        <li class="coding-progress-bar__item">
+                            <div class="coding-progress-bar__group">
+                                <input class="coding-progress-bar__input" type="text" id="input-keyword" value="" placeholder="Enter keyword...">
+                                <button class="coding-progress-bar__button" id="search"><i class="fas fa-search"></i></button>
+                            </div>
+                        <li>
+                        <li class="coding-progress-bar__item">
+                            <a class="btn" id="reset" href="#">View All</a>
+                        </li>
+                        <li class="coding-progress-bar__item coding-progress-bar__item--end">
+                            <div class="coding-progress-bar__group">
+                                <div class="coding-progress-bar__label">Last Updated:</div>
+                                <div class="coding-progress-bar__text" id="last-update"></div>
+                            </div>
+                        <li>
+                    </ul>
                 </div>
             
-                <table id='codingtable' class='table'>
-                    <thead></thead>
-                    <tbody id="coding-status-body"></tbody>
-                </table>
-                <div id="last-update">Last updated: </div>
-                <div class="accordion" id="accordionExample">
-                    <div class="card">
-                        <div id="headingOne">
-                            <h2 class="mb-0">
-                                <button class="btn btn-brown shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Message Coding Table Header Definitions
-                                </button>
-                            </h2>
+                <div class="table-responsive">
+                    <table id='codingtable' class="table">
+                        <thead></thead>
+                        <tbody id="coding-status-body"></tbody>
+                    </table>
                         </div>
                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
