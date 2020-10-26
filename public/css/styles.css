@@ -160,6 +160,21 @@ body {
     border-radius: .2rem;
 }
 
+.mobile-nav__item a {
+    font-size: 1.5rem;
+}
+
+.mobile-nav__item select {
+    color: #8d3538;
+    outline: none;
+    min-width: fit-content;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    border: none;
+    font-size: 1.25rem;
+    background-color: transparent;
+    margin: auto;
+}
+
 .main-nav__dropdown-menu {
     display: none;
 }
