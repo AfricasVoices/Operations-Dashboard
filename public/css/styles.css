@@ -386,6 +386,10 @@ body {
     text-align: center;
 }
 
+.coding-progress-table thead > tr > th:hover {
+    cursor: pointer;
+}
+
 .coding-progress-table thead > tr > th:first-of-type {
     text-align: initial;
 }
