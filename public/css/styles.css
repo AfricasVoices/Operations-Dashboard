@@ -116,6 +116,18 @@ body {
     display: flex;
 }
 
+.mobile-nav__items {
+    width: 90%;
+    height: 100%;
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .main-nav__item {
     padding: .5rem .5rem;
     min-width: fit-content;
