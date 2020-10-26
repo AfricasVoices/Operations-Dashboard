@@ -14,8 +14,9 @@ export class UIController {
     }
 
     static addDropdownMenu(data) {
-        const DOMstrings = UIController.getDOMstrings(),
-            statusMenu = document.querySelector(DOMstrings.projectMenu);
+        const DOMstrings = UIController.getDOMstrings();
+        const statusMenu = document.querySelector(DOMstrings.projectMenu);
+        const mobileStatusMenu = document.querySelector(DOMstrings.mobileProjectMenu);
         if (statusMenu) {
             while (statusMenu.firstChild) {
                 statusMenu.removeChild(statusMenu.firstChild);
@@ -27,6 +28,19 @@ export class UIController {
                 statusMenu.insertAdjacentHTML("beforeend", newHtml);
             });
         }
+        if (mobileStatusMenu) {
+            while (mobileStatusMenu.firstChild) {
+                mobileStatusMenu.removeChild(mobileStatusMenu.firstChild);
+            }
+            let html = `<option>%project_name%</option>`;
+            // Replace the placeholder text with some actual data
+            data.forEach((obj) => {
+                let newHtml = html.replace("%project_name%", obj.project_name);
+                mobileStatusMenu.insertAdjacentHTML("beforeend", newHtml);
+            });
+            mobileStatusMenu.insertAdjacentHTML("afterbegin", "<option selected disabled>SELECT TRAFFIC :</option>");
+        }
+        
     }
 
     static resetUI() {
