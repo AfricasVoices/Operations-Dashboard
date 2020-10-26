@@ -94,6 +94,10 @@ body {
     outline: none;
 }
 
+.main-nav {
+    display: none;
+}
+
 .navbar {
     box-shadow: 0 2px 2px -2px steelblue;
 }
