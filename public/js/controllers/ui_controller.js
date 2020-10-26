@@ -121,11 +121,11 @@ export class UIController {
                 </div>
             
                 <div class="table-responsive">
-                    <table id='codingtable' class="table">
+                    <table id="codingtable" class="coding-progress-table">
                         <thead></thead>
-                        <tbody id="coding-status-body"></tbody>
+                        <tbody></tbody>
                     </table>
-                        </div>
+                </div>
                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
                             <table class="table table-bordered table-hover shadow">
