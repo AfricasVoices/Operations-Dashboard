@@ -602,9 +602,11 @@ body {
 .text-stale-info {
     color: #000000;
 }
+
 .alert-stale-info {
     background-color: #f08080;
 }
+
 .tooltip {	
     position: absolute;		
     text-align: center;			
@@ -614,9 +616,7 @@ body {
     border-radius: 8px;			
     pointer-events: none;			
 }
-th:hover {
-    cursor: pointer;
-}
+
 .receivedGrid line,
 .sentGrid line,
 #failedGrid line {
