@@ -515,6 +515,37 @@ body {
     background: transparent;
     height: 2rem;
 }
+
+.traffic-metrics-charts > div {
+    margin: .5rem auto;
+    box-shadow: 0 .25rem .5rem 0 rgba(0, 0, 0, 0.2);
+    max-width: 93.75rem;
+}
+
+.traffic-metrics-charts > div:hover {
+    box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, 0.2);
+}
+
+.traffic-metrics-chart__ctrl {
+    max-width: 93.75rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: .5rem;
+    background: #f8f8f8;
+}
+
+.traffic-metrics-chart__input {
+    background: white;
+    color: #8d3538;
+    padding: .5rem .25rem;
+    margin: 0 1rem;
+    text-align: center;
+    border-radius: .125rem;
+    border: .0625rem solid #8d3538;
+}
+
+
+
 .text-stale-info {
     color: #000000;
 }
@@ -642,5 +673,9 @@ th:hover {
 
     .traffic-metrics__group {
         min-width: min-content;
+    }
+
+    .traffic-metrics-chart__ctrl {
+        padding: .2rem 4rem;
     }
 }
