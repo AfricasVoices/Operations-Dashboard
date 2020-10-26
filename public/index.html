@@ -14,32 +14,55 @@
     <script src="js/libs/firebase.js"></script>
 </head>
 <body>
-    <!-- NAVBAR WITH DROPDOWN & RESPONSIVE TOGGLE-->
-    <nav class="navbar navbar-expand-sm navbar-brown bg-white mb-1 py-0">
-        <div class="container">
-            <a class="navbar-brand" href="#"><img class="logo" src="images/avfdashboardlogo.png" alt="avf-logo"></a>
-            <!-- TOGGLE TRIGGER FOR SMALL DEVICES -->
-            <button class="navbar-light navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- RESPONSIVE TOGGLE -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li><a class="coding-progress-link nav-link border-left border-top border-right">MESSAGE CODING</a></li>
-                    <li class="nav-item dropdown">
-                        <!-- DROPDOWN TRIGGER -->
-                        <a href="#" class="traffics-link nav-link border-left border-top border-right dropdown-toggle" data-toggle="dropdown">TRAFFIC</a> 
-                        <!-- DROPDOWN MENU
-                        Display dropdown menu here -->
-                        <div class="dropdown-menu project-menu"></div>
-                    </li> 
-                    <li><a class="systems-link nav-link border-left border-top border-right">SYSTEMS</a></li>
-                    <li class="px-2 pt-1 border-top border-right"><button class="logout-btn btn btn-brown btn-sm shadow">Logout<i class="fas fa-sign-out-alt mx-2"></i></button></li>
-                </ul>
-            </div>
+    <div class="backdrop"></div>
+    <header class="main-header">
+        <div>
+            <a href="index.html" class="main-header__brand main-header__brand--logo-1">
+                <img src="images/avfdashboardlogo.png" alt="avf - Operations Dashboard">
+            </a>
+            <a href="index.html" class="main-header__brand main-header__brand--logo-2">
+                <img src="images/avficon.png" alt="avf - Operations Dashboard">
+            </a>
         </div>
-    </nav> 
-    <main class="main-container"></main>
+        <button class="toggle-button"><i class="fas fa-bars fa-2x"></i></button>
+        <nav class="main-nav">
+            <ul class="main-nav__items">
+                <li class="main-nav__item" id="coding-progress">
+                    <a href="javascript:void(0);">MESSAGE CODING</a>
+                </li>
+                <li class="main-nav__item" id="traffic-metrics">
+                    <a href="javascript:void(0);">TRAFFIC <i class="fas fa-caret-down"></i></a>
+                    <ul class="main-nav__dropdown-menu" id="traffic-metrics-menu"></ul>
+                </li>
+                <li class="main-nav__item" id="system-metrics">
+                    <a href="javascript:void(0);">SYSTEMS</a>
+                </li>
+                <li class="main-nav__item main-nav__item--logout logout">
+                    <a href="javascript:void(0);">Logout <i class="fas fa-sign-out-alt"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <nav class="mobile-nav">
+        <div class="close-button topright">&times;</div>
+        <ul class="mobile-nav__items">
+            <li class="mobile-nav__item" id="mobile-coding-progress">
+                <a href="javascript:void(0);">MESSAGE CODING</a>
+            </li>
+            <li class="mobile-nav__item" id="mobile-nav__traffic-metrics">
+                <select id="mobile-traffic-metrics-menu" style="padding: 4px;"></select> 
+            </li>
+            <li class="mobile-nav__item" id="mobile-system-metrics">
+                <a href="javascript:void(0);">SYSTEMS</a>
+            </li>
+            <li class="mobile-nav__item mobile-nav__item--logout logout">
+                <a href="javascript:void(0);">Logout <i class="fas fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
+    </nav>
+    <div class="responsive-container">
+        <main class="main-container" id="main"></main>
+    </div>
     <script src="vendor/d3-6.1.1/d3.min.js"></script>
     <script src="vendor/d3-legend-2.25.6/d3-legend.min.js"></script>
     <script src="js/controllers/app_controller.js" type="module"></script>
