@@ -7,17 +7,27 @@ class Controller {
     static setupEventListeners() {
         Controller.DOMstrings = UIController.getDOMstrings();
         document
-            .querySelector(Controller.DOMstrings.logoutBtn)
-            .addEventListener("click", AuthController.logout);
+            .querySelectorAll(Controller.DOMstrings.logoutBtns).forEach(btn => {
+                btn.addEventListener("click", AuthController.logout);
+            });
         document
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .addEventListener("click", Controller.navigateToCodingProgress);
         document
+            .querySelector(Controller.DOMstrings.mobileCodingProgressLinkSelector)
+            .addEventListener("click", Controller.navigateToCodingProgressOnMobile);
+        document
             .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
         document
+            .querySelector(Controller.DOMstrings.mobileProjectMenu)
+            .addEventListener("change", function() { Controller.navigateToSelectedProjectOnMobile(this.value) });
+        document
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .addEventListener("click", Controller.navigateToSystems);
+        document
+            .querySelector(Controller.DOMstrings.mobileSystemsLinkSelector)
+            .addEventListener("click", Controller.navigateToSystemsOnMobile);
     }
 
     static clearAllTimers() {
