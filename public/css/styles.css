@@ -98,6 +98,17 @@ body {
     display: none;
 }
 
+.mobile-nav {
+    display: none;
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    left: 0;
+    background: white;
+    width: 80%;
+    height: 100vh;
+}
+
 .main-nav__items {
     margin: 0;
     padding: 0;
