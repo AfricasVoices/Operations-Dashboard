@@ -71,6 +71,21 @@ body {
     justify-content: space-between;
 }
 
+.main-header__brand {
+    color: #0e4f1f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.main-header__brand img {
+    height: 2.5rem;
+    vertical-align: middle;
+}
+
+.main-header__brand--logo-1 {
+    display: none;
+}
+
 .navbar {
     box-shadow: 0 2px 2px -2px steelblue;
 }
