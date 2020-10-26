@@ -57,6 +57,20 @@ body {
     background: rgba(0, 0, 0, 0.5);
 }
 
+.main-header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: white;
+    box-shadow: 0 .125rem .125rem -0.125rem steelblue;
+    padding: 0.5rem 4rem;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .navbar {
     box-shadow: 0 2px 2px -2px steelblue;
 }
