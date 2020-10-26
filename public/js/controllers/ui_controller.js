@@ -20,7 +20,7 @@ export class UIController {
             while (statusMenu.firstChild) {
                 statusMenu.removeChild(statusMenu.firstChild);
             }
-            let html = `<a id="project" class="dropdown-item">%project_name%</a>`;
+            let html = `<li class="main-nav__dropdown-item"><a href="javascript:void(0);">%project_name%</a></li>`;
             // Replace the placeholder text with some actual data
             data.forEach((obj) => {
                 let newHtml = html.replace("%project_name%", obj.project_name);
