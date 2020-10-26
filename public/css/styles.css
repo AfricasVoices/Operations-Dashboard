@@ -371,3 +371,13 @@ th:hover {
 .startCpuGrid path {
     stroke-opacity: 0;
 }
+
+@media (min-width: 40rem) {
+    .main-header__brand--logo-1, .main-nav {
+        display: flex;
+    }
+
+    .main-header__brand--logo-2, .toggle-button {
+        display: none;
+    }
+}
