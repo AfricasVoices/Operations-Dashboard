@@ -17,7 +17,7 @@ export class CodingProgressTableController {
             CodingProgressTableController.selectedColumns = [];
             d3.selectAll("input[type=checkbox]").property("checked", true);
         } else {
-            d3.selectAll(".form-check-label").each(function () {
+            d3.selectAll(".coding-progress-bar__check-label").each(function () {
                 let text = this.innerText.trim();
                 if (!CodingProgressTableController.selectedColumns.includes(text)) {
                     d3.select(this.previousElementSibling).property("checked", true);
