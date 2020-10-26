@@ -104,6 +104,12 @@ class Controller {
         }
     }
 
+    static navigateToCodingProgressOnMobile(e) {
+        mobileNav.style.display = 'none';
+        backdrop.style.display = 'none';
+        Controller.navigateToCodingProgress(e);
+    }
+
     static navigateToSelectedProject(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.clearAllTimers();
@@ -115,6 +121,15 @@ class Controller {
         }
     }
 
+    static navigateToSelectedProjectOnMobile(project) {
+        mobileNav.style.display = 'none';
+        backdrop.style.display = 'none';
+        Controller.clearAllTimers();
+        DataController.detachSnapshotListener();
+        window.location.hash = `traffic-${project}`;
+        Controller.displayProject(project);
+    }
+
     static navigateToSystems(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.clearAllTimers();
@@ -122,6 +137,12 @@ class Controller {
             window.location.hash = "systems";
             Controller.displaySystems();
         }
+    }
+
+    static navigateToSystemsOnMobile(e) {
+        mobileNav.style.display = 'none';
+        backdrop.style.display = 'none';
+        Controller.navigateToSystems(e)
     }
 
     static displayDeepLinkedTrafficPage(activeProjectsData) {
