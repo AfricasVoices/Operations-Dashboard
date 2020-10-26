@@ -146,7 +146,7 @@ export class CodingProgressTableController {
             });
 
             // View all datasets on clicking `view all` button
-            d3.select("button#reset").on("click", () => {
+            d3.select("a#reset").on("click", () => {
                 CodingProgressTableController.keyword = "";
                 transform(column, sortInfo.order);
                 // Reset select value to default
@@ -158,9 +158,9 @@ export class CodingProgressTableController {
 
             // Hide `view all` button if all datasets are being displayed
             if (CodingProgressTableController.keyword) {
-                d3.select("button#reset").style("display", "block");
+                d3.select("a#reset").style("display", "block");
             } else if (CodingProgressTableController.keyword == "") {
-                d3.select("button#reset").style("display", "none");
+                d3.select("a#reset").style("display", "none");
             }
         }
     }
