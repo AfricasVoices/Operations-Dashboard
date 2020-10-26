@@ -86,6 +86,14 @@ body {
     display: none;
 }
 
+.toggle-button {
+    background: white;
+    color: #8d3538;
+    border-color: #8d3538;
+    border-radius: .25rem;
+    outline: none;
+}
+
 .navbar {
     box-shadow: 0 2px 2px -2px steelblue;
 }
