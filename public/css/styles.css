@@ -111,6 +111,15 @@ body {
     color: #8d3538;
 }
 
+.mobile-nav__item--logout a,
+.main-nav__item--logout a {
+    width: fit-content;
+    padding: .25rem .5rem;
+    border: .0625rem solid #8d3538;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+    border-radius: .2rem;
+}
+
 .navbar {
     box-shadow: 0 2px 2px -2px steelblue;
 }
