@@ -355,63 +355,93 @@ body {
     padding: 0 .5rem;
 }
 
-
-
-.active-link {
-    border-bottom: 2px #8d3538 solid;
-    padding-bottom: 6px;
+.table-responsive {
+    overflow-x: auto;
 }
-.active-item {
-    color: #8d3538;
-    background-color: #b6d4e7;
+
+.coding-progress-table {
+    display: table;
+    border-collapse: collapse;
+    border-color: grey;
+    width: 100%;
+    margin: auto;
+    max-width: 93.75rem;
+    color: #212529;
 }
-.table-heading {
+
+.coding-progress-table td, 
+.coding-progress-table th {
+    padding: 0.75rem;
+}
+
+.coding-progress-table thead > tr {
     background-color: #8e3436;
-    height: 30px;
+    height: 1.875rem;
     color: #ffff;
 }
-.table thead > tr > th {
+
+.coding-progress-table thead > tr > th {
     vertical-align: bottom;
-    border-bottom: 2px solid #8e3436;
+    border-bottom: .125rem solid #8e3436;
     text-align: center;
 }
-.table thead > tr > th:first-of-type {
+
+.coding-progress-table thead > tr > th:first-of-type {
     text-align: initial;
 }
-table > tbody > tr > td {
-    border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+
+.coding-progress-table > tbody > tr > td {
+    border-bottom: .0625rem solid rgb(0, 0, 0, 0.2);
 }
-td.float {
+
+.coding-progress-table td > a {
+    color: black;
+    text-decoration: none;
+}
+
+.coding-progress-table td > a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.coding-progress-table td.float {
     text-align: right
 }
-td.integer, td.dash {
+
+.coding-progress-table td.integer, td.dash {
     text-align: center;
 }
+
 .coding-notstarted {
     background-color: #fc9f9f;
     font-size: 16;
     line-height: 0.7rem;
 }
+
 .coding-below25 {
     background-color: #ffd1d1;
     font-size: 16;
     line-height: 0.7rem;
 }
+
 .coding-above25 {
     background-color: #87cefa;
     font-size: 16;
     line-height: 0.7rem;
 }
+
 .coding-above50 {
     background-color: #fff6d6;
     font-size: 16;
     line-height: 0.7rem;
 }
+
 .coding-above75 {
     background-color: #d6ffd9;
     font-size: 16;
     line-height: 0.6rem;
 }
+
 .coding-complete {
     background-color: white;
     font-size: 15;
