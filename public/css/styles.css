@@ -136,6 +136,10 @@ body {
     border-bottom: none;
 }
 
+.mobile-nav__item {
+    margin: 1rem 0;
+}
+
 .main-nav__item:first-of-type {
     border: .0625rem #dee2e6 solid;
     border-bottom: none;
