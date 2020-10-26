@@ -109,6 +109,19 @@ body {
     height: 100vh;
 }
 
+.close-button {
+    padding: .25rem 1rem;
+    color: #8d3538; 
+    cursor: pointer;
+    font-size: 3.125rem;
+}
+
+.topright {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
 .main-nav__items {
     margin: 0;
     padding: 0;
