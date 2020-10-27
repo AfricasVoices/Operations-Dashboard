@@ -15,8 +15,8 @@ export class UIController {
             backdrop: ".backdrop",
             toggleButton: ".toggle-button",
             closeButton: ".close-button",
-            activeLinkClassName: "active",
-            activeLinks: "a.active"
+            activeLink: ".active-nav-item",
+            activeLinkClassName: "active-nav-item"
         };
     }
 
