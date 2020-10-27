@@ -14,20 +14,50 @@ class Controller {
             .querySelector(Controller.DOMstrings.codingProgressLinkSelector)
             .addEventListener("click", Controller.navigateToCodingProgress);
         document
-            .querySelector(Controller.DOMstrings.mobileCodingProgressLinkSelector)
-            .addEventListener("click", Controller.navigateToCodingProgressOnMobile);
-        document
             .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
         document
-            .querySelector(Controller.DOMstrings.mobileProjectMenu)
-            .addEventListener("change", function() { Controller.navigateToSelectedProjectOnMobile(this.value) });
-        document
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .addEventListener("click", Controller.navigateToSystems);
+
+        let mobileNav = document.querySelector(".mobile-nav"),
+            backdrop = document.querySelector(".backdrop");
+        function displayMobileNav() {
+            mobileNav.style.display = 'block';
+            backdrop.style.display = 'block';
+        }
+        function hideMobileNav() {
+            mobileNav.style.display = 'none';
+            backdrop.style.display = 'none';
+        }
+        document
+            .querySelector(".toggle-button")
+            .addEventListener("click", function() {
+                displayMobileNav()
+            });
+        document
+            .querySelector(".close-button")
+            .addEventListener("click", function() {
+                hideMobileNav();
+            });
+        document
+            .querySelector(Controller.DOMstrings.mobileCodingProgressLinkSelector)
+            .addEventListener("click", function(event) {
+                hideMobileNav();
+                Controller.navigateToCodingProgress(event);
+            });
+        document
+            .querySelector(Controller.DOMstrings.mobileProjectMenu)
+            .addEventListener("change", function(event) { 
+                hideMobileNav();
+                Controller.navigateToSelectedProject(event, this.value) 
+            });
         document
             .querySelector(Controller.DOMstrings.mobileSystemsLinkSelector)
-            .addEventListener("click", Controller.navigateToSystemsOnMobile);
+            .addEventListener("click", function(event) {
+                hideMobileNav();
+                Controller.navigateToSystems(event)
+            });
     }
 
     static clearAllTimers() {
