@@ -454,9 +454,10 @@ body {
 }
 
 .table-header-definitions {
-    margin-top: 2rem;
+    margin: 2rem auto;
     border-collapse: collapse;
     width: 100%;
+    max-width: 93.75rem;
 }
 
 .table-header-definitions td,
@@ -579,6 +580,8 @@ body {
     transition: 0.3s;
     width: 100%;
     border-radius: 5px;
+    max-width: 93.75rem;
+    margin: auto;
 }
 
 .threats-to-validity:hover {
