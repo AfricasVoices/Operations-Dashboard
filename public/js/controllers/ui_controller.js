@@ -60,111 +60,111 @@ export class UIController {
 
     static addCodingProgressSection() {
         UIController.resetUI();
-        let html = `<div>
-                <div class="coding-progress-bar">
-                    <ul class="coding-progress-bar__items">
-                        <li class="coding-progress-bar__item filter-columns">
-                            <a class="btn" href="#">Filter by Columns <i class="fas fa-caret-down"></i></a>
-                            <ul class="coding-progress-bar__dropdown-menu">
-                                <li class="coding-progress-bar__dropdown-item">
-                                    <input id="unique-texts" class="coding-progress-bar__check-input" type="checkbox">
-                                    <label for="unique-texts" class="coding-progress-bar__check-label">Unique Texts</label>
-                                </li>
-                                <li class="coding-progress-bar__dropdown-item">
-                                    <input id="unique-texts-labels" class="coding-progress-bar__check-input" type="checkbox">
-                                    <label for="unique-texts-labels" class="coding-progress-bar__check-label">Unique Texts with a label</label>
-                                </li>
-                                <li class="coding-progress-bar__dropdown-item">
-                                    <input id="done" class="coding-progress-bar__check-input" type="checkbox">
-                                    <label for="done" class="coding-progress-bar__check-label">Done</label>
-                                </li>
-                                <li class="coding-progress-bar__dropdown-item">
-                                    <input id="wrong-scheme-messages" class="coding-progress-bar__check-input" type="checkbox">
-                                    <label for="wrong-scheme-messages" class="coding-progress-bar__check-label">Wrong Scheme messages</label>
-                                </li>
-                                <li class="coding-progress-bar__dropdown-item">
-                                    <input id="ws" class="coding-progress-bar__check-input" type="checkbox">
-                                    <label for="ws" class="coding-progress-bar__check-label">WS %</label>
-                                </li>
-                                <li class="coding-progress-bar__dropdown-item">
-                                    <input id="not-coded-messages" class="coding-progress-bar__check-input" type="checkbox">
-                                    <label for="not-coded-messages" class="coding-progress-bar__check-label">Not Coded messages</label>
-                                </li>
-                                <li class="coding-progress-bar__dropdown-item">
-                                    <input id="NC" class="coding-progress-bar__check-input" type="checkbox">
-                                    <label for="NC" class="coding-progress-bar__check-label">NC %</label>
-                                </li>
-                            </ul>
+        let html = `<section>
+        <div class="coding-progress-bar">
+            <ul class="coding-progress-bar__items">
+                <li class="coding-progress-bar__item filter-columns">
+                    <a class="btn" href="#">Filter by Columns <i class="fas fa-caret-down"></i></a>
+                    <ul class="coding-progress-bar__dropdown-menu">
+                        <li class="coding-progress-bar__dropdown-item">
+                            <input id="unique-texts" class="coding-progress-bar__check-input" type="checkbox">
+                            <label for="unique-texts" class="coding-progress-bar__check-label">Unique Texts</label>
                         </li>
-                        <li class="coding-progress-bar__item">
-                            <select id="keyword"></select>
+                        <li class="coding-progress-bar__dropdown-item">
+                            <input id="unique-texts-labels" class="coding-progress-bar__check-input" type="checkbox">
+                            <label for="unique-texts-labels" class="coding-progress-bar__check-label">Unique Texts with a label</label>
                         </li>
-                        <li class="coding-progress-bar__item">
-                            <div class="coding-progress-bar__group">
-                                <input class="coding-progress-bar__input" type="text" id="input-keyword" value="" placeholder="Enter keyword...">
-                                <button class="coding-progress-bar__button" id="search"><i class="fas fa-search"></i></button>
-                            </div>
-                        <li>
-                        <li class="coding-progress-bar__item">
-                            <a class="btn" id="reset" href="#">View All</a>
+                        <li class="coding-progress-bar__dropdown-item">
+                            <input id="done" class="coding-progress-bar__check-input" type="checkbox">
+                            <label for="done" class="coding-progress-bar__check-label">Done</label>
                         </li>
-                        <li class="coding-progress-bar__item coding-progress-bar__item--end">
-                            <div class="coding-progress-bar__group">
-                                <div class="coding-progress-bar__label">Last Updated:</div>
-                                <div class="coding-progress-bar__text" id="last-update"></div>
-                            </div>
-                        <li>
+                        <li class="coding-progress-bar__dropdown-item">
+                            <input id="wrong-scheme-messages" class="coding-progress-bar__check-input" type="checkbox">
+                            <label for="wrong-scheme-messages" class="coding-progress-bar__check-label">Wrong Scheme messages</label>
+                        </li>
+                        <li class="coding-progress-bar__dropdown-item">
+                            <input id="ws" class="coding-progress-bar__check-input" type="checkbox">
+                            <label for="ws" class="coding-progress-bar__check-label">WS %</label>
+                        </li>
+                        <li class="coding-progress-bar__dropdown-item">
+                            <input id="not-coded-messages" class="coding-progress-bar__check-input" type="checkbox">
+                            <label for="not-coded-messages" class="coding-progress-bar__check-label">Not Coded messages</label>
+                        </li>
+                        <li class="coding-progress-bar__dropdown-item">
+                            <input id="NC" class="coding-progress-bar__check-input" type="checkbox">
+                            <label for="NC" class="coding-progress-bar__check-label">NC %</label>
+                        </li>
                     </ul>
-                </div>
-            
-                <div class="table-responsive">
-                    <table id="codingtable" class="coding-progress-table">
-                        <thead></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+                </li>
+                <li class="coding-progress-bar__item">
+                    <select id="keyword"></select>
+                </li>
+                <li class="coding-progress-bar__item">
+                    <div class="coding-progress-bar__group">
+                        <input class="coding-progress-bar__input" type="text" id="input-keyword" value="" placeholder="Enter keyword...">
+                        <button class="coding-progress-bar__button" id="search"><i class="fas fa-search"></i></button>
+                    </div>
+                <li>
+                <li class="coding-progress-bar__item">
+                    <a class="btn" id="reset" href="#">View All</a>
+                </li>
+                <li class="coding-progress-bar__item coding-progress-bar__item--end">
+                    <div class="coding-progress-bar__group">
+                        <div class="coding-progress-bar__label">Last Updated:</div>
+                        <div class="coding-progress-bar__text" id="last-update"></div>
+                    </div>
+                <li>
+            </ul>
+        </div>
+    
+        <div class="table-responsive">
+            <table id="codingtable" class="coding-progress-table">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
 
-                <div class="table-responsive">
-                    <table class="table-header-definitions">
-                        <tr>
-                            <th>Table Headers</th>
-                            <th>Description</th>
-                        </tr>
-                        <tr>
-                            <td scope="row">Dataset</td>
-                            <td>The collection of messages for a given radio episode or survey</td>
-                        </tr>
-                        <tr>
-                            <td scope="row">Unique Texts</td>
-                            <td>Shows the total number of unique texts in the dataset. Note that to reduce labelling load, Coda only displays each unique message text once, so this is not the total number of messages received.</td>
-                        </tr>
-                        <tr>
-                            <td scope="row">Unique Texts with a label</td>
-                            <td>Shows the number of unique texts which contain a checked (i.e. manually verified) label in at least one code scheme</td>
-                        </tr>
-                        <tr>
-                            <td scope="row">Done</td>
-                            <td>Shows the percentage of labeled unique texts over total unique texts.</td>
-                        </tr>
-                        <tr>
-                            <td scope="row">Wrong Scheme messages</td>
-                            <td>Shows the number of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
-                        </tr>
-                        <tr>
-                            <td scope="row">WS %</td>
-                            <td>Shows the percentage of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
-                        </tr>
-                        <tr>
-                            <td scope="row">Not Coded messages</td>
-                            <td>Shows the number of messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
-                        </tr>
-                        <tr>
-                            <td scope="row">NC %</td>
-                            <td>Shows the percentage of 'messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
-                        </tr>
-                    </table>
-                </div>
-        </div> `;
+        <div class="table-responsive">
+            <table class="table-header-definitions">
+                <tr>
+                    <th>Table Headers</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td scope="row">Dataset</td>
+                    <td>The collection of messages for a given radio episode or survey</td>
+                </tr>
+                <tr>
+                    <td scope="row">Unique Texts</td>
+                    <td>Shows the total number of unique texts in the dataset. Note that to reduce labelling load, Coda only displays each unique message text once, so this is not the total number of messages received.</td>
+                </tr>
+                <tr>
+                    <td scope="row">Unique Texts with a label</td>
+                    <td>Shows the number of unique texts which contain a checked (i.e. manually verified) label in at least one code scheme</td>
+                </tr>
+                <tr>
+                    <td scope="row">Done</td>
+                    <td>Shows the percentage of labeled unique texts over total unique texts.</td>
+                </tr>
+                <tr>
+                    <td scope="row">Wrong Scheme messages</td>
+                    <td>Shows the number of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
+                </tr>
+                <tr>
+                    <td scope="row">WS %</td>
+                    <td>Shows the percentage of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
+                </tr>
+                <tr>
+                    <td scope="row">Not Coded messages</td>
+                    <td>Shows the number of messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
+                </tr>
+                <tr>
+                    <td scope="row">NC %</td>
+                    <td>Shows the percentage of 'messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
+                </tr>
+            </table>
+        </div>
+        </section>`;
         // Insert the HTML into the DOM
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
 
