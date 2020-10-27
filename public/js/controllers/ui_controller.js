@@ -177,6 +177,18 @@ export class UIController {
         </div> `;
         // Insert the HTML into the DOM
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
+
+        let toggleDropdownMenu = document.querySelector(".filter-columns"),
+            dropdownMenu = document.querySelector(".coding-progress-bar__dropdown-menu");
+        toggleDropdownMenu.addEventListener("click", function() {
+            if (!dropdownMenu.style.display) {
+                dropdownMenu.style.display = "block"
+            } else if (dropdownMenu.style.display === "none") {
+                dropdownMenu.style.display = "block";
+            } else {
+                dropdownMenu.style.display = "none";
+            }
+        });  
     }
 
     static addkeywordOptions(data) {
