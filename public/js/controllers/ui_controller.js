@@ -123,54 +123,47 @@ export class UIController {
                         <tbody></tbody>
                     </table>
                 </div>
-                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                        <div class="card-body">
-                            <table class="table table-bordered table-hover shadow">
-                                <thead>
-                                    <tr class="table-heading">
-                                        <th scope="col">Table Headers</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">Dataset</th>
-                                        <td>The collection of messages for a given radio episode or survey</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Unique Texts</th>
-                                        <td>Shows the total number of unique texts in the dataset. Note that to reduce labelling load, Coda only displays each unique message text once, so this is not the total number of messages received.</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Unique Texts with a label</th>
-                                        <td>Shows the number of unique texts which contain a checked (i.e. manually verified) label in at least one code scheme</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Done</th>
-                                        <td>Shows the % of labeled unique texts over total unique texts.</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Wrong Scheme messages</th>
-                                        <td>Shows the number of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">WS %</th>
-                                        <td>Shows the percentage of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">Not Coded messages</th>
-                                        <td>Shows the number of messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">NC %</th>
-                                        <td>Shows the percentage of 'messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+
+                <div class="table-responsive">
+                    <table class="table-header-definitions">
+                        <tr>
+                            <th>Table Headers</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td scope="row">Dataset</td>
+                            <td>The collection of messages for a given radio episode or survey</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Unique Texts</td>
+                            <td>Shows the total number of unique texts in the dataset. Note that to reduce labelling load, Coda only displays each unique message text once, so this is not the total number of messages received.</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Unique Texts with a label</td>
+                            <td>Shows the number of unique texts which contain a checked (i.e. manually verified) label in at least one code scheme</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Done</td>
+                            <td>Shows the percentage of labeled unique texts over total unique texts.</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Wrong Scheme messages</td>
+                            <td>Shows the number of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">WS %</td>
+                            <td>Shows the percentage of ‘messages with a label’ that contain a checked “WS (Wrong Scheme)” label.</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">Not Coded messages</td>
+                            <td>Shows the number of messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">NC %</td>
+                            <td>Shows the percentage of 'messages with a label’ that contain a checked “NC (Not Coded)” label.</td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
         </div> `;
         // Insert the HTML into the DOM
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
