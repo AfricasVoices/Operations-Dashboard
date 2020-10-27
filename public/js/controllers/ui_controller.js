@@ -64,7 +64,7 @@ export class UIController {
         <div class="coding-progress-bar">
             <ul class="coding-progress-bar__items">
                 <li class="coding-progress-bar__item filter-columns">
-                    <a class="btn" href="#">Filter by Columns <i class="fas fa-caret-down"></i></a>
+                    <a class="btn" href="javascript:void(0);">Filter by Columns <i class="fas fa-caret-down"></i></a>
                     <ul class="coding-progress-bar__dropdown-menu">
                         <li class="coding-progress-bar__dropdown-item">
                             <input id="unique-texts" class="coding-progress-bar__check-input" type="checkbox">
@@ -106,7 +106,7 @@ export class UIController {
                     </div>
                 <li>
                 <li class="coding-progress-bar__item">
-                    <a class="btn" id="reset" href="#">View All</a>
+                    <a class="btn" id="reset" href="javascript:void(0);">View All</a>
                 </li>
                 <li class="coding-progress-bar__item coding-progress-bar__item--end">
                     <div class="coding-progress-bar__group">
