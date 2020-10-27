@@ -58,15 +58,8 @@ export class UIController {
         }
     }
 
-    static getScrollJsScript() {
-        let scrollScript = document.createElement('script');
-        scrollScript.setAttribute('src', 'js/libs/scroll.js');
-        return scrollScript;
-    }
-
     static addCodingProgressSection() {
         UIController.resetUI();
-        document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div>
                 <div class="coding-progress-bar">
                     <ul class="coding-progress-bar__items">
@@ -214,7 +207,6 @@ export class UIController {
 
     static addGraphs(title) {
         UIController.resetUI();
-        document.head.appendChild(UIController.getScrollJsScript());
         let html = `<section> 
             <div class="traffic-metrics">
                 <ul class="traffic-metrics__items">
