@@ -452,6 +452,31 @@ body {
     font-size: 15;
     line-height: 0.5rem;
 }
+
+.table-header-definitions {
+    margin-top: 2rem;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-header-definitions td,
+.table-header-definitions th {
+    border: .0625rem solid #ddd;
+    padding: .5rem;
+}
+
+.table-header-definitions tr:nth-child(even){background-color: #f2f2f2;}
+
+.table-header-definitions tr:hover {background-color: #ddd;}
+
+.table-header-definitions th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #8d3538;
+  color: white;
+}
+
 .traffic-metrics {
     margin-top: 3.5rem;
 }
