@@ -46,6 +46,7 @@ body {
     font-size: 1.25rem;
 }
 
+/*  Navbar */
 .backdrop {
     position: fixed;
     display: none;
@@ -225,6 +226,7 @@ body {
     display: none;
 }
 
+/* Main section */
 .responsive-container {
     overflow-x:auto;
 }
@@ -233,6 +235,7 @@ body {
     padding: .5rem 0;
 }
 
+/* Message coding progress page */
 .coding-progress-bar {
     display: flex;
     justify-content: center;
@@ -478,6 +481,7 @@ body {
   color: white;
 }
 
+/* Traffic metrics monitoring page */
 .traffic-metrics {
     margin-top: 3.5rem;
 }
@@ -596,6 +600,7 @@ body {
     text-align: center;
 }
 
+/* System metrics monitoring page */
 .system-metrics {
     margin-top: 3.5rem;
 }
