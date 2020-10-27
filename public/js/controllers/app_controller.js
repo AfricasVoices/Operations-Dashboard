@@ -134,18 +134,11 @@ class Controller {
         }
     }
 
-    static navigateToCodingProgressOnMobile(e) {
-        mobileNav.style.display = 'none';
-        backdrop.style.display = 'none';
-        Controller.navigateToCodingProgress(e);
-    }
-
-    static navigateToSelectedProject(e) {
-        if (e.target && e.target.nodeName == "A") {
+    static navigateToSelectedProject(e, project = "") {
+        if (e.target && (e.target.nodeName == "A" || e.target.nodeName == "SELECT")) {
             Controller.clearAllTimers();
             DataController.detachSnapshotListener();
-            console.log(e.target.innerText);
-            let project = e.target.innerText;
+            if (!project) { project = e.target.innerText };
             window.location.hash = `traffic-${project}`;
             Controller.displayProject(project);
         }
