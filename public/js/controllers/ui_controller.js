@@ -201,93 +201,93 @@ export class UIController {
     static addGraphs(title) {
         UIController.resetUI();
         let html = `<section> 
-            <div class="traffic-metrics">
-                <ul class="traffic-metrics__items">
-                    <li class="traffic-metrics__item">
-                        <b class="traffic-metrics__text">${title}</b>
-                    </li>
-                    <li class="traffic-metrics__item">
-                        <div class="traffic-metrics__group">
-                            <div class="traffic-metrics__label">Timescale:</div>
-                            <input class="traffic-metrics__input" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                            <input class="traffic-metrics__input" type="button" id="buttonUpdateViewOneDay" value="1 day">
-                        </div>
-                    </li>
-                    <li class="traffic-metrics__item">
-                        <div class="traffic-metrics__group">
-                            <div class="traffic-metrics__label">TimeFrame:</div>
-                            <select class="traffic-metrics__select" id="timeFrame">
-                                <option value="default">Default</option>
-                                <option value="1">48 Hours</option>
-                                <option value="6">7 days</option>
-                                <option value="13">14 days</option>
-                                <option value="29">30 days</option>
-                            </select> 
-                        </div>
-                    </li>
-                    <li class="traffic-metrics__item">
-                        <div class="traffic-metrics__group">
-                            <div class="traffic-metrics__label">Last Updated:</div>
-                            <div class="traffic-metrics__text" id="lastUpdated"></div>
-                        </div>
-                    <li>
-                </ul>
-            </div> 
+        <div class="traffic-metrics">
+            <ul class="traffic-metrics__items">
+                <li class="traffic-metrics__item">
+                    <b class="traffic-metrics__text">${title}</b>
+                </li>
+                <li class="traffic-metrics__item">
+                    <div class="traffic-metrics__group">
+                        <div class="traffic-metrics__label">Timescale:</div>
+                        <input class="traffic-metrics__input" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
+                        <input class="traffic-metrics__input" type="button" id="buttonUpdateViewOneDay" value="1 day">
+                    </div>
+                </li>
+                <li class="traffic-metrics__item">
+                    <div class="traffic-metrics__group">
+                        <div class="traffic-metrics__label">TimeFrame:</div>
+                        <select class="traffic-metrics__select" id="timeFrame">
+                            <option value="default">Default</option>
+                            <option value="1">48 Hours</option>
+                            <option value="6">7 days</option>
+                            <option value="13">14 days</option>
+                            <option value="29">30 days</option>
+                        </select> 
+                    </div>
+                </li>
+                <li class="traffic-metrics__item">
+                    <div class="traffic-metrics__group">
+                        <div class="traffic-metrics__label">Last Updated:</div>
+                        <div class="traffic-metrics__text" id="lastUpdated"></div>
+                    </div>
+                <li>
+            </ul>
+        </div> 
 
-            <div class="traffic-metrics-charts">
-                <div class="traffic-metrics-chart">
-                    <div class="traffic-metrics-chart__ctrl">
-                        <div class="traffic-metrics-chart__label" type="text">Set the maximum number of incoming messages you want to see</div> 
-                        <input class="traffic-metrics-chart__input" type="number" id="buttonYLimitReceived" step="100" min="10">
-                    </div>
-                    <div class="total_received_sms_graph"></div>
-                </div> 
-                <div class="traffic-metrics-chart">
-                    <div class="traffic-metrics-chart__ctrl">
-                        <div class="traffic-metrics-chart__label" type="text">Set the maximum number of outgoing messages you want to see</div> 
-                        <input class="traffic-metrics-chart__input" type="number" id="buttonYLimitSent" step="500" min="10">
-                    </div>
-                    <div class="total_sent_sms_graph"></div>
-                </div> 
-                <div class="traffic-metrics-chart">
-                    <div class="traffic-metrics-chart__ctrl">
-                        <div class="traffic-metrics-chart__label" type="text">Set the maximum number of failed messages you want to see</div> 
-                        <input class="traffic-metrics-chart__input" type="number" id="buttonYLimitFailed" step="50" min="10">
-                    </div>
-                    <div class="total_failed_sms_graph"></div> 
+        <div class="traffic-metrics-charts">
+            <div class="traffic-metrics-chart">
+                <div class="traffic-metrics-chart__ctrl">
+                    <div class="traffic-metrics-chart__label" type="text">Set the maximum number of incoming messages you want to see</div> 
+                    <input class="traffic-metrics-chart__input" type="number" id="buttonYLimitReceived" step="100" min="10">
                 </div>
-                <div class="card shadow total_failed_sms_graph my-4"></div> 
-            </section>
-            <div class="accordion" id="accordionExample">
-                <div id="headingOne">
-                    <h2 class="mb-2">
-                        <button class="btn btn-brown shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Threats to Validity
-                        </button>
-                    </h2>
+                <div class="total_received_sms_graph"></div>
+            </div> 
+            <div class="traffic-metrics-chart">
+                <div class="traffic-metrics-chart__ctrl">
+                    <div class="traffic-metrics-chart__label" type="text">Set the maximum number of outgoing messages you want to see</div> 
+                    <input class="traffic-metrics-chart__input" type="number" id="buttonYLimitSent" step="500" min="10">
                 </div>
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                    <div class="card">
-                        <p class="h5 text-center card-title text-uppercase"><u>Threats to Validity</u></p>
-                        <div class="card-text">
-                            <p><strong>The outbound and failed messages graphs may show underestimates when TextIt is under outbound load</strong><br>
-                            This is has two causes:
-                            <ol>
-                                <li>TextIt has to rate-limit outbound messages to avoid problems with the MNOs being unable to handle a large number of requests over a short period.</li>
-                                <li>We can only query messages in TextIt by created_on date, not modified_on date.</li>
-                            </ol>
-                            Combined, this means it’s too expensive for us to get the status of all the queued messages, because we’d have to pull 10s of thousands of messages from the past few hours every 10 minutes, which TextIt can’t deliver. As a result, TextIt will only show the first few minutes of a burst. We mitigate this by running an expensive recount of the previous day nightly, so that previous days should always be unaffected by this issue.</p>
-                            
-                            <p><strong>There is a lag between when a message is sent/received by TextIt and when it shows up on the dashboards, typically by up to 10-15 minutes.</strong><br>
-                            This is because messages are counted in 10 minute blocks, and at the end of each 10 minute block only.</p>
+                <div class="total_sent_sms_graph"></div>
+            </div> 
+            <div class="traffic-metrics-chart">
+                <div class="traffic-metrics-chart__ctrl">
+                    <div class="traffic-metrics-chart__label" type="text">Set the maximum number of failed messages you want to see</div> 
+                    <input class="traffic-metrics-chart__input" type="number" id="buttonYLimitFailed" step="50" min="10">
+                </div>
+                <div class="total_failed_sms_graph"></div> 
+            </div>
+            <div class="card shadow total_failed_sms_graph my-4"></div> 
+        </div>
+        <div class="accordion" id="accordionExample">
+            <div id="headingOne">
+                <h2 class="mb-2">
+                    <button class="btn btn-brown shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Threats to Validity
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card">
+                    <p class="h5 text-center card-title text-uppercase"><u>Threats to Validity</u></p>
+                    <div class="card-text">
+                        <p><strong>The outbound and failed messages graphs may show underestimates when TextIt is under outbound load</strong><br>
+                        This is has two causes:
+                        <ol>
+                            <li>TextIt has to rate-limit outbound messages to avoid problems with the MNOs being unable to handle a large number of requests over a short period.</li>
+                            <li>We can only query messages in TextIt by created_on date, not modified_on date.</li>
+                        </ol>
+                        Combined, this means it’s too expensive for us to get the status of all the queued messages, because we’d have to pull 10s of thousands of messages from the past few hours every 10 minutes, which TextIt can’t deliver. As a result, TextIt will only show the first few minutes of a burst. We mitigate this by running an expensive recount of the previous day nightly, so that previous days should always be unaffected by this issue.</p>
                         
-                            <p><strong>Total failures are reported based only on the response received by the aggregator. </strong><br>
-                            Therefore the failures graph may underestimate if the aggregator reports a success but the MNO fails to deliver the message to the receipient, or show an overestimate if the aggregator delivers messages but fails to respond with a success status. Vice versa for total outbound messages.</p>
-                        </div>
+                        <p><strong>There is a lag between when a message is sent/received by TextIt and when it shows up on the dashboards, typically by up to 10-15 minutes.</strong><br>
+                        This is because messages are counted in 10 minute blocks, and at the end of each 10 minute block only.</p>
+                    
+                        <p><strong>Total failures are reported based only on the response received by the aggregator. </strong><br>
+                        Therefore the failures graph may underestimate if the aggregator reports a success but the MNO fails to deliver the message to the receipient, or show an overestimate if the aggregator delivers messages but fails to respond with a success status. Vice versa for total outbound messages.</p>
                     </div>
                 </div>
             </div>
-        </div> `;
+        </div>
+        </section>`;
         // Insert the HTML into the DOM
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
