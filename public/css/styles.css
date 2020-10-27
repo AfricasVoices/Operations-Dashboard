@@ -288,6 +288,7 @@ body {
 }
 
 .coding-progress-bar__dropdown-menu {
+    display: none;
     background: white;
     position: absolute;
     top: 6.6rem;
