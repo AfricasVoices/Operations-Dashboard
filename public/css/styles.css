@@ -159,6 +159,10 @@ body {
     border-bottom: none;
 }
 
+.active-nav-item {
+    border-bottom: 2px solid #8d3538 !important;
+}
+
 .main-nav__item a,
 .mobile-nav__item a {
     text-decoration: none;
