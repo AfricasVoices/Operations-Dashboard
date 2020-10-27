@@ -70,10 +70,10 @@ class Controller {
     }
 
     static resetActiveLink() {
-        let elements = document.querySelectorAll(Controller.DOMstrings.activeLinks);
-        elements.forEach((element) => {
+        let element = document.querySelector(Controller.DOMstrings.activeLink);
+        if (element) {
             element.classList.remove(Controller.DOMstrings.activeLinkClassName);
-        });
+        }
     }
 
     static displayCodingProgress() {
