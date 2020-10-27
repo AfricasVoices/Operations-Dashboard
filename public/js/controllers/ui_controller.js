@@ -11,6 +11,10 @@ export class UIController {
             mobileSystemsLinkSelector: "#mobile-system-metrics",
             logoutBtns: ".logout",
             mainContainer: "#main",
+            mobileNav: ".mobile-nav",
+            backdrop: ".backdrop",
+            toggleButton: ".toggle-button",
+            closeButton: ".close-button",
             activeLinkClassName: "active",
             activeLinks: "a.active"
         };

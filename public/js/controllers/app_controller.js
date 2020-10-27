@@ -20,8 +20,8 @@ class Controller {
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .addEventListener("click", Controller.navigateToSystems);
 
-        let mobileNav = document.querySelector(".mobile-nav"),
-            backdrop = document.querySelector(".backdrop");
+        let mobileNav = document.querySelector(Controller.DOMstrings.mobileNav),
+            backdrop = document.querySelector(Controller.DOMstrings.backdrop);
         function displayMobileNav() {
             mobileNav.style.display = 'block';
             backdrop.style.display = 'block';
@@ -31,12 +31,12 @@ class Controller {
             backdrop.style.display = 'none';
         }
         document
-            .querySelector(".toggle-button")
+            .querySelector(Controller.DOMstrings.toggleButton)
             .addEventListener("click", function() {
                 displayMobileNav()
             });
         document
-            .querySelector(".close-button")
+            .querySelector(Controller.DOMstrings.closeButton)
             .addEventListener("click", function() {
                 hideMobileNav();
             });
