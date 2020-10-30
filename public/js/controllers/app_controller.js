@@ -19,6 +19,9 @@ class Controller {
         document
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .addEventListener("click", Controller.navigateToSystems);
+        document
+            .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
+            .addEventListener("click", Controller.navigateToPipelines)
 
         let mobileNav = document.querySelector(Controller.DOMstrings.mobileNav),
             backdrop = document.querySelector(Controller.DOMstrings.backdrop);
@@ -150,6 +153,15 @@ class Controller {
             DataController.detachSnapshotListener();
             window.location.hash = "systems";
             Controller.displaySystems();
+        }
+    }
+
+    static navigateToPipelines(e) {
+        if (e.target && e.target.nodeName == "A") {
+            Controller.clearAllTimers();
+            DataController.detachSnapshotListener();
+            window.location.hash = "pipelines";
+            Controller.displayPipelines();
         }
     }
 
