@@ -9,6 +9,7 @@ export class UIController {
             mobileProjectMenu: "#mobile-traffic-metrics-menu",
             systemsLinkSelector: "#system-metrics",
             mobileSystemsLinkSelector: "#mobile-system-metrics",
+            pipelinesLinkSelector: "#pipeline-metrics",
             logoutBtns: ".logout",
             mainContainer: "#main",
             mobileNav: ".mobile-nav",
