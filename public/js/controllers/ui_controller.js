@@ -302,4 +302,22 @@ export class UIController {
         </section> `;
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
+
+    static addPipelinesGraphs() {
+        UIController.resetUI();
+        let html = `<section>
+            <div class="pipeline-metrics" style="margin-top: 86px;">
+                <div class="table-responsive">
+                    <table class="pipeline-progress-table">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="pipeline-metrics__charts">
+                <div class="line-chart"></div>
+            </div>
+        </section> `;
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
+    }
 }
