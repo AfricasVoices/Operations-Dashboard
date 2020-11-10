@@ -38,29 +38,6 @@ export class PipelinesController {
         svg.append("g")
             .call(d3.axisLeft(y));
 
-        // Create Line
-        let line = d3.line()
-            // .defined(function(d){
-            //     return d.num >= 0 && d.num <= 100;
-            // })
-            .x(d => x(d.timestamp))
-            .y(d => y(d.project));
-
-        // Example Blue Lines
-        // svg.append("path")
-        //     .datum(data)
-        //     .attr( 'fill', 'none' )
-        //     .attr( 'stroke', 'blue' )
-        //     .attr( 'stroke-width', 10 )
-        //     .attr("d", line);
-        const lines = svg.selectAll("lines")
-            .data(data)
-            .enter()
-            .append("g");
-
-            lines.append("path")
-            // .attr("class", ids) 
-            // .attr("d", function(d) { return line(d.values); });
     }
 
     static updatePipelineProgressTable(data) {
