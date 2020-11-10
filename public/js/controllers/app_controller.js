@@ -119,10 +119,17 @@ class Controller {
         document
             .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
             .classList.add(Controller.DOMstrings.activeLinkClassName);
+        // Update pipeline metrics table
+        // import("./pipelines_controller.js").then((module) => {
+        //     let unsubscribeFunc = DataController.watchpipelineProgress(
+        //         module.PipelinesController.updatePipelineProgressTable
+        //     );
+        //     DataController.registerSnapshotListener(unsubscribeFunc);
+        // });
         // Update and show the Graphs
         import("./pipelines_controller.js").then((module) => {
             let unsubscribeFunc = DataController.watchPipelineMetrics(
-                module.PipelinesController.updateGraphs
+                module.PipelinesController.updatePipelinePage
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
         });
@@ -204,7 +211,7 @@ class Controller {
         // set up event listeners
         Controller.setupEventListeners();
         // Add the dropdown menu to the UI
-        DataController.watchActiveProjects(UIController.addDropdownMenu);
+        // DataController.watchActiveProjects(UIController.addDropdownMenu);
         // Get hash value
         let page_route = window.location.hash.substring(1);
         // Navigate appropriately according to the hash value

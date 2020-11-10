@@ -657,6 +657,63 @@ body {
     box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, 0.2);
 }
 
+.pipeline-progress-table {
+    display: table;
+    border-collapse: collapse;
+    border-color: grey;
+    width: 100%;
+    /* margin: auto; */
+    max-width: 93.75rem;
+    color: #212529;
+    margin: .5rem auto;
+    box-shadow: 0 .25rem .5rem 0 rgba(0, 0, 0, 0.2);
+    max-width: 93.75rem;
+}
+
+.pipeline-progress-table td, 
+.pipeline-progress-table th {
+    padding: 0.75rem;
+}
+
+.pipeline-progress-table thead > tr {
+    background-color: #8e3436;
+    height: 1.875rem;
+    color: #ffff;
+}
+
+.pipeline-progress-table thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: .125rem solid #8e3436;
+    text-align: start;
+}
+
+.pipeline-progress-table thead > tr > th:hover {
+    cursor: pointer;
+}
+
+.pipeline-progress-table thead > tr > th:first-of-type {
+    text-align: initial;
+}
+
+.pipeline-progress-table > tbody > tr > td {
+    border-bottom: .0625rem solid rgb(0, 0, 0, 0.2);
+}
+
+.pipeline-metrics__charts > div {
+    margin: .5rem auto;
+    box-shadow: 0 .25rem .5rem 0 rgba(0, 0, 0, 0.2);
+    max-width: 93.75rem;
+}
+
+.pipeline-metrics__charts > div {
+    padding-top: 1rem;
+}
+
+.pipeline-metrics__charts > div:hover {
+    box-shadow: 0 .5rem 1rem 0 rgba(0, 0, 0, 0.2);
+}
+
+
 .text-stale-info {
     color: #000000;
 }
