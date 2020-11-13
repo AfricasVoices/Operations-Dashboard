@@ -71,6 +71,7 @@ export class PipelinesController {
                 .attr("class", "line")
                 .attr("x1", d => x(d.value1))
                 .attr("x2", d => {
+                    console.log(d)
                     if (d.running) {
                         return x(d.value1)
                     } else {

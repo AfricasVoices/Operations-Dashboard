@@ -118,13 +118,52 @@ export class DataController {
                 }
                 let pipelineProgress = {};
                 pipelineProgress["Pipeline"] = key;
-                pipelineProgress["Last Successful Run"] = lastSuccessfulRun;
+                pipelineProgress["Start Successful Run"] = lastSuccessfulRun;
+                pipelineProgress["End Successful Run"] = lastSuccessfulRun;
                 pipelineProgress["Period"] = period;
-                pipelineProgress["Previous Start Time"] = lastStartTime;
+                // pipelineProgress["Previous Start Time"] = lastStartTime;
                 pipelineProgress["Current Start Time"] = currentStartTime;
                 pipelineProgressTableData.push(pipelineProgress)
             }
-            onChange({pipelineMetrics, pipelineProgressTableData})
+            // Group pipeline metrics by run id
+            let metricsByRunID = d3.group(pipelineMetrics, d => d.run_id);
+            let clevelandDotPlotData = [];
+            for (let value of metricsByRunID.values()) {
+                let clevelandDotPlotValues = {}
+                clevelandDotPlotValues["project"] = value[0].project;
+                if (value.length == 2) {
+                    value.forEach(d => {
+                        if (d.event == "PipelineStart") { clevelandDotPlotValues["value1"] = d.timestamp }
+                        if (d.event == "PipelineCompletedSuccessfully") {clevelandDotPlotValues["value2"] = d.timestamp}
+                    }) 
+                } 
+                if (value.length == 1) {
+                    value.forEach(d => {
+                        if (d.event == "PipelineStart") { clevelandDotPlotValues["value1"] = d.timestamp }
+                    }) 
+                }
+                clevelandDotPlotData.push(clevelandDotPlotValues)
+            }
+            let metricsByProject2 = d3.group(clevelandDotPlotData, d => d.project);
+            let dt = [];
+            for (let value of metricsByProject2.values()) {
+                // sort value if not sorted
+                for (const [i, d] of value.entries()) {
+                    if (d.hasOwnProperty("value1") && d.hasOwnProperty("value2")) {
+                        d.success = true;
+                    }
+                    if (d.hasOwnProperty("value1") && !d.hasOwnProperty("value2")) {
+                        if (value[i+1] && value[i+1].hasOwnProperty("value1")) {
+                            d.value2 = value[i+1].value1
+                            d.failed = true;
+                        } else {
+                            d.running = true;
+                        }
+                    }
+                    dt.push(d);
+                }
+            }
+            onChange({dt, pipelineMetrics, pipelineProgressTableData})
         }, error => console.log(error));
     }
 
@@ -240,56 +279,3 @@ export class DataController {
     }
 }
 
-// static watchpipelineProgress2(onChange) {
-//     return mediadb.doc("metrics/pipelines").onSnapshot(res => {
-//         let data = []
-//         let pipelineProgressData = res.data();
-//         for (let pipelineID in pipelineProgressData["pipelines_progress"]) {
-//             let lastStartTime = new Date(pipelineProgressData["pipelines_progress"][pipelineID]["last_start_time"]),
-//                 lastSuccessfulRun = new Date(pipelineProgressData["pipelines_progress"][pipelineID]["last_successful_run"]),
-//                 currentStartTime = new Date(pipelineProgressData["pipelines_progress"][pipelineID]["current_start_time"]);
-//             let pipelineProgress = {}
-//             pipelineProgress["Pipeline"] = pipelineID
-//             pipelineProgress["Last Start Time"] = lastStartTime;
-//             pipelineProgress["Last Successful Run"] = lastSuccessfulRun;
-//             pipelineProgress["Period"] = timeDifference(lastSuccessfulRun, lastStartTime);
-//             pipelineProgress["Current Start Time"] = currentStartTime;
-//             data.push(pipelineProgress)
-//         }
-//         onChange({data, lastUpdate : pipelineProgressData["last_update"]}); 
-//     }, error => console.log(error));    
-// }
-// static watchpipelineProgress(onChange) {
-//     return mediadb.doc("metrics/pipelines").onSnapshot(res => {
-//         let data = res.data();
-//         // Format pipeline metrics data to display on table
-//         let metricsByProject = d3.group(data, d => d.project);
-//         let pipelineProgressTableData = []
-//         for (let [key, value] of metricsByProject.entries()) {
-//             // console.log([key, value])
-//             value.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-//             const currentObj = value.find(el => el.event == "PipelineStart");
-//             const currentObj2 = value.find(el => el.event == "PipelineCompletedSuccessfully");
-//             const newArr = value.filter(val => val !== currentObj);
-//             const currentObj3 = newArr.find(el => el.event == "PipelineStart");
-//             let lastStartTime = currentObj != null ? new Date(currentObj.timestamp) : "-",
-//                 lastSuccessfulRun =  currentObj2 != null ? new Date(currentObj2.timestamp) : "-",
-//                 currentStartTime = currentObj3 != null ? new Date(currentObj3.timestamp) : "-",
-//                 period;
-//             if (lastSuccessfulRun > lastStartTime) {
-//                 period = formattedTimeDifference(lastSuccessfulRun, lastStartTime)
-//             } else {
-//                 period = "-"
-//             }
-//             let pipelineProgress = {};
-//             pipelineProgress["Pipeline"] = key;
-//             pipelineProgress["Last Start Time"] = lastStartTime;
-//             pipelineProgress["Last Successful Run"] = lastSuccessfulRun;
-//             pipelineProgress["Period"] = period;
-//             pipelineProgress["Current Start Time"] = currentStartTime;
-//             pipelineProgressTableData.push(pipelineProgress)
-//         }
-//         console.log(data)
-//         onChange({data, pipelineProgressTableData}); 
-//     }, error => console.log(error));    
-// }
