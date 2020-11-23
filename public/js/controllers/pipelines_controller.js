@@ -8,7 +8,7 @@ export class PipelinesController {
 
     }
 
-    static updatePipelineProgressTable() {
+    static updatePipelineProgressTable(data) {
 
     }
 
