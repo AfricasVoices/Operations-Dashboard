@@ -281,4 +281,18 @@ export class UIController {
         </div> `;
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
+
+    static addPipelinesGraphs() {
+        UIController.resetUI();
+        let html = `<section>
+            <table>
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+            <section>
+                <div class="card shadow line-chart my-1"></div>
+            </section>
+        </section> `;
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
+    }
 }
