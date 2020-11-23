@@ -159,6 +159,8 @@ class Controller {
                 Controller.displayCodingProgress();
             } else if (page_route == "systems") {
                 Controller.displaySystems();
+            } else if (page_route == "pipelines") {
+                Controller.displayPipelines();
             } else if (page_route.startsWith("traffic-")) {
                 DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
             } else {
