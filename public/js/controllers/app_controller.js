@@ -18,6 +18,9 @@ class Controller {
         document
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .addEventListener("click", Controller.navigateToSystems);
+        document
+            .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
+            .addEventListener("click", Controller.navigateToPipelines);
     }
 
     static clearAllTimers() {
