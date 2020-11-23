@@ -5,7 +5,8 @@ export class PipelinesController {
     }
 
     static updateGraphs() {
-
+        // Clear previous graphs before redrawing
+        d3.selectAll("svg").remove();
     }
 
     static updatePipelineProgressTable(data) {
