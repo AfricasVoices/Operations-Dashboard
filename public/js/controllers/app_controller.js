@@ -88,6 +88,21 @@ class Controller {
         });
     }
 
+    static displayPipelines() {
+        UIController.addPipelinesGraphs();
+        Controller.resetActiveLink();
+        document
+            .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
+        // Update and show the Graphs
+        import("./pipelines_controller.js").then((module) => {
+            let unsubscribeFunc = DataController.watchPipelinesMetrics(
+                module.PipelinesController.updatePipelinePage
+            );
+            DataController.registerSnapshotListener(unsubscribeFunc);
+        });
+    }
+
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.clearAllTimers();
