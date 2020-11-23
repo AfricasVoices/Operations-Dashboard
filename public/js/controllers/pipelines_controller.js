@@ -11,4 +11,8 @@ export class PipelinesController {
     static updatePipelineProgressTable() {
 
     }
+
+    static jsonKeyValueToArray(k, v) {
+        return [k, v];
+    }
 }
