@@ -12,6 +12,14 @@ export class PipelinesController {
         const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
             Width = 960 - Margin.right - Margin.left,
             Height = 500 - Margin.top - Margin.bottom;
+
+        // Append the svg object to the body of the page
+        const svg = d3.select(".line-chart").append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", "-95 -40 1080 500")
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g");
     }
 
     static updatePipelineProgressTable(data) {
