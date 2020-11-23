@@ -7,6 +7,11 @@ export class PipelinesController {
     static updateGraphs() {
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
+
+        // Set the dimensions and margins of the graph
+        const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
+            Width = 960 - Margin.right - Margin.left,
+            Height = 500 - Margin.top - Margin.bottom;
     }
 
     static updatePipelineProgressTable(data) {
