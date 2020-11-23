@@ -284,7 +284,7 @@ export class UIController {
 
     static addPipelinesGraphs() {
         UIController.resetUI();
-        let html = `<section>
+        let html = `<div class="container">
             <table>
                 <thead></thead>
                 <tbody></tbody>
@@ -292,7 +292,7 @@ export class UIController {
             <section>
                 <div class="card shadow line-chart my-1"></div>
             </section>
-        </section> `;
+        </div> `;
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
 }
