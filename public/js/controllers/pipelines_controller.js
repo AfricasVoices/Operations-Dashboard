@@ -20,6 +20,9 @@ export class PipelinesController {
             .attr("viewBox", "-95 -40 1080 500")
             .attr("preserveAspectRatio", "xMinYMin")
             .append("g");
+
+        // Add X axis
+        const x = d3.scaleTime().range([0, Width]);
     }
 
     static updatePipelineProgressTable(data) {
