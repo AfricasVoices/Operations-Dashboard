@@ -6,6 +6,7 @@ export class UIController {
             codingProgressLinkSelector: ".coding-progress-link",
             trafficsLinkSelector: ".traffics-link",
             systemsLinkSelector: ".systems-link",
+            pipelinesLinkSelector: ".pipelines-link",
             logoutBtn: ".logout-btn",
             activeLinkClassName: "active-link",
             activeLinks: "a.active-link",
