@@ -117,6 +117,15 @@ class Controller {
         }
     }
 
+    static navigateToPipelines(e) {
+        if (e.target && e.target.nodeName == "A") {
+            Controller.clearAllTimers();
+            DataController.detachSnapshotListener();
+            window.location.hash = "pipelines";
+            Controller.displayPipelines();
+        }
+    }
+
     static displayDeepLinkedTrafficPage(activeProjectsData) {
         let activeProjects = [],
             page_route = window.location.hash.substring(1);
