@@ -74,6 +74,10 @@ export class DataController {
         }, error => console.log(error));    
     }
 
+    static watchPipelinesMetrics(onChange) {
+        
+    }
+
     static watchMNOColors() {
         return mediadb.doc("mno_properties/mno_colors").onSnapshot(res => {
             DataController.mno_colors = res.data();
