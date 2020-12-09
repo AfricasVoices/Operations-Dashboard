@@ -417,7 +417,7 @@ export class TrafficGraphsController {
                 })
 
             //Add the X Axis for the total received sms graph
-            total_received_sms_graph
+            let xAxis = total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
                 .attr("transform", "translate(0," + Height + ")")
