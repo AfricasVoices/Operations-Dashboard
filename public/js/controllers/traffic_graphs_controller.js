@@ -427,7 +427,8 @@ export class TrafficGraphsController {
                         .tickValues(tickValuesForXAxis)
                         .tickFormat(timeFormat)
                 )
-                // Rotate axis labels
+            // Rotate axis labels
+            xAxis
                 .selectAll("text")
                 .style("text-anchor", "end")
                 .attr("dx", "-.8em")
