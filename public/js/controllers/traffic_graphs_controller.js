@@ -460,6 +460,58 @@ export class TrafficGraphsController {
             // A function that set idleTimeOut to null
             let idleTimeout
             function idled() { idleTimeout = null; }
+
+            // A function that update the chart for given boundaries
+            function updateChart(event) {
+                // What are the selected boundaries?
+                let extent = event.selection;
+                let barsPadding = 0, updatedData;
+
+                // If no selection, back to initial coordinate. Otherwise, update X axis domain
+                if (!extent) {
+                    updatedData = tenMinGraphFilteredData;
+                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    x.domain(d3.extent(updatedData, d => new Date(d.datetime)));
+                } else {
+                    let newExtent = [x.invert(extent[0]), x.invert(extent[1])];
+                    // Update x axis domain
+                    x.domain(newExtent);
+
+                    // Reduce the stacked bars width
+                    barsPadding = -2;
+
+                    // Filter data to be used in calculating the bars width 
+                    let time;
+                    updatedData = tenMinGraphFilteredData.filter(d => {
+                        time = d.datetime.getTime();
+                        return ((newExtent[0].getTime() < time) && (time < newExtent[1].getTime()));
+                    });
+                    sectionWithBrushing.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+                }
+
+                // Update axis 
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(timeFormat));
+
+                // Rotate axis labels
+                xAxis
+                    .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-65)");
+                    
+                // Redraw the stacked bars
+                receivedLayer10min.selectAll("rect")
+                    .attr("x", d => x(d.data.datetime))
+                    .attr("width", d => {
+                        let calculatedWidth = Width / Object.keys(updatedData).length;
+                        // Condition to check if the bars are too wide to be adjusted
+                        if (calculatedWidth > 2) {
+                            calculatedWidth = (Width / Object.keys(updatedData).length) + barsPadding
+                        }
+                        return calculatedWidth;
+                    });
+            } 
         }
 
         function drawOneDayReceivedGraph(yLimitReceived) {
