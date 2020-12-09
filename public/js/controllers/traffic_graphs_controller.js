@@ -351,14 +351,14 @@ export class TrafficGraphsController {
                 .attr("width", Width)
                 .attr("height", Height)
                 .attr("x", 0)
-                .attr("y", 0);
-
-             // Add brushing
-            let brush = d3.brushX().extent([[0,0], [Width, Height]]).on("end", updateChart)
-            
+                .attr("y", 0); 
             // Create the variable: where both the stacked bars and the brush take place
-            let sectionWithBrushing = total_received_sms_graph.append('g').attr("clip-path", "url(#clip)")  
+            let sectionWithBrushing = total_received_sms_graph.append('g').attr("clip-path", "url(#clip)");
 
+            // Add the brushing
+            let brush = d3.brushX().extent([[0,0], [Width, Height]]).on("end", updateChart);
+            sectionWithBrushing.append("g").attr("class", "brush").call(brush);
+        
             let receivedLayer10min = sectionWithBrushing
                 .selectAll("#receivedStack10min")
                 .data(receivedDataStacked)
