@@ -456,6 +456,10 @@ export class TrafficGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Total Incoming Message(s) / 10 minutes");
+
+            // A function that set idleTimeOut to null
+            let idleTimeout
+            function idled() { idleTimeout = null; }
         }
 
         function drawOneDayReceivedGraph(yLimitReceived) {
