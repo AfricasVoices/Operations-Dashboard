@@ -379,7 +379,11 @@ export class TrafficGraphsController {
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(tenMinGraphFilteredData).length);
+                .attr("width", d => {
+                    let datetime = new Date(d.data.datetime);
+                    datetime.setMinutes(datetime.getMinutes() + 9);
+                    return x(datetime) - x(d.data.datetime);
+                });
 
             // Add tooltip for the total received sms graph
             receivedLayer10min
@@ -465,27 +469,15 @@ export class TrafficGraphsController {
             function updateChart(event) {
                 // What are the selected boundaries?
                 let extent = event.selection;
-                let barsPadding = 0, updatedData;
 
                 // If no selection, back to initial coordinate. Otherwise, update X axis domain
                 if (!extent) {
-                    updatedData = tenMinGraphFilteredData;
                     if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
-                    x.domain(d3.extent(updatedData, d => new Date(d.datetime)));
+                    x.domain(d3.extent(tenMinGraphFilteredData, d => new Date(d.datetime)));
                 } else {
-                    let newExtent = [x.invert(extent[0]), x.invert(extent[1])];
                     // Update x axis domain
-                    x.domain(newExtent);
+                    x.domain([x.invert(extent[0]), x.invert(extent[1])]);
 
-                    // Reduce the stacked bars width
-                    barsPadding = -2;
-
-                    // Filter data to be used in calculating the bars width 
-                    let time;
-                    updatedData = tenMinGraphFilteredData.filter(d => {
-                        time = d.datetime.getTime();
-                        return ((newExtent[0].getTime() < time) && (time < newExtent[1].getTime()));
-                    });
                     sectionWithBrushing.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
                 }
 
@@ -504,12 +496,9 @@ export class TrafficGraphsController {
                 receivedLayer10min.selectAll("rect")
                     .attr("x", d => x(d.data.datetime))
                     .attr("width", d => {
-                        let calculatedWidth = Width / Object.keys(updatedData).length;
-                        // Condition to check if the bars are too wide to be adjusted
-                        if (calculatedWidth > 2) {
-                            calculatedWidth = (Width / Object.keys(updatedData).length) + barsPadding
-                        }
-                        return calculatedWidth;
+                        let datetime = new Date(d.data.datetime);
+                        datetime.setMinutes(datetime.getMinutes() + 9);
+                        return x(datetime) - x(d.data.datetime);
                     });
             } 
         }
