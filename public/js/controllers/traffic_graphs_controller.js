@@ -436,7 +436,7 @@ export class TrafficGraphsController {
             sectionWithBrushing.append("g").attr("class", "brush").call(brush);
 
             // Create focus object
-            let focus = sectionWithBrushing.append("g").attr("class", `focus`);
+            let focus = total_received_sms_graph.append("g").attr("class", `focus`);
             // Add background rectangle behind the text tooltip
             focus
                 .append("rect")
