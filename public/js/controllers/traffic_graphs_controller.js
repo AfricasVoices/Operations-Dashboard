@@ -174,7 +174,7 @@ export class TrafficGraphsController {
                 .append("g")
                 .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
             // Format TimeStamp
-            timeFormat = d3.timeFormat("%Y-%m-%d");
+            timeFormat = d3.timeFormat("%a %d (%H:%M)");
 
         let mnoColorScheme = [],
             operatorsWithColorIdentity = Object.keys(MNOColors);
