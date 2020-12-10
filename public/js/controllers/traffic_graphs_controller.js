@@ -289,7 +289,14 @@ export class TrafficGraphsController {
                 receivedDataStacked = stackReceived(tenMinGraphFilteredData);
 
             // set scale domains
-            x.domain(d3.extent(tenMinGraphFilteredData, d => new Date(d.datetime)));
+            let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
+            let xMax = d3.max(tenMinGraphFilteredData, d => {
+                let datetime = new Date(d.datetime);
+                // Create a "padding" in the time scale
+                datetime.setMinutes(datetime.getMinutes() + 10);
+                return datetime;
+            });
+            x.domain([xMin, xMax]);
             if (yLimitReceived > 0)
                 y_total_received_sms_range.domain([0, yLimitReceived]);
 
@@ -473,7 +480,15 @@ export class TrafficGraphsController {
                 // If no selection, back to initial coordinate. Otherwise, update X axis domain
                 if (!extent) {
                     if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
-                    x.domain(d3.extent(tenMinGraphFilteredData, d => new Date(d.datetime)));
+                    // set scale domains
+                    let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
+                    let xMax = d3.max(tenMinGraphFilteredData, d => {
+                        let datetime = new Date(d.datetime);
+                        // Create a "padding" in the time scale
+                        datetime.setMinutes(datetime.getMinutes() + 10);
+                        return datetime;
+                    });
+                    x.domain([xMin, xMax]);
                 } else {
                     // Update x axis domain
                     x.domain([x.invert(extent[0]), x.invert(extent[1])]);
