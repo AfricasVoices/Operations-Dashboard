@@ -364,7 +364,7 @@ export class TrafficGraphsController {
 
             // Add the brushing
             let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
-            sectionWithBrushing.append("g").attr("class", "brush").call(brush);
+            // sectionWithBrushing.append("g").attr("class", "brush").call(brush);
         
             let receivedLayer10min = sectionWithBrushing
                 .selectAll("#receivedStack10min")
@@ -391,41 +391,6 @@ export class TrafficGraphsController {
                     datetime.setMinutes(datetime.getMinutes() + 9);
                     return x(datetime) - x(d.data.datetime);
                 });
-
-            // Add tooltip for the total received sms graph
-            receivedLayer10min
-                .selectAll("rect")
-                .on("mouseover", (event, d) => {
-                    // Get key of stacked data from the selection
-                    let operatorNameWithMessageDirection = d3.select(event.currentTarget.parentNode).datum().key,
-                        // Get operator name from the key
-                        operatorName = operatorNameWithMessageDirection.replace('_received',''),
-                        // Get color of hovered rect
-                        operatorColor = d3.select(event.currentTarget).style("fill");
-                    let receivedMessages = d.data[operatorNameWithMessageDirection],
-                        totalReceivedMessages = d.data.total_received,
-                        receivedDay = d.data.datetime,
-                        // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
-                        tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
-                        tooltipContent += `<div>${receivedMessages} 
-                        (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
-                        Message${receivedMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(receivedDay))}</div>`;
-                    tip.html(tooltipContent)
-                        .style("color", operatorColor)
-                        .style("font-size", "12px")
-                        .style("font-weight", "600")
-                        .style("font-family", "'Montserrat', sans-serif")
-                        .style("box-shadow", `2px 2px 4px -1px ${operatorColor}`)
-                        .style("visibility", "visible");
-                    d3.select(event.currentTarget).transition().duration(10).attr("opacity", 0.8);
-                })
-                .on("mouseout", (event, d) => {
-                    tip.style("visibility", "hidden");
-                    d3.select(event.currentTarget).transition().duration(10).attr("opacity", 1);
-                })
-                .on("mousemove", (event, d) => {
-                    tip.style("transform", `translate(${event.pageX}px, ${event.pageY - 60}px)`); // We can calculate the mouse's position relative the whole page by using event.pageX and event.pageY.
-                })
 
             //Add the X Axis for the total received sms graph
             let xAxis = total_received_sms_graph
@@ -467,6 +432,78 @@ export class TrafficGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Total Incoming Message(s) / 10 minutes");
+
+            sectionWithBrushing.append("g").attr("class", "brush").call(brush);
+
+            // Create focus object
+            let focus = sectionWithBrushing.append("g").attr("class", `focus`);
+            // Add background rectangle behind the text tooltip
+            focus
+                .append("rect")
+                .attr("x", -30)
+                .attr("y", "-32px")
+                .attr("rx", 6)
+                .attr("ry", 6)
+                .attr("width", 220)
+                .attr("height", 20);
+
+            // Add text annotation for tooltip
+            focus
+                .append("text")
+                .attr("x", -20)
+                .attr("dy", "-18px")
+                .attr("font-size", "12px")
+                .style("fill", "black");
+
+            sectionWithBrushing
+                .on("mouseover", () => focus.style("display", null))
+                .on("mouseout", () => focus.style("display", "none"))
+                .on("mousemove", (event) => {
+                    // Below code finds the date by bisecting and
+                    // Stores the x and y coordinate as variables
+                    let x0 = x.invert(d3.pointer(event)[0]);
+                    // This will select the closest date on the x axiswhen a user hover over the chart
+                    let bisectDate = d3.bisector(function (d) {
+                        return d.datetime;
+                    }).left;
+                    let i = bisectDate(tenMinGraphFilteredData, x0, 1);
+                    let d0 = tenMinGraphFilteredData[i - 1];
+                    let d1 = tenMinGraphFilteredData[i];
+                    let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
+    
+                    // Place the focus objects on the same path as the line
+                    focus.attr(
+                        "transform",
+                        `translate(${x(d.datetime)}, ${y_total_received_sms_range(d.total_received)})`
+                    );
+
+                    let str = [];
+                    operators.forEach(x => {
+                        if(d.operators[x].received != 0) {
+                            str.push(`${x}: ${d.operators[x].received}`)
+                        }
+                    })
+                            
+                    let tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}`;
+                    tooltipText += `  ${str}`;
+
+                    // Position the text
+                    focus
+                        .select("text")
+                        .text(tooltipText)
+                        .transition() // slowly fade in the tooltip
+                        .duration(100)
+                        .style("opacity", 1);
+
+                    // Show the rect on the path
+                    d3.selectAll(`.focus rect`).style("opacity", 1);
+                });
+
+            // Select focus objects and set opacity
+            d3.selectAll(`.focus`).style("opacity", 0.9);
+
+            // Select the rect and style it
+            d3.selectAll(`.focus rect`).style("fill", "whitesmoke").style("opacity", 0);
 
             // A function that set idleTimeOut to null
             let idleTimeout
