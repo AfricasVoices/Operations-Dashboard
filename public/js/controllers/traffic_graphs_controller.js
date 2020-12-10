@@ -364,7 +364,6 @@ export class TrafficGraphsController {
 
             // Add the brushing
             let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
-            // sectionWithBrushing.append("g").attr("class", "brush").call(brush);
         
             let receivedLayer10min = sectionWithBrushing
                 .selectAll("#receivedStack10min")
