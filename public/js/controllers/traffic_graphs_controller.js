@@ -492,7 +492,6 @@ export class TrafficGraphsController {
                 } else {
                     // Update x axis domain
                     x.domain([x.invert(extent[0]), x.invert(extent[1])]);
-
                     sectionWithBrushing.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
                 }
 
