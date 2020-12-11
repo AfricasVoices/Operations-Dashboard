@@ -481,7 +481,7 @@ export class TrafficGraphsController {
                         `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
                     );
 
-                    let tooltipContent = [];
+                    let tooltipContent = [], tooltipTranslateY = 5;
                     operators.forEach(x => {
                         if(d.operators[x].received != 0) {
                             tooltipContent.push(`${x}: ${d.operators[x].received}`)
