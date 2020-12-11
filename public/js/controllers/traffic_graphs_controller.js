@@ -304,6 +304,8 @@ export class TrafficGraphsController {
             d3.selectAll("#receivedStack").remove();
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll(".receivedGrid").remove();
+            d3.selectAll(".customTooltip").remove();
+            d3.selectAll(".brush").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily = d3
