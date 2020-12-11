@@ -436,6 +436,10 @@ export class TrafficGraphsController {
 
             // Create focus object
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
+
+            // Append circle on the line path
+            focus.append("circle").attr("r", 3.5);
+
             // Add background rectangle behind the text tooltip
             focus
                 .append("rect")
@@ -470,10 +474,12 @@ export class TrafficGraphsController {
                     let d1 = tenMinGraphFilteredData[i];
                     let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
     
-                    // Place the focus objects on the same path as the line
+                    // Place the focus objects on the same path as the bars
+                    let updatedDatetime = new Date(d.datetime);
+                    updatedDatetime.setMinutes(updatedDatetime.getMinutes() + 4.5);
                     focus.attr(
                         "transform",
-                        `translate(${x(d.datetime)}, ${y_total_received_sms_range(d.total_received)})`
+                        `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
                     );
 
                     let str = [];
@@ -493,6 +499,9 @@ export class TrafficGraphsController {
                         .transition() // slowly fade in the tooltip
                         .duration(100)
                         .style("opacity", 1);
+                    
+                    // Show the circle on the path
+                    focus.selectAll(`.focus circle`).style("opacity", 1);
 
                     // Show the rect on the path
                     d3.selectAll(`.focus rect`).style("opacity", 1);
@@ -500,6 +509,9 @@ export class TrafficGraphsController {
 
             // Select focus objects and set opacity
             d3.selectAll(`.focus`).style("opacity", 0.9);
+
+            // Select the circle and style it
+            d3.selectAll(`.focus circle`).style("fill", "red").style("opacity", 0);
 
             // Select the rect and style it
             d3.selectAll(`.focus rect`).style("fill", "whitesmoke").style("opacity", 0);
