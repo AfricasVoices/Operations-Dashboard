@@ -480,10 +480,6 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
                     );
-                    customTooltip.style(
-                        "transform",
-                        `translate(${x(updatedDatetime) + 30}px, ${y_total_received_sms_range(d.total_received)}px)`
-                    );
 
                     let tooltipContent = [];
                     operators.forEach(x => {
@@ -493,10 +489,14 @@ export class TrafficGraphsController {
                     })
                             
                     let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
-                    tooltipContent.forEach(d => {
-                        let j = d.split(":")[0]
-                        tooltipText += `<div class="${j}">${d}</div>`
-                    })
+                    if (tooltipContent.length) {
+                        tooltipContent.forEach(d => {
+                            let operator = d.split(":")[0];
+                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`
+                        })
+                    } else {
+                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`
+                    }
 
                     customTooltip
                         .html(tooltipText)
