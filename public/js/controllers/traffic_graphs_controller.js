@@ -485,8 +485,30 @@ export class TrafficGraphsController {
                     operators.forEach(x => {
                         if(d.operators[x].received != 0) {
                             tooltipContent.push(`${x}: ${d.operators[x].received}`)
+                            if (tooltipContent.length == 1) {
+                                tooltipTranslateY = tooltipContent.length + 5;
+                            } else if (tooltipContent.length == 2) {
+                                tooltipTranslateY = tooltipContent.length - 14;
+                            } else if (tooltipContent.length == 3) {
+                                tooltipTranslateY = tooltipContent.length - 33;
+                            } else if (tooltipContent.length == 4) {
+                                tooltipTranslateY = tooltipContent.length - 52;
+                            } else if (tooltipContent.length == 5) {
+                                tooltipTranslateY = tooltipContent.length - 71;
+                            } else if (tooltipContent.length == 6) {
+                                tooltipTranslateY = tooltipContent.length - 90;
+                            } else if (tooltipContent.length == 7) {
+                                tooltipTranslateY = tooltipContent.length - 109;
+                            } else if (tooltipContent.length == 8) {
+                                tooltipTranslateY = tooltipContent.length - 120;
+                            }
                         }
                     })
+
+                    customTooltip.style(
+                        "transform",
+                        `translate(${x(updatedDatetime) + 30}px, ${y_total_received_sms_range(d.total_received) + tooltipTranslateY}px)`
+                    );
                             
                     let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
                     if (tooltipContent.length) {
