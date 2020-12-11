@@ -436,31 +436,30 @@ export class TrafficGraphsController {
 
             // Create focus object
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
+            let focus2 = d3.select(".total_received_sms_graph").append("div");
 
             // Append circle on the line path
             focus.append("circle").attr("r", 3.5);
 
-            // Add background rectangle behind the text tooltip
-            focus
-                .append("rect")
-                .attr("x", -30)
-                .attr("y", "-32px")
-                .attr("rx", 6)
-                .attr("ry", 6)
-                .attr("width", 220)
-                .attr("height", 20);
-
-            // Add text annotation for tooltip
-            focus
-                .append("text")
-                .attr("x", -20)
-                .attr("dy", "-18px")
-                .attr("font-size", "12px")
-                .style("fill", "black");
+            focus2
+                .attr("class", "focus2 card")
+                .style("padding", "4px") 
+                .style("position", "absolute")
+                .style("left", 0)
+                .style("top", 0)
+                .style("background", "whitesmoke")
+                .style("border-radius", "8px")
+                .style("visibility", "hidden");
 
             sectionWithBrushing
-                .on("mouseover", () => focus.style("display", null))
-                .on("mouseout", () => focus.style("display", "none"))
+                .on("mouseover", () => {
+                    focus.style("display", null)
+                    focus2.style("display", null)
+                })
+                .on("mouseout", () => {
+                    focus.style("display", "none")
+                    focus2.style("display", "none")
+                })
                 .on("mousemove", (event) => {
                     // Below code finds the date by bisecting and
                     // Stores the x and y coordinate as variables
@@ -481,6 +480,10 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
                     );
+                    focus2.style(
+                        "transform",
+                        `translate(${x(updatedDatetime) + 30}px, ${y_total_received_sms_range(d.total_received)}px)`
+                    );
 
                     let str = [];
                     operators.forEach(x => {
@@ -489,22 +492,22 @@ export class TrafficGraphsController {
                         }
                     })
                             
-                    let tooltipText = `${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}`;
-                    tooltipText += `  ${str}`;
+                    let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
+                    str.forEach(d => {
+                        let j = d.split(":")[0]
+                        tooltipText += `<div class="${j}">${d}</div>`
+                    })
 
-                    // Position the text
-                    focus
-                        .select("text")
-                        .text(tooltipText)
-                        .transition() // slowly fade in the tooltip
-                        .duration(100)
-                        .style("opacity", 1);
+                    focus2
+                        .html(tooltipText)
+                        .style("color", "black")
+                        .style("font-size", "12px")
+                        .style("font-weight", "600")
+                        .style("font-family", "'Montserrat', sans-serif")
+                        .style("visibility", "visible");
                     
                     // Show the circle on the path
                     focus.selectAll(`.focus circle`).style("opacity", 1);
-
-                    // Show the rect on the path
-                    d3.selectAll(`.focus rect`).style("opacity", 1);
                 });
 
             // Select focus objects and set opacity
@@ -513,8 +516,7 @@ export class TrafficGraphsController {
             // Select the circle and style it
             d3.selectAll(`.focus circle`).style("fill", "red").style("opacity", 0);
 
-            // Select the rect and style it
-            d3.selectAll(`.focus rect`).style("fill", "whitesmoke").style("opacity", 0);
+            d3.selectAll(`.focus2 card`).style("visibility", "hidden");
 
             // A function that set idleTimeOut to null
             let idleTimeout
