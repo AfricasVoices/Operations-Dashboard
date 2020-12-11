@@ -436,13 +436,13 @@ export class TrafficGraphsController {
 
             // Create focus object
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
-            let focus2 = d3.select(".total_received_sms_graph").append("div");
+            let customTooltip = d3.select(".total_received_sms_graph").append("div");
 
             // Append circle on the line path
             focus.append("circle").attr("r", 3.5);
 
-            focus2
-                .attr("class", "focus2 card")
+            customTooltip
+                .attr("class", "customTooltip card")
                 .style("padding", "4px") 
                 .style("position", "absolute")
                 .style("left", 0)
@@ -454,11 +454,11 @@ export class TrafficGraphsController {
             sectionWithBrushing
                 .on("mouseover", () => {
                     focus.style("display", null)
-                    focus2.style("display", null)
+                    customTooltip.style("display", null)
                 })
                 .on("mouseout", () => {
                     focus.style("display", "none")
-                    focus2.style("display", "none")
+                    customTooltip.style("display", "none")
                 })
                 .on("mousemove", (event) => {
                     // Below code finds the date by bisecting and
@@ -480,7 +480,7 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
                     );
-                    focus2.style(
+                    customTooltip.style(
                         "transform",
                         `translate(${x(updatedDatetime) + 30}px, ${y_total_received_sms_range(d.total_received)}px)`
                     );
@@ -498,7 +498,7 @@ export class TrafficGraphsController {
                         tooltipText += `<div class="${j}">${d}</div>`
                     })
 
-                    focus2
+                    customTooltip
                         .html(tooltipText)
                         .style("color", "black")
                         .style("font-size", "12px")
@@ -516,7 +516,7 @@ export class TrafficGraphsController {
             // Select the circle and style it
             d3.selectAll(`.focus circle`).style("fill", "red").style("opacity", 0);
 
-            d3.selectAll(`.focus2 card`).style("visibility", "hidden");
+            d3.selectAll(`.customTooltip card`).style("visibility", "hidden");
 
             // A function that set idleTimeOut to null
             let idleTimeout
@@ -586,6 +586,8 @@ export class TrafficGraphsController {
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll("#receivedStack").remove();
             d3.selectAll(".receivedGrid").remove();
+            d3.selectAll(".customTooltip").remove();
+            d3.selectAll(".brush").remove();
 
             const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
             // Add the X gridlines
