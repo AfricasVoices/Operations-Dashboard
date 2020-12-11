@@ -514,7 +514,7 @@ export class TrafficGraphsController {
             d3.selectAll(`.focus`).style("opacity", 0.9);
 
             // Select the circle and style it
-            d3.selectAll(`.focus circle`).style("fill", "red").style("opacity", 0);
+            d3.selectAll(`.focus circle`).style("fill", "grey").style("opacity", 0);
 
             d3.selectAll(`.customTooltip card`).style("visibility", "hidden");
 
