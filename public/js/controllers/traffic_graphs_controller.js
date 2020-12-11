@@ -485,15 +485,15 @@ export class TrafficGraphsController {
                         `translate(${x(updatedDatetime) + 30}px, ${y_total_received_sms_range(d.total_received)}px)`
                     );
 
-                    let str = [];
+                    let tooltipContent = [];
                     operators.forEach(x => {
                         if(d.operators[x].received != 0) {
-                            str.push(`${x}: ${d.operators[x].received}`)
+                            tooltipContent.push(`${x}: ${d.operators[x].received}`)
                         }
                     })
                             
                     let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
-                    str.forEach(d => {
+                    tooltipContent.forEach(d => {
                         let j = d.split(":")[0]
                         tooltipText += `<div class="${j}">${d}</div>`
                     })
