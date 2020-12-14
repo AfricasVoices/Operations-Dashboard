@@ -156,25 +156,31 @@ export class TrafficGraphsController {
             .style("background", "whitesmoke")
             .style("border-radius", "8px")
             .style("visibility", "hidden");
-
-        // Append total received sms graph to svg
+        
+        let minX = -Margin.left,
+            minY = -Margin.top,
+            svgWidth = Width + Margin.left + Margin.right + 120,
+            svgHeight = Height + Margin.top + Margin.bottom; 
+        // Append total received sms graph to svg   
         let total_received_sms_graph = d3
                 .select(".total_received_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", `${minX} ${minY} ${svgWidth} ${svgHeight}`)
+                .attr("preserveAspectRatio", "xMinYMin")
+                .append("g");
             // Append total sent sms graph to svg
-            total_sent_sms_graph = d3
+        let total_sent_sms_graph = d3
                 .select(".total_sent_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", `${minX} ${minY} ${svgWidth} ${svgHeight}`)
+                .attr('preserveAspectRatio','xMinYMin')
+                .append("g");
             // Format TimeStamp
-            timeFormat = d3.timeFormat("%Y-%m-%d");
+        let timeFormat = d3.timeFormat("%Y-%m-%d");
 
         let mnoColorScheme = [],
             operatorsWithColorIdentity = Object.keys(MNOColors);
