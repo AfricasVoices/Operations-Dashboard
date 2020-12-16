@@ -141,7 +141,7 @@ export class TrafficGraphsController {
             Width = 960 - Margin.right - Margin.left,
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
-            x = d3.scaleTime().range([0, Width]),
+            x = d3.scaleTime().range([1, Width]),
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
             y_total_sent_sms_range = d3.scaleLinear().range([Height, 0]);
 
