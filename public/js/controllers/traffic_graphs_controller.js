@@ -805,21 +805,19 @@ export class TrafficGraphsController {
                 .attr("class", (d, i) => sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            // Values to adjust x and width attributes
-            let rightPadding = -2, shiftBarsToRight = 1;
             sentLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
                 .append("rect")
-                /* Shift bars to the right 
-                 - prevents first bar of graph from overlapping y axis path */
-                .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
+                .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                /* Reduce the right padding of bars 
-                 - Accomodates the shift of the bars to the right so that they don't overlap */
-                .attr("width", (Width / Object.keys(dailySentTotal).length) + rightPadding);
+                .attr("width", d => {
+                    let day = new Date(d.data.day);
+                    day.setHours(day.getHours() + 23);
+                    return x(day) - x(new Date(d.data.day));
+                });
 
             // Add tooltip for the total sent sms graph
             sentLayer
