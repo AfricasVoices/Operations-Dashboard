@@ -497,8 +497,6 @@ export class TrafficGraphsController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            // Values to adjust x and width attributes
-            let rightPadding = -2, shiftBarsToRight = 1;
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
