@@ -502,9 +502,7 @@ export class TrafficGraphsController {
                 .data(d => d)
                 .enter()
                 .append("rect")
-                /* Shift bars to the right 
-                 - prevents first bar of graph from overlapping y axis path */
-                .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
+                .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
