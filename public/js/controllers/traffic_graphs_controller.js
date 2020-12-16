@@ -508,9 +508,11 @@ export class TrafficGraphsController {
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                /* Reduce the right padding of bars 
-                 - Accomodates the shift of the bars to the right so that they don't overlap */
-                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) + rightPadding);
+                .attr("width", d => {
+                    let day = new Date(d.data.day);
+                    day.setHours(day.getHours() + 23);
+                    return x(day) - x(new Date(d.data.day));
+                });
 
             // Add tooltip for the total received sms graph
             receivedLayer
