@@ -440,8 +440,11 @@ export class TrafficGraphsController {
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
             let customTooltip = d3.select(".total_received_sms_graph").append("div");
 
-            // Append circle on the line path
-            focus.append("circle").attr("r", 3.5);
+            // Append diamond on the path
+            focus.append("path")
+                .attr("d", d3.symbol().type(d3.symbolDiamond))
+                .attr("transform", "translate(0, -6)")
+                .attr("class", "diamond");
 
             customTooltip
                 .attr("class", "customTooltip card")
@@ -530,15 +533,15 @@ export class TrafficGraphsController {
                         .style("font-family", "'Montserrat', sans-serif")
                         .style("visibility", "visible");
                     
-                    // Show the circle on the path
-                    focus.selectAll(`.focus circle`).style("opacity", 1);
+                    // Show the diamond on the path
+                    focus.selectAll(`.focus .diamond`).style("opacity", 1);
                 });
 
             // Select focus objects and set opacity
             d3.selectAll(`.focus`).style("opacity", 0.9);
 
-            // Select the circle and style it
-            d3.selectAll(`.focus circle`).style("fill", "grey").style("opacity", 0);
+            // Select the diamond and style it
+            d3.selectAll(`.focus .diamond`).style("fill", "black").style("opacity", 0);
 
             d3.selectAll(`.customTooltip card`).style("visibility", "hidden");
 
