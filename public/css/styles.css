@@ -286,3 +286,36 @@ th:hover {
 .startCpuGrid path {
     stroke-opacity: 0;
 }
+.DELETED {
+    color: #FFCC00;
+}
+.NC {
+    color: #31CECE;
+}
+.golis {
+    color: #F58231;
+}
+.hormud {
+    color: #3CB44B;
+}
+.kenyan.telephone {
+    color: #3CB44B;
+}
+.nationlink {
+    color: #CCCC00;
+}
+.somnet {
+    color: #4363D8;
+}
+.somtel {
+    color: #800000;
+}
+.telegram {
+    color: #f032e6;
+}
+.telesom {
+    color: #911EB4;
+}
+.other {
+    color: #E6194B;
+}
