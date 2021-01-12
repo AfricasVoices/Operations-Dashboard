@@ -485,27 +485,24 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
                     );
-
+                    
+                    // Adjust the space between the tooltip and the bars
                     let tooltipContent = [], tooltipTranslateY = 5;
-                    operators.forEach(x => {
-                        if(d.operators[x].received != 0) {
-                            tooltipContent.push(`${x}: ${d.operators[x].received}`)
+                    // Adjusts TranslateY attr used below based on the desired output
+                    const adjustTranslateYAttr = (contentSize, initialValue = 14, adjustValue = 19) => {
+                        return initialValue + (adjustValue * (contentSize - 2));
+                    } 
+                    operators.forEach(operator => {
+                        if(d.operators[operator].received != 0) {
+                            // List of operator(s) with the number of messages received
+                            tooltipContent.push(`${operator}: ${d.operators[operator].received}`)
+                            // TranslateY attr repositions the tooltip vertically
+                            // The calculations ensures the tooltip touches the bars
                             if (tooltipContent.length == 1) {
                                 tooltipTranslateY = tooltipContent.length + 5;
-                            } else if (tooltipContent.length == 2) {
-                                tooltipTranslateY = tooltipContent.length - 14;
-                            } else if (tooltipContent.length == 3) {
-                                tooltipTranslateY = tooltipContent.length - 33;
-                            } else if (tooltipContent.length == 4) {
-                                tooltipTranslateY = tooltipContent.length - 52;
-                            } else if (tooltipContent.length == 5) {
-                                tooltipTranslateY = tooltipContent.length - 71;
-                            } else if (tooltipContent.length == 6) {
-                                tooltipTranslateY = tooltipContent.length - 90;
-                            } else if (tooltipContent.length == 7) {
-                                tooltipTranslateY = tooltipContent.length - 109;
-                            } else if (tooltipContent.length == 8) {
-                                tooltipTranslateY = tooltipContent.length - 120;
+                            } else if (tooltipContent.length > 1) {
+                                let value = adjustTranslateYAttr(tooltipContent.length)
+                                tooltipTranslateY = tooltipContent.length - value;
                             }
                         }
                     })
