@@ -444,7 +444,6 @@ export class TrafficGraphsController {
 
             // Create focus object
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
-            let customTooltip = d3.select(".total_received_sms_graph").append("div");
 
             // Append diamond on the path
             focus.append("path")
@@ -452,24 +451,21 @@ export class TrafficGraphsController {
                 .attr("transform", "translate(0, -6)")
                 .attr("class", "diamond");
 
-            customTooltip
-                .attr("class", "customTooltip card")
-                .style("padding", "4px") 
-                .style("position", "absolute")
-                .style("left", 0)
-                .style("top", 0)
-                .style("background", "whitesmoke")
-                .style("border-radius", "8px")
-                .style("visibility", "hidden");
-
+            // Add background rectangle behind the text tooltip
+            let rec = focus.append("rect")
+                .attr("x", -10)
+                .attr("y", "-27px")
+                .attr("rx", 6)
+                .attr("ry", 6)
+                .attr("width", 150)
+                .attr("height", 60);
+            
             sectionWithBrushing
                 .on("mouseover", () => {
                     focus.style("display", null)
-                    customTooltip.style("display", null)
                 })
                 .on("mouseout", () => {
                     focus.style("display", "none")
-                    customTooltip.style("display", "none")
                 })
                 .on("mousemove", (event) => {
                     // Below code finds the date by bisecting and
@@ -513,31 +509,65 @@ export class TrafficGraphsController {
                         }
                     })
 
-                    customTooltip.style(
-                        "transform",
-                        `translate(${x(updatedDatetime) + 30}px, ${y_total_received_sms_range(d.total_received) + tooltipTranslateY}px)`
-                    );
                             
-                    let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
-                    if (tooltipContent.length) {
-                        tooltipContent.forEach(d => {
-                            let operator = d.split(":")[0];
-                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`
-                        })
-                    } else {
-                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`
-                    }
+                    // let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
+                    // if (tooltipContent.length) {
+                    //     tooltipContent.forEach(d => {
+                    //         let operator = d.split(":")[0];
+                    //         tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`
+                    //     })
+                    // } else {
+                    //     tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`
+                    // }
+                    d3.selectAll("#iconic").remove();
+                    d3.selectAll("#iconic2").remove();
+                    d3.selectAll("#iconic3").remove();
 
-                    customTooltip
-                        .html(tooltipText)
-                        .style("color", "black")
-                        .style("font-size", "12px")
-                        .style("font-weight", "600")
-                        .style("font-family", "'Montserrat', sans-serif")
-                        .style("visibility", "visible");
+                    focus.selectAll("#text3")
+                        .data([d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)])
+                        .enter()
+                        .append("text")
+                        .attr("id", "iconic3")
+                        .attr("text-anchor", "start")
+                        .attr("font-size", "12px")
+                        .attr("font-weight", "bold")
+                        .attr("y", -15 + tooltipContent.length * -14)
+                        .attr("dy", 0)
+                        .text(d => d)
+                        .style("fill", "black")
+                    
+                    focus.selectAll("#text")
+                        .data(tooltipContent)
+                        .enter()
+                        .append("text")       // Append a text element
+                        .attr("id", "iconic2")
+                        .attr("text-anchor", "start")
+                        .attr("y", tooltipContent.length * -14)
+                        .attr("dy", (d, i) => i * 16)
+                        .attr("class", "fa")  // Give it the font-awesome class
+                        .text(d => "\uf14a")      // Specify your icon in unicode
+                        .style("fill", d => MNOColors[d.split(":")[0]])
+
+                    focus.selectAll("#text2")
+                        .data(tooltipContent)
+                        .enter()
+                        .append("text")       // Append a text element
+                        .attr("id", "iconic")
+                        .attr("x", 20)
+                        .attr("y", tooltipContent.length * -14)
+                        .attr("dy", (d, i) => i * 16)
+                        .attr("class", "fa")  // Give it the font-awesome class
+                        .text(d => d)      // Specify your icon in unicode
+                        .style("fill", d => MNOColors[d.split(":")[0]])
+
+                    rec.attr("y", -(14 + tooltipContent.length * 25))
+                        .attr("height", 10 + tooltipContent.length * 25);
                     
                     // Show the diamond on the path
                     focus.selectAll(`.focus .diamond`).style("opacity", 1);
+
+                    // Show the rect on the path
+                    d3.selectAll(`.focus rect`).style("opacity", 1);
                 });
 
             // Select focus objects and set opacity
@@ -546,7 +576,8 @@ export class TrafficGraphsController {
             // Select the diamond and style it
             d3.selectAll(`.focus .diamond`).style("fill", "black").style("opacity", 0);
 
-            d3.selectAll(`.customTooltip card`).style("visibility", "hidden");
+            // Select the rect and style it
+            d3.selectAll(`.focus rect`).style("fill", "whitesmoke").style("opacity", 0);
 
             // A function that set idleTimeOut to null
             let idleTimeout
