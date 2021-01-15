@@ -513,6 +513,10 @@ export class TrafficGraphsController {
 
                     customTooltip
                         .html(tooltipText)
+                        .attr("y", () => (tooltipContent.length > 0) ? -35 - (tooltipContent.length * 15) : -45)
+                        .attr("height", () => (tooltipContent.length > 0) ? 30 + (tooltipContent.length * 15) : 40)
+                        .style("text-align", "center")
+                        .style("padding", "2px 0px")
                         .style("color", "black")
                         .style("font-size", "12px")
                         .style("font-weight", "600")
