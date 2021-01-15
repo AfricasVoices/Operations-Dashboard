@@ -492,33 +492,15 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}px, ${y_total_received_sms_range(d.total_received)}px)`
                     );
-                    
-                    // Adjust the space between the tooltip and the bars
-                    let tooltipContent = [], tooltipTranslateY = 5;
-                    // Adjusts TranslateY attr used below based on the desired output
-                    const adjustTranslateYAttr = (contentSize, initialValue = 14, adjustValue = 19) => {
-                        return initialValue + (adjustValue * (contentSize - 2));
-                    } 
+                        
+                    let tooltipContent = [];
                     operators.forEach(operator => {
                         if(d.operators[operator].received != 0) {
                             // List of operator(s) with the number of messages received
                             tooltipContent.push(`${operator}: ${d.operators[operator].received}`)
-                            // TranslateY attr repositions the tooltip vertically
-                            // The calculations ensures the tooltip touches the bars
-                            if (tooltipContent.length == 1) {
-                                tooltipTranslateY = tooltipContent.length + 5;
-                            } else if (tooltipContent.length > 1) {
-                                let value = adjustTranslateYAttr(tooltipContent.length)
-                                tooltipTranslateY = tooltipContent.length - value;
-                            }
                         }
                     })
-
-                    customTooltip.style(
-                        "transform",
-                        `translate(${x(updatedDatetime) + 30}px, ${y_total_received_sms_range(d.total_received) + tooltipTranslateY}px)`
-                    );
-                            
+    
                     let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
                     if (tooltipContent.length) {
                         tooltipContent.forEach(d => {
