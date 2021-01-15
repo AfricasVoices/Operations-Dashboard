@@ -444,7 +444,14 @@ export class TrafficGraphsController {
 
             // Create focus object
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
-            let customTooltip = d3.select(".total_received_sms_graph").append("div");
+            let customTooltip = total_received_sms_graph.append("foreignObject")
+                .attr("x", -70)
+                .attr("y", -45)
+                .attr("width", 150)
+                .attr("height", 40)
+                .style("background", "whitesmoke")
+                .style("border-radius", "8px")
+                .style("visibility", "hidden");
 
             // Append diamond on the path
             focus.append("path")
