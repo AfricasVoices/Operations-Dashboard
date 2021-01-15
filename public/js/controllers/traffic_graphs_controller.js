@@ -444,23 +444,21 @@ export class TrafficGraphsController {
 
             // Create focus object
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
-            let customTooltip = d3.select(".total_received_sms_graph").append("div");
+            let customTooltip = total_received_sms_graph.append("foreignObject")
+                .attr("class", "customTooltip")
+                .attr("x", -70)
+                .attr("y", -45)
+                .attr("width", 150)
+                .attr("height", 40)
+                .style("background", "whitesmoke")
+                .style("border-radius", "8px")
+                .style("visibility", "hidden");
 
             // Append diamond on the path
             focus.append("path")
                 .attr("d", d3.symbol().type(d3.symbolDiamond))
                 .attr("transform", "translate(0, -6)")
                 .attr("class", "diamond");
-
-            customTooltip
-                .attr("class", "customTooltip card")
-                .style("padding", "4px") 
-                .style("position", "absolute")
-                .style("left", 0)
-                .style("top", 0)
-                .style("background", "whitesmoke")
-                .style("border-radius", "8px")
-                .style("visibility", "hidden");
 
             sectionWithBrushing
                 .on("mouseover", () => {
@@ -491,33 +489,19 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
                     );
-                    
-                    // Adjust the space between the tooltip and the bars
-                    let tooltipContent = [], tooltipTranslateY = 5;
-                    // Adjusts TranslateY attr used below based on the desired output
-                    const adjustTranslateYAttr = (contentSize, initialValue = 14, adjustValue = 19) => {
-                        return initialValue + (adjustValue * (contentSize - 2));
-                    } 
+                    customTooltip.style(
+                        "transform",
+                        `translate(${x(updatedDatetime)}px, ${y_total_received_sms_range(d.total_received)}px)`
+                    );
+                        
+                    let tooltipContent = [];
                     operators.forEach(operator => {
                         if(d.operators[operator].received != 0) {
                             // List of operator(s) with the number of messages received
                             tooltipContent.push(`${operator}: ${d.operators[operator].received}`)
-                            // TranslateY attr repositions the tooltip vertically
-                            // The calculations ensures the tooltip touches the bars
-                            if (tooltipContent.length == 1) {
-                                tooltipTranslateY = tooltipContent.length + 5;
-                            } else if (tooltipContent.length > 1) {
-                                let value = adjustTranslateYAttr(tooltipContent.length)
-                                tooltipTranslateY = tooltipContent.length - value;
-                            }
                         }
                     })
-
-                    customTooltip.style(
-                        "transform",
-                        `translate(${x(updatedDatetime) + 30}px, ${y_total_received_sms_range(d.total_received) + tooltipTranslateY}px)`
-                    );
-                            
+    
                     let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
                     if (tooltipContent.length) {
                         tooltipContent.forEach(d => {
@@ -530,6 +514,10 @@ export class TrafficGraphsController {
 
                     customTooltip
                         .html(tooltipText)
+                        .attr("y", () => (tooltipContent.length > 0) ? -35 - (tooltipContent.length * 15) : -45)
+                        .attr("height", () => (tooltipContent.length > 0) ? 30 + (tooltipContent.length * 15) : 40)
+                        .style("text-align", "center")
+                        .style("padding", "2px 0px")
                         .style("color", "black")
                         .style("font-size", "12px")
                         .style("font-weight", "600")
@@ -546,7 +534,7 @@ export class TrafficGraphsController {
             // Select the diamond and style it
             d3.selectAll(`.focus .diamond`).style("fill", "black").style("opacity", 0);
 
-            d3.selectAll(`.customTooltip card`).style("visibility", "hidden");
+            d3.selectAll(`.customTooltip`).style("visibility", "hidden");
 
             // A function that set idleTimeOut to null
             let idleTimeout
