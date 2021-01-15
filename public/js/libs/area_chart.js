@@ -270,7 +270,7 @@ export class AreaChart extends GraphLayout {
         this.brush = d3
             .brushX() // Add the brush feature using the d3.brush function
             .extent([
-                [0, 0],
+                [1, 0],
                 [this.width, this.height],
             ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
             .on("end", this.updateChart.bind(this));
