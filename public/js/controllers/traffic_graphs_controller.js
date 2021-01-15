@@ -488,6 +488,10 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
                     );
+                    customTooltip.style(
+                        "transform",
+                        `translate(${x(updatedDatetime)}px, ${y_total_received_sms_range(d.total_received)}px)`
+                    );
                     
                     // Adjust the space between the tooltip and the bars
                     let tooltipContent = [], tooltipTranslateY = 5;
