@@ -459,16 +459,6 @@ export class TrafficGraphsController {
                 .attr("transform", "translate(0, -6)")
                 .attr("class", "diamond");
 
-            customTooltip
-                .attr("class", "customTooltip card")
-                .style("padding", "4px") 
-                .style("position", "absolute")
-                .style("left", 0)
-                .style("top", 0)
-                .style("background", "whitesmoke")
-                .style("border-radius", "8px")
-                .style("visibility", "hidden");
-
             sectionWithBrushing
                 .on("mouseover", () => {
                     focus.style("display", null)
