@@ -445,6 +445,7 @@ export class TrafficGraphsController {
             // Create focus object
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
             let customTooltip = total_received_sms_graph.append("foreignObject")
+                .attr("class", "customTooltip")
                 .attr("x", -70)
                 .attr("y", -45)
                 .attr("width", 150)
@@ -533,7 +534,7 @@ export class TrafficGraphsController {
             // Select the diamond and style it
             d3.selectAll(`.focus .diamond`).style("fill", "black").style("opacity", 0);
 
-            d3.selectAll(`.customTooltip card`).style("visibility", "hidden");
+            d3.selectAll(`.customTooltip`).style("visibility", "hidden");
 
             // A function that set idleTimeOut to null
             let idleTimeout
