@@ -800,8 +800,23 @@ export class TrafficGraphsController {
                 .attr("class", "redrawElementSent")
                 .call(d3.axisLeft(y_total_sent_sms_range));
 
+            // Add a clipPath: everything out of this area won't be drawn.
+            let clip = total_sent_sms_graph.append("defs").append("svg:clipPath")
+                .attr("id", "clip")
+                .append("svg:rect")
+                .attr("width", Width)
+                .attr("height", Height)
+                .attr("x", 0)
+                .attr("y", 0);
+                
+            // Create the variable: where both the stacked bars and the brush take place
+            let sectionWithBrushing = total_sent_sms_graph.append('g').attr("clip-path", "url(#clip)");
+
+            // Add the brushing
+            let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
+
             // Create stacks
-            let sentLayer10min = total_sent_sms_graph
+            let sentLayer10min = sectionWithBrushing
                 .selectAll("#sentStack10min")
                 .data(sentDataStacked)
                 .enter()
