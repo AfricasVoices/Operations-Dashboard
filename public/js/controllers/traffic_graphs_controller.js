@@ -879,6 +879,150 @@ export class TrafficGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Total Outgoing Message(s) / 10 minutes");
+
+            sectionWithBrushing.append("g").attr("class", "brush").call(brush);
+
+            // Create focus object
+            let focus = total_sent_sms_graph.append("g").attr("class", `focus`);
+            let customTooltip = total_sent_sms_graph.append("foreignObject")
+                .attr("class", "customTooltip")
+                .attr("x", -70)
+                .attr("y", -45)
+                .attr("width", 150)
+                .attr("height", 40)
+                .style("background", "whitesmoke")
+                .style("border-radius", "8px")
+                .style("visibility", "hidden");
+
+            // Append diamond on the path
+            focus.append("path")
+                .attr("d", d3.symbol().type(d3.symbolDiamond))
+                .attr("transform", "translate(0, -6)")
+                .attr("class", "diamond");
+
+            sectionWithBrushing
+                .on("mouseover", () => {
+                    focus.style("display", null)
+                    customTooltip.style("display", null)
+                })
+                .on("mouseout", () => {
+                    focus.style("display", "none")
+                    customTooltip.style("display", "none")
+                })
+                .on("mousemove", (event) => {
+                    // Below code finds the date by bisecting and
+                    // Stores the x and y coordinate as variables
+                    let x0 = x.invert(d3.pointer(event)[0]);
+                    // This will select the closest date on the x axiswhen a user hover over the chart
+                    let bisectDate = d3.bisector(function (d) {
+                        return d.datetime;
+                    }).left;
+                    let i = bisectDate(tenMinGraphFilteredData, x0, 1);
+                    let d0 = tenMinGraphFilteredData[i - 1];
+                    let d1 = tenMinGraphFilteredData[i];
+                    let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
+    
+                    // Place the focus objects on the same path as the bars
+                    let updatedDatetime = new Date(d.datetime);
+                    updatedDatetime.setMinutes(updatedDatetime.getMinutes() + 4.5);
+                    focus.attr(
+                        "transform",
+                        `translate(${x(updatedDatetime)}, ${y_total_sent_sms_range(d.total_sent)})`
+                    );
+                    customTooltip.style(
+                        "transform",
+                        `translate(${x(updatedDatetime)}px, ${y_total_sent_sms_range(d.total_sent)}px)`
+                    );
+                        
+                    let tooltipContent = [];
+                    operators.forEach(operator => {
+                        if(d.operators[operator].sent != 0) {
+                            // List of operator(s) with the number of messages sent
+                            tooltipContent.push(`${operator}: ${d.operators[operator].sent}`)
+                        }
+                    })
+    
+                    let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
+                    if (tooltipContent.length) {
+                        tooltipContent.forEach(d => {
+                            let operator = d.split(":")[0];
+                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`
+                        })
+                    } else {
+                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`
+                    }
+
+                    customTooltip
+                        .html(tooltipText)
+                        .attr("y", () => (tooltipContent.length > 0) ? -35 - (tooltipContent.length * 15) : -45)
+                        .attr("height", () => (tooltipContent.length > 0) ? 30 + (tooltipContent.length * 15) : 40)
+                        .style("text-align", "center")
+                        .style("padding", "2px 0px")
+                        .style("color", "black")
+                        .style("font-size", "12px")
+                        .style("font-weight", "600")
+                        .style("font-family", "'Montserrat', sans-serif")
+                        .style("visibility", "visible");
+                    
+                    // Show the diamond on the path
+                    focus.selectAll(`.focus .diamond`).style("opacity", 1);
+                });
+
+            // Select focus objects and set opacity
+            d3.selectAll(`.focus`).style("opacity", 0.9);
+
+            // Select the diamond and style it
+            d3.selectAll(`.focus .diamond`).style("fill", "black").style("opacity", 0);
+
+            d3.selectAll(`.customTooltip`).style("visibility", "hidden");
+
+            // A function that set idleTimeOut to null
+            let idleTimeout
+            function idled() { idleTimeout = null; }
+
+            // A function that update the chart for given boundaries
+            function updateChart(event) {
+                // What are the selected boundaries?
+                let extent = event.selection;
+
+                // If no selection, back to initial coordinate. Otherwise, update X axis domain
+                if (!extent) {
+                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    // set scale domains
+                    let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
+                    let xMax = d3.max(tenMinGraphFilteredData, d => {
+                        let datetime = new Date(d.datetime);
+                        // Create a "padding" in the time scale
+                        datetime.setMinutes(datetime.getMinutes() + 10);
+                        return datetime;
+                    });
+                    x.domain([xMin, xMax]);
+                } else {
+                    // Update x axis domain
+                    x.domain([x.invert(extent[0]), x.invert(extent[1])]);
+                    sectionWithBrushing.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+                }
+
+                // Update axis 
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(timeFormat));
+
+                // Rotate axis labels
+                xAxis
+                    .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-65)");
+                    
+                // Redraw the stacked bars
+                sentLayer10min.selectAll("rect")
+                    .attr("x", d => x(d.data.datetime))
+                    .attr("width", d => {
+                        let datetime = new Date(d.data.datetime);
+                        datetime.setMinutes(datetime.getMinutes() + 9);
+                        return x(datetime) - x(d.data.datetime);
+                    });
+            } 
         }
 
         function drawOneDaySentGraph(yLimitSent) {
