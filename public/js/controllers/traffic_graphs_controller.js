@@ -840,7 +840,7 @@ export class TrafficGraphsController {
                 });
 
             //Add the X Axis for the total sent sms graph
-            total_sent_sms_graph
+            let xAxis = total_sent_sms_graph
                 .append("g")
                 .attr("class", "redrawElementSent")
                 .attr("transform", "translate(0," + Height + ")")
@@ -850,7 +850,8 @@ export class TrafficGraphsController {
                         .tickValues(tickValuesForXAxis)
                         .tickFormat(timeFormat)
                 )
-                // Rotate axis labels
+            // Rotate axis labels
+            xAxis
                 .selectAll("text")
                 .style("text-anchor", "end")
                 .attr("dx", "-.8em")
