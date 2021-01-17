@@ -833,7 +833,11 @@ export class TrafficGraphsController {
                 .attr("x", d => x(d.data.datetime))
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", Width / Object.keys(tenMinGraphFilteredData).length);
+                .attr("width", d => {
+                    let datetime = new Date(d.data.datetime);
+                    datetime.setMinutes(datetime.getMinutes() + 9);
+                    return x(datetime) - x(d.data.datetime);
+                });
 
             // Add tooltip for the total received sms graph
             sentLayer10min
