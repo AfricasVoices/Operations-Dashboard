@@ -8,10 +8,11 @@ verify_ssl = true
 [packages]
 firebase-admin = "*"
 google-cloud-firestore = "*"
-coredatamodules = {editable = true,git = "https://www.github.com/AfricasVoices/CoreDataModules",ref = "v0.13.1"}
-pipelineinfrastructure = {editable = true,git = "https://www.github.com/AfricasVoices/Pipeline-Infrastructure",ref = "v0.0.4"}
-rapidprotools = {editable = true,git = "https://www.github.com/AfricasVoices/RapidProTools",ref = "v0.3.3"}
+coredatamodules = {editable = true,git = "https://www.github.com/AfricasVoices/CoreDataModules",ref = "v0.15.0"}
+pipelineinfrastructure = {editable = true,git = "https://www.github.com/AfricasVoices/Pipeline-Infrastructure",ref = "v0.0.12"}
+rapidprotools = {editable = true,git = "https://www.github.com/AfricasVoices/RapidProTools",ref = "v0.3.8"}
 python-dateutil = "*"
+africastalking = "*"
 
 [requires]
 python_version = "3.6"

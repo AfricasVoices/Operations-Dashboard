@@ -25,6 +25,9 @@ class FirestoreWrapper(object):
     def _get_sms_stat_doc_ref(self, project_name, date_string):
         return self.client.document(f"metrics/rapid_pro/{project_name}/{date_string}")
 
+    def _get_africas_talking_stat_doc_ref(self, project_name, date_string):
+        return self.client.document(f"metrics/africas_talking/{project_name}/{date_string}")
+
     def get_active_projects(self):
         """
         Downloads all the active projects from Firestore.
@@ -85,3 +88,8 @@ class FirestoreWrapper(object):
         assert batch_counter == 0
 
         log.info("SMS stats updated")
+
+    def update_africas_talking_stats(self, project_name, iso_string, africas_talking_stats):
+        log.info(f"Updating Africa's Talking stats for project {project_name} at time {iso_string}...")
+        self._get_africas_talking_stat_doc_ref(project_name, iso_string).set(africas_talking_stats.to_dict())
+        log.info("Africa's Talking stats updated")

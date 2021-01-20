@@ -51,10 +51,10 @@ class Cache(object):
                 json.dump([ap.to_dict() for ap in active_projects], f)
             return active_projects
 
-    def get_rapid_pro_token_for_project(self, project_name, google_cloud_credentials_file_path, rapid_pro_token_url):
-        cache_file_path = f"{self.cache_dir_path}/rapid_pro_tokens/{project_name}.txt"
+    def get_token_for_project(self, project_name, token_type, google_cloud_credentials_file_path, token_url):
+        cache_file_path = f"{self.cache_dir_path}/tokens/{project_name}/{token_type}.txt"
         try:
-            log.info(f"Attempting to read the Rapid Pro token for project '{project_name}' from the cache "
+            log.info(f"Attempting to read the {token_type} token for project '{project_name}' from the cache "
                      f"at '{cache_file_path}'")
             with open(cache_file_path) as f:
                 token = f.read()
@@ -63,9 +63,9 @@ class Cache(object):
         except FileNotFoundError:
             log.info(f"Cache file '{cache_file_path}' not found; will download from Google Cloud Storage")
             token = google_cloud_utils.download_blob_to_string(
-                google_cloud_credentials_file_path, rapid_pro_token_url).strip()
+                google_cloud_credentials_file_path, token_url).strip()
 
-            log.info(f"Saving the fetched Rapid Pro token to the cache at '{cache_file_path}'...")
+            log.info(f"Saving the fetched {token_type} token to the cache at '{cache_file_path}'...")
             IOUtils.ensure_dirs_exist_for_file(cache_file_path)
             with open(cache_file_path, "w") as f:
                 f.write(token)
