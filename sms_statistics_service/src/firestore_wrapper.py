@@ -90,6 +90,16 @@ class FirestoreWrapper(object):
         log.info("SMS stats updated")
 
     def update_africas_talking_stats(self, project_name, iso_string, africas_talking_stats):
+        """
+        Updates the Africa's Talking stats for the given project and timestamp.
+
+        :param project_name: Name of project to update the Africa's Talking stats of.
+        :type project_name: str
+        :param iso_string: ISO 8601 formatted string to update the Africa's Talking stats of.
+        :type iso_string: str
+        :param africas_talking_stats: Africa's Talking stats to update with.
+        :type africas_talking_stats: src.data_models.AfricasTalkingStats
+        """
         log.info(f"Updating Africa's Talking stats for project {project_name} at time {iso_string}...")
         self._get_africas_talking_stat_doc_ref(project_name, iso_string).set(africas_talking_stats.to_dict())
         log.info("Africa's Talking stats updated")
