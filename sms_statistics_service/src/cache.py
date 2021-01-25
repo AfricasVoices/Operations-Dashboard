@@ -58,7 +58,7 @@ class Cache(object):
                      f"at '{cache_file_path}'")
             with open(cache_file_path) as f:
                 token = f.read()
-            log.info("Loaded the Rapid Pro token from the cache")
+            log.info(f"Loaded the {token_type} token from the cache")
             return token
         except FileNotFoundError:
             log.info(f"Cache file '{cache_file_path}' not found; will download from Google Cloud Storage")
