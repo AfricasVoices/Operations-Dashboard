@@ -121,6 +121,17 @@ export class DataController {
             }, error => console.log(error));
     }
 
+    static watchATCredits(projectName, onChange) {
+        let ATCredits = [];
+        return mediadb.collection(`metrics/africas_talking/${projectName}`)
+            .orderBy("datetime", "desc")
+            .limit(1).onSnapshot(res => {
+                // Update data every time it changes in firestore
+                DataController.updateData(res, ATCredits);
+                onChange(ATCredits);
+            }, error => console.log(error));
+    }
+
     static watchSystemsMetrics(onChange) {
         const TIMERANGE = 30;
         let offset = new Date();
