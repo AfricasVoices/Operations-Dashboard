@@ -2,6 +2,8 @@ import { BarChart } from "../libs/bar_chart.js";
 
 // GRAPH CONTROLLER
 export class TrafficGraphsController {
+    static displayATCredits(data) {}
+
     static addOneDayToDate(date) {
         let newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
