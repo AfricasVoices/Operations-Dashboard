@@ -142,14 +142,17 @@ export class AreaChart extends GraphLayout {
         // Create focus object
         this.focus = this.plot.append("g").attr("class", `${this.id}focus`);
 
-        // Append circle on the line path
-        this.focus.append("circle").attr("r", 3.5);
+        // Append diamond on the path
+        this.focus.append("path")
+            .attr("d", d3.symbol().type(d3.symbolDiamond))
+            .attr("transform", "translate(0, -8)")
+            .attr("class", "diamond");
 
         // Add background rectangle behind the text tooltip
         this.focus
             .append("rect")
             .attr("x", -30)
-            .attr("y", "-32px")
+            .attr("y", "-27px")
             .attr("rx", 6)
             .attr("ry", 6)
             .attr("width", 220)
@@ -159,7 +162,7 @@ export class AreaChart extends GraphLayout {
         this.focus
             .append("text")
             .attr("x", -20)
-            .attr("dy", "-18px")
+            .attr("dy", "-13px")
             .attr("font-size", "12px")
             .style("fill", this.color);
 
@@ -171,8 +174,8 @@ export class AreaChart extends GraphLayout {
         // Select focus objects and set opacity
         d3.selectAll(`.${this.id}focus`).style("opacity", 0.9);
 
-        // Select the circle and style it
-        d3.selectAll(`.${this.id}focus circle`).style("fill", this.color).style("opacity", 0);
+        // Select the diamond and style it
+        d3.selectAll(`.${this.id}focus .diamond`).style("fill", this.color).style("opacity", 0);
 
         // Select the rect and style it
         d3.selectAll(`.${this.id}focus rect`).style("fill", "whitesmoke").style("opacity", 0);
@@ -213,8 +216,8 @@ export class AreaChart extends GraphLayout {
             .duration(100)
             .style("opacity", 1);
 
-        // Show the circle on the path
-        this.focus.selectAll(`.${this.id}focus circle`).style("opacity", 1);
+        // Show the diamond on the path
+        this.focus.selectAll(`.${this.id}focus .diamond`).style("opacity", 1);
 
         // Show the rect on the path
         d3.selectAll(`.${this.id}focus rect`).style("opacity", 1);
@@ -267,7 +270,7 @@ export class AreaChart extends GraphLayout {
         this.brush = d3
             .brushX() // Add the brush feature using the d3.brush function
             .extent([
-                [0, 0],
+                [1, 0],
                 [this.width, this.height],
             ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
             .on("end", this.updateChart.bind(this));

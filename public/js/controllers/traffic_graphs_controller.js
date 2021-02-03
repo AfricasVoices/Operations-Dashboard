@@ -141,7 +141,7 @@ export class TrafficGraphsController {
             Width = 960 - Margin.right - Margin.left,
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
-            x = d3.scaleTime().range([0, Width]),
+            x = d3.scaleTime().range([1, Width]),
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
             y_total_sent_sms_range = d3.scaleLinear().range([Height, 0]);
 
@@ -156,25 +156,31 @@ export class TrafficGraphsController {
             .style("background", "whitesmoke")
             .style("border-radius", "8px")
             .style("visibility", "hidden");
-
-        // Append total received sms graph to svg
+        
+        let minX = -Margin.left,
+            minY = -Margin.top,
+            svgWidth = Width + Margin.left + Margin.right + 120,
+            svgHeight = Height + Margin.top + Margin.bottom; 
+        // Append total received sms graph to svg   
         let total_received_sms_graph = d3
                 .select(".total_received_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Append total sent sms graph to svg
-            total_sent_sms_graph = d3
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", `${minX} ${minY} ${svgWidth} ${svgHeight}`)
+                .attr("preserveAspectRatio", "xMinYMin")
+                .append("g");
+        // Append total sent sms graph to svg
+        let total_sent_sms_graph = d3
                 .select(".total_sent_sms_graph")
                 .append("svg")
-                .attr("width", Width + Margin.left + Margin.right + 120)
-                .attr("height", Height + Margin.top + Margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + Margin.left + "," + Margin.top + ")"),
-            // Format TimeStamp
-            timeFormat = d3.timeFormat("%Y-%m-%d");
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", `${minX} ${minY} ${svgWidth} ${svgHeight}`)
+                .attr('preserveAspectRatio','xMinYMin')
+                .append("g");
+        // Format TimeStamp
+        let timeFormat = d3.timeFormat("%a %d (%H:%M)");
 
         let mnoColorScheme = [],
             operatorsWithColorIdentity = Object.keys(MNOColors);
@@ -289,7 +295,14 @@ export class TrafficGraphsController {
                 receivedDataStacked = stackReceived(tenMinGraphFilteredData);
 
             // set scale domains
-            x.domain(d3.extent(tenMinGraphFilteredData, d => new Date(d.datetime)));
+            let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
+            let xMax = d3.max(tenMinGraphFilteredData, d => {
+                let datetime = new Date(d.datetime);
+                // Create a "padding" in the time scale
+                datetime.setMinutes(datetime.getMinutes() + 10);
+                return datetime;
+            });
+            x.domain([xMin, xMax]);
             if (yLimitReceived > 0)
                 y_total_received_sms_range.domain([0, yLimitReceived]);
 
@@ -297,6 +310,8 @@ export class TrafficGraphsController {
             d3.selectAll("#receivedStack").remove();
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll(".receivedGrid").remove();
+            d3.selectAll(".customTooltip").remove();
+            d3.selectAll(".brush").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
             let dataFilteredWeekGroupedDaily = d3
@@ -344,7 +359,21 @@ export class TrafficGraphsController {
                 .attr("class", "redrawElementReceived")
                 .call(d3.axisLeft(y_total_received_sms_range));
 
-            let receivedLayer10min = total_received_sms_graph
+            // Add a clipPath: everything out of this area won't be drawn.
+            let clip = total_received_sms_graph.append("defs").append("svg:clipPath")
+                .attr("id", "clip")
+                .append("svg:rect")
+                .attr("width", Width)
+                .attr("height", Height)
+                .attr("x", 0)
+                .attr("y", 0); 
+            // Create the variable: where both the stacked bars and the brush take place
+            let sectionWithBrushing = total_received_sms_graph.append('g').attr("clip-path", "url(#clip)");
+
+            // Add the brushing
+            let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
+        
+            let receivedLayer10min = sectionWithBrushing
                 .selectAll("#receivedStack10min")
                 .data(receivedDataStacked)
                 .enter()
@@ -364,45 +393,14 @@ export class TrafficGraphsController {
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                .attr("width", Width / Object.keys(tenMinGraphFilteredData).length);
-
-            // Add tooltip for the total received sms graph
-            receivedLayer10min
-                .selectAll("rect")
-                .on("mouseover", (event, d) => {
-                    // Get key of stacked data from the selection
-                    let operatorNameWithMessageDirection = d3.select(event.currentTarget.parentNode).datum().key,
-                        // Get operator name from the key
-                        operatorName = operatorNameWithMessageDirection.replace('_received',''),
-                        // Get color of hovered rect
-                        operatorColor = d3.select(event.currentTarget).style("fill");
-                    let receivedMessages = d.data[operatorNameWithMessageDirection],
-                        totalReceivedMessages = d.data.total_received,
-                        receivedDay = d.data.datetime,
-                        // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
-                        tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
-                        tooltipContent += `<div>${receivedMessages} 
-                        (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
-                        Message${receivedMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(receivedDay))}</div>`;
-                    tip.html(tooltipContent)
-                        .style("color", operatorColor)
-                        .style("font-size", "12px")
-                        .style("font-weight", "600")
-                        .style("font-family", "'Montserrat', sans-serif")
-                        .style("box-shadow", `2px 2px 4px -1px ${operatorColor}`)
-                        .style("visibility", "visible");
-                    d3.select(event.currentTarget).transition().duration(10).attr("opacity", 0.8);
-                })
-                .on("mouseout", (event, d) => {
-                    tip.style("visibility", "hidden");
-                    d3.select(event.currentTarget).transition().duration(10).attr("opacity", 1);
-                })
-                .on("mousemove", (event, d) => {
-                    tip.style("transform", `translate(${event.pageX}px, ${event.pageY - 60}px)`); // We can calculate the mouse's position relative the whole page by using event.pageX and event.pageY.
-                })
+                .attr("width", d => {
+                    let datetime = new Date(d.data.datetime);
+                    datetime.setMinutes(datetime.getMinutes() + 9);
+                    return x(datetime) - x(d.data.datetime);
+                });
 
             //Add the X Axis for the total received sms graph
-            total_received_sms_graph
+            let xAxis = total_received_sms_graph
                 .append("g")
                 .attr("class", "redrawElementReceived")
                 .attr("transform", "translate(0," + Height + ")")
@@ -412,7 +410,8 @@ export class TrafficGraphsController {
                         .tickValues(tickValuesForXAxis)
                         .tickFormat(timeFormat)
                 )
-                // Rotate axis labels
+            // Rotate axis labels
+            xAxis
                 .selectAll("text")
                 .style("text-anchor", "end")
                 .attr("dx", "-.8em")
@@ -440,6 +439,150 @@ export class TrafficGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Total Incoming Message(s) / 10 minutes");
+
+            sectionWithBrushing.append("g").attr("class", "brush").call(brush);
+
+            // Create focus object
+            let focus = total_received_sms_graph.append("g").attr("class", `focus`);
+            let customTooltip = total_received_sms_graph.append("foreignObject")
+                .attr("class", "customTooltip")
+                .attr("x", -70)
+                .attr("y", -45)
+                .attr("width", 150)
+                .attr("height", 40)
+                .style("background", "whitesmoke")
+                .style("border-radius", "8px")
+                .style("visibility", "hidden");
+
+            // Append diamond on the path
+            focus.append("path")
+                .attr("d", d3.symbol().type(d3.symbolDiamond))
+                .attr("transform", "translate(0, -6)")
+                .attr("class", "diamond");
+
+            sectionWithBrushing
+                .on("mouseover", () => {
+                    focus.style("display", null)
+                    customTooltip.style("display", null)
+                })
+                .on("mouseout", () => {
+                    focus.style("display", "none")
+                    customTooltip.style("display", "none")
+                })
+                .on("mousemove", (event) => {
+                    // Below code finds the date by bisecting and
+                    // Stores the x and y coordinate as variables
+                    let x0 = x.invert(d3.pointer(event)[0]);
+                    // This will select the closest date on the x axiswhen a user hover over the chart
+                    let bisectDate = d3.bisector(function (d) {
+                        return d.datetime;
+                    }).left;
+                    let i = bisectDate(tenMinGraphFilteredData, x0, 1);
+                    let d0 = tenMinGraphFilteredData[i - 1];
+                    let d1 = tenMinGraphFilteredData[i];
+                    let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
+    
+                    // Place the focus objects on the same path as the bars
+                    let updatedDatetime = new Date(d.datetime);
+                    updatedDatetime.setMinutes(updatedDatetime.getMinutes() + 4.5);
+                    focus.attr(
+                        "transform",
+                        `translate(${x(updatedDatetime)}, ${y_total_received_sms_range(d.total_received)})`
+                    );
+                    customTooltip.style(
+                        "transform",
+                        `translate(${x(updatedDatetime)}px, ${y_total_received_sms_range(d.total_received)}px)`
+                    );
+                        
+                    let tooltipContent = [];
+                    operators.forEach(operator => {
+                        if(d.operators[operator].received != 0) {
+                            // List of operator(s) with the number of messages received
+                            tooltipContent.push(`${operator}: ${d.operators[operator].received}`)
+                        }
+                    })
+    
+                    let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
+                    if (tooltipContent.length) {
+                        tooltipContent.forEach(d => {
+                            let operator = d.split(":")[0];
+                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`
+                        })
+                    } else {
+                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`
+                    }
+
+                    customTooltip
+                        .html(tooltipText)
+                        .attr("y", () => (tooltipContent.length > 0) ? -35 - (tooltipContent.length * 15) : -45)
+                        .attr("height", () => (tooltipContent.length > 0) ? 30 + (tooltipContent.length * 15) : 40)
+                        .style("text-align", "center")
+                        .style("padding", "2px 0px")
+                        .style("color", "black")
+                        .style("font-size", "12px")
+                        .style("font-weight", "600")
+                        .style("font-family", "'Montserrat', sans-serif")
+                        .style("visibility", "visible");
+                    
+                    // Show the diamond on the path
+                    focus.selectAll(`.focus .diamond`).style("opacity", 1);
+                });
+
+            // Select focus objects and set opacity
+            d3.selectAll(`.focus`).style("opacity", 0.9);
+
+            // Select the diamond and style it
+            d3.selectAll(`.focus .diamond`).style("fill", "black").style("opacity", 0);
+
+            d3.selectAll(`.customTooltip`).style("visibility", "hidden");
+
+            // A function that set idleTimeOut to null
+            let idleTimeout
+            function idled() { idleTimeout = null; }
+
+            // A function that update the chart for given boundaries
+            function updateChart(event) {
+                // What are the selected boundaries?
+                let extent = event.selection;
+
+                // If no selection, back to initial coordinate. Otherwise, update X axis domain
+                if (!extent) {
+                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    // set scale domains
+                    let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
+                    let xMax = d3.max(tenMinGraphFilteredData, d => {
+                        let datetime = new Date(d.datetime);
+                        // Create a "padding" in the time scale
+                        datetime.setMinutes(datetime.getMinutes() + 10);
+                        return datetime;
+                    });
+                    x.domain([xMin, xMax]);
+                } else {
+                    // Update x axis domain
+                    x.domain([x.invert(extent[0]), x.invert(extent[1])]);
+                    sectionWithBrushing.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+                }
+
+                // Update axis 
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(timeFormat));
+
+                // Rotate axis labels
+                xAxis
+                    .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-65)");
+                    
+                // Redraw the stacked bars
+                receivedLayer10min.selectAll("rect")
+                    .attr("x", d => x(d.data.datetime))
+                    .attr("width", d => {
+                        let datetime = new Date(d.data.datetime);
+                        datetime.setMinutes(datetime.getMinutes() + 9);
+                        return x(datetime) - x(d.data.datetime);
+                    });
+            } 
         }
 
         function drawOneDayReceivedGraph(yLimitReceived) {
@@ -461,6 +604,8 @@ export class TrafficGraphsController {
             d3.selectAll("#receivedStack10min").remove();
             d3.selectAll("#receivedStack").remove();
             d3.selectAll(".receivedGrid").remove();
+            d3.selectAll(".customTooltip").remove();
+            d3.selectAll(".brush").remove();
 
             const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
             // Add the X gridlines
@@ -497,24 +642,22 @@ export class TrafficGraphsController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            // Values to adjust x and width attributes
-            let rightPadding = -2, shiftBarsToRight = 1;
             receivedLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
                 .append("rect")
-                /* Shift bars to the right 
-                 - prevents first bar of graph from overlapping y axis path */
-                .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
+                .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_received_sms_range(d[1]))
                 .attr(
                     "height",
                     d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
                 )
-                /* Reduce the right padding of bars 
-                 - Accomodates the shift of the bars to the right so that they don't overlap */
-                .attr("width", (Width / Object.keys(dailyReceivedTotal).length) + rightPadding);
+                .attr("width", d => {
+                    let day = new Date(d.data.day);
+                    day.setHours(day.getHours() + 23);
+                    return x(day) - x(new Date(d.data.day));
+                });
 
             // Add tooltip for the total received sms graph
             receivedLayer
@@ -657,8 +800,23 @@ export class TrafficGraphsController {
                 .attr("class", "redrawElementSent")
                 .call(d3.axisLeft(y_total_sent_sms_range));
 
+            // Add a clipPath: everything out of this area won't be drawn.
+            let clip = total_sent_sms_graph.append("defs").append("svg:clipPath")
+                .attr("id", "clip")
+                .append("svg:rect")
+                .attr("width", Width)
+                .attr("height", Height)
+                .attr("x", 0)
+                .attr("y", 0);
+                
+            // Create the variable: where both the stacked bars and the brush take place
+            let sectionWithBrushing = total_sent_sms_graph.append('g').attr("clip-path", "url(#clip)");
+
+            // Add the brushing
+            let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
+
             // Create stacks
-            let sentLayer10min = total_sent_sms_graph
+            let sentLayer10min = sectionWithBrushing
                 .selectAll("#sentStack10min")
                 .data(sentDataStacked)
                 .enter()
@@ -675,43 +833,14 @@ export class TrafficGraphsController {
                 .attr("x", d => x(d.data.datetime))
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", Width / Object.keys(tenMinGraphFilteredData).length);
+                .attr("width", d => {
+                    let datetime = new Date(d.data.datetime);
+                    datetime.setMinutes(datetime.getMinutes() + 9);
+                    return x(datetime) - x(d.data.datetime);
+                });
 
-            // Add tooltip for the total received sms graph
-            sentLayer10min
-                .selectAll("rect")
-                .on("mouseover", (event, d) => {
-                    // Get key of stacked data from the selection
-                    let operatorNameWithMessageDirection = d3.select(event.currentTarget.parentNode).datum().key,
-                        // Get operator name from the key
-                        operatorName = operatorNameWithMessageDirection.replace('_sent',''),
-                        // Get color of hovered rect
-                        operatorColor = d3.select(event.currentTarget).style("fill");
-                    let sentMessages = d.data[operatorNameWithMessageDirection],
-                        totalSentMessages = d.data.total_sent,
-                        sentDay = d.data.datetime,
-                        // Tooltip with operator name, date, no. of msg(s) & msg percentage in that day.
-                        tooltipContent = `<div>${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)}</div>`;
-                    tooltipContent += `<div>${sentMessages} (${Math.round((sentMessages/totalSentMessages)*100)}%)
-                        Message${sentMessages !== 1 ? 's': ''} at ${dayTimeFormat(new Date(sentDay))}</div>`;
-                    tip.html(tooltipContent)
-                        .style("color", operatorColor)
-                        .style("font-size", "12px")
-                        .style("font-weight", "600")
-                        .style("font-family", "'Montserrat', sans-serif")
-                        .style("box-shadow", `2px 2px 4px -1px ${operatorColor}`)
-                        .style("visibility", "visible");
-                    d3.select(event.currentTarget).transition().duration(10).attr("opacity", 0.8);
-                })
-                .on("mouseout", (event, d) => {
-                    tip.style("visibility", "hidden");
-                    d3.select(event.currentTarget).transition().duration(10).attr("opacity", 1);
-                })
-                .on("mousemove", (event, d) => {
-                    tip.style("transform", `translate(${event.pageX}px, ${event.pageY - 60}px)`); // We can calculate the mouse's position relative the whole page by using event.pageX and event.pageY.
-                })
             //Add the X Axis for the total sent sms graph
-            total_sent_sms_graph
+            let xAxis = total_sent_sms_graph
                 .append("g")
                 .attr("class", "redrawElementSent")
                 .attr("transform", "translate(0," + Height + ")")
@@ -721,7 +850,8 @@ export class TrafficGraphsController {
                         .tickValues(tickValuesForXAxis)
                         .tickFormat(timeFormat)
                 )
-                // Rotate axis labels
+            // Rotate axis labels
+            xAxis
                 .selectAll("text")
                 .style("text-anchor", "end")
                 .attr("dx", "-.8em")
@@ -749,6 +879,150 @@ export class TrafficGraphsController {
                 .style("font-size", "20px")
                 .style("text-decoration", "bold")
                 .text("Total Outgoing Message(s) / 10 minutes");
+
+            sectionWithBrushing.append("g").attr("class", "brush").call(brush);
+
+            // Create focus object
+            let focus = total_sent_sms_graph.append("g").attr("class", `focus`);
+            let customTooltip = total_sent_sms_graph.append("foreignObject")
+                .attr("class", "customTooltip")
+                .attr("x", -70)
+                .attr("y", -45)
+                .attr("width", 150)
+                .attr("height", 40)
+                .style("background", "whitesmoke")
+                .style("border-radius", "8px")
+                .style("visibility", "hidden");
+
+            // Append diamond on the path
+            focus.append("path")
+                .attr("d", d3.symbol().type(d3.symbolDiamond))
+                .attr("transform", "translate(0, -6)")
+                .attr("class", "diamond");
+
+            sectionWithBrushing
+                .on("mouseover", () => {
+                    focus.style("display", null)
+                    customTooltip.style("display", null)
+                })
+                .on("mouseout", () => {
+                    focus.style("display", "none")
+                    customTooltip.style("display", "none")
+                })
+                .on("mousemove", (event) => {
+                    // Below code finds the date by bisecting and
+                    // Stores the x and y coordinate as variables
+                    let x0 = x.invert(d3.pointer(event)[0]);
+                    // This will select the closest date on the x axiswhen a user hover over the chart
+                    let bisectDate = d3.bisector(function (d) {
+                        return d.datetime;
+                    }).left;
+                    let i = bisectDate(tenMinGraphFilteredData, x0, 1);
+                    let d0 = tenMinGraphFilteredData[i - 1];
+                    let d1 = tenMinGraphFilteredData[i];
+                    let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
+    
+                    // Place the focus objects on the same path as the bars
+                    let updatedDatetime = new Date(d.datetime);
+                    updatedDatetime.setMinutes(updatedDatetime.getMinutes() + 4.5);
+                    focus.attr(
+                        "transform",
+                        `translate(${x(updatedDatetime)}, ${y_total_sent_sms_range(d.total_sent)})`
+                    );
+                    customTooltip.style(
+                        "transform",
+                        `translate(${x(updatedDatetime)}px, ${y_total_sent_sms_range(d.total_sent)}px)`
+                    );
+                        
+                    let tooltipContent = [];
+                    operators.forEach(operator => {
+                        if(d.operators[operator].sent != 0) {
+                            // List of operator(s) with the number of messages sent
+                            tooltipContent.push(`${operator}: ${d.operators[operator].sent}`)
+                        }
+                    })
+    
+                    let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
+                    if (tooltipContent.length) {
+                        tooltipContent.forEach(d => {
+                            let operator = d.split(":")[0];
+                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`
+                        })
+                    } else {
+                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`
+                    }
+
+                    customTooltip
+                        .html(tooltipText)
+                        .attr("y", () => (tooltipContent.length > 0) ? -35 - (tooltipContent.length * 15) : -45)
+                        .attr("height", () => (tooltipContent.length > 0) ? 30 + (tooltipContent.length * 15) : 40)
+                        .style("text-align", "center")
+                        .style("padding", "2px 0px")
+                        .style("color", "black")
+                        .style("font-size", "12px")
+                        .style("font-weight", "600")
+                        .style("font-family", "'Montserrat', sans-serif")
+                        .style("visibility", "visible");
+                    
+                    // Show the diamond on the path
+                    focus.selectAll(`.focus .diamond`).style("opacity", 1);
+                });
+
+            // Select focus objects and set opacity
+            d3.selectAll(`.focus`).style("opacity", 0.9);
+
+            // Select the diamond and style it
+            d3.selectAll(`.focus .diamond`).style("fill", "black").style("opacity", 0);
+
+            d3.selectAll(`.customTooltip`).style("visibility", "hidden");
+
+            // A function that set idleTimeOut to null
+            let idleTimeout
+            function idled() { idleTimeout = null; }
+
+            // A function that update the chart for given boundaries
+            function updateChart(event) {
+                // What are the selected boundaries?
+                let extent = event.selection;
+
+                // If no selection, back to initial coordinate. Otherwise, update X axis domain
+                if (!extent) {
+                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    // set scale domains
+                    let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
+                    let xMax = d3.max(tenMinGraphFilteredData, d => {
+                        let datetime = new Date(d.datetime);
+                        // Create a "padding" in the time scale
+                        datetime.setMinutes(datetime.getMinutes() + 10);
+                        return datetime;
+                    });
+                    x.domain([xMin, xMax]);
+                } else {
+                    // Update x axis domain
+                    x.domain([x.invert(extent[0]), x.invert(extent[1])]);
+                    sectionWithBrushing.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+                }
+
+                // Update axis 
+                xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(timeFormat));
+
+                // Rotate axis labels
+                xAxis
+                    .selectAll("text")
+                    .style("text-anchor", "end")
+                    .attr("dx", "-.8em")
+                    .attr("dy", ".15em")
+                    .attr("transform", "rotate(-65)");
+                    
+                // Redraw the stacked bars
+                sentLayer10min.selectAll("rect")
+                    .attr("x", d => x(d.data.datetime))
+                    .attr("width", d => {
+                        let datetime = new Date(d.data.datetime);
+                        datetime.setMinutes(datetime.getMinutes() + 9);
+                        return x(datetime) - x(d.data.datetime);
+                    });
+            } 
         }
 
         function drawOneDaySentGraph(yLimitSent) {
@@ -807,21 +1081,19 @@ export class TrafficGraphsController {
                 .attr("class", (d, i) => sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            // Values to adjust x and width attributes
-            let rightPadding = -2, shiftBarsToRight = 1;
             sentLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
                 .append("rect")
-                /* Shift bars to the right 
-                 - prevents first bar of graph from overlapping y axis path */
-                .attr("x", d => x(new Date(d.data.day)) + shiftBarsToRight)
+                .attr("x", d => x(new Date(d.data.day)))
                 .attr("y", d => y_total_sent_sms_range(d[1]))
                 .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                /* Reduce the right padding of bars 
-                 - Accomodates the shift of the bars to the right so that they don't overlap */
-                .attr("width", (Width / Object.keys(dailySentTotal).length) + rightPadding);
+                .attr("width", d => {
+                    let day = new Date(d.data.day);
+                    day.setHours(day.getHours() + 23);
+                    return x(day) - x(new Date(d.data.day));
+                });
 
             // Add tooltip for the total sent sms graph
             sentLayer
