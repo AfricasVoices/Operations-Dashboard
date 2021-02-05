@@ -268,9 +268,9 @@ export class UIController {
                             <div class="col">
                                 <div class="card responsetext">
                                     <b>Message metrics</b>
-                                    <div>Total Incoming Messages: <span id="total_received"></span></div>
-                                    <div>Total Outgoing Messages: <span id="total_sent"></span></div>
-                                    <div>Response Rate: <span id="response_rate"></span></div>
+                                    <div>Total Incoming Messages: <span id="total-received"></span></div>
+                                    <div>Total Outgoing Messages: <span id="total-sent"></span></div>
+                                    <div>Response Rate: <span id="response-rate"></span></div>
                                 </div>
                             </div>
                             <div class="col">
@@ -281,9 +281,9 @@ export class UIController {
                             <div class="col">
                                 <div class="card responsetext">
                                     <b>Project Details</b>
-                                    <div>Project Name: <span id="project_name"></span></div>
-                                    <div>AT Units Used: <span id="AT_units_used"></span></div>
-                                    <div>AT Units Balance: <span id="AT_units_bal"></span></div>
+                                    <div>Project Name: <span id="project-name"></span></div>
+                                    <div>AT Units Used: <span id="AT-units-used"></span></div>
+                                    <div>AT Units Balance: <span id="AT-units-bal"></span></div>
                                 </div>
                             </div>
                         </div>
