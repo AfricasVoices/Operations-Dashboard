@@ -260,26 +260,31 @@ export class UIController {
                 </div>
 
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card responsetext">
-                                <b>Message metrics</b></br>
-                                <div id="total_received">Total Incoming Messages</div>
-                                <div id="total_sent">Total Outgoing Messages: </div>
-                                <div id="response_rate">Response Rate: </div>
+                    <div class="border">
+                        <input class="form-control col-md-4 mt-2 ml-2" 
+                                id="datetime-picker" 
+                                type="text">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card responsetext">
+                                    <b>Message metrics</b>
+                                    <div>Total Incoming Messages: <span id="total_received"></span></div>
+                                    <div>Total Outgoing Messages: <span id="total_sent"></span></div>
+                                    <div>Response Rate: <span id="response_rate"></span></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card responsetext">
-                                <b>Operator metrics</b></br>
+                            <div class="col">
+                                <div class="card responsetext">
+                                    <b>Operator metrics</b>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card responsetext">
-                                <b>Project Details</b></br>
-                                <div id="project_name">Project Name:</div>
-                                <div id="AT_units_used">AT Units Used:</div>
-                                <div id="AT_units_bal">AT Units Balance</div>
+                            <div class="col">
+                                <div class="card responsetext">
+                                    <b>Project Details</b>
+                                    <div>Project Name: <span id="project_name"></span></div>
+                                    <div>AT Units Used: <span id="AT_units_used"></span></div>
+                                    <div>AT Units Balance: <span id="AT_units_bal"></span></div>
+                                </div>
                             </div>
                         </div>
                     </div>
