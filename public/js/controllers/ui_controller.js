@@ -261,9 +261,12 @@ export class UIController {
 
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                     <div class="border">
-                        <input class="form-control col-md-4 mt-2 ml-2" 
-                                id="datetime-picker" 
-                                type="text">
+                        <div class="input-group px-2 pt-1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Datetime Picker: </span>
+                            </div>
+                            <input type="text" class="form-control col-md-3 bg-light" id="datetime-picker">
+                        </div>
                         <div class="row">
                             <div class="col">
                                 <div class="card responsetext">
