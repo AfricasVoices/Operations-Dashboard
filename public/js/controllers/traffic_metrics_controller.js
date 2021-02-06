@@ -1,0 +1,49 @@
+import { DataController } from "./data_controller.js";
+
+export class TrafficMeticsController {
+    static updateTotals(metrics) {
+        let { data, dateRange, projectCollection: projectName, operators } = metrics;
+
+        flatpickr("#datetime-picker", {
+            mode: "range",
+            maxDate: "today",
+            dateFormat: "Y-m-d",
+            defaultDate: [...dateRange],
+            onChange: function (selectedDates, dateStr, instance) {
+                if (selectedDates.length > 1) {
+                    DataController.projectTrafficDataMetrics(
+                        projectName,
+                        TrafficMeticsController.updateTotals,
+                        selectedDates
+                    );
+                }
+            },
+        });
+
+        let totalReceived = d3.sum(data, (d) => d.total_received),
+            totalSent = d3.sum(data, (d) => d.total_sent),
+            responseRate = (Number(totalSent) / Number(totalReceived)).toFixed(2);
+
+        d3.select("#project-name").text(projectName);
+        d3.select("#total-received").text(totalReceived);
+        d3.select("#total-sent").text(totalSent);
+        d3.select("#response-rate").text(responseRate);
+
+        const metricsTable = document.getElementById("operator-metrics");
+        while (metricsTable.firstChild) {
+            metricsTable.removeChild(metricsTable.firstChild);
+        }
+        let html = "<tr>%operator_metrics%</tr>";
+        operators.forEach((operator) => {
+            let tableData = `<td>${operator}</td>
+                <td>${d3.sum(data, (d) => d[`${operator}_received`])}</td>
+                <td>${d3.sum(data, (d) => d[`${operator}_sent`])}</td>`;
+            let newHtml = html.replace("%operator_metrics%", tableData);
+            metricsTable.insertAdjacentHTML("beforeend", newHtml);
+        });
+        metricsTable.insertAdjacentHTML(
+            "afterbegin",
+            "<th>Operators</th><th>Incoming</th><th>Outgoing</th>"
+        );
+    }
+}
