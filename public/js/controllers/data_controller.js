@@ -141,7 +141,7 @@ export class DataController {
         const trafficMetricsRef = mediadb.collection(`/metrics/rapid_pro/${projectCollection}/`);
         const snapshot = await trafficMetricsRef
             .where("datetime", ">=", iso(firstDay))
-            .where("datetime", "<", iso(lastDay))
+            .where("datetime", "<=", iso(lastDay))
             .get();
 
         if (snapshot.empty) {
