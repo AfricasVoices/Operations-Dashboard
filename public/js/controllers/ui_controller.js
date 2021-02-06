@@ -276,6 +276,7 @@ export class UIController {
                             <div class="col">
                                 <div class="card responsetext">
                                     <b>Operator metrics</b>
+                                    <table id="operator-metrics"></table>
                                 </div>
                             </div>
                             <div class="col">
