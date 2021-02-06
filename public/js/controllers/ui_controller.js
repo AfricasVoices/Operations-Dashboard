@@ -261,7 +261,7 @@ export class UIController {
 
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                     <div class="border">
-                        <div class="input-group px-2 pt-1">
+                        <div class="input-group px-2 pt-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Datetime Picker: </span>
                             </div>
