@@ -9,8 +9,6 @@ export class TrafficGraphsController {
     }
 
     static updateGraphs(data, projectName, operators,  MNOColors) {
-        d3.select("#project-name").text(projectName);
-
         const TIMEFRAME_WEEK = 7;
         const TIMEFRAME_MONTH = 30;
         if (!(TrafficGraphsController.tenMinGraphTimeframe && TrafficGraphsController.oneDayGraphTimeframe)) {
