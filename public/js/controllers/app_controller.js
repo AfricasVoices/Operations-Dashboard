@@ -72,7 +72,7 @@ class Controller {
         import("./traffic_metrics_controller.js").then((module) => {
             DataController.projectTrafficDataMetrics(
                 project,
-                module.TrafficMeticsController.updateTotals
+                module.TrafficMetricsController.updateTotals
             )
         });
     }
