@@ -130,6 +130,7 @@ export class DataController {
                 DataController.updateData(res, ATCredits);
                 onChange(ATCredits);
             }, error => console.log(error));
+    }
       
     static async projectTrafficDataMetrics(projectCollection, onChange, dateRange = []) {
         let iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L"), firstDay, lastDay;
