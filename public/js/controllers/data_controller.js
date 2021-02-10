@@ -130,6 +130,62 @@ export class DataController {
                 DataController.updateData(res, ATCredits);
                 onChange(ATCredits);
             }, error => console.log(error));
+      
+    static async projectTrafficDataMetrics(projectCollection, onChange, dateRange = []) {
+        let iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L"), firstDay, lastDay;
+        
+        if (dateRange.length > 1) {
+            [firstDay, lastDay] = dateRange;
+        } else {
+            var makeDate = new Date();
+            // Get Previous Months Date
+            makeDate.setMonth(makeDate.getMonth() - 1);
+            // Get first and last date of current month
+            firstDay = new Date(makeDate.getFullYear(), makeDate.getMonth(), 1);
+            lastDay = new Date(makeDate.getFullYear(), makeDate.getMonth() + 1, 0);
+        }
+        // End of day
+        lastDay.setHours(23,59,59,999);
+
+        // Call a method to get the data.
+        const trafficMetricsRef = mediadb.collection(`/metrics/rapid_pro/${projectCollection}/`);
+        const snapshot = await trafficMetricsRef
+            .where("datetime", ">=", iso(firstDay))
+            .where("datetime", "<=", iso(lastDay))
+            .get();
+
+        if (snapshot.empty) {
+            console.log("No matching documents.");
+            return;
+        }
+
+        let data = [];
+        snapshot.forEach((doc) => {
+            const obj = { id: doc.id, ...doc.data() };
+            data.push(obj);
+        });
+
+        let operators = new Set();
+        data.forEach((d) => {
+            d.datetime = new Date(d.datetime);
+            d.total_received = +d.total_received;
+            d.total_sent = +d.total_sent;
+            d.total_errored = +d.total_errored;
+            Object.keys(d.operators)
+                .sort()
+                .forEach(operator => {
+                    if (!(operator in operators)) {
+                        operators.add(operator);
+                        d[`${operator}_received`] = +d.operators[operator]["received"];
+                        d[`${operator}_sent`] = +d.operators[operator]["sent"];
+                    }
+                });
+        });
+        // Sort data by date
+        data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+        dateRange = [firstDay, lastDay];
+        onChange({ data, dateRange, projectCollection, operators });
     }
 
     static watchSystemsMetrics(onChange) {
