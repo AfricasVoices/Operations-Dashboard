@@ -273,7 +273,6 @@ export class UIController {
                                     <b>Message metrics</b>
                                     <div>Total Incoming Messages: <span id="total-received"></span></div>
                                     <div>Total Outgoing Messages: <span id="total-sent"></span></div>
-                                    <div>Response Rate: <span id="response-rate"></span></div>
                                 </div>
                             </div>
                             <div class="col">
