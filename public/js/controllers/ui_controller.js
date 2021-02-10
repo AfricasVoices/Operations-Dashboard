@@ -239,7 +239,7 @@ export class UIController {
                     </h2>
                 </div>
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                    <div class="card">
+                    <div class="card shadow">
                         <p class="h5 text-center card-title text-uppercase"><u>Threats to Validity</u></p>
                         <div class="card-text">
                             <p><strong>The outbound and failed messages graphs may show underestimates when TextIt is under outbound load</strong><br>
@@ -260,7 +260,7 @@ export class UIController {
                 </div>
 
                 <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                    <div class="border">
+                    <div class="card shadow">
                         <div class="input-group px-2 pt-2">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Datetime Picker: </span>
