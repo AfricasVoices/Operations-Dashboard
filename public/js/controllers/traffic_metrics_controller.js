@@ -1,6 +1,6 @@
 import { DataController } from "./data_controller.js";
 
-export class TrafficMeticsController {
+export class TrafficMetricsController {
     static updateTotals(metrics) {
         let { data, dateRange, projectCollection: projectName, operators } = metrics;
 
@@ -13,7 +13,7 @@ export class TrafficMeticsController {
                 if (selectedDates.length > 1) {
                     DataController.projectTrafficDataMetrics(
                         projectName,
-                        TrafficMeticsController.updateTotals,
+                        TrafficMetricsController.updateTotals,
                         selectedDates
                     );
                 }
