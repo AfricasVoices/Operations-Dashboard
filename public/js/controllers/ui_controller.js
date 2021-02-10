@@ -229,14 +229,14 @@ export class UIController {
             </section>
             <div class="accordion" id="accordionExample">
                 <div id="headingOne">
-                    <h2 class="mb-2">
-                        <button class="btn btn-brown shadow-none" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <div class="btn-group mb-2">
+                        <button class="btn btn-outline-custom shadow-none" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                         Metrics
                         </button>
-                        <button class="btn btn-brown shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <button class="btn btn-outline-custom shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         Threats to Validity
                         </button>
-                    </h2>
+                    </div>
                 </div>
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                     <div class="card shadow">
