@@ -68,6 +68,13 @@ class Controller {
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
         });
+        // Update and show the Metrics
+        import("./traffic_metrics_controller.js").then((module) => {
+            DataController.projectTrafficDataMetrics(
+                project,
+                module.TrafficMetricsController.updateTotals
+            )
+        });
     }
 
     static displaySystems() {
