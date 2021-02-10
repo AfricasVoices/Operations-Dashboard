@@ -21,13 +21,11 @@ export class TrafficMetricsController {
         });
 
         let totalReceived = d3.sum(data, (d) => d.total_received),
-            totalSent = d3.sum(data, (d) => d.total_sent),
-            responseRate = (Number(totalSent) / Number(totalReceived)).toFixed(2);
+            totalSent = d3.sum(data, (d) => d.total_sent);
 
         d3.select("#project-name").text(projectName);
         d3.select("#total-received").text(totalReceived);
         d3.select("#total-sent").text(totalSent);
-        d3.select("#response-rate").text(responseRate);
 
         const metricsTable = document.getElementById("operator-metrics");
         while (metricsTable.firstChild) {
