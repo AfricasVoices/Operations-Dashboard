@@ -121,6 +121,17 @@ export class DataController {
             }, error => console.log(error));
     }
 
+    static watchATCredits(projectName, onChange) {
+        let ATCredits = [];
+        return mediadb.collection(`metrics/africas_talking/${projectName}`)
+            .orderBy("datetime", "desc")
+            .limit(1).onSnapshot(res => {
+                // Update data every time it changes in firestore
+                DataController.updateData(res, ATCredits);
+                onChange(ATCredits);
+            }, error => console.log(error));
+    }
+      
     static async projectTrafficDataMetrics(projectCollection, onChange, dateRange = []) {
         let iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L"), firstDay, lastDay;
         

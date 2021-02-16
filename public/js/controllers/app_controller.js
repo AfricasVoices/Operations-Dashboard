@@ -1,6 +1,7 @@
 import { UIController } from "./ui_controller.js";
 import { DataController } from "./data_controller.js";
 import { AuthController } from "./auth_controller.js";
+import { TrafficMetricsController } from "./traffic_metrics_controller.js";
 
 // GLOBAL APP CONTROLLER
 class Controller {
@@ -68,13 +69,11 @@ class Controller {
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
         });
+        const { updateTotals, displayATCredits } = TrafficMetricsController;
         // Update and show the Metrics
-        import("./traffic_metrics_controller.js").then((module) => {
-            DataController.projectTrafficDataMetrics(
-                project,
-                module.TrafficMetricsController.updateTotals
-            )
-        });
+        DataController.projectTrafficDataMetrics(project, updateTotals);
+        // Update Africa's Talking balance
+        DataController.watchATCredits(project, displayATCredits);
     }
 
     static displaySystems() {

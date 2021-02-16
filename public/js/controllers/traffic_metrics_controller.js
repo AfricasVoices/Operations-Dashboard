@@ -44,4 +44,14 @@ export class TrafficMetricsController {
             "<th>Operators</th><th>Incoming</th><th>Outgoing</th>"
         );
     }
+
+    static displayATCredits(data) {
+        let node = d3.select("#AT-units-bal");
+        if (data.length) {
+            let { balance } = data[0];
+            node.text(balance);
+        } else {
+            node.text("N/A");
+        }
+    }
 }
