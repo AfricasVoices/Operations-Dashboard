@@ -46,7 +46,12 @@ export class TrafficMetricsController {
     }
 
     static displayATCredits(data) {
-        let { balance } = data[0]  
-        d3.select("#AT-units-bal").text(balance);
+        let node = d3.select("#AT-units-bal");
+        if (data.length) {
+            let { balance } = data[0];
+            node.text(balance);
+        } else {
+            node.text("N/A");
+        }
     }
 }
