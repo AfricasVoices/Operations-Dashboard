@@ -44,4 +44,9 @@ export class TrafficMetricsController {
             "<th>Operators</th><th>Incoming</th><th>Outgoing</th>"
         );
     }
+
+    static displayATCredits(data) {
+        let { balance } = data[0]  
+        d3.select("#AT-units-bal").text(balance);
+    }
 }
