@@ -230,14 +230,17 @@ export class UIController {
             </section>
             <div class="accordion" id="accordionExample">
                 <div id="headingOne">
-                    <h2 class="mb-2">
-                        <button class="btn btn-brown shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <div class="btn-group mb-2">
+                        <button class="btn btn-outline-custom shadow-none" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                        Metrics
+                        </button>
+                        <button class="btn btn-outline-custom shadow-none" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         Threats to Validity
                         </button>
-                    </h2>
+                    </div>
                 </div>
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                    <div class="card">
+                    <div class="card shadow">
                         <p class="h5 text-center card-title text-uppercase"><u>Threats to Validity</u></p>
                         <div class="card-text">
                             <p><strong>The outbound and failed messages graphs may show underestimates when TextIt is under outbound load</strong><br>
@@ -253,6 +256,40 @@ export class UIController {
                         
                             <p><strong>Total failures are reported based only on the response received by the aggregator. </strong><br>
                             Therefore the failures graph may underestimate if the aggregator reports a success but the MNO fails to deliver the message to the receipient, or show an overestimate if the aggregator delivers messages but fails to respond with a success status. Vice versa for total outbound messages.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="border shadow">
+                        <div class="input-group px-2 pt-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Datetime Picker: </span>
+                            </div>
+                            <input type="text" class="form-control col-md-3 bg-light" id="datetime-picker">
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="card responsetext">
+                                    <b>Message metrics</b>
+                                    <div>Total Incoming Messages: <span id="total-received"></span></div>
+                                    <div>Total Outgoing Messages: <span id="total-sent"></span></div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card responsetext">
+                                    <b>Operator metrics</b>
+                                    <table id="operator-metrics"></table>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card responsetext">
+                                    <b>Project Details</b>
+                                    <div>Project Name: <span id="project-name"></span></div>
+                                    <div>Africas Talking Units Used: <span id="AT-units-used"></span></div>
+                                    <div>Africas Talking Units Balance: <span id="AT-units-bal"></span></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
