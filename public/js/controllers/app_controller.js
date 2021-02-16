@@ -75,6 +75,13 @@ class Controller {
                 module.TrafficMetricsController.updateTotals
             )
         });
+        // Update Africa's Talking balance
+        import("./traffic_metrics_controller.js").then((module) => {
+            DataController.watchATCredits(
+                project,
+                module.TrafficMetricsController.displayATCredits
+            )
+        });
     }
 
     static displaySystems() {
