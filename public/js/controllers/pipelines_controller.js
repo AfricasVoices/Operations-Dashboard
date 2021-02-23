@@ -1,7 +1,9 @@
 export class PipelinesController {
-    static updatePipelinePage() {
-        PipelinesController.updateGraphs()
-        PipelinesController.updatePipelineProgressTable();
+    static updatePipelinePage(pipelineMetrics) {
+        // Group pipeline metrics by pipeline name
+        let metricsByPipeline = d3.group(pipelineMetrics, (d) => d.pipeline_name);
+
+        
     }
 
     static updateGraphs() {
