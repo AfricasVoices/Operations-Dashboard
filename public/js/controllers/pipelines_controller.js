@@ -3,7 +3,33 @@ export class PipelinesController {
         // Group pipeline metrics by pipeline name
         let metricsByPipeline = d3.group(pipelineMetrics, (d) => d.pipeline_name);
 
-        
+        // Generate data for pipeline progress table
+        let pipelineProgressTableData = [];
+        for (let [key, value] of metricsByPipeline.entries()) {
+            let pipelineProgress = {};
+            pipelineProgress["Pipeline"] = key;
+            // Sort pipeline metrics in a descending order
+            value.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            pipelineProgress["Last Start Time"] = value.find(
+                (d) => d.event == "PipelineRunStart"
+            ).timestamp;
+
+            // Group pipeline metrics by run id
+            let metricsByRunId = d3.group(value, (d) => d.run_id);
+
+            pipelineProgress["Last Successful Run"] = "-";
+            for (let value of metricsByRunId.values()) {
+                let eventsInOneRun = value.map((d) => d.event);
+                if (eventsInOneRun.includes("PipelineRunEnd")) {
+                    pipelineProgress["Last Successful Run"] = value.find(
+                        (d) => d.event == "PipelineRunEnd"
+                    ).timestamp;
+                    break;
+                }
+            }
+            pipelineProgressTableData.push(pipelineProgress);
+        }
+        PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
     }
 
     static updateGraphs() {
