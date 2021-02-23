@@ -30,6 +30,7 @@ export class PipelinesController {
             pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
+        // TODO: Update pipeline monitoring graphs.
     }
 
     static updateGraphs() {
