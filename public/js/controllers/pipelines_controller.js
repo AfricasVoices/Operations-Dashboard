@@ -79,6 +79,12 @@ export class PipelinesController {
             let td = tr.selectAll("td")
                 .data(d => PipelinesController.jsonToArray(d))
                 .enter().append("td");
+            
+            td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
+            td.filter((d, i) => d[0] !== "Pipeline").text(d => {
+                if (d[1] !== "-") d[1] = fullDateFormat(d[1]);
+                return d[1];
+            }).style("text-align", "center");
         }
 
     }
