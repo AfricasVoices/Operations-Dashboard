@@ -94,8 +94,7 @@ export class DataController {
                 pipelineMetrics.forEach(d => d.timestamp = new Date(d.timestamp));
                 // Sort data by date
                 pipelineMetrics.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-                // Group pipeline metrics by project
-                let metricsByProject = d3.group(pipelineMetrics, d => d.pipeline_name);
+                onChange(pipelineMetrics)
             })
         
     }
