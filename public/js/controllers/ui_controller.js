@@ -322,7 +322,7 @@ export class UIController {
     static addPipelinesGraphs() {
         UIController.resetUI();
         let html = `<div class="container">
-            <table>
+            <table class="table">
                 <thead></thead>
                 <tbody></tbody>
             </table>
