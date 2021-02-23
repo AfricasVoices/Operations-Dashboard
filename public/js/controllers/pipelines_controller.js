@@ -81,6 +81,8 @@ export class PipelinesController {
                 .enter().append("td");
             
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
+
+            let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
             td.filter((d, i) => d[0] !== "Pipeline").text(d => {
                 if (d[1] !== "-") d[1] = fullDateFormat(d[1]);
                 return d[1];
