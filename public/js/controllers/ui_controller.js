@@ -6,6 +6,7 @@ export class UIController {
             codingProgressLinkSelector: ".coding-progress-link",
             trafficsLinkSelector: ".traffics-link",
             systemsLinkSelector: ".systems-link",
+            pipelinesLinkSelector: ".pipelines-link",
             logoutBtn: ".logout-btn",
             activeLinkClassName: "active-link",
             activeLinks: "a.active-link",
@@ -314,6 +315,20 @@ export class UIController {
             <section>
                 <div class="card shadow cpu-utilization-chart my-1"></div>
             </section> 
+        </div> `;
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
+    }
+
+    static addPipelinesGraphs() {
+        UIController.resetUI();
+        let html = `<div class="container">
+            <table class="table">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+            <section>
+                <div class="card shadow line-chart my-1"></div>
+            </section>
         </div> `;
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }

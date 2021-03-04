@@ -19,6 +19,9 @@ class Controller {
         document
             .querySelector(Controller.DOMstrings.systemsLinkSelector)
             .addEventListener("click", Controller.navigateToSystems);
+        document
+            .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
+            .addEventListener("click", Controller.navigateToPipelines);
     }
 
     static clearAllTimers() {
@@ -91,6 +94,21 @@ class Controller {
         });
     }
 
+    static displayPipelines() {
+        UIController.addPipelinesGraphs();
+        Controller.resetActiveLink();
+        document
+            .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
+            .classList.add(Controller.DOMstrings.activeLinkClassName);
+        // Update and show the Graphs
+        import("./pipelines_controller.js").then((module) => {
+            let unsubscribeFunc = DataController.watchPipelinesMetrics(
+                module.PipelinesController.updatePipelinePage
+            );
+            DataController.registerSnapshotListener(unsubscribeFunc);
+        });
+    }
+
     static navigateToCodingProgress(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.clearAllTimers();
@@ -117,6 +135,15 @@ class Controller {
             DataController.detachSnapshotListener();
             window.location.hash = "systems";
             Controller.displaySystems();
+        }
+    }
+
+    static navigateToPipelines(e) {
+        if (e.target && e.target.nodeName == "A") {
+            Controller.clearAllTimers();
+            DataController.detachSnapshotListener();
+            window.location.hash = "pipelines";
+            Controller.displayPipelines();
         }
     }
 
@@ -153,6 +180,8 @@ class Controller {
                 Controller.displayCodingProgress();
             } else if (page_route == "systems") {
                 Controller.displaySystems();
+            } else if (page_route == "pipelines") {
+                Controller.displayPipelines();
             } else if (page_route.startsWith("traffic-")) {
                 DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
             } else {

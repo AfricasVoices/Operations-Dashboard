@@ -74,6 +74,31 @@ export class DataController {
         }, error => console.log(error));    
     }
 
+    static watchPipelinesMetrics(onChange) {
+        const TIMERANGE = 31;
+        
+        let offset = new Date(), 
+            offsetString, 
+            iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
+
+        offset.setDate(offset.getDate() - TIMERANGE);
+        offsetString = iso(offset);
+
+        let pipelineMetrics = [];
+        return mediadb.collection("metrics/pipelines/pipeline_logs")
+            .where("timestamp", ">", offsetString)
+            .onSnapshot(res => {
+                // Update data every time it changes in firestore
+                DataController.updateData(res, pipelineMetrics);
+                // format the data
+                pipelineMetrics.forEach(d => d.timestamp = new Date(d.timestamp));
+                // Sort data by date
+                pipelineMetrics.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                onChange(pipelineMetrics)
+            })
+        
+    }
+
     static watchMNOColors() {
         return mediadb.doc("mno_properties/mno_colors").onSnapshot(res => {
             DataController.mno_colors = res.data();
