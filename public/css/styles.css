@@ -15,10 +15,7 @@
     color: steelblue;
     cursor: pointer;
 }
-.traffics-link,
-.systems-link,
-.pipelines-link,
-.coding-progress-link {
+.navbar-nav .nav-item {
     margin-left: -1px;
 }
 .dropdown-menu {
