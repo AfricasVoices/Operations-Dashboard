@@ -126,20 +126,17 @@ class Controller {
                 .classList.add(Controller.DOMstrings.activeLinkClassName);
             Controller.clearAllTimers();
             DataController.detachSnapshotListener();
-            window.location.hash = "systems";
-            Controller.displaySystems();
+            
+            const [ SERVER, PIPELINES ] = ["miranda", "pipelines"]
+            if (system.toLowerCase() === SERVER) {
+                Controller.displayServerMetrics()
+            }
+            if (system.toLowerCase() === PIPELINES) {
+                Controller.displayPipelines()
+            }
         }
     }
-
-    static navigateToPipelines(e) {
-        if (e.target && e.target.nodeName == "A") {
-            Controller.clearAllTimers();
-            DataController.detachSnapshotListener();
-            window.location.hash = "pipelines";
-            Controller.displayPipelines();
-        }
-    }
-
+    
     static displayDeepLinkedTrafficPage(activeProjectsData) {
         let activeProjects = [],
             page_route = window.location.hash.substring(1);
