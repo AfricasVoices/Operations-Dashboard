@@ -49,7 +49,7 @@ export class TrafficMetricsController {
         let node = d3.select("#AT-units-bal");
         if (data.length) {
             let { balance } = data[0];
-            let [currency, amount] = balance.split(" ");
+            let [ currency, amount ] = balance.split(" ");
             node.text(`${Number(amount).toLocaleString("en-KE", { style: "currency", currency })}`);
         } else {
             node.text("N/A");
