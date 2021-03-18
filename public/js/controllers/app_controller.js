@@ -78,10 +78,6 @@ class Controller {
 
     static displaySystems() {
         UIController.addSystemsGraphs();
-        Controller.resetActiveLink();
-        document
-            .querySelector(Controller.DOMstrings.systemsLinkSelector)
-            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
         import("./systems_graphs_controller.js").then((module) => {
             let unsubscribeFunc = DataController.watchSystemsMetrics(
@@ -93,10 +89,6 @@ class Controller {
 
     static displayPipelines() {
         UIController.addPipelinesGraphs();
-        Controller.resetActiveLink();
-        document
-            .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
-            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
         import("./pipelines_controller.js").then((module) => {
             let unsubscribeFunc = DataController.watchPipelinesMetrics(
@@ -128,6 +120,10 @@ class Controller {
 
     static navigateToSystems(e) {
         if (e.target && e.target.nodeName == "A") {
+            Controller.resetActiveLink();
+            document
+                .querySelector(Controller.DOMstrings.systemsLinkSelector)
+                .classList.add(Controller.DOMstrings.activeLinkClassName);
             Controller.clearAllTimers();
             DataController.detachSnapshotListener();
             window.location.hash = "systems";
