@@ -80,7 +80,7 @@ class Controller {
         UIController.addSystemsGraphs();
         // Update and show the Graphs
         import("./systems_graphs_controller.js").then((module) => {
-            let unsubscribeFunc = DataController.watchSystemsMetrics(
+            let unsubscribeFunc = DataController.watchServerMetrics(
                 module.SystemsGraphsController.updateGraphs
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
