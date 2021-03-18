@@ -126,7 +126,7 @@ class Controller {
                 .classList.add(Controller.DOMstrings.activeLinkClassName);
             Controller.clearAllTimers();
             DataController.detachSnapshotListener();
-            
+            let system = e.target.innerText;
             const [ SERVER, PIPELINES ] = ["miranda", "pipelines"]
             if (system.toLowerCase() === SERVER) {
                 Controller.displayServerMetrics()
