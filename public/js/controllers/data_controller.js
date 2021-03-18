@@ -214,7 +214,7 @@ export class DataController {
         onChange({ data, dateRange, projectCollection, operators });
     }
 
-    static watchSystemsMetrics(onChange) {
+    static watchServerMetrics(onChange) {
         const TIMERANGE = 30;
         let offset = new Date();
         offset.setDate(offset.getDate() - TIMERANGE);
