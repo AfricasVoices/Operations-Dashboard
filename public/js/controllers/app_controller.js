@@ -76,7 +76,7 @@ class Controller {
         DataController.watchATCredits(project, displayATCredits);
     }
 
-    static displaySystems() {
+    static displayServerMetrics() {
         UIController.addSystemsGraphs();
         // Update and show the Graphs
         import("./systems_graphs_controller.js").then((module) => {
