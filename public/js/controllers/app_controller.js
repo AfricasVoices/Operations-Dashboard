@@ -117,8 +117,8 @@ class Controller {
             Controller.displayProject(project);
         }
     }
-
-    static navigateToSystems(e) {
+    
+    static navigateToSelectedSystem(e) {
         if (e.target && e.target.nodeName == "A") {
             Controller.resetActiveLink();
             document
