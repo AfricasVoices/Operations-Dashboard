@@ -238,8 +238,9 @@ export class DataController {
     }
 
     static registerSnapshotListener(unsubscribeFunc) {
+        if (!DataController.unsubscribeFunctions) { DataController.unsubscribeFunctions = []; }
         if (unsubscribeFunc) {
-            DataController.unsubscribeFunc = unsubscribeFunc;
+            DataController.unsubscribeFunctions.push(unsubscribeFunc);
             console.log(`subscribed to listener: ${unsubscribeFunc.toString()}`);
         } else {
             console.log("unable to subscribe to listener");
@@ -247,9 +248,8 @@ export class DataController {
     }
 
     static detachSnapshotListener() {
-        if (DataController.unsubscribeFunc) {
-            let unsubscribe = DataController.unsubscribeFunc;
-            unsubscribe();
+        if (DataController.unsubscribeFunctions) {
+            DataController.unsubscribeFunctions.forEach(unsubscribe => unsubscribe())
             console.log("unsubscribed from listener");
         } else {
             console.log("no listener subscribed");
