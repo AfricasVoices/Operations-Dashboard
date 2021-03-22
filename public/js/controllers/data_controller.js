@@ -215,7 +215,7 @@ export class DataController {
     }
 
     static watchSystemsMetrics(onChange) {
-        const TIMERANGE = 30;
+        const TIMERANGE = 7;
         let offset = new Date();
         offset.setDate(offset.getDate() - TIMERANGE);
         let systemMetrics = [],
