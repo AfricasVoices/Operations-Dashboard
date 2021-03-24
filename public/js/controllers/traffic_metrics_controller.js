@@ -24,8 +24,8 @@ export class TrafficMetricsController {
             totalSent = d3.sum(data, (d) => d.total_sent);
 
         d3.select("#project-name").text(projectName);
-        d3.select("#total-received").text(totalReceived);
-        d3.select("#total-sent").text(totalSent);
+        d3.select("#total-received").text(totalReceived.toLocaleString());
+        d3.select("#total-sent").text(totalSent.toLocaleString());
 
         const metricsTable = document.getElementById("operator-metrics");
         while (metricsTable.firstChild) {
@@ -34,8 +34,8 @@ export class TrafficMetricsController {
         let html = "<tr>%operator_metrics%</tr>";
         operators.forEach((operator) => {
             let tableData = `<td>${operator}</td>
-                <td>${d3.sum(data, (d) => d[`${operator}_received`])}</td>
-                <td>${d3.sum(data, (d) => d[`${operator}_sent`])}</td>`;
+                <td>${d3.sum(data, (d) => d[`${operator}_received`]).toLocaleString()}</td>
+                <td>${d3.sum(data, (d) => d[`${operator}_sent`]).toLocaleString()}</td>`;
             let newHtml = html.replace("%operator_metrics%", tableData);
             metricsTable.insertAdjacentHTML("beforeend", newHtml);
         });
@@ -49,7 +49,11 @@ export class TrafficMetricsController {
         let node = d3.select("#AT-units-bal");
         if (data.length) {
             let { balance } = data[0];
-            node.text(balance);
+            let [currency, amount] = balance.split(" ");
+            let { language } = navigator;
+            node.text(
+                `${Number(amount).toLocaleString(language, { style: "currency", currency })}`
+            );
         } else {
             node.text("N/A");
         }
