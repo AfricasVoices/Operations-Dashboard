@@ -73,7 +73,8 @@ class Controller {
         // Update and show the Metrics
         DataController.projectTrafficDataMetrics(project, updateTotals);
         // Update Africa's Talking balance
-        DataController.watchATCredits(project, displayATCredits);
+        let unsubscribeWatchATCredits = DataController.watchATCredits(project, displayATCredits);
+        DataController.registerSnapshotListener(unsubscribeWatchATCredits);
     }
 
     static displayServerMetrics() {
