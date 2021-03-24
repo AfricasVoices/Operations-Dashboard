@@ -50,7 +50,8 @@ export class TrafficMetricsController {
         if (data.length) {
             let { balance } = data[0];
             let [ currency, amount ] = balance.split(" ");
-            node.text(`${Number(amount).toLocaleString("en-KE", { style: "currency", currency })}`);
+            let { language } = navigator;
+            node.text(`${Number(amount).toLocaleString(language, { style: "currency", currency })}`);
         } else {
             node.text("N/A");
         }
