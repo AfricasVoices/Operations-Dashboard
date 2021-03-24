@@ -17,11 +17,8 @@ class Controller {
             .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
         document
-            .querySelector(Controller.DOMstrings.systemsLinkSelector)
-            .addEventListener("click", Controller.navigateToSystems);
-        document
-            .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
-            .addEventListener("click", Controller.navigateToPipelines);
+            .querySelector(Controller.DOMstrings.systemsMenu)
+            .addEventListener("click", Controller.navigateToSelectedSystem);
     }
 
     static clearAllTimers() {
@@ -80,15 +77,11 @@ class Controller {
         DataController.registerSnapshotListener(unsubscribeWatchATCredits);
     }
 
-    static displaySystems() {
+    static displayMirandaMetrics() {
         UIController.addSystemsGraphs();
-        Controller.resetActiveLink();
-        document
-            .querySelector(Controller.DOMstrings.systemsLinkSelector)
-            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
         import("./systems_graphs_controller.js").then((module) => {
-            let unsubscribeFunc = DataController.watchSystemsMetrics(
+            let unsubscribeFunc = DataController.watchMirandaMetrics(
                 module.SystemsGraphsController.updateGraphs
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
@@ -97,10 +90,6 @@ class Controller {
 
     static displayPipelines() {
         UIController.addPipelinesGraphs();
-        Controller.resetActiveLink();
-        document
-            .querySelector(Controller.DOMstrings.pipelinesLinkSelector)
-            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
         import("./pipelines_controller.js").then((module) => {
             let unsubscribeFunc = DataController.watchPipelinesMetrics(
@@ -129,25 +118,25 @@ class Controller {
             Controller.displayProject(project);
         }
     }
-
-    static navigateToSystems(e) {
+    
+    static navigateToSelectedSystem(e) {
         if (e.target && e.target.nodeName == "A") {
+            Controller.resetActiveLink();
+            document
+                .querySelector(Controller.DOMstrings.systemsLinkSelector)
+                .classList.add(Controller.DOMstrings.activeLinkClassName);
             Controller.clearAllTimers();
             DataController.detachSnapshotListener();
-            window.location.hash = "systems";
-            Controller.displaySystems();
+            let system = e.target.innerText;
+            if (system.toLowerCase() === "miranda") {
+                Controller.displayMirandaMetrics();
+            }
+            if (system.toLowerCase() === "pipelines") {
+                Controller.displayPipelines();
+            }
         }
     }
-
-    static navigateToPipelines(e) {
-        if (e.target && e.target.nodeName == "A") {
-            Controller.clearAllTimers();
-            DataController.detachSnapshotListener();
-            window.location.hash = "pipelines";
-            Controller.displayPipelines();
-        }
-    }
-
+    
     static displayDeepLinkedTrafficPage(activeProjectsData) {
         let activeProjects = [],
             page_route = window.location.hash.substring(1);
