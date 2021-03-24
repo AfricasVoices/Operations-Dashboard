@@ -286,7 +286,6 @@ export class UIController {
                                 <div class="card responsetext">
                                     <b>Project Details</b>
                                     <div>Project Name: <span id="project-name"></span></div>
-                                    <div>Africas Talking Units Used: <span id="AT-units-used"></span></div>
                                     <div>Africas Talking Units Balance: <span id="AT-units-bal"></span></div>
                                 </div>
                             </div>
