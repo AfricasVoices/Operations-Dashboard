@@ -77,11 +77,11 @@ class Controller {
         DataController.registerSnapshotListener(unsubscribeWatchATCredits);
     }
 
-    static displayServerMetrics() {
+    static displayMirandaMetrics() {
         UIController.addSystemsGraphs();
         // Update and show the Graphs
         import("./systems_graphs_controller.js").then((module) => {
-            let unsubscribeFunc = DataController.watchServerMetrics(
+            let unsubscribeFunc = DataController.watchMirandaMetrics(
                 module.SystemsGraphsController.updateGraphs
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
@@ -128,12 +128,11 @@ class Controller {
             Controller.clearAllTimers();
             DataController.detachSnapshotListener();
             let system = e.target.innerText;
-            const [ SERVER, PIPELINES ] = ["miranda", "pipelines"]
-            if (system.toLowerCase() === SERVER) {
-                Controller.displayServerMetrics()
+            if (system.toLowerCase() === "miranda") {
+                Controller.displayMirandaMetrics();
             }
-            if (system.toLowerCase() === PIPELINES) {
-                Controller.displayPipelines()
+            if (system.toLowerCase() === "pipelines") {
+                Controller.displayPipelines();
             }
         }
     }

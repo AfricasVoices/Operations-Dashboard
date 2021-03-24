@@ -214,7 +214,7 @@ export class DataController {
         onChange({ data, dateRange, projectCollection, operators });
     }
 
-    static watchServerMetrics(onChange) {
+    static watchMirandaMetrics(onChange) {
         const TIMERANGE = 7;
         let offset = new Date();
         offset.setDate(offset.getDate() - TIMERANGE);
