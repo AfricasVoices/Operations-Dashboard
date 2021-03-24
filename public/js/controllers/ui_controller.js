@@ -2,15 +2,15 @@
 export class UIController {
     static getDOMstrings() {
         return {
-            projectMenu: ".project-menu",
-            codingProgressLinkSelector: ".coding-progress-link",
-            trafficsLinkSelector: ".traffics-link",
-            systemsLinkSelector: ".systems-link",
-            pipelinesLinkSelector: ".pipelines-link",
-            logoutBtn: ".logout-btn",
+            projectMenu: "#traffic-menu",
+            systemsMenu: "#systems-menu",
+            codingProgressLinkSelector: "#coding-progress-link",
+            trafficsLinkSelector: "#traffic-link",
+            systemsLinkSelector: "#systems-link",
+            logoutBtn: "#logout-btn",
+            mainContainer: "#main-container",
             activeLinkClassName: "active-link",
             activeLinks: "a.active-link",
-            mainContainer: ".main-container"
         };
     }
 
