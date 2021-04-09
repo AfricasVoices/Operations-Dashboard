@@ -146,6 +146,16 @@ export class DataController {
             }, error => console.log(error));
     }
 
+    static watchProjectsWithATconfig(activeProjects) {
+        let projectsWithATconfig = new Set();
+        activeProjects.forEach((project) => {
+            if (project.hasOwnProperty("africas_talking")) {
+                projectsWithATconfig.add(project.project_name);
+            }
+        });
+        DataController.projectsWithATconfig = [...projectsWithATconfig];
+    }
+
     static watchATCredits(projectName, onChange) {
         let ATCredits = [];
         return mediadb.collection(`metrics/africas_talking/${projectName}`)
