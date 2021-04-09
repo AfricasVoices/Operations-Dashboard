@@ -158,6 +158,10 @@ export class DataController {
     }
 
     static watchATCredits(projectName, onChange) {
+        if (!DataController.projectsWithATconfig.includes(projectName)) {
+            onChange("N/A", true);
+            return;
+        }
         let ATCredits = [];
         return mediadb.collection(`metrics/africas_talking/${projectName}`)
             .orderBy("datetime", "desc")
