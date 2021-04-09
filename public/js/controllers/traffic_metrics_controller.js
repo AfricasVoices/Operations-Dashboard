@@ -59,7 +59,7 @@ export class TrafficMetricsController {
                 `${Number(amount).toLocaleString(language, { style: "currency", currency })}`
             );
         } else {
-            node.text("N/A");
+            node.text("No Data Available") 
         }
     }
 }
