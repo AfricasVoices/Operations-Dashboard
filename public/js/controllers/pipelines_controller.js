@@ -5,7 +5,7 @@ export class PipelinesController {
 
         // Generate data for pipeline progress table
         let pipelineProgressTableData = [];
-        for (let [key, value] of metricsByPipeline.entries()) {
+        for (const [key, value] of metricsByPipeline.entries()) {
             let pipelineProgress = {};
             pipelineProgress["Pipeline"] = key;
             // Sort pipeline metrics in a descending order
