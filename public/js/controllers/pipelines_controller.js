@@ -27,6 +27,12 @@ export class PipelinesController {
                     break;
                 }
             }
+
+            pipelineProgress["Duration"] = "-";
+            if (pipelineProgress["Last Successful Run"] > pipelineProgress["Last Start Time"]) {
+                pipelineProgress["Duration"] =
+                    pipelineProgress["Last Successful Run"] - pipelineProgress["Last Start Time"];
+            }
             pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
