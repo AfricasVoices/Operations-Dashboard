@@ -137,8 +137,8 @@ export class TrafficGraphsController {
             sentDataStackedDaily = stackSentDaily(dailySentTotal);
 
         //Create margins for the three graphs
-        const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
-            Width = 960 - Margin.right - Margin.left,
+        const Margin = { top: 40, right: 140, bottom: 105, left: 130 },
+            Width = 1100 - Margin.right - Margin.left,
             Height = 500 - Margin.top - Margin.bottom,
             // Set x and y scales
             x = d3.scaleTime().range([1, Width]),
@@ -182,6 +182,48 @@ export class TrafficGraphsController {
         // Format TimeStamp
         let timeFormat = d3.timeFormat("%a %d (%H:%M)");
 
+        total_received_sms_graph
+        .append("g")
+        .attr("class", "receivedLegend2")
+        .attr("transform", `translate(${-45},${0})`);
+
+    // Step
+    let sliderStep = d3
+        .sliderLeft()
+        .min(0)
+        .max(5000)
+        .height(Height)
+        // .tickFormat(d3.format('.2%'))
+        .ticks(5)
+        .step(100)
+        .default(0)
+        .on('onchange', val => {
+            // console.log(val)
+            // d3.select('p#value-step').text(d3.format('.2%')(val));
+            isYLimitReceivedManuallySet = true;
+            if (TrafficGraphsController.chartTimeUnit == "1day") {
+                yLimitReceived = val;
+                drawOneDayReceivedGraph(yLimitReceived);
+            } else if (TrafficGraphsController.chartTimeUnit == "10min") {
+                yLimitReceivedFiltered = val;
+                draw10MinReceivedGraph(yLimitReceivedFiltered);
+            }
+        });
+
+    let gStep = d3
+        .select('.receivedLegend2');
+        // .append('svg')
+        // .attr('width', 500)
+        // .attr('height', 100)
+        // .append('g')
+        // .attr('transform', 'translate(30,30)');
+    
+      gStep.call(sliderStep);
+
+    //   sliderStep.value(300)
+    
+    //   d3.select('.receivedLegend2').text(d3.format('.2%')(sliderStep.value()));
+
         let mnoColorScheme = [],
             operatorsWithColorIdentity = Object.keys(MNOColors);
 
@@ -212,19 +254,21 @@ export class TrafficGraphsController {
         // Draw graphs according to selected time unit
         if (TrafficGraphsController.chartTimeUnit == "1day") {
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
+            sliderStep.value(yLimitReceived)
         } else if (TrafficGraphsController.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
+            sliderStep.value(yLimitReceivedFiltered)
         }
 
         // Y axis Label for the total received sms graph
         total_received_sms_graph
             .append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - Margin.left)
+            .attr("y", 0 - Margin.left - 5)
             .attr("x", 0 - Height / 2)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("No. of Incoming Message (s)");
+            .text("Set Maximum No. of Incoming Message (s)");
 
         // Y axis Label for the total sent sms graph
         total_sent_sms_graph
@@ -240,7 +284,7 @@ export class TrafficGraphsController {
         total_received_sms_graph
             .append("g")
             .attr("class", "receivedLegend")
-            .attr("transform", `translate(${Width - Margin.right + 110},${Margin.top - 30})`);
+            .attr("transform", `translate(${Width - Margin.right + 155},${Margin.top - 30})`);
 
         let receivedLegend = d3
             .legendColor()
@@ -1258,6 +1302,7 @@ export class TrafficGraphsController {
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             TrafficGraphsController.chartTimeUnit = "10min";
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
+            sliderStep.value(yLimitReceivedFiltered)
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
