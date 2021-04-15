@@ -110,7 +110,7 @@ export class PipelinesController {
                     let minutes = Math.floor(seconds / 60) % 60;
                     seconds -= minutes * 60;
                     // What's left is seconds
-                    let seconds = Math.floor(seconds % 60);
+                    seconds = Math.floor(seconds % 60);
                     // Add leading zeroes to date
                     days = days.toString().padStart(2, "0");
                     hours = hours.toString().padStart(2, "0");
