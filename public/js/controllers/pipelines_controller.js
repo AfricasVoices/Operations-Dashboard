@@ -94,6 +94,31 @@ export class PipelinesController {
                 if (d[1] !== "-") d[1] = fullDateFormat(d[1]);
                 return d[1];
             }).style("text-align", "center");
+
+            td.filter((d, i) => d[0] === "Duration")
+                .text((d) => {
+                    if (d[1] === "-") return d[1];
+                    // Get total seconds
+                    let seconds = d[1] / 1000;
+                    // Calculate (and subtract) whole days
+                    let days = Math.floor(seconds / 86400);
+                    seconds -= days * 86400;
+                    // Calculate (and subtract) whole hours
+                    let hours = Math.floor(seconds / 3600) % 24;
+                    seconds -= hours * 3600;
+                    // Calculate (and subtract) whole minutes
+                    let minutes = Math.floor(seconds / 60) % 60;
+                    seconds -= minutes * 60;
+                    // What's left is seconds
+                    let seconds = Math.floor(seconds % 60);
+                    // Add leading zeroes to date
+                    days = days.toString().padStart(2, "0");
+                    hours = hours.toString().padStart(2, "0");
+                    minutes = minutes.toString().padStart(2, "0");
+                    seconds = seconds.toString().padStart(2, "0");
+                    return `${days}:${hours}:${minutes}:${seconds}`;
+                })
+                .style("text-align", "center");
         }
 
     }
