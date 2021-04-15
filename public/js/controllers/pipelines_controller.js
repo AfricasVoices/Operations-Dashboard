@@ -84,7 +84,7 @@ export class PipelinesController {
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
 
             let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
-            td.filter((d, i) => d[0] !== "Pipeline").text(d => {
+            td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).text(d => {
                 if (d[1] !== "-") d[1] = fullDateFormat(d[1]);
                 return d[1];
             }).style("text-align", "center");
