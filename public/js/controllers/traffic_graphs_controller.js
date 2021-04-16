@@ -182,48 +182,6 @@ export class TrafficGraphsController {
         // Format TimeStamp
         let timeFormat = d3.timeFormat("%a %d (%H:%M)");
 
-        total_received_sms_graph
-        .append("g")
-        .attr("class", "receivedLegend2")
-        .attr("transform", `translate(${-45},${0})`);
-
-    // Step
-    let sliderStep = d3
-        .sliderLeft()
-        .min(0)
-        .max(5000)
-        .height(Height)
-        // .tickFormat(d3.format('.2%'))
-        .ticks(5)
-        .step(100)
-        .default(0)
-        .on('onchange', val => {
-            // console.log(val)
-            // d3.select('p#value-step').text(d3.format('.2%')(val));
-            isYLimitReceivedManuallySet = true;
-            if (TrafficGraphsController.chartTimeUnit == "1day") {
-                yLimitReceived = val;
-                drawOneDayReceivedGraph(yLimitReceived);
-            } else if (TrafficGraphsController.chartTimeUnit == "10min") {
-                yLimitReceivedFiltered = val;
-                draw10MinReceivedGraph(yLimitReceivedFiltered);
-            }
-        });
-
-    let gStep = d3
-        .select('.receivedLegend2');
-        // .append('svg')
-        // .attr('width', 500)
-        // .attr('height', 100)
-        // .append('g')
-        // .attr('transform', 'translate(30,30)');
-    
-      gStep.call(sliderStep);
-
-    //   sliderStep.value(300)
-    
-    //   d3.select('.receivedLegend2').text(d3.format('.2%')(sliderStep.value()));
-
         let mnoColorScheme = [],
             operatorsWithColorIdentity = Object.keys(MNOColors);
 
@@ -249,15 +207,51 @@ export class TrafficGraphsController {
             yLimitSent = d3.max(dailySentTotal, d => d.total_sent),
             yLimitSentFiltered = d3.max(tenMinGraphFilteredData, d => d.total_sent),
             yLimitFailed = d3.max(dailyFailedTotal, d => d.total_errored),
-            yLimitFailedFiltered = d3.max(tenMinGraphFilteredData, d => d.total_errored); 
+            yLimitFailedFiltered = d3.max(tenMinGraphFilteredData, d => d.total_errored);
+
+        // Add Slider
+        total_received_sms_graph
+            .append("g")
+            .attr("class", "receivedSlider")
+            .attr("transform", `translate(${-45},${0})`);
+
+        // Step
+        let receivedSliderStep = d3
+            .sliderLeft()
+            .min(0)
+            .max(yLimitReceived)
+            .height(Height)
+            // .tickFormat(d3.format('.2%'))
+            .ticks(5)
+            // .step(1)
+            // .default(0);
+
+        d3.select(".receivedSlider").call(receivedSliderStep);
+
+        // Add Slider
+        total_sent_sms_graph
+            .append("g")
+            .attr("class", "sentSlider")
+            .attr("transform", `translate(${-45},${0})`);
+
+        // Step
+        let sentSliderStep = d3
+            .sliderLeft()
+            .min(-500)
+            .max(5000)
+            .height(Height)
+            // .tickFormat(d3.format('.2%'))
+            .ticks(5)
+            .step(5)
+            .default(0);
+
+        d3.select(".sentSlider").call(sentSliderStep);
 
         // Draw graphs according to selected time unit
         if (TrafficGraphsController.chartTimeUnit == "1day") {
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
-            sliderStep.value(yLimitReceived)
         } else if (TrafficGraphsController.chartTimeUnit == "10min") {
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
-            sliderStep.value(yLimitReceivedFiltered)
         }
 
         // Y axis Label for the total received sms graph
@@ -312,18 +306,22 @@ export class TrafficGraphsController {
 
         // Set y-axis control button value and draw graphs
         function updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered) {
-            d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
-            d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
-            d3.select("#buttonYLimitFailed").property("value", yLimitFailedFiltered);
+            // d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
+            // d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
+            // d3.select("#buttonYLimitFailed").property("value", yLimitFailedFiltered);
+            receivedSliderStep.value(yLimitReceivedFiltered)
+            sentSliderStep.value(yLimitSentFiltered)
             draw10MinReceivedGraph(yLimitReceivedFiltered);
             draw10MinSentGraph(yLimitSentFiltered);
             draw10MinFailedGraph(yLimitFailedFiltered);
         }
 
         function updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed) {
-            d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
-            d3.select("#buttonYLimitSent").property("value", yLimitSent);
-            d3.select("#buttonYLimitFailed").property("value", yLimitFailed);
+            // d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
+            // d3.select("#buttonYLimitSent").property("value", yLimitSent);
+            // d3.select("#buttonYLimitFailed").property("value", yLimitFailed);
+            receivedSliderStep.value(yLimitReceived)
+            sentSliderStep.value(yLimitSent)
             drawOneDayReceivedGraph(yLimitReceived);
             drawOneDaySentGraph(yLimitSent);
             drawOneDayFailedGraph(yLimitFailed);
@@ -1302,7 +1300,6 @@ export class TrafficGraphsController {
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             TrafficGraphsController.chartTimeUnit = "10min";
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
-            sliderStep.value(yLimitReceivedFiltered)
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
@@ -1323,40 +1320,62 @@ export class TrafficGraphsController {
         })
 
         // Draw received graph with user-selected y-axis limit
-        d3.select("#buttonYLimitReceived").on("input", function() {
+        // d3.select("#buttonYLimitReceived").on("input", function() {
+        //     isYLimitReceivedManuallySet = true;
+        //     if (TrafficGraphsController.chartTimeUnit == "1day") {
+        //         yLimitReceived = this.value;
+        //         drawOneDayReceivedGraph(yLimitReceived);
+        //     } else if (TrafficGraphsController.chartTimeUnit == "10min") {
+        //         yLimitReceivedFiltered = this.value;
+        //         draw10MinReceivedGraph(yLimitReceivedFiltered);
+        //     }
+        // });
+        receivedSliderStep.on("onchange", val => {
+            // d3.select('p#value-step').text(d3.format('.2%')(val));
             isYLimitReceivedManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
-                yLimitReceived = this.value;
+                yLimitReceived = val;
                 drawOneDayReceivedGraph(yLimitReceived);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
-                yLimitReceivedFiltered = this.value;
+                yLimitReceivedFiltered = val;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
             }
         });
 
         // Draw sent graph with user-selected y-axis limit
-        d3.select("#buttonYLimitSent").on("input", function() {
+        // d3.select("#buttonYLimitSent").on("input", function() {
+        //     isYLimitSentManuallySet = true;
+        //     if (TrafficGraphsController.chartTimeUnit == "1day") {
+        //         yLimitSent = this.value;
+        //         drawOneDaySentGraph(yLimitSent);
+        //     } else if (TrafficGraphsController.chartTimeUnit == "10min") {
+        //         yLimitSentFiltered = this.value;
+        //         draw10MinSentGraph(yLimitSentFiltered);
+        //     }
+        // });
+        sentSliderStep.on("onchange", val => {
+            // d3.select('p#value-step').text(d3.format('.2%')(val));
             isYLimitSentManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
-                yLimitSent = this.value;
+                yLimitSent = val;
                 drawOneDaySentGraph(yLimitSent);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
-                yLimitSentFiltered = this.value;
+                yLimitSentFiltered = val;
                 draw10MinSentGraph(yLimitSentFiltered);
             }
         });
 
         // Draw failed graph with user-selected y-axis limit
-        d3.select("#buttonYLimitFailed").on("input", function() {
-            isYLimitFailedManuallySet = true;
-            if (TrafficGraphsController.chartTimeUnit == "1day") {
-                yLimitFailed = this.value;
-                drawOneDayFailedGraph(yLimitFailed);
-            }  else if (TrafficGraphsController.chartTimeUnit == "10min") {
-                yLimitFailedFiltered = this.value;
-                draw10MinFailedGraph(yLimitFailedFiltered);
-            }
-        });
+        // d3.select("#buttonYLimitFailed").on("input", function() {
+        //     isYLimitFailedManuallySet = true;
+        //     if (TrafficGraphsController.chartTimeUnit == "1day") {
+        //         yLimitFailed = this.value;
+        //         drawOneDayFailedGraph(yLimitFailed);
+        //     }  else if (TrafficGraphsController.chartTimeUnit == "10min") {
+        //         yLimitFailedFiltered = this.value;
+        //         draw10MinFailedGraph(yLimitFailedFiltered);
+        //     }
+        // });
 
         let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
         // Update timestamp of update and reset formatting
