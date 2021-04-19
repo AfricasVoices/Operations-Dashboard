@@ -186,42 +186,27 @@ export class UIController {
         document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container"> 
             <div class="d-md-flex justify-content-between p-1" style="border-botto:solid 1px lightgray">
-                <div class="d-md-flex">
-                    <span class="font-weight-bold txt-brown mr-1">Africas Talking Balance:</span>
-                    <div class="font-weight-bold mb-0" id="lastUpdate">KES 15,159.60</div>
-                </div>
                 <div>
                     <span class="txt-brown my-auto title"><b>${title}</b></span>
                 </div>
-                <div class="d-flex">
-                    <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
-                    <div class="font-weight-bold mb-0" id="lastUpdated"></div>
-                </div>
-            </div> 
-           
-            <div class="d-md-flex" style="border-bott:solid 1px lightgray; padding-left:350px">
-                <div class="d-md-flex p-" style="padding-right:20px">  
-                    <div>
-                        <select class="btn-brown btn-sm form-control shadow-none" id="timeFrame">
-                            <option value="default">Set the Time Frame</option>
-                            <option value="1">48 Hours</option>
-                            <option value="6">7 days</option>
-                            <option value="13">14 days</option>
-                            <option value="29">30 days</option>
-                        </select>
+                <div class="d-flex flex-md-column">
+                    <div class="d-md-flex">
+                        <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
+                        <div class="font-weight-bold mb-0" id="lastUpdated"></div>
                     </div>
-                </div> 
-                
-                <div class="d-md-flex">
-                <div class="align-content-end font-weight-bold mr-1 p-1" style="border: solid 0.5px brown">TimeScale</div>
-                    <input class="mr-2 btn btn-sm btn-brown form-control shadow-none" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                    <input class="btn btn-sm btn-brown form-control shadow-none" type="button" id="buttonUpdateViewOneDay" value="1 day">
+                    <div class="d-md-flex">
+                        <span class="font-weight-bold txt-brown mr-1">Africas Talking Balance:</span>
+                        <div class="font-weight-bold mb-0" id="lastUpdate">KES 15,159.60</div>
+                    </div> 
                 </div>
             </div>
-                
-            <div class="card shadow total_received_sms_graph my-1"></div>
-            <div class="card shadow total_sent_sms_graph my-4"></div>
-            <div class="card shadow total_failed_sms_graph my-4"></div> 
+
+            <div class="p-1">
+                <div class="card shadow total_received_sms_graph m-1"></div>
+                <div class="card shadow total_sent_sms_graph m-1"></div>
+                <div class="card shadow total_failed_sms_graph m-1"></div>
+            </div>
+
             
             <div class="accordion" id="accordionExample">
                 <div id="headingOne">
