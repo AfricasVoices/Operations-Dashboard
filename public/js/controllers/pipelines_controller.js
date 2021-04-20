@@ -6,8 +6,6 @@ export class PipelinesController {
         // Generate data for pipeline progress table
         let pipelineProgressTableData = [];
         for (const [key, value] of metricsByPipeline.entries()) {
-            let pipelineProgress = {};
-            pipelineProgress["Pipeline"] = key;
             // Sort pipeline metrics in a descending order
             value.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             let lastStartData = value.find((d) => d.event == "PipelineRunStart");
@@ -31,6 +29,13 @@ export class PipelinesController {
                     duration = lastSuccessfulRunData.timestamp - lastStartData.timestamp;
                 }
             }
+
+            let pipelineProgress = {};
+            pipelineProgress["Pipeline"] = key;
+            pipelineProgress["Last Start Time"] = lastStartData.timestamp;
+            pipelineProgress["Last Successful Run"] = !!lastSuccessfulRunData ? lastSuccessfulRunData.timestamp : "-";
+            pipelineProgress["Duration"] = !!duration ? duration : "-";
+            pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
         // TODO: Update pipeline monitoring graphs.
