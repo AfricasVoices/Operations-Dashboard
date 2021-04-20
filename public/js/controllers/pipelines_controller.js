@@ -23,12 +23,14 @@ export class PipelinesController {
                 }
             }
 
-            pipelineProgress["Duration"] = "-";
-            if (pipelineProgress["Last Successful Run"] > pipelineProgress["Last Start Time"]) {
-                pipelineProgress["Duration"] =
-                    pipelineProgress["Last Successful Run"] - pipelineProgress["Last Start Time"];
+            let duration;
+            if (!!lastSuccessfulRunData) {
+                const hasRunSuccessfully = lastSuccessfulRunData.timestamp > lastStartData.timestamp;
+                const hasSameRunId = lastSuccessfulRunData.run_id == lastStartData.run_id;
+                if (hasRunSuccessfully && hasSameRunId) {
+                    duration = lastSuccessfulRunData.timestamp - lastStartData.timestamp;
+                }
             }
-            pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
         // TODO: Update pipeline monitoring graphs.
@@ -115,7 +117,6 @@ export class PipelinesController {
                 })
                 .style("text-align", "center");
         }
-
     }
 
     static jsonKeyValueToArray(k, v) {
