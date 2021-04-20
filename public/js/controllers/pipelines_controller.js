@@ -10,20 +10,15 @@ export class PipelinesController {
             pipelineProgress["Pipeline"] = key;
             // Sort pipeline metrics in a descending order
             value.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            pipelineProgress["Last Start Time"] = value.find(
-                (d) => d.event == "PipelineRunStart"
-            ).timestamp;
-
+            let lastStartData = value.find((d) => d.event == "PipelineRunStart");
             // Group pipeline metrics by run id
             let metricsByRunId = d3.group(value, (d) => d.run_id);
 
-            pipelineProgress["Last Successful Run"] = "-";
+            let lastSuccessfulRunData;
             for (let value of metricsByRunId.values()) {
                 let eventsInOneRun = value.map((d) => d.event);
                 if (eventsInOneRun.includes("PipelineRunEnd")) {
-                    pipelineProgress["Last Successful Run"] = value.find(
-                        (d) => d.event == "PipelineRunEnd"
-                    ).timestamp;
+                    lastSuccessfulRunData = value.find((d) => d.event == "PipelineRunEnd");
                     break;
                 }
             }
