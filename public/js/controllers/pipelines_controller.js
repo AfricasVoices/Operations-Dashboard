@@ -23,8 +23,8 @@ export class PipelinesController {
 
             let duration;
             if (!!lastSuccessfulRunData) {
-                const hasRunSuccessfully = lastSuccessfulRunData.timestamp > lastStartData.timestamp;
-                const hasSameRunId = lastSuccessfulRunData.run_id == lastStartData.run_id;
+                const hasRunSuccessfully = lastSuccessfulRunData.timestamp > lastStartData.timestamp,
+                    hasSameRunId = lastSuccessfulRunData.run_id == lastStartData.run_id;
                 if (hasRunSuccessfully && hasSameRunId) {
                     duration = lastSuccessfulRunData.timestamp - lastStartData.timestamp;
                 }
