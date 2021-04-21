@@ -5,28 +5,36 @@ export class PipelinesController {
 
         // Generate data for pipeline progress table
         let pipelineProgressTableData = [];
-        for (let [key, value] of metricsByPipeline.entries()) {
-            let pipelineProgress = {};
-            pipelineProgress["Pipeline"] = key;
+        for (const [key, value] of metricsByPipeline.entries()) {
             // Sort pipeline metrics in a descending order
             value.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            pipelineProgress["Last Start Time"] = value.find(
-                (d) => d.event == "PipelineRunStart"
-            ).timestamp;
-
+            let lastStartData = value.find((d) => d.event == "PipelineRunStart");
             // Group pipeline metrics by run id
             let metricsByRunId = d3.group(value, (d) => d.run_id);
 
-            pipelineProgress["Last Successful Run"] = "-";
+            let lastSuccessfulRunData;
             for (let value of metricsByRunId.values()) {
                 let eventsInOneRun = value.map((d) => d.event);
                 if (eventsInOneRun.includes("PipelineRunEnd")) {
-                    pipelineProgress["Last Successful Run"] = value.find(
-                        (d) => d.event == "PipelineRunEnd"
-                    ).timestamp;
+                    lastSuccessfulRunData = value.find((d) => d.event == "PipelineRunEnd");
                     break;
                 }
             }
+
+            let duration;
+            if (!!lastSuccessfulRunData) {
+                const hasRunSuccessfully = lastSuccessfulRunData.timestamp > lastStartData.timestamp,
+                    hasSameRunId = lastSuccessfulRunData.run_id == lastStartData.run_id;
+                if (hasRunSuccessfully && hasSameRunId) {
+                    duration = lastSuccessfulRunData.timestamp - lastStartData.timestamp;
+                }
+            }
+
+            let pipelineProgress = {};
+            pipelineProgress["Pipeline"] = key;
+            pipelineProgress["Last Start Time"] = lastStartData.timestamp;
+            pipelineProgress["Last Successful Run"] = !!lastSuccessfulRunData ? lastSuccessfulRunData.timestamp : "-";
+            pipelineProgress["Duration"] = !!duration ? duration : "-";
             pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
@@ -84,12 +92,36 @@ export class PipelinesController {
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
 
             let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
-            td.filter((d, i) => d[0] !== "Pipeline").text(d => {
+            td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).text(d => {
                 if (d[1] !== "-") d[1] = fullDateFormat(d[1]);
                 return d[1];
             }).style("text-align", "center");
-        }
 
+            td.filter((d, i) => d[0] === "Duration")
+                .text((d) => {
+                    if (d[1] === "-") return d[1];
+                    // Get total seconds
+                    let seconds = d[1] / 1000;
+                    // Calculate (and subtract) whole days
+                    let days = Math.floor(seconds / 86400);
+                    seconds -= days * 86400;
+                    // Calculate (and subtract) whole hours
+                    let hours = Math.floor(seconds / 3600) % 24;
+                    seconds -= hours * 3600;
+                    // Calculate (and subtract) whole minutes
+                    let minutes = Math.floor(seconds / 60) % 60;
+                    seconds -= minutes * 60;
+                    // What's left is seconds
+                    seconds = Math.floor(seconds % 60);
+                    // Add leading zeroes to date
+                    days = days.toString().padStart(2, "0");
+                    hours = hours.toString().padStart(2, "0");
+                    minutes = minutes.toString().padStart(2, "0");
+                    seconds = seconds.toString().padStart(2, "0");
+                    return `${days}:${hours}:${minutes}:${seconds}`;
+                })
+                .style("text-align", "center");
+        }
     }
 
     static jsonKeyValueToArray(k, v) {

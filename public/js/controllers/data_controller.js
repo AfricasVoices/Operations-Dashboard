@@ -178,12 +178,10 @@ export class DataController {
         if (dateRange.length > 1) {
             [firstDay, lastDay] = dateRange;
         } else {
-            var makeDate = new Date();
-            // Get Previous Months Date
-            makeDate.setMonth(makeDate.getMonth() - 1);
-            // Get first and last date of current month
-            firstDay = new Date(makeDate.getFullYear(), makeDate.getMonth(), 1);
-            lastDay = new Date(makeDate.getFullYear(), makeDate.getMonth() + 1, 0);
+            let makeDate = new Date();
+            // Get last and first date of the previous month
+            lastDay = new Date(makeDate.setDate(0)); // 0 will result in the last day of the previous month
+            firstDay = new Date(makeDate.setDate(1)); // 1 will result in the first day of the month
         }
         // End of day
         lastDay.setHours(23,59,59,999);
