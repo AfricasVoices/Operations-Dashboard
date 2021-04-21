@@ -71,24 +71,25 @@ export class PipelinesController {
             d3.select("thead").selectAll("tr").remove();
 
             // Table Header
-            d3.select("thead").append('tr')
+            d3.select("thead")
+                .append("tr")
                 .attr("class", "table-heading")
                 .selectAll("th")
                 .data(PipelinesController.jsonToArray(data[0]))
                 .enter()
                 .append("th")
                 .text((d) => d[0]);
-            
+
             // Table Rows
-            let tr = d3.select("tbody").selectAll("tr")
-                .data(data)
-                .enter().append("tr");
-            
+            let tr = d3.select("tbody").selectAll("tr").data(data).enter().append("tr");
+
             // Table Cells
-            let td = tr.selectAll("td")
-                .data(d => PipelinesController.jsonToArray(d))
-                .enter().append("td");
-            
+            let td = tr
+                .selectAll("td")
+                .data((d) => PipelinesController.jsonToArray(d))
+                .enter()
+                .append("td");
+
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
 
             let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
