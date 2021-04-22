@@ -115,7 +115,7 @@ export class PipelinesController {
                         parentNode.style("line-height", 0.6);
                     }
                 })
-                .text((d) => (d[1] > 0 ? d[1] : "-"))
+                .text((d) => (d[1] >= 0 ? d[1] : "-"))
                 .style("text-align", "center");
 
             let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
