@@ -12,14 +12,19 @@ export class PipelinesController {
             // Group pipeline metrics by run id
             let metricsByRunId = d3.group(value, (d) => d.run_id);
 
-            let lastSuccessfulRunData;
+            let lastSuccessfulRunData,
+                pipelineRunStartEvents = 0;
             for (let value of metricsByRunId.values()) {
                 let eventsInOneRun = value.map((d) => d.event);
                 if (eventsInOneRun.includes("PipelineRunEnd")) {
                     lastSuccessfulRunData = value.find((d) => d.event == "PipelineRunEnd");
                     break;
                 }
+                if (eventsInOneRun.includes("PipelineRunStart")) {
+                    pipelineRunStartEvents += 1;
+                }
             }
+            let pipelineRestarts = pipelineRunStartEvents - 1;
 
             let duration;
             if (!!lastSuccessfulRunData) {
@@ -35,6 +40,7 @@ export class PipelinesController {
             pipelineProgress["Last Start Time"] = lastStartData.timestamp;
             pipelineProgress["Last Successful Run"] = !!lastSuccessfulRunData ? lastSuccessfulRunData.timestamp : "-";
             pipelineProgress["Duration"] = !!duration ? duration : "-";
+            pipelineProgress["Restarts"] = pipelineRestarts;
             pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
