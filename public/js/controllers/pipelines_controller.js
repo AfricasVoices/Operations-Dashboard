@@ -115,6 +115,8 @@ export class PipelinesController {
                         parentNode.style("line-height", 0.6);
                     }
                 })
+                .text((d) => (d[1] > 0 ? d[1] : "-"))
+                .style("text-align", "center");
 
             let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
             td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).text(d => {
