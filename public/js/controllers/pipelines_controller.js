@@ -98,6 +98,24 @@ export class PipelinesController {
 
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
 
+            td.filter((d, i) => d[0] === "Restarts")
+                .each((d, i, n) => {
+                    // Select Table Row
+                    let parentNode = d3.select(n[i].parentNode);
+                    parentNode.style("font-size", 16);
+                    // Select Table Data and access data bound to the node
+                    let tableData = parseInt(d3.select(n[i]).data()[0][1]);
+                    if (tableData === 0) {
+                        parentNode.style("background-color", "#d6ffd9").style("line-height", 0.7);
+                    } else if (tableData > 0) {
+                        let opacity = tableData / 10;
+                        opacity > 1 ? 1 : opacity;
+                        parentNode.style("background-color", `rgb(255,0,0,${opacity})`).style("line-height", 0.8);
+                    } else {
+                        parentNode.style("line-height", 0.6);
+                    }
+                })
+
             let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
             td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).text(d => {
                 if (d[1] !== "-") d[1] = fullDateFormat(d[1]);
