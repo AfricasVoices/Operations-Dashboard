@@ -15,19 +15,21 @@ export class UIController {
     }
 
     static addDropdownMenu(data) {
-        const DOMstrings = UIController.getDOMstrings(),
-            statusMenu = document.querySelector(DOMstrings.projectMenu);
-        if (statusMenu) {
-            while (statusMenu.firstChild) {
-                statusMenu.removeChild(statusMenu.firstChild);
-            }
-            let html = `<a id="project" class="dropdown-item">%project_name%</a>`;
-            // Replace the placeholder text with some actual data
-            data.forEach((obj) => {
-                let newHtml = html.replace("%project_name%", obj.project_name);
-                statusMenu.insertAdjacentHTML("beforeend", newHtml);
-            });
-        }
+        const DOMstrings = UIController.getDOMstrings();
+        const projectMenu = d3.select(DOMstrings.projectMenu);
+        projectMenu
+            .selectAll("a")
+            .data(data, d => d.project_name)
+            .enter()
+            .append("a")
+            .attr("class", "dropdown-item")
+            .text(d => d.project_name)
+
+        projectMenu
+            .selectAll("a")
+            .data(data, d => d.project_name)
+            .exit()
+            .remove()
     }
 
     static resetUI() {
