@@ -1,6 +1,7 @@
 import { UIController } from "./ui_controller.js";
 import { DataController } from "./data_controller.js";
 import { AuthController } from "./auth_controller.js";
+import { TrafficMetricsController } from "./traffic_metrics_controller.js";
 
 // GLOBAL APP CONTROLLER
 class Controller {
@@ -16,8 +17,8 @@ class Controller {
             .querySelector(Controller.DOMstrings.projectMenu)
             .addEventListener("click", Controller.navigateToSelectedProject);
         document
-            .querySelector(Controller.DOMstrings.systemsLinkSelector)
-            .addEventListener("click", Controller.navigateToSystems);
+            .querySelector(Controller.DOMstrings.systemsMenu)
+            .addEventListener("click", Controller.navigateToSelectedSystem);
     }
 
     static clearAllTimers() {
@@ -68,18 +69,31 @@ class Controller {
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
         });
+        const { updateTotals, displayATCredits } = TrafficMetricsController;
+        // Update and show the Metrics
+        DataController.projectTrafficDataMetrics(project, updateTotals);
+        // Update Africa's Talking balance
+        let unsubscribeWatchATCredits = DataController.watchATCredits(project, displayATCredits);
+        DataController.registerSnapshotListener(unsubscribeWatchATCredits);
     }
 
-    static displaySystems() {
+    static displayMirandaMetrics() {
         UIController.addSystemsGraphs();
-        Controller.resetActiveLink();
-        document
-            .querySelector(Controller.DOMstrings.systemsLinkSelector)
-            .classList.add(Controller.DOMstrings.activeLinkClassName);
         // Update and show the Graphs
         import("./systems_graphs_controller.js").then((module) => {
-            let unsubscribeFunc = DataController.watchSystemsMetrics(
+            let unsubscribeFunc = DataController.watchMirandaMetrics(
                 module.SystemsGraphsController.updateGraphs
+            );
+            DataController.registerSnapshotListener(unsubscribeFunc);
+        });
+    }
+
+    static displayPipelines() {
+        UIController.addPipelinesGraphs();
+        // Update and show the Graphs
+        import("./pipelines_controller.js").then((module) => {
+            let unsubscribeFunc = DataController.watchPipelinesMetrics(
+                module.PipelinesController.updatePipelinePage
             );
             DataController.registerSnapshotListener(unsubscribeFunc);
         });
@@ -104,16 +118,25 @@ class Controller {
             Controller.displayProject(project);
         }
     }
-
-    static navigateToSystems(e) {
+    
+    static navigateToSelectedSystem(e) {
         if (e.target && e.target.nodeName == "A") {
+            Controller.resetActiveLink();
+            document
+                .querySelector(Controller.DOMstrings.systemsLinkSelector)
+                .classList.add(Controller.DOMstrings.activeLinkClassName);
             Controller.clearAllTimers();
             DataController.detachSnapshotListener();
-            window.location.hash = "systems";
-            Controller.displaySystems();
+            let system = e.target.innerText;
+            if (system.toLowerCase() === "miranda") {
+                Controller.displayMirandaMetrics();
+            }
+            if (system.toLowerCase() === "pipelines") {
+                Controller.displayPipelines();
+            }
         }
     }
-
+    
     static displayDeepLinkedTrafficPage(activeProjectsData) {
         let activeProjects = [],
             page_route = window.location.hash.substring(1);
@@ -147,6 +170,8 @@ class Controller {
                 Controller.displayCodingProgress();
             } else if (page_route == "systems") {
                 Controller.displaySystems();
+            } else if (page_route == "pipelines") {
+                Controller.displayPipelines();
             } else if (page_route.startsWith("traffic-")) {
                 DataController.watchActiveProjects(Controller.displayDeepLinkedTrafficPage);
             } else {

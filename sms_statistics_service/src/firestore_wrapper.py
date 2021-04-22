@@ -25,6 +25,9 @@ class FirestoreWrapper(object):
     def _get_sms_stat_doc_ref(self, project_name, date_string):
         return self.client.document(f"metrics/rapid_pro/{project_name}/{date_string}")
 
+    def _get_africas_talking_stat_doc_ref(self, project_name, date_string):
+        return self.client.document(f"metrics/africas_talking/{project_name}/{date_string}")
+
     def get_active_projects(self):
         """
         Downloads all the active projects from Firestore.
@@ -74,14 +77,29 @@ class FirestoreWrapper(object):
 
             if batch_counter >= self.MAX_BATCH_SIZE:
                 batch.commit()
-                log.info(f"Batch of {batch_counter} messages committed, progress: {total_counter} / {len(sms_stats_batch)}")
+                log.info(f"Batch of {batch_counter} SMS stats committed, progress: {total_counter} / {len(sms_stats_batch)}")
                 batch_counter = 0
 
         if batch_counter > 0:
             batch.commit()
-            log.info(f"Final batch of {batch_counter} messages committed")
+            log.info(f"Final batch of {batch_counter} SMS stats committed")
             batch_counter = 0
 
         assert batch_counter == 0
 
         log.info("SMS stats updated")
+
+    def update_africas_talking_stats(self, project_name, iso_string, africas_talking_stats):
+        """
+        Updates the Africa's Talking stats for the given project and timestamp.
+
+        :param project_name: Name of project to update the Africa's Talking stats of.
+        :type project_name: str
+        :param iso_string: ISO 8601 formatted string to update the Africa's Talking stats of.
+        :type iso_string: str
+        :param africas_talking_stats: Africa's Talking stats to update with.
+        :type africas_talking_stats: src.data_models.AfricasTalkingStats
+        """
+        log.info(f"Updating Africa's Talking stats for project {project_name} at time {iso_string}...")
+        self._get_africas_talking_stat_doc_ref(project_name, iso_string).set(africas_talking_stats.to_dict())
+        log.info("Africa's Talking stats updated")

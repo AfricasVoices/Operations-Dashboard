@@ -74,6 +74,31 @@ export class DataController {
         }, error => console.log(error));    
     }
 
+    static watchPipelinesMetrics(onChange) {
+        const TIMERANGE = 31;
+        
+        let offset = new Date(), 
+            offsetString, 
+            iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L");
+
+        offset.setDate(offset.getDate() - TIMERANGE);
+        offsetString = iso(offset);
+
+        let pipelineMetrics = [];
+        return mediadb.collection("metrics/pipelines/pipeline_logs")
+            .where("timestamp", ">", offsetString)
+            .onSnapshot(res => {
+                // Update data every time it changes in firestore
+                DataController.updateData(res, pipelineMetrics);
+                // format the data
+                pipelineMetrics.forEach(d => d.timestamp = new Date(d.timestamp));
+                // Sort data by date
+                pipelineMetrics.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                onChange(pipelineMetrics)
+            })
+        
+    }
+
     static watchMNOColors() {
         return mediadb.doc("mno_properties/mno_colors").onSnapshot(res => {
             DataController.mno_colors = res.data();
@@ -121,8 +146,74 @@ export class DataController {
             }, error => console.log(error));
     }
 
-    static watchSystemsMetrics(onChange) {
-        const TIMERANGE = 30;
+    static watchATCredits(projectName, onChange) {
+        let ATCredits = [];
+        return mediadb.collection(`metrics/africas_talking/${projectName}`)
+            .orderBy("datetime", "desc")
+            .limit(1).onSnapshot(res => {
+                // Update data every time it changes in firestore
+                DataController.updateData(res, ATCredits);
+                onChange(ATCredits);
+            }, error => console.log(error));
+    }
+      
+    static async projectTrafficDataMetrics(projectCollection, onChange, dateRange = []) {
+        let iso = d3.utcFormat("%Y-%m-%dT%H:%M:%S+%L"), firstDay, lastDay;
+        
+        if (dateRange.length > 1) {
+            [firstDay, lastDay] = dateRange;
+        } else {
+            let makeDate = new Date();
+            // Get last and first date of the previous month
+            lastDay = new Date(makeDate.setDate(0)); // 0 will result in the last day of the previous month
+            firstDay = new Date(makeDate.setDate(1)); // 1 will result in the first day of the month
+        }
+        // End of day
+        lastDay.setHours(23,59,59,999);
+
+        // Call a method to get the data.
+        const trafficMetricsRef = mediadb.collection(`/metrics/rapid_pro/${projectCollection}/`);
+        const snapshot = await trafficMetricsRef
+            .where("datetime", ">=", iso(firstDay))
+            .where("datetime", "<=", iso(lastDay))
+            .get();
+
+        if (snapshot.empty) {
+            console.log("No matching documents.");
+            return;
+        }
+
+        let data = [];
+        snapshot.forEach((doc) => {
+            const obj = { id: doc.id, ...doc.data() };
+            data.push(obj);
+        });
+
+        let operators = new Set();
+        data.forEach((d) => {
+            d.datetime = new Date(d.datetime);
+            d.total_received = +d.total_received;
+            d.total_sent = +d.total_sent;
+            d.total_errored = +d.total_errored;
+            Object.keys(d.operators)
+                .sort()
+                .forEach(operator => {
+                    if (!(operator in operators)) {
+                        operators.add(operator);
+                        d[`${operator}_received`] = +d.operators[operator]["received"];
+                        d[`${operator}_sent`] = +d.operators[operator]["sent"];
+                    }
+                });
+        });
+        // Sort data by date
+        data.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+        dateRange = [firstDay, lastDay];
+        onChange({ data, dateRange, projectCollection, operators });
+    }
+
+    static watchMirandaMetrics(onChange) {
+        const TIMERANGE = 7;
         let offset = new Date();
         offset.setDate(offset.getDate() - TIMERANGE);
         let systemMetrics = [],
@@ -145,8 +236,9 @@ export class DataController {
     }
 
     static registerSnapshotListener(unsubscribeFunc) {
+        if (!DataController.unsubscribeFunctions) { DataController.unsubscribeFunctions = []; }
         if (unsubscribeFunc) {
-            DataController.unsubscribeFunc = unsubscribeFunc;
+            DataController.unsubscribeFunctions.push(unsubscribeFunc);
             console.log(`subscribed to listener: ${unsubscribeFunc.toString()}`);
         } else {
             console.log("unable to subscribe to listener");
@@ -154,9 +246,8 @@ export class DataController {
     }
 
     static detachSnapshotListener() {
-        if (DataController.unsubscribeFunc) {
-            let unsubscribe = DataController.unsubscribeFunc;
-            unsubscribe();
+        if (DataController.unsubscribeFunctions) {
+            DataController.unsubscribeFunctions.forEach(unsubscribe => unsubscribe())
             console.log("unsubscribed from listener");
         } else {
             console.log("no listener subscribed");

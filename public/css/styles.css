@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 .logo {
     height: 3rem;
 }
@@ -14,9 +15,7 @@
     color: steelblue;
     cursor: pointer;
 }
-.traffics-link,
-.systems-link,
-.coding-progress-link {
+.navbar-nav .nav-item {
     margin-left: -1px;
 }
 .dropdown-menu {
@@ -41,7 +40,7 @@
     cursor: pointer;
 }
 .active-link {
-    border-bottom: 2px #8d3538 solid;
+    border-bottom: 2px #8d3538 solid !important;
     padding-bottom: 6px;
 }
 .active-item {
@@ -62,6 +61,14 @@
 .btn-brown:hover {
     color: steelblue;
     transform: scale(1.05);
+}
+.btn-outline-custom {
+    border-color: #8d3538;
+    color: #8d3538;
+}
+.btn-outline-custom:hover {
+    background: #8d3538;;
+    color: white;
 }
 a {
     color: black;
@@ -87,9 +94,10 @@ table > tbody > tr > td {
     border-bottom: 1px solid rgb(0, 0, 0, 0.2);
 }
 td.float {
-    text-align: right
+    text-align: right;
 }
-td.integer, td.dash {
+td.integer,
+td.dash {
     text-align: center;
 }
 .coding-notstarted {
@@ -218,14 +226,14 @@ td.integer, td.dash {
 .alert-stale-info {
     background-color: #f08080;
 }
-.tooltip {	
-    position: absolute;		
-    text-align: center;			
-    padding: 4px;				
-    font: 12px sans-serif;		
-    background: whitesmoke;	
-    border-radius: 8px;			
-    pointer-events: none;			
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 4px;
+    font: 12px sans-serif;
+    background: whitesmoke;
+    border-radius: 8px;
+    pointer-events: none;
 }
 th:hover {
     cursor: pointer;
@@ -249,7 +257,7 @@ th:hover {
 .cpuGrid line,
 .diskXGrid line,
 .memoryXGrid line,
-.cpuXGrid line  {
+.cpuXGrid line {
     stroke: lightgrey;
     stroke-opacity: 0.3;
     shape-rendering: crispEdges;
@@ -259,7 +267,7 @@ th:hover {
 .cpuGrid path,
 .diskXGrid path,
 .memoryXGrid path,
-.cpuXGrid path  {
+.cpuXGrid path {
     stroke: lightgrey;
     stroke-opacity: 0.3;
     shape-rendering: crispEdges;
@@ -287,25 +295,25 @@ th:hover {
     stroke-opacity: 0;
 }
 .DELETED {
-    color: #FFCC00;
+    color: #ffcc00;
 }
 .NC {
-    color: #31CECE;
+    color: #31cece;
 }
 .golis {
-    color: #F58231;
+    color: #f58231;
 }
 .hormud {
-    color: #3CB44B;
+    color: #3cb44b;
 }
 .kenyan.telephone {
-    color: #3CB44B;
+    color: #3cb44b;
 }
 .nationlink {
-    color: #CCCC00;
+    color: #cccc00;
 }
 .somnet {
-    color: #4363D8;
+    color: #4363d8;
 }
 .somtel {
     color: #800000;
@@ -314,8 +322,8 @@ th:hover {
     color: #f032e6;
 }
 .telesom {
-    color: #911EB4;
+    color: #911eb4;
 }
 .other {
-    color: #E6194B;
+    color: #e6194b;
 }

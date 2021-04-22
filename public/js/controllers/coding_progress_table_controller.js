@@ -73,7 +73,7 @@ export class CodingProgressTableController {
             .attr('class', d => Number.isInteger(d[1]) ? "integer" : 
                 Math.ceil(d[1]) === d[1] ? "float" : "dash")
             .text(d => Number.isNaN(d[1]) ? "-" : 
-                    Number.isInteger(d[1]) ? ["Done", "WS %", "NC %"].includes(d[0]) ? `${d[1]}%` : d[1] :
+                    Number.isInteger(d[1]) ? ["Done", "WS %", "NC %"].includes(d[0]) ? `${d[1]}%` : d[1].toLocaleString() :
                     ["Done", "WS %", "NC %"].includes(d[0]) ? `${d[1].toFixed(2)}%` : d[1].toFixed(2))
 
             // Select Dataset Column, create a link & append text to td

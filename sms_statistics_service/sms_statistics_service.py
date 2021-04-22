@@ -1,6 +1,7 @@
 import argparse
-from datetime import timedelta
+from datetime import timedelta, datetime
 
+import africastalking
 import pytz
 from core_data_modules.cleaners import PhoneCleaner, Codes
 from core_data_modules.data_models import validators
@@ -9,6 +10,7 @@ from core_data_modules.util import TimeUtils
 from dateutil.parser import isoparse
 from rapid_pro_tools.rapid_pro_client import RapidProClient
 
+from src.data_models.africas_talking_stats import AfricasTalkingStats
 from src import FirestoreWrapper, Cache
 from src.data_models import SMSStats
 from src.data_models.sms_stats import SMSOperatorStats
@@ -70,8 +72,8 @@ if __name__ == "__main__":
         log.info(f"Computing SMS statistics for project {project.project_name}...")
 
         log.info("Loading the Rapid Pro token...")
-        rapid_pro_token = cache.get_rapid_pro_token_for_project(
-            project.project_name, google_cloud_credentials_file_path, project.rapid_pro_token_url)
+        rapid_pro_token = cache.get_token_for_project(
+            project.project_name, "rapid_pro", google_cloud_credentials_file_path, project.rapid_pro_token_url)
         log.info("Loaded the Rapid Pro token")
         rapid_pro = RapidProClient(project.rapid_pro_domain, rapid_pro_token)
 
@@ -135,4 +137,21 @@ if __name__ == "__main__":
         log.info("Uploading message stats to Firestore...")
         firestore_wrapper.update_sms_stats_batch(project.project_name, stats)
 
-        log.info(f"Completed updating the SMS statistics for project {project.project_name}")
+        if project.africas_talking is not None:
+            log.info("Loading the Africa's Talking token...")
+            africas_talking_token = cache.get_token_for_project(
+                project.project_name, "africas_talking", google_cloud_credentials_file_path,
+                project.africas_talking.token_url
+            )
+            log.info("Loaded the Africa's Talking token")
+            africas_talking_app = africastalking.ApplicationService(project.africas_talking.username, africas_talking_token)
+            update_timestamp = datetime.now()
+            balance = africas_talking_app.fetch_application_data()["UserData"]["balance"]
+
+            firestore_wrapper.update_africas_talking_stats(
+                project.project_name,
+                update_timestamp.astimezone(pytz.utc).isoformat(),
+                AfricasTalkingStats(update_timestamp, balance)
+            )
+        else:
+            log.debug("Skipping fetching Africa's Talking balance as no 'africas_talking' configuration was provided")
