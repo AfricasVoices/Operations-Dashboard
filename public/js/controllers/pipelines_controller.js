@@ -91,9 +91,12 @@ export class PipelinesController {
             
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
 
-            let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
-            td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).text(d => {
-                if (d[1] !== "-") d[1] = fullDateFormat(d[1]);
+            const dateFormat = d3.timeFormat("%a %b %d - %H:%M - %p");
+            td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).html(d => {
+                if (d[1] !== "-") {
+                    const [date, time, anteOrPostMeridiem] = dateFormat(d[1]).split("-");
+                    return `<span class="badge">${date}</span>${time}<span class="badge">${anteOrPostMeridiem}</span>`;
+                }
                 return d[1];
             }).style("text-align", "center");
 
