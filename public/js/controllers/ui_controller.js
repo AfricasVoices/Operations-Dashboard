@@ -97,7 +97,7 @@ export class UIController {
                     <div><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
                 </div>
             
-                <table id='codingtable' class='table'>
+                <table id="codingtable" class="table">
                     <thead></thead>
                     <tbody id="coding-status-body"></tbody>
                 </table>
