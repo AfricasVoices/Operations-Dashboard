@@ -51,9 +51,8 @@ export class TrafficMetricsController {
             node.text(data);
             return;
         }
-        if (Array.isArray(data) && data.length) {
-            let { balance } = data[0];
-            let [currency, amount] = balance.split(" ");
+        if (data.hasOwnProperty("balance")) {
+            let [currency, amount] = data.balance.split(" ");
             let { language } = navigator;
             node.text(
                 `${Number(amount).toLocaleString(language, { style: "currency", currency })}`
