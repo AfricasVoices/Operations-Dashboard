@@ -156,19 +156,18 @@ export class DataController {
                     return;
                 }
 
-                let ATCredits = [];
                 return mediadb
                     .collection(`metrics/africas_talking/${projectName}`)
                     .orderBy("datetime", "desc")
                     .limit(1)
-                    .onSnapshot((res) => {
-                        // Update data every time it changes in firestore
-                        DataController.updateData(res, ATCredits);
-                        onChange(ATCredits);
-                    })
-                    .catch((error) => console.log(error));
-            })
-            .catch((error) => console.log(error));
+                    .onSnapshot((snapshot) => {
+                        snapshot.docChanges().forEach(change => {
+                            const doc = { ...change.doc.data() };
+                            onChange(doc)
+                        });
+                    }, error => console.log(error));
+
+            }, error => console.log(error));
     }
       
     static async projectTrafficDataMetrics(projectCollection, onChange, dateRange = []) {
