@@ -75,7 +75,7 @@ export class DataController {
     }
 
     static watchPipelinesMetrics(onChange) {
-        const TIMERANGE = 31;
+        const TIMERANGE = 7;
         
         let offset = new Date(), 
             offsetString, 
