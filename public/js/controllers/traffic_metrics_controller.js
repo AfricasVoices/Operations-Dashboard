@@ -45,9 +45,9 @@ export class TrafficMetricsController {
         );
     }
 
-    static displayATCredits(data, NA=false) {
-        let node = d3.select("#AT-units-bal");
-        if (NA) {
+    static displayATCredits(data) {
+        const node = d3.select("#AT-units-bal");
+        if (typeof data == "string") {
             node.text(data);
             return;
         }
