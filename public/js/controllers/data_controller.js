@@ -161,10 +161,7 @@ export class DataController {
                     .orderBy("datetime", "desc")
                     .limit(1)
                     .onSnapshot((snapshot) => {
-                        snapshot.docChanges().forEach(change => {
-                            const doc = { ...change.doc.data() };
-                            onChange(doc)
-                        });
+                        snapshot.forEach(doc => onChange(doc.data()));
                     }, error => console.log(error));
 
             }, error => console.log(error));
