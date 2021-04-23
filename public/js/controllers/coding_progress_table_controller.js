@@ -4,7 +4,7 @@ export class CodingProgressTableController {
             lastUpdate = codingProgressData.lastUpdate;
 
         // Set last updated timestamp in UI
-        document.getElementById("last-update").innerText = `Last updated: ${lastUpdate}`;
+        d3.select("#last-update").text(lastUpdate);
 
         // Default sorting and column filter information
         if (!CodingProgressTableController.sortInfoArray)
