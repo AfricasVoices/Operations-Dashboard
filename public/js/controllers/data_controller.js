@@ -28,7 +28,6 @@ export class DataController {
         mediadb.collection("active_projects").onSnapshot(res => {
             // Update data every time it changes in firestore
             DataController.updateData(res, activeProjects);
-            DataController.watchProjectsWithATconfig(activeProjects);
             onChange(activeProjects);
         }, error => {
             if (error.code == "permission-denied") {
