@@ -46,16 +46,19 @@ export class TrafficMetricsController {
     }
 
     static displayATCredits(data) {
-        let node = d3.select("#AT-units-bal");
-        if (data.length) {
-            let { balance } = data[0];
-            let [currency, amount] = balance.split(" ");
+        const node = d3.select("#AT-units-bal");
+        if (typeof data == "string") {
+            node.text(data);
+            return;
+        }
+        if (data.hasOwnProperty("balance")) {
+            let [currency, amount] = data.balance.split(" ");
             let { language } = navigator;
             node.text(
                 `${Number(amount).toLocaleString(language, { style: "currency", currency })}`
             );
         } else {
-            node.text("N/A");
+            node.text("No Data Available") 
         }
     }
 }
