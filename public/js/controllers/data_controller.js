@@ -147,18 +147,28 @@ export class DataController {
     }
 
     static watchATCredits(projectName, onChange) {
-        if (!DataController.projectsWithATconfig.includes(projectName)) {
-            onChange("N/A", true);
-            return;
-        }
-        let ATCredits = [];
-        return mediadb.collection(`metrics/africas_talking/${projectName}`)
-            .orderBy("datetime", "desc")
-            .limit(1).onSnapshot(res => {
-                // Update data every time it changes in firestore
-                DataController.updateData(res, ATCredits);
-                onChange(ATCredits);
-            }, error => console.log(error));
+        const ref = mediadb.collection("active_projects").doc(projectName);
+        ref.get()
+            .then((doc) => {
+                const data = doc.data();
+                if (!data.hasOwnProperty("africas_talking")) {
+                    onChange("N/A");
+                    return;
+                }
+
+                let ATCredits = [];
+                return mediadb
+                    .collection(`metrics/africas_talking/${projectName}`)
+                    .orderBy("datetime", "desc")
+                    .limit(1)
+                    .onSnapshot((res) => {
+                        // Update data every time it changes in firestore
+                        DataController.updateData(res, ATCredits);
+                        onChange(ATCredits);
+                    })
+                    .catch((error) => console.log(error));
+            })
+            .catch((error) => console.log(error));
     }
       
     static async projectTrafficDataMetrics(projectCollection, onChange, dateRange = []) {
