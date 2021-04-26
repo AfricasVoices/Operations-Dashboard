@@ -137,9 +137,9 @@ export class TrafficGraphsController {
             sentDataStackedDaily = stackSentDaily(dailySentTotal);
 
         //Create margins for the three graphs
-        const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
-            Width = 960 - Margin.right - Margin.left,
-            Height = 500 - Margin.top - Margin.bottom,
+        const Margin = { top: 40, right: 100, bottom: 105, left: 140 },
+            Width = 1221 - Margin.right - Margin.left,
+            Height = 586 - Margin.top - Margin.bottom,
             // Set x and y scales
             x = d3.scaleTime().range([1, Width]),
             y_total_received_sms_range = d3.scaleLinear().range([Height, 0]),
