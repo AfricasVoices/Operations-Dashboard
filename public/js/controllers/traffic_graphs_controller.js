@@ -208,6 +208,24 @@ export class TrafficGraphsController {
             yLimitSentFiltered = d3.max(tenMinGraphFilteredData, d => d.total_sent),
             yLimitFailed = d3.max(dailyFailedTotal, d => d.total_errored),
             yLimitFailedFiltered = d3.max(tenMinGraphFilteredData, d => d.total_errored); 
+        
+        // Add Y axis Slider
+        total_received_sms_graph
+            .append("g")
+            .attr("class", "receivedSlider")
+            .attr("transform", `translate(${-45},${0})`);
+
+        // Step
+        let receivedSliderStep = d3
+            .sliderLeft()
+            .min(0)
+            .max(yLimitReceived + (0.2 * yLimitReceived))
+            .height(Height)
+            .ticks(5)
+            .step(5)
+            .default(0);
+
+        d3.select(".receivedSlider").call(receivedSliderStep);
 
         // Draw graphs according to selected time unit
         if (TrafficGraphsController.chartTimeUnit == "1day") {
