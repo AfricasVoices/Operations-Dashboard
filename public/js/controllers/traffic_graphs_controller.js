@@ -1329,6 +1329,7 @@ export class TrafficGraphsController {
             }
         });
 
+        // Draw received graph with user-selected y-axis limit
         receivedSliderStep.on("onchange", value => {
             isYLimitReceivedManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
@@ -1352,6 +1353,7 @@ export class TrafficGraphsController {
             }
         });
 
+        // Draw sent graph with user-selected y-axis limit
         sentSliderStep.on("onchange", value => {
             isYLimitSentManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
