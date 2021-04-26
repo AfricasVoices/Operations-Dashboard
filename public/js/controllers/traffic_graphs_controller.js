@@ -227,6 +227,24 @@ export class TrafficGraphsController {
 
         d3.select(".receivedSlider").call(receivedSliderStep);
 
+        // Add Y axis Slider
+        total_sent_sms_graph
+            .append("g")
+            .attr("class", "sentSlider")
+            .attr("transform", `translate(${-45},${0})`);
+
+        // Step
+        let sentSliderStep = d3
+            .sliderLeft()
+            .min(0)
+            .max(yLimitSent + (0.2 * yLimitSent))
+            .height(Height)
+            .ticks(5)
+            .step(5)
+            .default(0);
+
+        d3.select(".sentSlider").call(sentSliderStep);
+
         // Draw graphs according to selected time unit
         if (TrafficGraphsController.chartTimeUnit == "1day") {
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
