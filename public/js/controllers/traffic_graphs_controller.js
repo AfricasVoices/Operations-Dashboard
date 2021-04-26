@@ -1329,6 +1329,17 @@ export class TrafficGraphsController {
             }
         });
 
+        receivedSliderStep.on("onchange", value => {
+            isYLimitReceivedManuallySet = true;
+            if (TrafficGraphsController.chartTimeUnit == "1day") {
+                yLimitReceived = value;
+                drawOneDayReceivedGraph(yLimitReceived);
+            } else if (TrafficGraphsController.chartTimeUnit == "10min") {
+                yLimitReceivedFiltered = value;
+                draw10MinReceivedGraph(yLimitReceivedFiltered);
+            }
+        });
+
         // Draw sent graph with user-selected y-axis limit
         d3.select("#buttonYLimitSent").on("input", function() {
             isYLimitSentManuallySet = true;
@@ -1337,6 +1348,17 @@ export class TrafficGraphsController {
                 drawOneDaySentGraph(yLimitSent);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitSentFiltered = this.value;
+                draw10MinSentGraph(yLimitSentFiltered);
+            }
+        });
+
+        sentSliderStep.on("onchange", value => {
+            isYLimitSentManuallySet = true;
+            if (TrafficGraphsController.chartTimeUnit == "1day") {
+                yLimitSent = value;
+                drawOneDaySentGraph(yLimitSent);
+            } else if (TrafficGraphsController.chartTimeUnit == "10min") {
+                yLimitSentFiltered = value;
                 draw10MinSentGraph(yLimitSentFiltered);
             }
         });
