@@ -207,20 +207,9 @@ export class UIController {
                     <div class="font-weight-bold mb-0" id="lastUpdated"></div>
                 </div>
             </div> 
-            <section>
-                <div class="d-md-flex justify-content-start my-2">
-                    <span class="font-weight-bold" type="text">Set the maximum number of incoming messages you want to see</span> 
-                    <div class="col-md-2"><input class="form-control form-control-sm shadow-none" type="number" id="buttonYLimitReceived" step="100" min="10"></div>
-                </div>
-                <div class="card shadow total_received_sms_graph"></div>
-            </section> 
-            <section>
-                <div class="d-md-flex justify-content-start mt-4 mb-3">
-                    <span class="font-weight-bold" type="text">Set the maximum number of outgoing messages you want to see</span> 
-                    <div class="col-md-2"><input class="form-control form-control-sm shadow-none" type="number" id="buttonYLimitSent" step="500" min="10"></div>
-                </div>
-                <div class="card shadow total_sent_sms_graph"></div>
-            </section> 
+            
+            <div class="card shadow total_received_sms_graph"></div>
+            <div class="card shadow total_sent_sms_graph mt-1"></div>
             <section>
                 <div class="d-md-flex justify-content-start mt-4 mb-3">
                     <span class="font-weight-bold" type="text">Set the maximum number of failed messages you want to see</span> 
