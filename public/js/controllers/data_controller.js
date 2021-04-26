@@ -75,7 +75,7 @@ export class DataController {
     }
 
     static watchPipelinesMetrics(onChange) {
-        const TIMERANGE = 31;
+        const TIMERANGE = 7;
         
         let offset = new Date(), 
             offsetString, 
@@ -147,13 +147,23 @@ export class DataController {
     }
 
     static watchATCredits(projectName, onChange) {
-        let ATCredits = [];
-        return mediadb.collection(`metrics/africas_talking/${projectName}`)
-            .orderBy("datetime", "desc")
-            .limit(1).onSnapshot(res => {
-                // Update data every time it changes in firestore
-                DataController.updateData(res, ATCredits);
-                onChange(ATCredits);
+        const ref = mediadb.collection("active_projects").doc(projectName);
+        ref.get()
+            .then((doc) => {
+                const data = doc.data();
+                if (!data.hasOwnProperty("africas_talking")) {
+                    onChange("N/A");
+                    return;
+                }
+
+                return mediadb
+                    .collection(`metrics/africas_talking/${projectName}`)
+                    .orderBy("datetime", "desc")
+                    .limit(1)
+                    .onSnapshot((snapshot) => {
+                        snapshot.forEach(doc => onChange(doc.data()));
+                    }, error => console.log(error));
+
             }, error => console.log(error));
     }
       
