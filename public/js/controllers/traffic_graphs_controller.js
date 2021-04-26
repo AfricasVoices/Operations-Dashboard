@@ -307,6 +307,8 @@ export class TrafficGraphsController {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
             d3.select("#buttonYLimitFailed").property("value", yLimitFailedFiltered);
+            receivedSliderStep.value(yLimitReceivedFiltered)
+            sentSliderStep.value(yLimitSentFiltered)
             draw10MinReceivedGraph(yLimitReceivedFiltered);
             draw10MinSentGraph(yLimitSentFiltered);
             draw10MinFailedGraph(yLimitFailedFiltered);
@@ -316,6 +318,8 @@ export class TrafficGraphsController {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
             d3.select("#buttonYLimitFailed").property("value", yLimitFailed);
+            receivedSliderStep.value(yLimitReceived)
+            sentSliderStep.value(yLimitSent)
             drawOneDayReceivedGraph(yLimitReceived);
             drawOneDaySentGraph(yLimitSent);
             drawOneDayFailedGraph(yLimitFailed);
