@@ -12,14 +12,19 @@ export class PipelinesController {
             // Group pipeline metrics by run id
             let metricsByRunId = d3.group(value, (d) => d.run_id);
 
-            let lastSuccessfulRunData;
+            let lastSuccessfulRunData,
+                pipelineRunStartEvents = 0;
             for (let value of metricsByRunId.values()) {
                 let eventsInOneRun = value.map((d) => d.event);
                 if (eventsInOneRun.includes("PipelineRunEnd")) {
                     lastSuccessfulRunData = value.find((d) => d.event == "PipelineRunEnd");
                     break;
                 }
+                if (eventsInOneRun.includes("PipelineRunStart")) {
+                    pipelineRunStartEvents += 1;
+                }
             }
+            let pipelineRestarts = pipelineRunStartEvents - 1;
 
             let duration;
             if (!!lastSuccessfulRunData) {
@@ -35,31 +40,10 @@ export class PipelinesController {
             pipelineProgress["Last Start Time"] = lastStartData.timestamp;
             pipelineProgress["Last Successful Run"] = !!lastSuccessfulRunData ? lastSuccessfulRunData.timestamp : "-";
             pipelineProgress["Duration"] = !!duration ? duration : "-";
+            pipelineProgress["Restarts"] = pipelineRestarts;
             pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
-        // TODO: Update pipeline monitoring graphs.
-    }
-
-    static updateGraphs() {
-        // Clear previous graphs before redrawing
-        d3.selectAll("svg").remove();
-
-        // Set the dimensions and margins of the graph
-        const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
-            Width = 960 - Margin.right - Margin.left,
-            Height = 500 - Margin.top - Margin.bottom;
-
-        // Append the svg object to the body of the page
-        const svg = d3.select(".line-chart").append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .attr("viewBox", "-95 -40 1080 500")
-            .attr("preserveAspectRatio", "xMinYMin")
-            .append("g");
-
-        // Add X axis
-        const x = d3.scaleTime().range([0, Width]);
     }
 
     static updatePipelineProgressTable(data) {
@@ -71,24 +55,25 @@ export class PipelinesController {
             d3.select("thead").selectAll("tr").remove();
 
             // Table Header
-            d3.select("thead").append('tr')
+            d3.select("thead")
+                .append("tr")
                 .attr("class", "table-heading")
                 .selectAll("th")
                 .data(PipelinesController.jsonToArray(data[0]))
                 .enter()
                 .append("th")
                 .text((d) => d[0]);
-            
+
             // Table Rows
-            let tr = d3.select("tbody").selectAll("tr")
-                .data(data)
-                .enter().append("tr");
-            
+            let tr = d3.select("tbody").selectAll("tr").data(data).enter().append("tr");
+
             // Table Cells
-            let td = tr.selectAll("td")
-                .data(d => PipelinesController.jsonToArray(d))
-                .enter().append("td");
-            
+            let td = tr
+                .selectAll("td")
+                .data((d) => PipelinesController.jsonToArray(d))
+                .enter()
+                .append("td");
+
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
 
             const dateFormat = d3.timeFormat("%a %b %d - %H:%M - %p");
@@ -99,6 +84,26 @@ export class PipelinesController {
                 }
                 return d[1];
             }).style("text-align", "center");
+          
+            td.filter((d, i) => d[0] === "Restarts")
+                .each((d, i, n) => {
+                    // Select Table Row
+                    let parentNode = d3.select(n[i].parentNode);
+                    parentNode.style("font-size", 16);
+                    // Select Table Data and access data bound to the node
+                    let tableData = parseInt(d3.select(n[i]).data()[0][1]);
+                    if (tableData === 0) {
+                        parentNode.style("background-color", "#d6ffd9").style("line-height", 0.7);
+                    } else if (tableData > 0) {
+                        let opacity = tableData / 10;
+                        opacity > 1 ? 1 : opacity;
+                        parentNode.style("background-color", `rgb(255,0,0,${opacity})`).style("line-height", 0.8);
+                    } else {
+                        parentNode.style("line-height", 0.6);
+                    }
+                })
+                .text((d) => (d[1] >= 0 ? d[1] : "-"))
+                .style("text-align", "center");
 
             td.filter((d, i) => d[0] === "Duration")
                 .text((d) => {
