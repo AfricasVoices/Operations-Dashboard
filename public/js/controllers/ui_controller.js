@@ -325,9 +325,6 @@ export class UIController {
                 <thead></thead>
                 <tbody></tbody>
             </table>
-            <section>
-                <div class="card shadow line-chart my-1"></div>
-            </section>
         </div> `;
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
