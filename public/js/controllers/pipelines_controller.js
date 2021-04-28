@@ -12,14 +12,19 @@ export class PipelinesController {
             // Group pipeline metrics by run id
             let metricsByRunId = d3.group(value, (d) => d.run_id);
 
-            let lastSuccessfulRunData;
+            let lastSuccessfulRunData,
+                pipelineRunStartEvents = 0;
             for (let value of metricsByRunId.values()) {
                 let eventsInOneRun = value.map((d) => d.event);
                 if (eventsInOneRun.includes("PipelineRunEnd")) {
                     lastSuccessfulRunData = value.find((d) => d.event == "PipelineRunEnd");
                     break;
                 }
+                if (eventsInOneRun.includes("PipelineRunStart")) {
+                    pipelineRunStartEvents += 1;
+                }
             }
+            let pipelineRestarts = pipelineRunStartEvents - 1;
 
             let duration;
             if (!!lastSuccessfulRunData) {
@@ -35,6 +40,7 @@ export class PipelinesController {
             pipelineProgress["Last Start Time"] = lastStartData.timestamp;
             pipelineProgress["Last Successful Run"] = !!lastSuccessfulRunData ? lastSuccessfulRunData.timestamp : "-";
             pipelineProgress["Duration"] = !!duration ? duration : "-";
+            pipelineProgress["Restarts"] = pipelineRestarts;
             pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
@@ -71,25 +77,46 @@ export class PipelinesController {
             d3.select("thead").selectAll("tr").remove();
 
             // Table Header
-            d3.select("thead").append('tr')
+            d3.select("thead")
+                .append("tr")
                 .attr("class", "table-heading")
                 .selectAll("th")
                 .data(PipelinesController.jsonToArray(data[0]))
                 .enter()
                 .append("th")
                 .text((d) => d[0]);
-            
+
             // Table Rows
-            let tr = d3.select("tbody").selectAll("tr")
-                .data(data)
-                .enter().append("tr");
-            
+            let tr = d3.select("tbody").selectAll("tr").data(data).enter().append("tr");
+
             // Table Cells
-            let td = tr.selectAll("td")
-                .data(d => PipelinesController.jsonToArray(d))
-                .enter().append("td");
-            
+            let td = tr
+                .selectAll("td")
+                .data((d) => PipelinesController.jsonToArray(d))
+                .enter()
+                .append("td");
+
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
+
+            td.filter((d, i) => d[0] === "Restarts")
+                .each((d, i, n) => {
+                    // Select Table Row
+                    let parentNode = d3.select(n[i].parentNode);
+                    parentNode.style("font-size", 16);
+                    // Select Table Data and access data bound to the node
+                    let tableData = parseInt(d3.select(n[i]).data()[0][1]);
+                    if (tableData === 0) {
+                        parentNode.style("background-color", "#d6ffd9").style("line-height", 0.7);
+                    } else if (tableData > 0) {
+                        let opacity = tableData / 10;
+                        opacity > 1 ? 1 : opacity;
+                        parentNode.style("background-color", `rgb(255,0,0,${opacity})`).style("line-height", 0.8);
+                    } else {
+                        parentNode.style("line-height", 0.6);
+                    }
+                })
+                .text((d) => (d[1] >= 0 ? d[1] : "-"))
+                .style("text-align", "center");
 
             let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
             td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).text(d => {
