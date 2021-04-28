@@ -38,28 +38,6 @@ export class PipelinesController {
             pipelineProgressTableData.push(pipelineProgress);
         }
         PipelinesController.updatePipelineProgressTable(pipelineProgressTableData);
-        // TODO: Update pipeline monitoring graphs.
-    }
-
-    static updateGraphs() {
-        // Clear previous graphs before redrawing
-        d3.selectAll("svg").remove();
-
-        // Set the dimensions and margins of the graph
-        const Margin = { top: 40, right: 100, bottom: 105, left: 70 },
-            Width = 960 - Margin.right - Margin.left,
-            Height = 500 - Margin.top - Margin.bottom;
-
-        // Append the svg object to the body of the page
-        const svg = d3.select(".line-chart").append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .attr("viewBox", "-95 -40 1080 500")
-            .attr("preserveAspectRatio", "xMinYMin")
-            .append("g");
-
-        // Add X axis
-        const x = d3.scaleTime().range([0, Width]);
     }
 
     static updatePipelineProgressTable(data) {
