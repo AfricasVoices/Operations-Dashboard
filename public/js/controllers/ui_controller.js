@@ -95,13 +95,17 @@ export class UIController {
                         </div>
                     </div>
                     <div><button class="btn btn-sm btn-brown shadow-none" id="reset">View All</button></div>
+                    
+                    <div class="ml-auto">
+                        <span class="font-weight-bold txt-brown">Last Updated: </span>
+                        <span class="font-weight-bold" id="last-update"></span>
+                    </div>
                 </div>
             
-                <table id='codingtable' class='table'>
+                <table id="codingtable" class="table">
                     <thead></thead>
                     <tbody id="coding-status-body"></tbody>
                 </table>
-                <div id="last-update">Last updated: </div>
                 <div class="accordion" id="accordionExample">
                     <div class="card">
                         <div id="headingOne">
