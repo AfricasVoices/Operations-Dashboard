@@ -208,9 +208,7 @@ export class CodingProgressTableController {
         );
     }
 
-    static jsonKeyValueToArray(k, v) {
-        return [k, v];
-    }
+    static jsonKeyValueToArray = (k, v) => [k, v];
 
     static jsonToArray(json, tableSection = "") {
         let arr = [];
