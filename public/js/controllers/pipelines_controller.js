@@ -76,6 +76,14 @@ export class PipelinesController {
 
             td.filter((d, i) => d[0] === "Pipeline").text((d) => d[1]);
 
+            const dateFormat = d3.timeFormat("%a %d %b  %I:%M %p");
+            td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).text(d => {
+                if (d[1] !== "-") {
+                    return dateFormat(d[1]);
+                }
+                return d[1];
+            }).style("text-align", "center");
+          
             td.filter((d, i) => d[0] === "Restarts")
                 .each((d, i, n) => {
                     // Select Table Row
@@ -95,12 +103,6 @@ export class PipelinesController {
                 })
                 .text((d) => (d[1] >= 0 ? d[1] : "-"))
                 .style("text-align", "center");
-
-            let fullDateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
-            td.filter((d, i) => ["Last Start Time", "Last Successful Run"].includes(d[0])).text(d => {
-                if (d[1] !== "-") d[1] = fullDateFormat(d[1]);
-                return d[1];
-            }).style("text-align", "center");
 
             td.filter((d, i) => d[0] === "Duration")
                 .text((d) => {
