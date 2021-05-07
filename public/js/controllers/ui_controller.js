@@ -218,7 +218,7 @@ export class UIController {
                 <div class="mx-1">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Set Time Scale</span>
+                            <span class="input-group-text">Set Time Frame</span>
                         </div>
                         <select class="btn-brown form-control shadow-none" id="timeFrame">
                             <option value="default">Default</option>
