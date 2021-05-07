@@ -204,7 +204,7 @@ export class UIController {
             </div>
 
             <div class="d-md-flex justify-content-center my-1">
-                <div> 
+                <div class="mx-1"> 
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Set Time Scale</span>
@@ -215,14 +215,19 @@ export class UIController {
                         </div>
                     </div>
                 </div>
-                <div class="d-md-flex mx-2">
-                    <select class="btn-brown form-control shadow-none" id="timeFrame">
-                        <option value="default">Set Time Frame</option>
-                        <option value="1">48 Hours</option>
-                        <option value="6">7 days</option>
-                        <option value="13">14 days</option>
-                        <option value="29">30 days</option>
-                    </select>
+                <div class="mx-1">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Set Time Scale</span>
+                        </div>
+                        <select class="btn-brown form-control shadow-none" id="timeFrame">
+                            <option value="default">Default</option>
+                            <option value="1">48 Hours</option>
+                            <option value="6">7 days</option>
+                            <option value="13">14 days</option>
+                            <option value="29">30 days</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
