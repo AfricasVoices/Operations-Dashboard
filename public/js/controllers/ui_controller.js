@@ -205,15 +205,15 @@ export class UIController {
 
             <div class="d-md-flex justify-content-center my-1">
                 <div> 
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Set Time Scale</span>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Set Time Scale</span>
+                        </div>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button class="btn btn-brown shadow-none" id="buttonUpdateView10Minutes">10 minutes</button>
+                            <button class="btn btn-brown shadow-none" id="buttonUpdateViewOneDay">1 day</button>
+                        </div>
                     </div>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button class="btn btn-brown shadow-none" id="buttonUpdateView10Minutes">10 minutes</button>
-                        <button class="btn btn-brown shadow-none" id="buttonUpdateViewOneDay">1 day</button>
-                    </div>
-                </div>
                 </div>
                 <div class="d-md-flex mx-2">
                     <select class="btn-brown form-control shadow-none" id="timeFrame">
