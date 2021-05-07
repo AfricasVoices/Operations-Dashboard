@@ -60,7 +60,7 @@
 }
 .btn-brown:hover {
     color: steelblue;
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 .btn-outline-custom {
     border-color: #8d3538;
