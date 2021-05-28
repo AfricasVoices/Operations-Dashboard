@@ -8,7 +8,7 @@ verify_ssl = true
 [packages]
 firebase-admin = "*"
 google-cloud-firestore = "*"
-coredatamodules = {editable = true,git = "https://www.github.com/AfricasVoices/CoreDataModules",ref = "v0.15.2"}
+coredatamodules = {editable = true,git = "https://www.github.com/AfricasVoices/CoreDataModules",ref = "v0.15.4"}
 pipelineinfrastructure = {editable = true,git = "https://www.github.com/AfricasVoices/Pipeline-Infrastructure",ref = "v0.1.0"}
 rapidprotools = {editable = true,git = "https://www.github.com/AfricasVoices/RapidProTools",ref = "v0.3.8"}
 python-dateutil = "*"
