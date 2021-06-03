@@ -197,7 +197,7 @@ export class UIController {
                     <div class="font-weight-bold mb-0" id="AT-units-bal"></div>
                 </div>
                 <div>
-                    <span class="txt-brown my-auto title"><b>${title}</b></span>
+                    <span class="txt-brown my-auto project-title"><b>${title}</b></span>
                 </div>
                 <div class="d-flex">
                     <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
