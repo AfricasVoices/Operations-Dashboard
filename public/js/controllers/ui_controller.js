@@ -191,7 +191,7 @@ export class UIController {
         UIController.resetUI();
         document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container"> 
-            <div class="d-md-flex justify-content-between">
+            <div class="d-md-flex justify-content-between row">
                 <div class="d-flex">
                     <span class="font-weight-bold txt-brown mr-1">Africa's Talking Units Balance:</span>
                     <div class="font-weight-bold mb-0" id="AT-units-bal"></div>
