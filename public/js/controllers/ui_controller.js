@@ -191,28 +191,47 @@ export class UIController {
         UIController.resetUI();
         document.head.appendChild(UIController.getScrollJsScript());
         let html = `<div class="container"> 
-            <div class="d-md-flex justify-content-between p-1">
-                <div>
-                    <span class="txt-brown my-auto title"><b>${title}</b></span>
+            <div class="d-md-flex justify-content-between row">
+                <div class="d-flex">
+                    <span class="font-weight-bold txt-brown mr-1">Africa's Talking Units Balance:</span>
+                    <div class="font-weight-bold mb-0" id="AT-units-bal"></div>
                 </div>
-                <div class="d-md-flex">
-                    <span class="align-content-end font-weight-bold mr-1 p-1">Timescale</span>
-                    <input class="mr-2 btn btn-sm btn-brown form-control shadow-none" type="button" id="buttonUpdateView10Minutes" value="10 minutes">
-                    <input class="btn btn-sm btn-brown form-control shadow-none" type="button" id="buttonUpdateViewOneDay" value="1 day">
-                    <span class="align-content-end font-weight-bold ml-3 mr-1 p-1">TimeFrame</span>
-                    <select class="btn-brown btn-sm form-control shadow-none col-3" id="timeFrame">
-                        <option value="default">Default</option>
-                        <option value="1">48 Hours</option>
-                        <option value="6">7 days</option>
-                        <option value="13">14 days</option>
-                        <option value="29">30 days</option>
-                    </select> 
+                <div>
+                    <span class="txt-brown my-auto project-title"><b>${title}</b></span>
                 </div>
                 <div class="d-flex">
                     <span class="font-weight-bold txt-brown mr-1">Last Updated:</span>
                     <div class="font-weight-bold mb-0" id="lastUpdated"></div>
                 </div>
-            </div> 
+            </div>
+
+            <div class="d-md-flex justify-content-center my-1">
+                <div class="mx-1"> 
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Set Time Scale</span>
+                        </div>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button class="btn btn-brown shadow-none" id="buttonUpdateView10Minutes">10 minutes</button>
+                            <button class="btn btn-brown shadow-none" id="buttonUpdateViewOneDay">1 day</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mx-1">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Set Time Frame</span>
+                        </div>
+                        <select class="btn-brown form-control shadow-none" id="timeFrame">
+                            <option value="default">Default</option>
+                            <option value="1">48 Hours</option>
+                            <option value="6">7 days</option>
+                            <option value="13">14 days</option>
+                            <option value="29">30 days</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             
             <div class="card shadow total_received_sms_graph"></div>
             <div class="card shadow total_sent_sms_graph mt-1"></div>
@@ -275,13 +294,6 @@ export class UIController {
                                 <div class="card responsetext">
                                     <b>Operator metrics</b>
                                     <table id="operator-metrics"></table>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card responsetext">
-                                    <b>Project Details</b>
-                                    <div>Project Name: <span id="project-name"></span></div>
-                                    <div>Africas Talking Units Balance: <span id="AT-units-bal"></span></div>
                                 </div>
                             </div>
                         </div>

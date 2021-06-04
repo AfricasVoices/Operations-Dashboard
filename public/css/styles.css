@@ -60,7 +60,7 @@
 }
 .btn-brown:hover {
     color: steelblue;
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 .btn-outline-custom {
     border-color: #8d3538;
@@ -219,6 +219,10 @@ td.dash {
 }
 .body {
     background: #fafafa;
+}
+.project-title {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
 }
 .text-stale-info {
     color: #000000;
