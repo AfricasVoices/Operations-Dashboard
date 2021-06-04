@@ -296,13 +296,6 @@ export class UIController {
                                     <table id="operator-metrics"></table>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="card responsetext">
-                                    <b>Project Details</b>
-                                    <div>Project Name: <span id="project-name"></span></div>
-                                    <div>Africas Talking Units Balance: <span id="AT-units-bal"></span></div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
