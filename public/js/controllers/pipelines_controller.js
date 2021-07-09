@@ -27,7 +27,7 @@ export class PipelinesController {
             let pipelineRestarts = pipelineRunStartEvents - 1;
 
             let duration;
-            if (!!lastSuccessfulRunData) {
+            if (!!lastSuccessfulRunData && lastStartData) {
                 const hasRunSuccessfully = lastSuccessfulRunData.timestamp > lastStartData.timestamp,
                     hasSameRunId = lastSuccessfulRunData.run_id == lastStartData.run_id;
                 if (hasRunSuccessfully && hasSameRunId) {
@@ -37,7 +37,7 @@ export class PipelinesController {
 
             let pipelineProgress = {};
             pipelineProgress["Pipeline"] = key;
-            pipelineProgress["Last Start Time"] = lastStartData.timestamp;
+            pipelineProgress["Last Start Time"] = !!lastStartData ? lastStartData.timestamp : "-";
             pipelineProgress["Last Successful Run"] = !!lastSuccessfulRunData ? lastSuccessfulRunData.timestamp : "-";
             pipelineProgress["Duration"] = !!duration ? duration : "-";
             pipelineProgress["Restarts"] = pipelineRestarts;
