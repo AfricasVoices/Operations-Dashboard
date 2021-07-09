@@ -27,7 +27,7 @@ export class PipelinesController {
             let pipelineRestarts = pipelineRunStartEvents - 1;
 
             let duration;
-            if (!!lastSuccessfulRunData && lastStartData) {
+            if (lastSuccessfulRunData && lastStartData) {
                 const hasRunSuccessfully = lastSuccessfulRunData.timestamp > lastStartData.timestamp,
                     hasSameRunId = lastSuccessfulRunData.run_id == lastStartData.run_id;
                 if (hasRunSuccessfully && hasSameRunId) {
