@@ -164,6 +164,7 @@ class GraphController {
             legendIdentityArray = [], //store legend classes to select bars in plotSingle()
             y_orig, // to store original y-posn
             receivedLayer,
+            receivedLayer10min,
             class_keep, idx;
 
         //Create margins for the three graphs
@@ -438,7 +439,7 @@ class GraphController {
                 .attr("class", "redrawElementReceived")
                 .call(d3.axisLeft(y_total_received_sms_range));
 
-            let receivedLayer10min = total_received_sms_graph
+            receivedLayer10min = total_received_sms_graph
                 .selectAll("#receivedStack10min")
                 .data(receivedDataStacked)
                 .enter()
@@ -1253,6 +1254,14 @@ class GraphController {
         }
 
         function plotSingle(legendClicked, legendIdentityArray, transition = "true") {
+            let layer;
+            if (GraphController.chartTimeUnit == "1day") {
+                layer = receivedLayer
+            }
+            if (GraphController.chartTimeUnit == "10min") {
+                layer = receivedLayer10min
+            }
+
             class_keep = legendClicked;
             idx = legendIdentityArray.indexOf(class_keep);    
            
@@ -1272,7 +1281,7 @@ class GraphController {
         
             // Lower the bars to start on x-axis
             y_orig = [];
-            receivedLayer.selectAll("rect")._groups[idx].forEach(function (d, i, n) {      
+            layer.selectAll("rect")._groups[idx].forEach(function (d, i, n) {      
                 // Get height and y posn of base bar and selected bar
                 let h_keep = d3.select(d).attr("height");
                 let y_keep = d3.select(d).attr("y");
@@ -1280,7 +1289,7 @@ class GraphController {
                 y_orig.push(y_keep);
             
                 let h_base, y_base;
-                receivedLayer.selectAll("rect")._groups[0].forEach(function (d, i, n) {
+                layer.selectAll("rect")._groups[0].forEach(function (d, i, n) {
                     h_base = d3.select(d).attr("height");
                     y_base = d3.select(d).attr("y");
                 })
@@ -1303,7 +1312,15 @@ class GraphController {
         }
 
         function restorePlot(legendIdentityArray) {
-            receivedLayer.selectAll("rect")._groups[idx].forEach(function (d, i, n) {
+            let layer;
+            if (GraphController.chartTimeUnit == "1day") {
+                layer = receivedLayer
+            }
+            if (GraphController.chartTimeUnit == "10min") {
+                layer = receivedLayer10min
+            }
+
+            layer.selectAll("rect")._groups[idx].forEach(function (d, i, n) {
                 d3.select(d)
                   .transition()
                   .duration(1000)        
