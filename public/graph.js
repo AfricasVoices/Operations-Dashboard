@@ -159,10 +159,10 @@ class GraphController {
             stackSentDaily = d3.stack().keys(sentKeys),
             sentDataStackedDaily = stackSentDaily(dailySentTotal);
 
-        let active_link = "0", //to control legend selections and hover
-            legendClicked, //to control legend selections
+        let active_link = "0", // to control legend selections and hover
+            legendClicked, // to control legend selections
             legendIdentityArray = [], //store legend classes to select bars in plotSingle()
-            y_orig, //to store original y-posn
+            y_orig, // to store original y-posn
             receivedLayer,
             class_keep, idx;
 
