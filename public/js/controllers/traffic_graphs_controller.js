@@ -435,7 +435,7 @@ export class TrafficGraphsController {
             // Add the brushing
             let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
         
-            let receivedLayer10min = sectionWithBrushing
+            ReceivedMsgGraph.receivedLayer10min = sectionWithBrushing
                 .selectAll("#receivedStack10min")
                 .data(receivedDataStacked)
                 .enter()
@@ -444,7 +444,7 @@ export class TrafficGraphsController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            receivedLayer10min
+            ReceivedMsgGraph.receivedLayer10min
                 .selectAll("rect")
                 .data(tenMinGraphFilteredData => tenMinGraphFilteredData)
                 .enter()
@@ -637,7 +637,7 @@ export class TrafficGraphsController {
                     .attr("transform", "rotate(-65)");
                     
                 // Redraw the stacked bars
-                receivedLayer10min.selectAll("rect")
+                ReceivedMsgGraph.receivedLayer10min.selectAll("rect")
                     .attr("x", d => x(d.data.datetime))
                     .attr("width", d => {
                         let datetime = new Date(d.data.datetime);
@@ -695,7 +695,7 @@ export class TrafficGraphsController {
                 .attr("class", "redrawElementReceived")
                 .call(d3.axisLeft(y_total_received_sms_range));
 
-            let receivedLayer = total_received_sms_graph
+            ReceivedMsgGraph.receivedLayer = total_received_sms_graph
                 .selectAll("#receivedStack")
                 .data(receivedDataStackedDaily)
                 .enter()
@@ -704,7 +704,7 @@ export class TrafficGraphsController {
                 .attr("class", (d, i) => receivedKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            receivedLayer
+            ReceivedMsgGraph.receivedLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
@@ -722,7 +722,7 @@ export class TrafficGraphsController {
                 });
 
             // Add tooltip for the total received sms graph
-            receivedLayer
+            ReceivedMsgGraph.receivedLayer
                 .selectAll("rect")
                 .on("mouseover", (event, d) => {
                     // Get key of stacked data from the selection
@@ -878,7 +878,7 @@ export class TrafficGraphsController {
             let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
 
             // Create stacks
-            let sentLayer10min = sectionWithBrushing
+            SentMsgGraph.sentLayer10min = sectionWithBrushing
                 .selectAll("#sentStack10min")
                 .data(sentDataStacked)
                 .enter()
@@ -887,7 +887,7 @@ export class TrafficGraphsController {
                 .attr("class", (d, i) => sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            sentLayer10min
+            SentMsgGraph.sentLayer10min
                 .selectAll("rect")
                 .data(tenMinGraphFilteredData => tenMinGraphFilteredData)
                 .enter()
@@ -1077,7 +1077,7 @@ export class TrafficGraphsController {
                     .attr("transform", "rotate(-65)");
                     
                 // Redraw the stacked bars
-                sentLayer10min.selectAll("rect")
+                SentMsgGraph.sentLayer10min.selectAll("rect")
                     .attr("x", d => x(d.data.datetime))
                     .attr("width", d => {
                         let datetime = new Date(d.data.datetime);
@@ -1134,7 +1134,7 @@ export class TrafficGraphsController {
                 .call(d3.axisLeft(y_total_sent_sms_range));
 
             // Create stacks
-            let sentLayer = total_sent_sms_graph
+            SentMsgGraph.sentLayer = total_sent_sms_graph
                 .selectAll("#sentStack1day")
                 .data(sentDataStackedDaily)
                 .enter()
@@ -1143,7 +1143,7 @@ export class TrafficGraphsController {
                 .attr("class", (d, i) => sentKeys[i])
                 .style("fill", (d, i) => color(i));
 
-            sentLayer
+            SentMsgGraph.sentLayer
                 .selectAll("rect")
                 .data(d => d)
                 .enter()
@@ -1158,7 +1158,7 @@ export class TrafficGraphsController {
                 });
 
             // Add tooltip for the total sent sms graph
-            sentLayer
+            SentMsgGraph.sentLayer
                 .selectAll("rect")
                 .on("mouseover", (event, d) => {
                     // Get key of stacked data from the selection
