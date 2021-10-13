@@ -1,39 +1,43 @@
 import { TrafficGraphsController } from "../controllers/traffic_graphs_controller.js";
 
-const plotSingleReceivedMsgGraph = (ReceivedMsgGraph, transition = true) => {
+const getGraphByMsgDirection = (graph, msgDirection) => {
     let layer;
     if (TrafficGraphsController.chartTimeUnit == "1day") {
-        layer = ReceivedMsgGraph.receivedLayer;
+        if (msgDirection == "received") layer = graph.receivedLayer;
+        if (msgDirection == "sent") layer = graph.sentLayer;
     }
     if (TrafficGraphsController.chartTimeUnit == "10min") {
-        layer = ReceivedMsgGraph.receivedLayer10min;
+        if (msgDirection == "received") layer = graph.receivedLayer10min;
+        if (msgDirection == "sent") layer = graph.sentLayer10min;
     }
+    return layer;
+};
 
-    ReceivedMsgGraph.class_keep = ReceivedMsgGraph.clickedLegend;
-    ReceivedMsgGraph.idx = ReceivedMsgGraph.legendIdentityArray.indexOf(ReceivedMsgGraph.class_keep);
+const plotSingle = (graph, msgDirection, transition = true) => {
+    let layer = getGraphByMsgDirection(graph, msgDirection);
+
+    graph.class_keep = graph.clickedLegend;
+    graph.idx = graph.legendIdentityArray.indexOf(graph.class_keep);
 
     // Erase all but selected bars by setting opacity to 0
-    for (let i = 0; i < ReceivedMsgGraph.legendIdentityArray.length; i++) {
-        if (ReceivedMsgGraph.legendIdentityArray[i] != ReceivedMsgGraph.class_keep) {
+    for (let i = 0; i < graph.legendIdentityArray.length; i++) {
+        if (graph.legendIdentityArray[i] != graph.class_keep) {
             if (!transition) {
-                d3.selectAll(`.${ReceivedMsgGraph.legendIdentityArray[i]}`).style("opacity", 0);
+                d3.selectAll(`.${graph.legendIdentityArray[i]}`).style("opacity", 0);
             } else {
-                d3.selectAll(`.${ReceivedMsgGraph.legendIdentityArray[i]}`)
-                    .transition()
-                    .duration(1000)
-                    .style("opacity", 0);
+                d3.selectAll(`.${graph.legendIdentityArray[i]}`).transition().duration(500).style("opacity", 0);
             }
         }
     }
 
     // Lower the bars to start on x-axis
-    ReceivedMsgGraph.y_orig = []; // to store original y-posn
-    layer.selectAll("rect")._groups[ReceivedMsgGraph.idx].forEach(function (d, i, n) {
+    graph.y_orig = []; // to store original y-posn
+    layer.selectAll("rect")._groups[graph.idx].forEach(function (d, i, n) {
         // Get height and y posn of base bar and selected bar
         let h_keep = d3.select(d).attr("height");
         let y_keep = d3.select(d).attr("y");
         // Store y_base in array to restore plot
-        ReceivedMsgGraph.y_orig.push(y_keep);
+        graph.y_orig.push(y_keep);
 
         let h_base, y_base;
         layer.selectAll("rect")._groups[0].forEach(function (d, i, n) {
@@ -48,111 +52,97 @@ const plotSingleReceivedMsgGraph = (ReceivedMsgGraph, transition = true) => {
         if (!transition) {
             d3.select(d).attr("y", y_new);
         } else {
-            d3.select(d).transition().ease(d3.easeBounce).duration(1000).delay(750).attr("y", y_new);
+            d3.select(d).transition().ease(d3.easeBounce).duration(500).delay(150).attr("y", y_new);
         }
     });
-    return ReceivedMsgGraph;
-}
+    return graph;
+};
 
-const restoreReceivedMsgGraphPlot = (ReceivedMsgGraph) => {
-    let layer;
-    if (TrafficGraphsController.chartTimeUnit == "1day") {
-        layer = ReceivedMsgGraph.receivedLayer;
-    }
-    if (TrafficGraphsController.chartTimeUnit == "10min") {
-        layer = ReceivedMsgGraph.receivedLayer10min;
-    }
+const restorePlot = (graph, msgDirection) => {
+    let layer = getGraphByMsgDirection(graph, msgDirection);
 
-    layer.selectAll("rect")._groups[ReceivedMsgGraph.idx].forEach(function (d, i, n) {
-        d3.select(d).transition().duration(1000).attr("y", ReceivedMsgGraph.y_orig[i]);
+    layer.selectAll("rect")._groups[graph.idx].forEach(function (d, i, n) {
+        d3.select(d).transition().duration(500).attr("y", graph.y_orig[i]);
     });
 
     //restore opacity of erased bars
-    for (let i = 0; i < ReceivedMsgGraph.legendIdentityArray.length; i++) {
-        if (ReceivedMsgGraph.legendIdentityArray[i] != ReceivedMsgGraph.class_keep) {
-            d3.selectAll(`.${ReceivedMsgGraph.legendIdentityArray[i]}`)
-                .transition()
-                .duration(1000)
-                .delay(750)
-                .style("opacity", 1);
+    for (let i = 0; i < graph.legendIdentityArray.length; i++) {
+        if (graph.legendIdentityArray[i] != graph.class_keep) {
+            d3.selectAll(`.${graph.legendIdentityArray[i]}`).transition().duration(500).delay(150).style("opacity", 1);
         }
     }
-}
+};
 
-const plotSingleSentMsgGraph = (SentMsgGraph, transition = true) => {
-    let layer;
-    if (TrafficGraphsController.chartTimeUnit == "1day") {
-        layer = SentMsgGraph.sentLayer;
+const cellOverHandler = (target, graph) => {
+    let legendHovered = d3.select(target).datum().replace(/\s/g, "");
+    if (graph.activeLink === "0") d3.select(target).style("cursor", "pointer");
+    else {
+        if (graph.activeLink === legendHovered) {
+            d3.select(target).style("cursor", "pointer");
+        } else d3.select(target).style("cursor", "auto");
     }
-    if (TrafficGraphsController.chartTimeUnit == "10min") {
-        layer = SentMsgGraph.sentLayer10min;
-    }
+};
 
-    SentMsgGraph.class_keep = SentMsgGraph.clickedLegend;
-    SentMsgGraph.idx = SentMsgGraph.legendIdentityArray.indexOf(SentMsgGraph.class_keep);
+const cellClickHandler = (target, graph, msgDirection) => {
+    graph.clickedLegend = d3.select(target).datum().replace(/\s/g, ""); // to control legend selections
+    if (graph.activeLink === "0") {
+        //nothing selected, turn on this selection
+        graph.activeLink = graph.clickedLegend;
+        graph.clickedNode = target;
 
-    // Erase all but selected bars by setting opacity to 0
-    for (let i = 0; i < SentMsgGraph.legendIdentityArray.length; i++) {
-        if (SentMsgGraph.legendIdentityArray[i] != SentMsgGraph.class_keep) {
-            if (!transition) {
-                d3.selectAll(`.${SentMsgGraph.legendIdentityArray[i]}`).style("opacity", 0);
-            } else {
-                d3.selectAll(`.${SentMsgGraph.legendIdentityArray[i]}`).transition().duration(1000).style("opacity", 0);
+        let operatorsLegend = d3.select(target.parentNode).selectAll("rect");
+        operatorsLegend.each(function (legend) {
+            let cell = d3.select(this).datum().replace(/\s/g, "");
+            graph.legendIdentityArray.push(cell);
+            if (cell !== graph.clickedLegend) {
+                d3.select(this).style("opacity", 0.5);
+            } else if (cell == graph.clickedLegend) {
+                d3.select(this).style("stroke", "black").style("stroke-width", 2);
             }
-        }
-    }
-
-    // Lower the bars to start on x-axis
-    SentMsgGraph.y_orig = []; // to store original y-posn
-    layer.selectAll("rect")._groups[SentMsgGraph.idx].forEach(function (d, i, n) {
-        // Get height and y posn of base bar and selected bar
-        let h_keep = d3.select(d).attr("height");
-        let y_keep = d3.select(d).attr("y");
-        // Store y_base in array to restore plot
-        SentMsgGraph.y_orig.push(y_keep);
-
-        let h_base, y_base;
-        layer.selectAll("rect")._groups[0].forEach(function (d, i, n) {
-            h_base = d3.select(d).attr("height");
-            y_base = d3.select(d).attr("y");
         });
+        graph = plotSingle(graph, msgDirection);
+    } else {
+        //deactivate
+        if (graph.activeLink === graph.clickedLegend) {
+            //active square selected; turn it OFF
+            graph.activeLink = "0"; //reset
 
-        let h_shift = h_keep - h_base;
-        let y_new = y_base - h_shift;
-
-        // Reposition selected bars
-        if (!transition) {
-            d3.select(d).attr("y", y_new);
-        } else {
-            d3.select(d).transition().ease(d3.easeBounce).duration(1000).delay(750).attr("y", y_new);
+            let operatorsLegend = d3.select(target.parentNode).selectAll("rect");
+            operatorsLegend.each(function (legend) {
+                let cell = d3.select(this).datum().replace(/\s/g, "");
+                if (cell !== graph.clickedLegend) {
+                    d3.select(this).style("opacity", 1);
+                }
+                if (cell == graph.clickedLegend) {
+                    d3.select(this).style("stroke", "none");
+                }
+            });
+            //restore plot to original
+            restorePlot(graph, msgDirection);
         }
-    });
-    return SentMsgGraph;
-}
+    } //end graph.activeLink check
+    return graph;
+};
 
-const restoreSentMsgGraphPlot = (SentMsgGraph) => {
-    let layer;
-    if (TrafficGraphsController.chartTimeUnit == "1day") {
-        layer = SentMsgGraph.sentLayer;
-    }
-    if (TrafficGraphsController.chartTimeUnit == "10min") {
-        layer = SentMsgGraph.sentLayer10min;
-    }
-
-    layer.selectAll("rect")._groups[SentMsgGraph.idx].forEach(function (d, i, n) {
-        d3.select(d).transition().duration(1000).attr("y", SentMsgGraph.y_orig[i]);
-    });
-
-    //restore opacity of erased bars
-    for (let i = 0; i < SentMsgGraph.legendIdentityArray.length; i++) {
-        if (SentMsgGraph.legendIdentityArray[i] != SentMsgGraph.class_keep) {
-            d3.selectAll(`.${SentMsgGraph.legendIdentityArray[i]}`)
-                .transition()
-                .duration(1000)
-                .delay(750)
-                .style("opacity", 1);
+const resetSelectedLegend = (graphs) => {
+    let updatedGraphs = [];
+    graphs.forEach(function (graph) {
+        if (graph.clickedNode) {
+            let operatorsLegend2 = d3.select(graph.clickedNode.parentNode).selectAll("rect");
+            operatorsLegend2.each(function (legend) {
+                let cell = d3.select(this).datum().replace(/\s/g, "");
+                if (cell !== graph.clickedLegend) {
+                    d3.select(this).style("opacity", 1);
+                }
+                if (cell == graph.clickedLegend) {
+                    d3.select(this).style("stroke", "none");
+                }
+            });
         }
-    }
-}
+        graph.activeLink = "0";
+        updatedGraphs.push(graph);
+    });
+    return updatedGraphs;
+};
 
-export { plotSingleReceivedMsgGraph, restoreReceivedMsgGraphPlot, plotSingleSentMsgGraph, restoreSentMsgGraphPlot };
+export { plotSingle, cellOverHandler, cellClickHandler, resetSelectedLegend };
