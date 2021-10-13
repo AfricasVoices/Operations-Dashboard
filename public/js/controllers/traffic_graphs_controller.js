@@ -293,7 +293,13 @@ export class TrafficGraphsController {
             .shapeWidth(12)
             .orient("vertical")
             .scale(colorReceived)
-            .labels(operators);
+            .labels(operators)
+            .on("cellover", function () {
+                cellOverHandler(this, ReceivedMsgGraph)
+            })
+            .on("cellclick", function () {
+                ReceivedMsgGraph = cellClickHandler(this, ReceivedMsgGraph, "received")
+            });
 
         d3.select(".receivedLegend").call(receivedLegend);
 
@@ -308,7 +314,13 @@ export class TrafficGraphsController {
             .shapeWidth(12)
             .orient("vertical")
             .scale(colorSent)
-            .labels(operators);
+            .labels(operators)
+            .on("cellover", function () {
+                cellOverHandler(this, SentMsgGraph)
+            })
+            .on("cellclick", function () {
+                SentMsgGraph = cellClickHandler(this, SentMsgGraph, "sent")
+            });
 
         d3.select(".sentLegend").call(sentLegend);
 
