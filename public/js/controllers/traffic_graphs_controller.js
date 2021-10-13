@@ -1359,9 +1359,11 @@ export class TrafficGraphsController {
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitReceived = value;
                 drawOneDayReceivedGraph(yLimitReceived);
+                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingle(ReceivedMsgGraph, "received", false);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = value;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
+                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingle(ReceivedMsgGraph, "received", false);
             }
         });
 
@@ -1383,9 +1385,11 @@ export class TrafficGraphsController {
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitSent = value;
                 drawOneDaySentGraph(yLimitSent);
+                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingle(SentMsgGraph, "sent", false);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitSentFiltered = value;
                 draw10MinSentGraph(yLimitSentFiltered);
+                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingle(SentMsgGraph, "sent", false);
             }
         });
 
