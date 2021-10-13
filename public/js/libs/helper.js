@@ -1,6 +1,6 @@
 import { TrafficGraphsController } from "../controllers/traffic_graphs_controller.js";
 
-function plotSingleReceivedMsgGraph(ReceivedMsgGraph, transition = true) {
+const plotSingleReceivedMsgGraph = (ReceivedMsgGraph, transition = true) => {
     let layer;
     if (TrafficGraphsController.chartTimeUnit == "1day") {
         layer = ReceivedMsgGraph.receivedLayer;
@@ -54,7 +54,7 @@ function plotSingleReceivedMsgGraph(ReceivedMsgGraph, transition = true) {
     return ReceivedMsgGraph;
 }
 
-function restoreReceivedMsgGraphPlot(ReceivedMsgGraph) {
+const restoreReceivedMsgGraphPlot = (ReceivedMsgGraph) => {
     let layer;
     if (TrafficGraphsController.chartTimeUnit == "1day") {
         layer = ReceivedMsgGraph.receivedLayer;
@@ -79,7 +79,7 @@ function restoreReceivedMsgGraphPlot(ReceivedMsgGraph) {
     }
 }
 
-function plotSingleSentMsgGraph(SentMsgGraph, transition = true) {
+const plotSingleSentMsgGraph = (SentMsgGraph, transition = true) => {
     let layer;
     if (TrafficGraphsController.chartTimeUnit == "1day") {
         layer = SentMsgGraph.sentLayer;
@@ -130,7 +130,7 @@ function plotSingleSentMsgGraph(SentMsgGraph, transition = true) {
     return SentMsgGraph;
 }
 
-function restoreSentMsgGraphPlot(SentMsgGraph) {
+const restoreSentMsgGraphPlot = (SentMsgGraph) => {
     let layer;
     if (TrafficGraphsController.chartTimeUnit == "1day") {
         layer = SentMsgGraph.sentLayer;
