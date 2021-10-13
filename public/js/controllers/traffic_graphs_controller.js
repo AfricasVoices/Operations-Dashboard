@@ -1320,11 +1320,13 @@ export class TrafficGraphsController {
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             TrafficGraphsController.chartTimeUnit = "10min";
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
+            [ReceivedMsgGraph, SentMsgGraph] = resetSelectedLegend([ReceivedMsgGraph, SentMsgGraph])
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
             TrafficGraphsController.chartTimeUnit = "1day";
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
+            [ReceivedMsgGraph, SentMsgGraph] = resetSelectedLegend([ReceivedMsgGraph, SentMsgGraph])
         });
 
         d3.select("#timeFrame").on("change", function() {
