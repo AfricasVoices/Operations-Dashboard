@@ -137,6 +137,15 @@ export class TrafficGraphsController {
             stackSentDaily = d3.stack().keys(sentKeys),
             sentDataStackedDaily = stackSentDaily(dailySentTotal);
 
+        let ReceivedMsgGraph = {
+            activeLink: "0", // to control legend selections and hover
+            legendIdentityArray: [], // store legend classes to select bars in plotSingle()
+        };
+        let SentMsgGraph = {
+            activeLink: "0", // to control legend selections and hover
+            legendIdentityArray: [], // store legend classes to select bars in plotSingle()
+        }
+
         //Create margins for the three graphs
         const Margin = { top: 40, right: 100, bottom: 105, left: 140 },
             Width = 1221 - Margin.right - Margin.left,
