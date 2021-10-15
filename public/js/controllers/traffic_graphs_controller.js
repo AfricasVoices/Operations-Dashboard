@@ -9,6 +9,19 @@ export class TrafficGraphsController {
         return newDate;
     }
 
+    static getGraphByMsgDirection = (graph, msgDirection) => {
+        let layer;
+        if (TrafficGraphsController.chartTimeUnit == "1day") {
+            if (msgDirection == "received") layer = graph.receivedLayer;
+            if (msgDirection == "sent") layer = graph.sentLayer;
+        }
+        if (TrafficGraphsController.chartTimeUnit == "10min") {
+            if (msgDirection == "received") layer = graph.receivedLayer10min;
+            if (msgDirection == "sent") layer = graph.sentLayer10min;
+        }
+        return layer;
+    };
+
     static updateGraphs(data, projectName, operators,  MNOColors) {
         const TIMEFRAME_WEEK = 7;
         const TIMEFRAME_MONTH = 30;
@@ -298,7 +311,8 @@ export class TrafficGraphsController {
                 cellOverHandler(this, ReceivedMsgGraph)
             })
             .on("cellclick", function () {
-                ReceivedMsgGraph = cellClickHandler(this, ReceivedMsgGraph, "received")
+                let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
+                ReceivedMsgGraph = cellClickHandler(this, ReceivedMsgGraph, layer)
             });
 
         d3.select(".receivedLegend").call(receivedLegend);
@@ -319,7 +333,8 @@ export class TrafficGraphsController {
                 cellOverHandler(this, SentMsgGraph)
             })
             .on("cellclick", function () {
-                SentMsgGraph = cellClickHandler(this, SentMsgGraph, "sent")
+                let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
+                SentMsgGraph = cellClickHandler(this, SentMsgGraph, layer)
             });
 
         d3.select(".sentLegend").call(sentLegend);
@@ -1359,11 +1374,13 @@ export class TrafficGraphsController {
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitReceived = value;
                 drawOneDayReceivedGraph(yLimitReceived);
-                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingle(ReceivedMsgGraph, "received", false);
+                let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
+                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingle(ReceivedMsgGraph, layer, false);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = value;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
-                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingle(ReceivedMsgGraph, "received", false);
+                let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
+                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingle(ReceivedMsgGraph, layer, false);
             }
         });
 
@@ -1385,11 +1402,13 @@ export class TrafficGraphsController {
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitSent = value;
                 drawOneDaySentGraph(yLimitSent);
-                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingle(SentMsgGraph, "sent", false);
+                let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
+                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingle(SentMsgGraph, layer, false);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitSentFiltered = value;
                 draw10MinSentGraph(yLimitSentFiltered);
-                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingle(SentMsgGraph, "sent", false);
+                let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
+                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingle(SentMsgGraph, layer, false);
             }
         });
 

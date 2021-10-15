@@ -1,21 +1,4 @@
-import { TrafficGraphsController } from "../controllers/traffic_graphs_controller.js";
-
-const getGraphByMsgDirection = (graph, msgDirection) => {
-    let layer;
-    if (TrafficGraphsController.chartTimeUnit == "1day") {
-        if (msgDirection == "received") layer = graph.receivedLayer;
-        if (msgDirection == "sent") layer = graph.sentLayer;
-    }
-    if (TrafficGraphsController.chartTimeUnit == "10min") {
-        if (msgDirection == "received") layer = graph.receivedLayer10min;
-        if (msgDirection == "sent") layer = graph.sentLayer10min;
-    }
-    return layer;
-};
-
-const plotSingle = (graph, msgDirection, transition = true) => {
-    let layer = getGraphByMsgDirection(graph, msgDirection);
-
+const plotSingle = (graph, layer, transition = true) => {
     graph.class_keep = graph.clickedLegend;
     graph.idx = graph.legendIdentityArray.indexOf(graph.class_keep);
 
@@ -58,9 +41,7 @@ const plotSingle = (graph, msgDirection, transition = true) => {
     return graph;
 };
 
-const restorePlot = (graph, msgDirection) => {
-    let layer = getGraphByMsgDirection(graph, msgDirection);
-
+const restorePlot = (graph, layer) => {
     layer.selectAll("rect")._groups[graph.idx].forEach(function (d, i, n) {
         d3.select(d).transition().duration(500).attr("y", graph.y_orig[i]);
     });
@@ -83,7 +64,7 @@ const cellOverHandler = (target, graph) => {
     }
 };
 
-const cellClickHandler = (target, graph, msgDirection) => {
+const cellClickHandler = (target, graph, layer) => {
     graph.clickedLegend = d3.select(target).datum().replace(/\s/g, ""); // to control legend selections
     if (graph.activeLink === "0") {
         //nothing selected, turn on this selection
@@ -100,7 +81,7 @@ const cellClickHandler = (target, graph, msgDirection) => {
                 d3.select(this).style("stroke", "black").style("stroke-width", 2);
             }
         });
-        graph = plotSingle(graph, msgDirection);
+        graph = plotSingle(graph, layer);
     } else {
         //deactivate
         if (graph.activeLink === graph.clickedLegend) {
@@ -118,7 +99,7 @@ const cellClickHandler = (target, graph, msgDirection) => {
                 }
             });
             //restore plot to original
-            restorePlot(graph, msgDirection);
+            restorePlot(graph, layer);
         }
     } //end graph.activeLink check
     return graph;
