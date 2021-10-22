@@ -1,4 +1,4 @@
-const plotSingle = (graph, layer, transition = true) => {
+const plotSingleOperator = (graph, layer, transition = true) => {
     graph.class_keep = graph.clickedLegend;
     graph.idx = graph.legendIdentityArray.indexOf(graph.class_keep);
 
