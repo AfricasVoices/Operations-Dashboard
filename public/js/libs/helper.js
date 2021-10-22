@@ -81,7 +81,7 @@ const cellClickHandler = (target, graph, layer) => {
                 d3.select(this).style("stroke", "black").style("stroke-width", 2);
             }
         });
-        graph = plotSingle(graph, layer);
+        graph = plotSingleOperator(graph, layer);
     } else {
         //deactivate
         if (graph.activeLink === graph.clickedLegend) {
@@ -126,4 +126,4 @@ const resetSelectedLegend = (graphs) => {
     return updatedGraphs;
 };
 
-export { plotSingle, cellOverHandler, cellClickHandler, resetSelectedLegend };
+export { plotSingleOperator, cellOverHandler, cellClickHandler, resetSelectedLegend };

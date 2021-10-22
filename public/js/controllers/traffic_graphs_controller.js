@@ -1,5 +1,5 @@
 import { BarChart } from "../libs/bar_chart.js";
-import { plotSingle, cellOverHandler, cellClickHandler, resetSelectedLegend } from "../libs/helper.js"
+import { plotSingleOperator, cellOverHandler, cellClickHandler, resetSelectedLegend } from "../libs/helper.js"
 
 // GRAPH CONTROLLER
 export class TrafficGraphsController {
@@ -152,11 +152,11 @@ export class TrafficGraphsController {
 
         let ReceivedMsgGraph = {
             activeLink: "0", // to control legend selections and hover
-            legendIdentityArray: [], // store legend classes to select bars in plotSingle()
+            legendIdentityArray: [], // store legend classes to select bars in plotSingleOperator()
         };
         let SentMsgGraph = {
             activeLink: "0", // to control legend selections and hover
-            legendIdentityArray: [], // store legend classes to select bars in plotSingle()
+            legendIdentityArray: [], // store legend classes to select bars in plotSingleOperator()
         }
 
         //Create margins for the three graphs
@@ -1375,12 +1375,12 @@ export class TrafficGraphsController {
                 yLimitReceived = value;
                 drawOneDayReceivedGraph(yLimitReceived);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
-                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingle(ReceivedMsgGraph, layer, false);
+                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, false);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = value;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
-                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingle(ReceivedMsgGraph, layer, false);
+                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, false);
             }
         });
 
@@ -1403,12 +1403,12 @@ export class TrafficGraphsController {
                 yLimitSent = value;
                 drawOneDaySentGraph(yLimitSent);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
-                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingle(SentMsgGraph, layer, false);
+                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingleOperator(SentMsgGraph, layer, false);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitSentFiltered = value;
                 draw10MinSentGraph(yLimitSentFiltered);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
-                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingle(SentMsgGraph, layer, false);
+                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingleOperator(SentMsgGraph, layer, false);
             }
         });
 
