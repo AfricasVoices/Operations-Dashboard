@@ -39,7 +39,7 @@ const plotSingleOperator = (graph, layer, transitionDuration) => {
     return graph;
 };
 
-const restorePlot = (graph, layer) => {
+const showAllOperators = (graph, layer) => {
     layer.nodes()[graph.idx].childNodes.forEach(function (d, i, n) {
         d3.select(d).transition().duration(500).attr("y", graph.y_orig[i]);
     });
@@ -97,7 +97,7 @@ const cellClickHandler = (target, graph, layer) => {
                 }
             });
             // Restore plot to original
-            restorePlot(graph, layer);
+            showAllOperators(graph, layer);
         }
     } // End graph.activeLink check
     return graph;
