@@ -14,7 +14,7 @@ const plotSingleOperator = (graph, layer, transitionDuration) => {
 
     // Lower the bars to start on x-axis
     graph.y_orig = []; // To store original y-posn
-    layer.nodes()[graph.idx].childNodes.forEach(function (d, i, n) {
+    layer.nodes()[graph.idx].childNodes.forEach(d => {
         // Get height and y posn of base bar and selected bar
         let h_keep = d3.select(d).attr("height");
         let y_keep = d3.select(d).attr("y");
@@ -22,7 +22,7 @@ const plotSingleOperator = (graph, layer, transitionDuration) => {
         graph.y_orig.push(y_keep);
 
         let h_base, y_base;
-        layer.nodes()[0].childNodes.forEach(function (d, i, n) {
+        layer.nodes()[0].childNodes.forEach(d => {
             h_base = d3.select(d).attr("height");
             y_base = d3.select(d).attr("y");
         });
