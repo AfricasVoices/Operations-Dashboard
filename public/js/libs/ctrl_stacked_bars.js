@@ -70,13 +70,12 @@ const cellClickHandler = (target, graph, layer) => {
         graph.clickedNode = target;
 
         let operatorsLegend = d3.select(target.parentNode).selectAll("rect");
-        operatorsLegend.each(function (legend) {
-            let cell = d3.select(this).datum().replace(/\s/g, "");
-            graph.legendIdentityArray.push(cell);
-            if (cell !== graph.clickedLegend) {
-                d3.select(this).style("opacity", 0.5);
-            } else if (cell == graph.clickedLegend) {
-                d3.select(this).style("stroke", "black").style("stroke-width", 2);
+        operatorsLegend.each( (legend, i, n) => {
+            graph.legendIdentityArray.push(legend);
+            if (legend !== graph.clickedLegend) {
+                d3.select(n[i]).style("opacity", 0.5);
+            } else if (legend == graph.clickedLegend) {
+                d3.select(n[i]).style("stroke", "black").style("stroke-width", 2);
             }
         });
         graph = plotSingleOperator(graph, layer, 500);
@@ -87,13 +86,12 @@ const cellClickHandler = (target, graph, layer) => {
             graph.activeLink = "0"; // Reset
 
             let operatorsLegend = d3.select(target.parentNode).selectAll("rect");
-            operatorsLegend.each(function (legend) {
-                let cell = d3.select(this).datum().replace(/\s/g, "");
-                if (cell !== graph.clickedLegend) {
-                    d3.select(this).style("opacity", 1);
+            operatorsLegend.each((legend, i, n) => {
+                if (legend !== graph.clickedLegend) {
+                    d3.select(n[i]).style("opacity", 1);
                 }
-                if (cell == graph.clickedLegend) {
-                    d3.select(this).style("stroke", "none");
+                if (legend == graph.clickedLegend) {
+                    d3.select(n[i]).style("stroke", "none");
                 }
             });
             // Restore plot to original
@@ -105,16 +103,15 @@ const cellClickHandler = (target, graph, layer) => {
 
 const resetSelectedLegend = (graphs) => {
     let updatedGraphs = [];
-    graphs.forEach(function (graph) {
+    graphs.forEach(graph => {
         if (graph.clickedNode) {
             let operatorsLegend2 = d3.select(graph.clickedNode.parentNode).selectAll("rect");
-            operatorsLegend2.each(function (legend) {
-                let cell = d3.select(this).datum().replace(/\s/g, "");
-                if (cell !== graph.clickedLegend) {
-                    d3.select(this).style("opacity", 1);
+            operatorsLegend2.each((legend, i, n) => {
+                if (legend !== graph.clickedLegend) {
+                    d3.select(n[i]).style("opacity", 1);
                 }
-                if (cell == graph.clickedLegend) {
-                    d3.select(this).style("stroke", "none");
+                if (legend == graph.clickedLegend) {
+                    d3.select(n[i]).style("stroke", "none");
                 }
             });
         }
