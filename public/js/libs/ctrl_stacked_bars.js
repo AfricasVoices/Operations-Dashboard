@@ -40,7 +40,7 @@ const plotSingleOperator = (graph, layer, transitionDuration) => {
 };
 
 const showAllOperators = (graph, layer) => {
-    layer.nodes()[graph.idx].childNodes.forEach(function (d, i, n) {
+    layer.nodes()[graph.idx].childNodes.forEach((d, i) => {
         d3.select(d).transition().duration(500).attr("y", graph.y_orig[i]);
     });
 
