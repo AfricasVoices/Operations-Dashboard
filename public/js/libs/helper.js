@@ -13,7 +13,7 @@ const plotSingleOperator = (graph, layer, transitionDuration) => {
     }
 
     // Lower the bars to start on x-axis
-    graph.y_orig = []; // to store original y-posn
+    graph.y_orig = []; // To store original y-posn
     layer.selectAll("rect")._groups[graph.idx].forEach(function (d, i, n) {
         // Get height and y posn of base bar and selected bar
         let h_keep = d3.select(d).attr("height");
@@ -44,7 +44,7 @@ const restorePlot = (graph, layer) => {
         d3.select(d).transition().duration(500).attr("y", graph.y_orig[i]);
     });
 
-    //restore opacity of erased bars
+    // Restore opacity of erased bars
     for (let i = 0; i < graph.legendIdentityArray.length; i++) {
         if (graph.legendIdentityArray[i] != graph.class_keep) {
             d3.selectAll(`.${graph.legendIdentityArray[i]}`).transition().duration(500).delay(150).style("opacity", 1);
@@ -63,9 +63,9 @@ const cellOverHandler = (target, graph) => {
 };
 
 const cellClickHandler = (target, graph, layer) => {
-    graph.clickedLegend = d3.select(target).datum().replace(/\s/g, ""); // to control legend selections
+    graph.clickedLegend = d3.select(target).datum().replace(/\s/g, ""); // To control legend selections
     if (graph.activeLink === "0") {
-        //nothing selected, turn on this selection
+        // Nothing selected, turn on this selection
         graph.activeLink = graph.clickedLegend;
         graph.clickedNode = target;
 
@@ -81,10 +81,10 @@ const cellClickHandler = (target, graph, layer) => {
         });
         graph = plotSingleOperator(graph, layer, 500);
     } else {
-        //deactivate
+        // Deactivate
         if (graph.activeLink === graph.clickedLegend) {
-            //active square selected; turn it OFF
-            graph.activeLink = "0"; //reset
+            // Active square selected; turn it OFF
+            graph.activeLink = "0"; // Reset
 
             let operatorsLegend = d3.select(target.parentNode).selectAll("rect");
             operatorsLegend.each(function (legend) {
@@ -96,10 +96,10 @@ const cellClickHandler = (target, graph, layer) => {
                     d3.select(this).style("stroke", "none");
                 }
             });
-            //restore plot to original
+            // Restore plot to original
             restorePlot(graph, layer);
         }
-    } //end graph.activeLink check
+    } // End graph.activeLink check
     return graph;
 };
 

@@ -151,12 +151,12 @@ export class TrafficGraphsController {
             sentDataStackedDaily = stackSentDaily(dailySentTotal);
 
         let ReceivedMsgGraph = {
-            activeLink: "0", // to control legend selections and hover
-            legendIdentityArray: [], // store legend classes to select bars in plotSingleOperator()
+            activeLink: "0", // To control legend selections and hover
+            legendIdentityArray: [], // Store legend classes to select bars in plotSingleOperator()
         };
         let SentMsgGraph = {
-            activeLink: "0", // to control legend selections and hover
-            legendIdentityArray: [], // store legend classes to select bars in plotSingleOperator()
+            activeLink: "0", // To control legend selections and hover
+            legendIdentityArray: [], // Store legend classes to select bars in plotSingleOperator()
         }
 
         //Create margins for the three graphs
