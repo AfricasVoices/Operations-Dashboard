@@ -1,5 +1,5 @@
 import { BarChart } from "../libs/bar_chart.js";
-import { plotSingleOperator, cellOverHandler, cellClickHandler, resetSelectedLegend } from "../libs/helper.js"
+import { plotSingleOperator, cellOverHandler, cellClickHandler, resetSelectedLegend } from "../libs/ctrl_stacked_bars"
 
 // GRAPH CONTROLLER
 export class TrafficGraphsController {
