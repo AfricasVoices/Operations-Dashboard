@@ -31,11 +31,10 @@ const plotSingleOperator = (graph, layer, transitionDuration) => {
         let y_new = y_base - h_shift;
 
         // Reposition selected bars
-        if (!transition) {
-            d3.select(d).attr("y", y_new);
-        } else {
-            d3.select(d).transition().ease(d3.easeBounce).duration(500).delay(150).attr("y", y_new);
-        }
+        d3.select(d).transition()
+            .ease(d3.easeBounce)
+            .duration(transitionDuration)
+            .delay(transitionDuration/3.3).attr("y", y_new);
     });
     return graph;
 };
