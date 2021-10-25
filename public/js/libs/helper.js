@@ -1,15 +1,14 @@
-const plotSingleOperator = (graph, layer, transition = true) => {
+const plotSingleOperator = (graph, layer, transitionDuration) => {
     graph.class_keep = graph.clickedLegend;
     graph.idx = graph.legendIdentityArray.indexOf(graph.class_keep);
 
     // Erase all but selected bars by setting opacity to 0
     for (let i = 0; i < graph.legendIdentityArray.length; i++) {
         if (graph.legendIdentityArray[i] != graph.class_keep) {
-            if (!transition) {
-                d3.selectAll(`.${graph.legendIdentityArray[i]}`).style("opacity", 0);
-            } else {
-                d3.selectAll(`.${graph.legendIdentityArray[i]}`).transition().duration(500).style("opacity", 0);
-            }
+            d3.selectAll(`.${graph.legendIdentityArray[i]}`)
+                .transition()
+                .duration(transitionDuration)
+                .style("opacity", 0);
         }
     }
 
@@ -81,7 +80,7 @@ const cellClickHandler = (target, graph, layer) => {
                 d3.select(this).style("stroke", "black").style("stroke-width", 2);
             }
         });
-        graph = plotSingleOperator(graph, layer);
+        graph = plotSingleOperator(graph, layer, 500);
     } else {
         //deactivate
         if (graph.activeLink === graph.clickedLegend) {

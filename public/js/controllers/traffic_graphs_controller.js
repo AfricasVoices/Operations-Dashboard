@@ -1375,12 +1375,12 @@ export class TrafficGraphsController {
                 yLimitReceived = value;
                 drawOneDayReceivedGraph(yLimitReceived);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
-                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, false);
+                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, 0);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = value;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
-                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, false);
+                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, 0);
             }
         });
 
@@ -1403,12 +1403,12 @@ export class TrafficGraphsController {
                 yLimitSent = value;
                 drawOneDaySentGraph(yLimitSent);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
-                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingleOperator(SentMsgGraph, layer, false);
+                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingleOperator(SentMsgGraph, layer, 0);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitSentFiltered = value;
                 draw10MinSentGraph(yLimitSentFiltered);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
-                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingleOperator(SentMsgGraph, layer, false);
+                if (SentMsgGraph.activeLink !== "0") SentMsgGraph = plotSingleOperator(SentMsgGraph, layer, 0);
             }
         });
 
