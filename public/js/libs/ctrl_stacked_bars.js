@@ -55,7 +55,7 @@ const showAllOperators = (graph, layer) => {
     }
 };
 
-const indicateSelecteableOptionsOnLegend = (target, graph) => {
+const indicateSelecteableLegends = (target, graph) => {
     let legendHovered = d3.select(target).datum().replace(/\s/g, "");
     if (graph.activeLink === "0") d3.select(target).style("cursor", "pointer");
     else {
@@ -124,4 +124,4 @@ const resetSelectedLegend = (graphs) => {
     return updatedGraphs;
 };
 
-export { plotSingleOperator, indicateSelecteableOptionsOnLegend, ctrlGraphByLegendSelections, resetSelectedLegend };
+export { plotSingleOperator, indicateSelecteableLegends, ctrlGraphByLegendSelections, resetSelectedLegend };
