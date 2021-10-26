@@ -1,5 +1,10 @@
 import { BarChart } from "../libs/bar_chart.js";
-import { plotSingleOperator, indicateSelecteableLegends, ctrlGraphByLegendSelections, resetSelectedLegend } from "../libs/ctrl_stacked_bars.js"
+import {
+    plotSingleOperator,
+    indicateSelecteableLegends,
+    ctrlGraphByLegendSelections,
+    resetSelectedLegend,
+} from "../libs/ctrl_stacked_bars.js";
 
 // GRAPH CONTROLLER
 export class TrafficGraphsController {
@@ -22,16 +27,15 @@ export class TrafficGraphsController {
         return layer;
     };
 
-    static updateGraphs(data, projectName, operators,  MNOColors) {
+    static updateGraphs(data, projectName, operators, MNOColors) {
         const TIMEFRAME_WEEK = 7;
         const TIMEFRAME_MONTH = 30;
         if (!(TrafficGraphsController.tenMinGraphTimeframe && TrafficGraphsController.oneDayGraphTimeframe)) {
-            TrafficGraphsController.tenMinGraphTimeframe = TIMEFRAME_WEEK; 
+            TrafficGraphsController.tenMinGraphTimeframe = TIMEFRAME_WEEK;
             TrafficGraphsController.oneDayGraphTimeframe = TIMEFRAME_MONTH;
         }
-        if (!TrafficGraphsController.chartTimeUnit) 
-            TrafficGraphsController.chartTimeUnit = "10min";   
-       
+        if (!TrafficGraphsController.chartTimeUnit) TrafficGraphsController.chartTimeUnit = "10min";
+
         let isYLimitReceivedManuallySet = false,
             isYLimitSentManuallySet = false,
             isYLimitFailedManuallySet = false,
@@ -46,30 +50,30 @@ export class TrafficGraphsController {
 
         offsetTenMinGraph.setDate(offsetTenMinGraph.getDate() - TrafficGraphsController.tenMinGraphTimeframe);
         offsetOneDayGraph.setDate(offsetOneDayGraph.getDate() - TrafficGraphsController.oneDayGraphTimeframe);
-        // Set date offsets to nearest midnight in the past 
+        // Set date offsets to nearest midnight in the past
         /* The offset dates sometime don't begin at the start of the day; thus they leave 
             the rest of the day messages not to be included in the first bar of graph when
             plotting one day view graphs */
-        offsetTenMinGraph.setHours(0,0,0,0)
-        offsetOneDayGraph.setHours(0,0,0,0)
+        offsetTenMinGraph.setHours(0, 0, 0, 0);
+        offsetOneDayGraph.setHours(0, 0, 0, 0);
 
         // Set default y-axis limits
-        let tenMinGraphFilteredData = data.filter(a => a.datetime > offsetTenMinGraph),
-            oneDayGraphFilteredData = data.filter(a => a.datetime > offsetOneDayGraph);
+        let tenMinGraphFilteredData = data.filter((a) => a.datetime > offsetTenMinGraph),
+            oneDayGraphFilteredData = data.filter((a) => a.datetime > offsetOneDayGraph);
 
         // Group received data by day
-        let dailyReceivedTotal = d3
-            .rollup(oneDayGraphFilteredData, v => {
+        let dailyReceivedTotal = d3.rollup(
+            oneDayGraphFilteredData,
+            (v) => {
                 let receivedData = {};
-                operators.forEach(operator => {
-                    receivedData[`${operator}_received`] = d3.sum(
-                        v,
-                        d => d[`${operator}_received`]
-                    );
+                operators.forEach((operator) => {
+                    receivedData[`${operator}_received`] = d3.sum(v, (d) => d[`${operator}_received`]);
                 });
-                receivedData["total_received"] = d3.sum(v, d => d.total_received);
+                receivedData["total_received"] = d3.sum(v, (d) => d.total_received);
                 return receivedData;
-            }, d => d.day)
+            },
+            (d) => d.day
+        );
         // Convert Map to array of object
         dailyReceivedTotal = Array.from(dailyReceivedTotal, ([key, value]) => ({ key, value }));
 
@@ -85,15 +89,18 @@ export class TrafficGraphsController {
         }
 
         // Group sent data by day
-        let dailySentTotal = d3
-            .rollup(oneDayGraphFilteredData, v => {
+        let dailySentTotal = d3.rollup(
+            oneDayGraphFilteredData,
+            (v) => {
                 let sentData = {};
-                operators.forEach(operator => {
-                    sentData[`${operator}_sent`] = d3.sum(v, d => d[`${operator}_sent`]);
+                operators.forEach((operator) => {
+                    sentData[`${operator}_sent`] = d3.sum(v, (d) => d[`${operator}_sent`]);
                 });
-                sentData["total_sent"] = d3.sum(v, d => d.total_sent);
+                sentData["total_sent"] = d3.sum(v, (d) => d.total_sent);
                 return sentData;
-            }, d => d.day)
+            },
+            (d) => d.day
+        );
         // Convert Map to array of object
         dailySentTotal = Array.from(dailySentTotal, ([key, value]) => ({ key, value }));
 
@@ -109,12 +116,15 @@ export class TrafficGraphsController {
         }
 
         // Group failed data by day
-        let dailyFailedTotal = d3
-            .rollup(oneDayGraphFilteredData, v => {
+        let dailyFailedTotal = d3.rollup(
+            oneDayGraphFilteredData,
+            (v) => {
                 let failedData = {};
-                failedData["total_errored"] = d3.sum(v,d => d.total_errored);
+                failedData["total_errored"] = d3.sum(v, (d) => d.total_errored);
                 return failedData;
-            }, d => d.day)
+            },
+            (d) => d.day
+        );
         // Convert Map to array of object
         dailyFailedTotal = Array.from(dailyFailedTotal, ([key, value]) => ({ key, value }));
 
@@ -157,7 +167,7 @@ export class TrafficGraphsController {
         let SentMsgGraph = {
             activeLink: "0", // To control legend selections and hover
             legendIdentityArray: [], // Store legend classes to select bars in plotSingleOperator()
-        }
+        };
 
         //Create margins for the three graphs
         const Margin = { top: 40, right: 100, bottom: 105, left: 140 },
@@ -179,37 +189,36 @@ export class TrafficGraphsController {
             .style("background", "whitesmoke")
             .style("border-radius", "8px")
             .style("visibility", "hidden");
-        
+
         let minX = -Margin.left,
             minY = -Margin.top,
             svgWidth = Width + Margin.left + Margin.right + 120,
-            svgHeight = Height + Margin.top + Margin.bottom; 
-        // Append total received sms graph to svg   
+            svgHeight = Height + Margin.top + Margin.bottom;
+        // Append total received sms graph to svg
         let total_received_sms_graph = d3
-                .select(".total_received_sms_graph")
-                .append("svg")
-                .attr("width", "100%")
-                .attr("height", "100%")
-                .attr("viewBox", `${minX} ${minY} ${svgWidth} ${svgHeight}`)
-                .attr("preserveAspectRatio", "xMinYMin")
-                .append("g");
+            .select(".total_received_sms_graph")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `${minX} ${minY} ${svgWidth} ${svgHeight}`)
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g");
         // Append total sent sms graph to svg
         let total_sent_sms_graph = d3
-                .select(".total_sent_sms_graph")
-                .append("svg")
-                .attr("width", "100%")
-                .attr("height", "100%")
-                .attr("viewBox", `${minX} ${minY} ${svgWidth} ${svgHeight}`)
-                .attr('preserveAspectRatio','xMinYMin')
-                .append("g");
+            .select(".total_sent_sms_graph")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", `${minX} ${minY} ${svgWidth} ${svgHeight}`)
+            .attr("preserveAspectRatio", "xMinYMin")
+            .append("g");
         // Format TimeStamp
         let timeFormat = d3.timeFormat("%a %d (%H:%M)");
 
         let mnoColorScheme = [],
             operatorsWithColorIdentity = Object.keys(MNOColors);
 
-        let firstOperatorWithoutColorIdentity = operators.filter(
-            x => !operatorsWithColorIdentity.includes(x))[0];
+        let firstOperatorWithoutColorIdentity = operators.filter((x) => !operatorsWithColorIdentity.includes(x))[0];
         let firstOperatorsWithoutColorIdentityIndex = operators.indexOf(firstOperatorWithoutColorIdentity);
         // Assign the value of `other` property of MNOColors to the first operator without color identity
         mnoColorScheme[firstOperatorsWithoutColorIdentityIndex] = MNOColors.other;
@@ -225,13 +234,13 @@ export class TrafficGraphsController {
             colorReceived = d3.scaleOrdinal(mnoColorScheme).domain(receivedKeys),
             colorSent = d3.scaleOrdinal(mnoColorScheme).domain(sentKeys);
 
-        let yLimitReceived = d3.max(dailyReceivedTotal, d => d.total_received),
-            yLimitReceivedFiltered = d3.max(tenMinGraphFilteredData, d => d.total_received),
-            yLimitSent = d3.max(dailySentTotal, d => d.total_sent),
-            yLimitSentFiltered = d3.max(tenMinGraphFilteredData, d => d.total_sent),
-            yLimitFailed = d3.max(dailyFailedTotal, d => d.total_errored),
-            yLimitFailedFiltered = d3.max(tenMinGraphFilteredData, d => d.total_errored); 
-        
+        let yLimitReceived = d3.max(dailyReceivedTotal, (d) => d.total_received),
+            yLimitReceivedFiltered = d3.max(tenMinGraphFilteredData, (d) => d.total_received),
+            yLimitSent = d3.max(dailySentTotal, (d) => d.total_sent),
+            yLimitSentFiltered = d3.max(tenMinGraphFilteredData, (d) => d.total_sent),
+            yLimitFailed = d3.max(dailyFailedTotal, (d) => d.total_errored),
+            yLimitFailedFiltered = d3.max(tenMinGraphFilteredData, (d) => d.total_errored);
+
         // Add Y axis Slider
         total_received_sms_graph
             .append("g")
@@ -242,7 +251,7 @@ export class TrafficGraphsController {
         let receivedSliderStep = d3
             .sliderLeft()
             .min(0)
-            .max(yLimitReceived + (0.2 * yLimitReceived))
+            .max(yLimitReceived + 0.2 * yLimitReceived)
             .height(Height)
             .ticks(5)
             .step(5)
@@ -251,16 +260,13 @@ export class TrafficGraphsController {
         d3.select(".receivedSlider").call(receivedSliderStep);
 
         // Add Y axis Slider
-        total_sent_sms_graph
-            .append("g")
-            .attr("class", "sentSlider")
-            .attr("transform", `translate(${-45},${0})`);
+        total_sent_sms_graph.append("g").attr("class", "sentSlider").attr("transform", `translate(${-45},${0})`);
 
         // Step
         let sentSliderStep = d3
             .sliderLeft()
             .min(0)
-            .max(yLimitSent + (0.2 * yLimitSent))
+            .max(yLimitSent + 0.2 * yLimitSent)
             .height(Height)
             .ticks(5)
             .step(5)
@@ -308,11 +314,11 @@ export class TrafficGraphsController {
             .scale(colorReceived)
             .labels(operators)
             .on("cellover", function () {
-                indicateSelecteableLegends(this, ReceivedMsgGraph)
+                indicateSelecteableLegends(this, ReceivedMsgGraph);
             })
             .on("cellclick", function () {
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
-                ReceivedMsgGraph = ctrlGraphByLegendSelections(this, ReceivedMsgGraph, layer)
+                ReceivedMsgGraph = ctrlGraphByLegendSelections(this, ReceivedMsgGraph, layer);
             });
 
         d3.select(".receivedLegend").call(receivedLegend);
@@ -330,11 +336,11 @@ export class TrafficGraphsController {
             .scale(colorSent)
             .labels(operators)
             .on("cellover", function () {
-                indicateSelecteableLegends(this, SentMsgGraph)
+                indicateSelecteableLegends(this, SentMsgGraph);
             })
             .on("cellclick", function () {
                 let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
-                SentMsgGraph = ctrlGraphByLegendSelections(this, SentMsgGraph, layer)
+                SentMsgGraph = ctrlGraphByLegendSelections(this, SentMsgGraph, layer);
             });
 
         d3.select(".sentLegend").call(sentLegend);
@@ -344,8 +350,8 @@ export class TrafficGraphsController {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceivedFiltered);
             d3.select("#buttonYLimitSent").property("value", yLimitSentFiltered);
             d3.select("#buttonYLimitFailed").property("value", yLimitFailedFiltered);
-            receivedSliderStep.value(yLimitReceivedFiltered)
-            sentSliderStep.value(yLimitSentFiltered)
+            receivedSliderStep.value(yLimitReceivedFiltered);
+            sentSliderStep.value(yLimitSentFiltered);
             draw10MinReceivedGraph(yLimitReceivedFiltered);
             draw10MinSentGraph(yLimitSentFiltered);
             draw10MinFailedGraph(yLimitFailedFiltered);
@@ -355,8 +361,8 @@ export class TrafficGraphsController {
             d3.select("#buttonYLimitReceived").property("value", yLimitReceived);
             d3.select("#buttonYLimitSent").property("value", yLimitSent);
             d3.select("#buttonYLimitFailed").property("value", yLimitFailed);
-            receivedSliderStep.value(yLimitReceived)
-            sentSliderStep.value(yLimitSent)
+            receivedSliderStep.value(yLimitReceived);
+            sentSliderStep.value(yLimitSent);
             drawOneDayReceivedGraph(yLimitReceived);
             drawOneDaySentGraph(yLimitSent);
             drawOneDayFailedGraph(yLimitFailed);
@@ -365,23 +371,22 @@ export class TrafficGraphsController {
         function draw10MinReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitReceivedManuallySet == false) {
-                yLimitReceived = d3.max(tenMinGraphFilteredData, d => d.total_received);
+                yLimitReceived = d3.max(tenMinGraphFilteredData, (d) => d.total_received);
             }
 
             let stackReceived = d3.stack().keys(receivedKeys),
                 receivedDataStacked = stackReceived(tenMinGraphFilteredData);
 
             // set scale domains
-            let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
-            let xMax = d3.max(tenMinGraphFilteredData, d => {
+            let xMin = d3.min(tenMinGraphFilteredData, (d) => new Date(d.datetime));
+            let xMax = d3.max(tenMinGraphFilteredData, (d) => {
                 let datetime = new Date(d.datetime);
                 // Create a "padding" in the time scale
                 datetime.setMinutes(datetime.getMinutes() + 10);
                 return datetime;
             });
             x.domain([xMin, xMax]);
-            if (yLimitReceived > 0)
-                y_total_received_sms_range.domain([0, yLimitReceived]);
+            if (yLimitReceived > 0) y_total_received_sms_range.domain([0, yLimitReceived]);
 
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack").remove();
@@ -391,12 +396,15 @@ export class TrafficGraphsController {
             d3.selectAll(".brush").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
-            let dataFilteredWeekGroupedDaily = d3
-                .rollup(tenMinGraphFilteredData, v => {
-                    let firstTimestampOfDay = {}
-                    firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
-                    return firstTimestampOfDay
-                }, d => d.day)
+            let dataFilteredWeekGroupedDaily = d3.rollup(
+                tenMinGraphFilteredData,
+                (v) => {
+                    let firstTimestampOfDay = {};
+                    firstTimestampOfDay["datetime"] = d3.min(v, (d) => d.datetime);
+                    return firstTimestampOfDay;
+                },
+                (d) => d.day
+            );
             // Convert Map to array of object
             dataFilteredWeekGroupedDaily = Array.from(dataFilteredWeekGroupedDaily, ([key, value]) => ({ key, value }));
 
@@ -409,25 +417,20 @@ export class TrafficGraphsController {
                 delete dataFilteredWeekGroupedDaily[entry]["value"];
                 delete dataFilteredWeekGroupedDaily[entry]["key"];
             }
-            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map((d) => d.datetime);
 
             // Add the X gridlines
-            total_received_sms_graph.append("g")			
+            total_received_sms_graph
+                .append("g")
                 .attr("class", "receivedGrid")
                 .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .tickValues(tickValuesForXAxis)
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
-                
+                .call(d3.axisBottom(x).tickValues(tickValuesForXAxis).tickSize(-Height).tickFormat(""));
+
             // Add the Y gridlines
-            total_received_sms_graph.append("g")			
+            total_received_sms_graph
+                .append("g")
                 .attr("class", "receivedGrid")
-                .call(d3.axisLeft(y_total_received_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
+                .call(d3.axisLeft(y_total_received_sms_range).tickSize(-Width).tickFormat(""));
 
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
@@ -437,19 +440,27 @@ export class TrafficGraphsController {
                 .call(d3.axisLeft(y_total_received_sms_range));
 
             // Add a clipPath: everything out of this area won't be drawn.
-            let clip = total_received_sms_graph.append("defs").append("svg:clipPath")
+            let clip = total_received_sms_graph
+                .append("defs")
+                .append("svg:clipPath")
                 .attr("id", "clip")
                 .append("svg:rect")
                 .attr("width", Width)
                 .attr("height", Height)
                 .attr("x", 0)
-                .attr("y", 0); 
+                .attr("y", 0);
             // Create the variable: where both the stacked bars and the brush take place
-            let sectionWithBrushing = total_received_sms_graph.append('g').attr("clip-path", "url(#clip)");
+            let sectionWithBrushing = total_received_sms_graph.append("g").attr("clip-path", "url(#clip)");
 
             // Add the brushing
-            let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
-        
+            let brush = d3
+                .brushX()
+                .extent([
+                    [0, 0],
+                    [Width, Height],
+                ])
+                .on("end", updateChart);
+
             ReceivedMsgGraph.receivedLayer10min = sectionWithBrushing
                 .selectAll("#receivedStack10min")
                 .data(receivedDataStacked)
@@ -461,16 +472,13 @@ export class TrafficGraphsController {
 
             ReceivedMsgGraph.receivedLayer10min
                 .selectAll("rect")
-                .data(tenMinGraphFilteredData => tenMinGraphFilteredData)
+                .data((tenMinGraphFilteredData) => tenMinGraphFilteredData)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
-                )
-                .attr("width", d => {
+                .attr("x", (d) => x(d.data.datetime))
+                .attr("y", (d) => y_total_received_sms_range(d[1]))
+                .attr("height", (d) => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1]))
+                .attr("width", (d) => {
                     let datetime = new Date(d.data.datetime);
                     datetime.setMinutes(datetime.getMinutes() + 9);
                     return x(datetime) - x(d.data.datetime);
@@ -481,12 +489,7 @@ export class TrafficGraphsController {
                 .append("g")
                 .attr("class", "redrawElementReceived")
                 .attr("transform", "translate(0," + Height + ")")
-                .call(
-                    d3
-                        .axisBottom(x)
-                        .tickValues(tickValuesForXAxis)
-                        .tickFormat(timeFormat)
-                )
+                .call(d3.axisBottom(x).tickValues(tickValuesForXAxis).tickFormat(timeFormat));
             // Rotate axis labels
             xAxis
                 .selectAll("text")
@@ -499,10 +502,7 @@ export class TrafficGraphsController {
             total_received_sms_graph
                 .append("text")
                 .attr("class", "redrawElementReceived")
-                .attr(
-                    "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
-                )
+                .attr("transform", "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")")
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
 
@@ -521,7 +521,8 @@ export class TrafficGraphsController {
 
             // Create focus object
             let focus = total_received_sms_graph.append("g").attr("class", `focus`);
-            let customTooltip = total_received_sms_graph.append("foreignObject")
+            let customTooltip = total_received_sms_graph
+                .append("foreignObject")
                 .attr("class", "customTooltip")
                 .attr("x", -70)
                 .attr("y", -45)
@@ -532,19 +533,20 @@ export class TrafficGraphsController {
                 .style("visibility", "hidden");
 
             // Append diamond on the path
-            focus.append("path")
+            focus
+                .append("path")
                 .attr("d", d3.symbol().type(d3.symbolDiamond))
                 .attr("transform", "translate(0, -6)")
                 .attr("class", "diamond");
 
             sectionWithBrushing
                 .on("mouseover", () => {
-                    focus.style("display", null)
-                    customTooltip.style("display", null)
+                    focus.style("display", null);
+                    customTooltip.style("display", null);
                 })
                 .on("mouseout", () => {
-                    focus.style("display", "none")
-                    customTooltip.style("display", "none")
+                    focus.style("display", "none");
+                    customTooltip.style("display", "none");
                 })
                 .on("mousemove", (event) => {
                     // Below code finds the date by bisecting and
@@ -558,7 +560,7 @@ export class TrafficGraphsController {
                     let d0 = tenMinGraphFilteredData[i - 1];
                     let d1 = tenMinGraphFilteredData[i];
                     let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
-    
+
                     // Place the focus objects on the same path as the bars
                     let updatedDatetime = new Date(d.datetime);
                     updatedDatetime.setMinutes(updatedDatetime.getMinutes() + 4.5);
@@ -570,29 +572,29 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}px, ${y_total_received_sms_range(d.total_received)}px)`
                     );
-                        
+
                     let tooltipContent = [];
-                    operators.forEach(operator => {
-                        if(d.operators[operator].received != 0) {
+                    operators.forEach((operator) => {
+                        if (d.operators[operator].received != 0) {
                             // List of operator(s) with the number of messages received
-                            tooltipContent.push(`${operator}: ${d.operators[operator].received}`)
+                            tooltipContent.push(`${operator}: ${d.operators[operator].received}`);
                         }
-                    })
-    
+                    });
+
                     let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
                     if (tooltipContent.length) {
-                        tooltipContent.forEach(d => {
+                        tooltipContent.forEach((d) => {
                             let operator = d.split(":")[0];
-                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`
-                        })
+                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`;
+                        });
                     } else {
-                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`
+                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`;
                     }
 
                     customTooltip
                         .html(tooltipText)
-                        .attr("y", () => (tooltipContent.length > 0) ? -35 - (tooltipContent.length * 15) : -45)
-                        .attr("height", () => (tooltipContent.length > 0) ? 30 + (tooltipContent.length * 15) : 40)
+                        .attr("y", () => (tooltipContent.length > 0 ? -35 - tooltipContent.length * 15 : -45))
+                        .attr("height", () => (tooltipContent.length > 0 ? 30 + tooltipContent.length * 15 : 40))
                         .style("text-align", "center")
                         .style("padding", "2px 0px")
                         .style("color", "black")
@@ -600,7 +602,7 @@ export class TrafficGraphsController {
                         .style("font-weight", "600")
                         .style("font-family", "'Montserrat', sans-serif")
                         .style("visibility", "visible");
-                    
+
                     // Show the diamond on the path
                     focus.selectAll(`.focus .diamond`).style("opacity", 1);
                 });
@@ -614,8 +616,10 @@ export class TrafficGraphsController {
             d3.selectAll(`.customTooltip`).style("visibility", "hidden");
 
             // A function that set idleTimeOut to null
-            let idleTimeout
-            function idled() { idleTimeout = null; }
+            let idleTimeout;
+            function idled() {
+                idleTimeout = null;
+            }
 
             // A function that update the chart for given boundaries
             function updateChart(event) {
@@ -624,10 +628,10 @@ export class TrafficGraphsController {
 
                 // If no selection, back to initial coordinate. Otherwise, update X axis domain
                 if (!extent) {
-                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)); // This allows to wait a little bit
                     // set scale domains
-                    let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
-                    let xMax = d3.max(tenMinGraphFilteredData, d => {
+                    let xMin = d3.min(tenMinGraphFilteredData, (d) => new Date(d.datetime));
+                    let xMax = d3.max(tenMinGraphFilteredData, (d) => {
                         let datetime = new Date(d.datetime);
                         // Create a "padding" in the time scale
                         datetime.setMinutes(datetime.getMinutes() + 10);
@@ -637,10 +641,10 @@ export class TrafficGraphsController {
                 } else {
                     // Update x axis domain
                     x.domain([x.invert(extent[0]), x.invert(extent[1])]);
-                    sectionWithBrushing.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+                    sectionWithBrushing.select(".brush").call(brush.move, null); // This remove the grey brush area as soon as the selection has been done
                 }
 
-                // Update axis 
+                // Update axis
                 xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(timeFormat));
 
                 // Rotate axis labels
@@ -650,32 +654,32 @@ export class TrafficGraphsController {
                     .attr("dx", "-.8em")
                     .attr("dy", ".15em")
                     .attr("transform", "rotate(-65)");
-                    
+
                 // Redraw the stacked bars
-                ReceivedMsgGraph.receivedLayer10min.selectAll("rect")
-                    .attr("x", d => x(d.data.datetime))
-                    .attr("width", d => {
+                ReceivedMsgGraph.receivedLayer10min
+                    .selectAll("rect")
+                    .attr("x", (d) => x(d.data.datetime))
+                    .attr("width", (d) => {
                         let datetime = new Date(d.data.datetime);
                         datetime.setMinutes(datetime.getMinutes() + 9);
                         return x(datetime) - x(d.data.datetime);
                     });
-            } 
+            }
         }
 
         function drawOneDayReceivedGraph(yLimitReceived) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            let yLimitReceivedTotal = d3.max(dailyReceivedTotal, d => d.total_received);
+            let yLimitReceivedTotal = d3.max(dailyReceivedTotal, (d) => d.total_received);
 
             if (isYLimitReceivedManuallySet == false) {
                 yLimitReceived = yLimitReceivedTotal;
             }
 
-            let xMin = d3.min(dailyReceivedTotal, d => new Date(d.day)),
-                xMax = d3.max(dailyReceivedTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
+            let xMin = d3.min(dailyReceivedTotal, (d) => new Date(d.day)),
+                xMax = d3.max(dailyReceivedTotal, (d) => TrafficGraphsController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
-            if (yLimitReceived > 0)
-                y_total_received_sms_range.domain([0, yLimitReceived]);
+            if (yLimitReceived > 0) y_total_received_sms_range.domain([0, yLimitReceived]);
 
             d3.selectAll(".redrawElementReceived").remove();
             d3.selectAll("#receivedStack10min").remove();
@@ -684,24 +688,19 @@ export class TrafficGraphsController {
             d3.selectAll(".customTooltip").remove();
             d3.selectAll(".brush").remove();
 
-            const tickValuesForXAxis = dailyReceivedTotal.map(d => new Date(d.day));
+            const tickValuesForXAxis = dailyReceivedTotal.map((d) => new Date(d.day));
             // Add the X gridlines
-            total_received_sms_graph.append("g")			
+            total_received_sms_graph
+                .append("g")
                 .attr("class", "receivedGrid")
                 .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .tickValues(tickValuesForXAxis)
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
+                .call(d3.axisBottom(x).tickValues(tickValuesForXAxis).tickSize(-Height).tickFormat(""));
 
             // Add the Y gridlines
-            total_received_sms_graph.append("g")			
+            total_received_sms_graph
+                .append("g")
                 .attr("class", "receivedGrid")
-                .call(d3.axisLeft(y_total_received_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
+                .call(d3.axisLeft(y_total_received_sms_range).tickSize(-Width).tickFormat(""));
 
             // Add the Y Axis for the total received sms graph
             total_received_sms_graph
@@ -721,16 +720,13 @@ export class TrafficGraphsController {
 
             ReceivedMsgGraph.receivedLayer
                 .selectAll("rect")
-                .data(d => d)
+                .data((d) => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
-                .attr("y", d => y_total_received_sms_range(d[1]))
-                .attr(
-                    "height",
-                    d => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1])
-                )
-                .attr("width", d => {
+                .attr("x", (d) => x(new Date(d.data.day)))
+                .attr("y", (d) => y_total_received_sms_range(d[1]))
+                .attr("height", (d) => y_total_received_sms_range(d[0]) - y_total_received_sms_range(d[1]))
+                .attr("width", (d) => {
                     let day = new Date(d.data.day);
                     day.setHours(day.getHours() + 23);
                     return x(day) - x(new Date(d.data.day));
@@ -743,16 +739,16 @@ export class TrafficGraphsController {
                     // Get key of stacked data from the selection
                     let operatorNameWithMessageDirection = d3.select(event.currentTarget.parentNode).datum().key,
                         // Get operator name from the key
-                        operatorName = operatorNameWithMessageDirection.replace('_received',''),
+                        operatorName = operatorNameWithMessageDirection.replace("_received", ""),
                         // Get color of hovered rect
                         operatorColor = d3.select(event.currentTarget.parentNode).style("fill");
                     let receivedMessages = d.data[operatorNameWithMessageDirection],
                         totalReceivedMessages = d.data.total_received,
                         // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
                         tooltipContent = `<div>${receivedMessages} 
-                        (${Math.round((receivedMessages/totalReceivedMessages)*100)}%)
+                        (${Math.round((receivedMessages / totalReceivedMessages) * 100)}%)
                         ${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
-                        Message${receivedMessages !== 1 ? 's': ''} </div>`;
+                        Message${receivedMessages !== 1 ? "s" : ""} </div>`;
                     tip.html(tooltipContent)
                         .style("color", operatorColor)
                         .style("font-size", "12px")
@@ -768,7 +764,7 @@ export class TrafficGraphsController {
                 })
                 .on("mousemove", (event, d) => {
                     tip.style("transform", `translate(${event.pageX}px, ${event.pageY - 40}px)`); // We can calculate the mouse's position relative the whole page by using event.pageX and event.pageY.
-                })
+                });
 
             // "Add the X Axis for the total received sms graph
             total_received_sms_graph
@@ -779,7 +775,7 @@ export class TrafficGraphsController {
                     d3
                         .axisBottom(x)
                         .tickValues(tickValuesForXAxis)
-                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
+                        .tickFormat((d) => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -792,10 +788,7 @@ export class TrafficGraphsController {
             total_received_sms_graph
                 .append("text")
                 .attr("class", "redrawElementReceived")
-                .attr(
-                    "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
-                )
+                .attr("transform", "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")")
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
 
@@ -814,16 +807,15 @@ export class TrafficGraphsController {
         function draw10MinSentGraph(yLimitSent) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitSentManuallySet == false) {
-                yLimitSent = d3.max(tenMinGraphFilteredData, d => d.total_sent);
+                yLimitSent = d3.max(tenMinGraphFilteredData, (d) => d.total_sent);
             }
 
             let stackSent = d3.stack().keys(sentKeys),
                 sentDataStacked = stackSent(tenMinGraphFilteredData);
 
             // set scale domains
-            x.domain(d3.extent(tenMinGraphFilteredData, d => new Date(d.datetime)));
-            if (yLimitSent > 0)
-                y_total_sent_sms_range.domain([0, yLimitSent]);
+            x.domain(d3.extent(tenMinGraphFilteredData, (d) => new Date(d.datetime)));
+            if (yLimitSent > 0) y_total_sent_sms_range.domain([0, yLimitSent]);
 
             // Remove changing chart elements before redrawing
             d3.selectAll(".redrawElementSent").remove();
@@ -832,12 +824,15 @@ export class TrafficGraphsController {
             d3.selectAll(".sentGrid").remove();
 
             // Group data filtered by week daily and generate tick values for x axis
-            let dataFilteredWeekGroupedDaily = d3
-                .rollup(tenMinGraphFilteredData, v => {
-                    let firstTimestampOfDay = {}
-                    firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
-                    return firstTimestampOfDay
-                }, d => d.day)
+            let dataFilteredWeekGroupedDaily = d3.rollup(
+                tenMinGraphFilteredData,
+                (v) => {
+                    let firstTimestampOfDay = {};
+                    firstTimestampOfDay["datetime"] = d3.min(v, (d) => d.datetime);
+                    return firstTimestampOfDay;
+                },
+                (d) => d.day
+            );
             // Convert Map to array of object
             dataFilteredWeekGroupedDaily = Array.from(dataFilteredWeekGroupedDaily, ([key, value]) => ({ key, value }));
 
@@ -850,25 +845,20 @@ export class TrafficGraphsController {
                 delete dataFilteredWeekGroupedDaily[entry]["value"];
                 delete dataFilteredWeekGroupedDaily[entry]["key"];
             }
-            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map((d) => d.datetime);
 
             // Add the X gridlines
-            total_sent_sms_graph.append("g")			
+            total_sent_sms_graph
+                .append("g")
                 .attr("class", "sentGrid")
                 .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .tickValues(tickValuesForXAxis)
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
-                
+                .call(d3.axisBottom(x).tickValues(tickValuesForXAxis).tickSize(-Height).tickFormat(""));
+
             // Add the Y gridlines
-            total_sent_sms_graph.append("g")			
+            total_sent_sms_graph
+                .append("g")
                 .attr("class", "sentGrid")
-                .call(d3.axisLeft(y_total_sent_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
+                .call(d3.axisLeft(y_total_sent_sms_range).tickSize(-Width).tickFormat(""));
 
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
@@ -878,19 +868,27 @@ export class TrafficGraphsController {
                 .call(d3.axisLeft(y_total_sent_sms_range));
 
             // Add a clipPath: everything out of this area won't be drawn.
-            let clip = total_sent_sms_graph.append("defs").append("svg:clipPath")
+            let clip = total_sent_sms_graph
+                .append("defs")
+                .append("svg:clipPath")
                 .attr("id", "clip")
                 .append("svg:rect")
                 .attr("width", Width)
                 .attr("height", Height)
                 .attr("x", 0)
                 .attr("y", 0);
-                
+
             // Create the variable: where both the stacked bars and the brush take place
-            let sectionWithBrushing = total_sent_sms_graph.append('g').attr("clip-path", "url(#clip)");
+            let sectionWithBrushing = total_sent_sms_graph.append("g").attr("clip-path", "url(#clip)");
 
             // Add the brushing
-            let brush = d3.brushX().extent([[0, 0], [Width, Height]]).on("end", updateChart);
+            let brush = d3
+                .brushX()
+                .extent([
+                    [0, 0],
+                    [Width, Height],
+                ])
+                .on("end", updateChart);
 
             // Create stacks
             SentMsgGraph.sentLayer10min = sectionWithBrushing
@@ -904,13 +902,13 @@ export class TrafficGraphsController {
 
             SentMsgGraph.sentLayer10min
                 .selectAll("rect")
-                .data(tenMinGraphFilteredData => tenMinGraphFilteredData)
+                .data((tenMinGraphFilteredData) => tenMinGraphFilteredData)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(d.data.datetime))
-                .attr("y", d => y_total_sent_sms_range(d[1]))
-                .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", d => {
+                .attr("x", (d) => x(d.data.datetime))
+                .attr("y", (d) => y_total_sent_sms_range(d[1]))
+                .attr("height", (d) => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
+                .attr("width", (d) => {
                     let datetime = new Date(d.data.datetime);
                     datetime.setMinutes(datetime.getMinutes() + 9);
                     return x(datetime) - x(d.data.datetime);
@@ -921,12 +919,7 @@ export class TrafficGraphsController {
                 .append("g")
                 .attr("class", "redrawElementSent")
                 .attr("transform", "translate(0," + Height + ")")
-                .call(
-                    d3
-                        .axisBottom(x)
-                        .tickValues(tickValuesForXAxis)
-                        .tickFormat(timeFormat)
-                )
+                .call(d3.axisBottom(x).tickValues(tickValuesForXAxis).tickFormat(timeFormat));
             // Rotate axis labels
             xAxis
                 .selectAll("text")
@@ -939,10 +932,7 @@ export class TrafficGraphsController {
             total_sent_sms_graph
                 .append("text")
                 .attr("class", "redrawElementSent")
-                .attr(
-                    "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")"
-                )
+                .attr("transform", "translate(" + Width / 2 + " ," + (Height + Margin.top + 50) + ")")
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
 
@@ -961,7 +951,8 @@ export class TrafficGraphsController {
 
             // Create focus object
             let focus = total_sent_sms_graph.append("g").attr("class", `focus`);
-            let customTooltip = total_sent_sms_graph.append("foreignObject")
+            let customTooltip = total_sent_sms_graph
+                .append("foreignObject")
                 .attr("class", "customTooltip")
                 .attr("x", -70)
                 .attr("y", -45)
@@ -972,19 +963,20 @@ export class TrafficGraphsController {
                 .style("visibility", "hidden");
 
             // Append diamond on the path
-            focus.append("path")
+            focus
+                .append("path")
                 .attr("d", d3.symbol().type(d3.symbolDiamond))
                 .attr("transform", "translate(0, -6)")
                 .attr("class", "diamond");
 
             sectionWithBrushing
                 .on("mouseover", () => {
-                    focus.style("display", null)
-                    customTooltip.style("display", null)
+                    focus.style("display", null);
+                    customTooltip.style("display", null);
                 })
                 .on("mouseout", () => {
-                    focus.style("display", "none")
-                    customTooltip.style("display", "none")
+                    focus.style("display", "none");
+                    customTooltip.style("display", "none");
                 })
                 .on("mousemove", (event) => {
                     // Below code finds the date by bisecting and
@@ -998,7 +990,7 @@ export class TrafficGraphsController {
                     let d0 = tenMinGraphFilteredData[i - 1];
                     let d1 = tenMinGraphFilteredData[i];
                     let d = x0 - d0.datetime > d1.datetime - x0 ? d1 : d0;
-    
+
                     // Place the focus objects on the same path as the bars
                     let updatedDatetime = new Date(d.datetime);
                     updatedDatetime.setMinutes(updatedDatetime.getMinutes() + 4.5);
@@ -1010,29 +1002,29 @@ export class TrafficGraphsController {
                         "transform",
                         `translate(${x(updatedDatetime)}px, ${y_total_sent_sms_range(d.total_sent)}px)`
                     );
-                        
+
                     let tooltipContent = [];
-                    operators.forEach(operator => {
-                        if(d.operators[operator].sent != 0) {
+                    operators.forEach((operator) => {
+                        if (d.operators[operator].sent != 0) {
                             // List of operator(s) with the number of messages sent
-                            tooltipContent.push(`${operator}: ${d.operators[operator].sent}`)
+                            tooltipContent.push(`${operator}: ${d.operators[operator].sent}`);
                         }
-                    })
-    
+                    });
+
                     let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
                     if (tooltipContent.length) {
-                        tooltipContent.forEach(d => {
+                        tooltipContent.forEach((d) => {
                             let operator = d.split(":")[0];
-                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`
-                        })
+                            tooltipText += `<div class="${operator}"><i class="fas fa-check-square"></i> ${d}</div>`;
+                        });
                     } else {
-                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`
+                        tooltipText += `<div class="other"><i class="fas fa-minus-square"></i> No message</div>`;
                     }
 
                     customTooltip
                         .html(tooltipText)
-                        .attr("y", () => (tooltipContent.length > 0) ? -35 - (tooltipContent.length * 15) : -45)
-                        .attr("height", () => (tooltipContent.length > 0) ? 30 + (tooltipContent.length * 15) : 40)
+                        .attr("y", () => (tooltipContent.length > 0 ? -35 - tooltipContent.length * 15 : -45))
+                        .attr("height", () => (tooltipContent.length > 0 ? 30 + tooltipContent.length * 15 : 40))
                         .style("text-align", "center")
                         .style("padding", "2px 0px")
                         .style("color", "black")
@@ -1040,7 +1032,7 @@ export class TrafficGraphsController {
                         .style("font-weight", "600")
                         .style("font-family", "'Montserrat', sans-serif")
                         .style("visibility", "visible");
-                    
+
                     // Show the diamond on the path
                     focus.selectAll(`.focus .diamond`).style("opacity", 1);
                 });
@@ -1054,8 +1046,10 @@ export class TrafficGraphsController {
             d3.selectAll(`.customTooltip`).style("visibility", "hidden");
 
             // A function that set idleTimeOut to null
-            let idleTimeout
-            function idled() { idleTimeout = null; }
+            let idleTimeout;
+            function idled() {
+                idleTimeout = null;
+            }
 
             // A function that update the chart for given boundaries
             function updateChart(event) {
@@ -1064,10 +1058,10 @@ export class TrafficGraphsController {
 
                 // If no selection, back to initial coordinate. Otherwise, update X axis domain
                 if (!extent) {
-                    if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+                    if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)); // This allows to wait a little bit
                     // set scale domains
-                    let xMin = d3.min(tenMinGraphFilteredData, d => new Date(d.datetime));
-                    let xMax = d3.max(tenMinGraphFilteredData, d => {
+                    let xMin = d3.min(tenMinGraphFilteredData, (d) => new Date(d.datetime));
+                    let xMax = d3.max(tenMinGraphFilteredData, (d) => {
                         let datetime = new Date(d.datetime);
                         // Create a "padding" in the time scale
                         datetime.setMinutes(datetime.getMinutes() + 10);
@@ -1077,10 +1071,10 @@ export class TrafficGraphsController {
                 } else {
                     // Update x axis domain
                     x.domain([x.invert(extent[0]), x.invert(extent[1])]);
-                    sectionWithBrushing.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+                    sectionWithBrushing.select(".brush").call(brush.move, null); // This remove the grey brush area as soon as the selection has been done
                 }
 
-                // Update axis 
+                // Update axis
                 xAxis.transition().duration(1000).call(d3.axisBottom(x).tickFormat(timeFormat));
 
                 // Rotate axis labels
@@ -1090,56 +1084,51 @@ export class TrafficGraphsController {
                     .attr("dx", "-.8em")
                     .attr("dy", ".15em")
                     .attr("transform", "rotate(-65)");
-                    
+
                 // Redraw the stacked bars
-                SentMsgGraph.sentLayer10min.selectAll("rect")
-                    .attr("x", d => x(d.data.datetime))
-                    .attr("width", d => {
+                SentMsgGraph.sentLayer10min
+                    .selectAll("rect")
+                    .attr("x", (d) => x(d.data.datetime))
+                    .attr("width", (d) => {
                         let datetime = new Date(d.data.datetime);
                         datetime.setMinutes(datetime.getMinutes() + 9);
                         return x(datetime) - x(d.data.datetime);
                     });
-            } 
+            }
         }
 
         function drawOneDaySentGraph(yLimitSent) {
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            let yLimitSentTotal = d3.max(dailySentTotal, d => d.total_sent);
+            let yLimitSentTotal = d3.max(dailySentTotal, (d) => d.total_sent);
 
             if (isYLimitSentManuallySet != true) {
                 yLimitSent = yLimitSentTotal;
             }
 
-            let xMin = d3.min(dailySentTotal, d => new Date(d.day)),
-                xMax = d3.max(dailySentTotal, d => TrafficGraphsController.addOneDayToDate(d.day));
+            let xMin = d3.min(dailySentTotal, (d) => new Date(d.day)),
+                xMax = d3.max(dailySentTotal, (d) => TrafficGraphsController.addOneDayToDate(d.day));
             // set scale domains
             x.domain([xMin, xMax]);
-            if (yLimitSent > 0)
-                y_total_sent_sms_range.domain([0, yLimitSent]);
+            if (yLimitSent > 0) y_total_sent_sms_range.domain([0, yLimitSent]);
 
             d3.selectAll(".redrawElementSent").remove();
             d3.selectAll("#sentStack10min").remove();
             d3.selectAll("#sentStack1day").remove();
             d3.selectAll(".sentGrid").remove();
 
-            const tickValuesForXAxis = dailySentTotal.map(d => new Date(d.day));
+            const tickValuesForXAxis = dailySentTotal.map((d) => new Date(d.day));
             // Add the X gridlines
-            total_sent_sms_graph.append("g")			
+            total_sent_sms_graph
+                .append("g")
                 .attr("class", "sentGrid")
                 .attr("transform", "translate(0," + Height + ")")
-                .call(d3.axisBottom(x)
-                    .tickValues(tickValuesForXAxis)
-                    .tickSize(-Height)
-                    .tickFormat("")
-                )
+                .call(d3.axisBottom(x).tickValues(tickValuesForXAxis).tickSize(-Height).tickFormat(""));
 
             // Add the Y gridlines
-            total_sent_sms_graph.append("g")			
+            total_sent_sms_graph
+                .append("g")
                 .attr("class", "sentGrid")
-                .call(d3.axisLeft(y_total_sent_sms_range)
-                    .tickSize(-Width)
-                    .tickFormat("")
-                )
+                .call(d3.axisLeft(y_total_sent_sms_range).tickSize(-Width).tickFormat(""));
 
             // Add the Y Axis for the total sent sms graph
             total_sent_sms_graph
@@ -1160,13 +1149,13 @@ export class TrafficGraphsController {
 
             SentMsgGraph.sentLayer
                 .selectAll("rect")
-                .data(d => d)
+                .data((d) => d)
                 .enter()
                 .append("rect")
-                .attr("x", d => x(new Date(d.data.day)))
-                .attr("y", d => y_total_sent_sms_range(d[1]))
-                .attr("height", d => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
-                .attr("width", d => {
+                .attr("x", (d) => x(new Date(d.data.day)))
+                .attr("y", (d) => y_total_sent_sms_range(d[1]))
+                .attr("height", (d) => y_total_sent_sms_range(d[0]) - y_total_sent_sms_range(d[1]))
+                .attr("width", (d) => {
                     let day = new Date(d.data.day);
                     day.setHours(day.getHours() + 23);
                     return x(day) - x(new Date(d.data.day));
@@ -1179,16 +1168,16 @@ export class TrafficGraphsController {
                     // Get key of stacked data from the selection
                     let operatorNameWithMessageDirection = d3.select(event.currentTarget.parentNode).datum().key,
                         // Get operator name from the key
-                        operatorName = operatorNameWithMessageDirection.replace('_sent',''),
+                        operatorName = operatorNameWithMessageDirection.replace("_sent", ""),
                         // Get color of hovered rect
                         operatorColor = d3.select(event.currentTarget).style("fill");
                     let sentMessages = d.data[operatorNameWithMessageDirection],
                         totalSentMessages = d.data.total_sent,
                         // Tooltip with operator name, no. of msg(s) & msg percentage in that day.
                         tooltipContent = `<div>${sentMessages} 
-                        (${Math.round((sentMessages/totalSentMessages)*100)}%)
+                        (${Math.round((sentMessages / totalSentMessages) * 100)}%)
                         ${operatorName.charAt(0).toUpperCase() + operatorName.slice(1)} 
-                        Message${sentMessages !== 1 ? 's': ''} </div>`;
+                        Message${sentMessages !== 1 ? "s" : ""} </div>`;
                     tip.html(tooltipContent)
                         .style("color", operatorColor)
                         .style("font-size", "12px")
@@ -1204,7 +1193,7 @@ export class TrafficGraphsController {
                 })
                 .on("mousemove", (event, d) => {
                     tip.style("transform", `translate(${event.pageX}px, ${event.pageY - 40}px)`); // We can calculate the mouse's position relative the whole page by using event.pageX and event.pageY.
-                })
+                });
 
             //Add the X Axis for the total sent sms graph
             total_sent_sms_graph
@@ -1215,7 +1204,7 @@ export class TrafficGraphsController {
                     d3
                         .axisBottom(x)
                         .tickValues(tickValuesForXAxis)
-                        .tickFormat(d => dayDateFormatWithWeekdayName(d))
+                        .tickFormat((d) => dayDateFormatWithWeekdayName(d))
                 )
                 // Rotate axis labels
                 .selectAll("text")
@@ -1228,10 +1217,7 @@ export class TrafficGraphsController {
             total_sent_sms_graph
                 .append("text")
                 .attr("class", "redrawElementSent")
-                .attr(
-                    "transform",
-                    "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")"
-                )
+                .attr("transform", "translate(" + Width / 2 + " ," + (Height + Margin.top + 65) + ")")
                 .style("text-anchor", "middle")
                 .text("Date (Y-M-D)");
 
@@ -1249,22 +1235,24 @@ export class TrafficGraphsController {
 
         function drawOneDayFailedGraph(yLimitFailed) {
             let oneDayFailedChartData = JSON.parse(JSON.stringify(dailyFailedTotal));
-            oneDayFailedChartData.forEach(function(d) {
+            oneDayFailedChartData.forEach(function (d) {
                 d.datetime = new Date(d.day);
                 d.value = +d.total_errored;
-            })
+            });
             // Set Y axis limit to max of daily values or to the value inputted by the user
-            let yLimitFailedTotal = d3.max(oneDayFailedChartData, d => d.value);
+            let yLimitFailedTotal = d3.max(oneDayFailedChartData, (d) => d.value);
             if (isYLimitFailedManuallySet != true) {
                 yLimitFailed = yLimitFailedTotal;
             }
             // Tick Values for X axis
-            const tickValuesForXAxis = oneDayFailedChartData.map(d => new Date(d.datetime));
+            const tickValuesForXAxis = oneDayFailedChartData.map((d) => new Date(d.datetime));
 
-            let oneDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
-            let xMax = d3.max(oneDayFailedChartData, d => TrafficGraphsController.addOneDayToDate(d.datetime));
-            const oneDayFailedChart = new BarChart(
-                { element: document.querySelector('.total_failed_sms_graph'), data: oneDayFailedChartData });
+            let oneDayFailedChartConfig = { setFailedMsgGraphTooltipText: true };
+            let xMax = d3.max(oneDayFailedChartData, (d) => TrafficGraphsController.addOneDayToDate(d.datetime));
+            const oneDayFailedChart = new BarChart({
+                element: document.querySelector(".total_failed_sms_graph"),
+                data: oneDayFailedChartData,
+            });
             oneDayFailedChart
                 .setTitle("Total Failed Message(s) / day")
                 .setXAxisLabel("Date (Y-M-D)")
@@ -1284,21 +1272,24 @@ export class TrafficGraphsController {
 
         function draw10MinFailedGraph(yLimitFailed) {
             let _10minFailedChartData = JSON.parse(JSON.stringify(tenMinGraphFilteredData));
-            _10minFailedChartData.forEach(function(d) {
+            _10minFailedChartData.forEach(function (d) {
                 d.datetime = new Date(d.datetime);
                 d.value = +d.total_errored;
-            })  
+            });
             // Set Y axis limit to max of daily values or to the value inputted by the user
             if (isYLimitFailedManuallySet == false) {
-                yLimitFailed = d3.max(_10minFailedChartData, d => d.value);
+                yLimitFailed = d3.max(_10minFailedChartData, (d) => d.value);
             }
             // Group data filtered by week daily and generate tick values for x axis
-            let dataFilteredWeekGroupedDaily = d3
-                .rollup(_10minFailedChartData, v => {
-                    let firstTimestampOfDay = {}
-                    firstTimestampOfDay["datetime"] = d3.min(v,d => d.datetime)
-                    return firstTimestampOfDay
-                }, d => d.day)
+            let dataFilteredWeekGroupedDaily = d3.rollup(
+                _10minFailedChartData,
+                (v) => {
+                    let firstTimestampOfDay = {};
+                    firstTimestampOfDay["datetime"] = d3.min(v, (d) => d.datetime);
+                    return firstTimestampOfDay;
+                },
+                (d) => d.day
+            );
             // Convert Map to array of object
             dataFilteredWeekGroupedDaily = Array.from(dataFilteredWeekGroupedDaily, ([key, value]) => ({ key, value }));
 
@@ -1311,11 +1302,13 @@ export class TrafficGraphsController {
                 delete dataFilteredWeekGroupedDaily[entry]["value"];
                 delete dataFilteredWeekGroupedDaily[entry]["key"];
             }
-            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map(d => d.datetime);
+            const tickValuesForXAxis = dataFilteredWeekGroupedDaily.map((d) => d.datetime);
 
-            let _10minDayFailedChartConfig = { setFailedMsgGraphTooltipText: true }
-            const _10minFailedChart = new BarChart(
-                {element: document.querySelector('.total_failed_sms_graph'), data: _10minFailedChartData });
+            let _10minDayFailedChartConfig = { setFailedMsgGraphTooltipText: true };
+            const _10minFailedChart = new BarChart({
+                element: document.querySelector(".total_failed_sms_graph"),
+                data: _10minFailedChartData,
+            });
             _10minFailedChart
                 .setTitle("Total Failed Message(s) / 10 minutes")
                 .setXAxisLabel("Date (Y-M-D)")
@@ -1335,29 +1328,29 @@ export class TrafficGraphsController {
         d3.select("#buttonUpdateView10Minutes").on("click", () => {
             TrafficGraphsController.chartTimeUnit = "10min";
             updateView10Minutes(yLimitReceivedFiltered, yLimitSentFiltered, yLimitFailedFiltered);
-            [ReceivedMsgGraph, SentMsgGraph] = resetSelectedLegend([ReceivedMsgGraph, SentMsgGraph])
+            [ReceivedMsgGraph, SentMsgGraph] = resetSelectedLegend([ReceivedMsgGraph, SentMsgGraph]);
         });
 
         d3.select("#buttonUpdateViewOneDay").on("click", () => {
             TrafficGraphsController.chartTimeUnit = "1day";
             updateViewOneDay(yLimitReceived, yLimitSent, yLimitFailed);
-            [ReceivedMsgGraph, SentMsgGraph] = resetSelectedLegend([ReceivedMsgGraph, SentMsgGraph])
+            [ReceivedMsgGraph, SentMsgGraph] = resetSelectedLegend([ReceivedMsgGraph, SentMsgGraph]);
         });
 
-        d3.select("#timeFrame").on("change", function() {
+        d3.select("#timeFrame").on("change", function () {
             let timeFrame = this.options[this.selectedIndex].value;
             if (timeFrame == "default") {
-                TrafficGraphsController.tenMinGraphTimeframe = TIMEFRAME_WEEK; 
+                TrafficGraphsController.tenMinGraphTimeframe = TIMEFRAME_WEEK;
                 TrafficGraphsController.oneDayGraphTimeframe = TIMEFRAME_MONTH;
-                TrafficGraphsController.updateGraphs(data, projectName, operators, MNOColors)
+                TrafficGraphsController.updateGraphs(data, projectName, operators, MNOColors);
             } else {
                 TrafficGraphsController.tenMinGraphTimeframe = TrafficGraphsController.oneDayGraphTimeframe = timeFrame;
-                TrafficGraphsController.updateGraphs(data, projectName, operators, MNOColors)
+                TrafficGraphsController.updateGraphs(data, projectName, operators, MNOColors);
             }
-        })
+        });
 
         // Draw received graph with user-selected y-axis limit
-        d3.select("#buttonYLimitReceived").on("input", function() {
+        d3.select("#buttonYLimitReceived").on("input", function () {
             isYLimitReceivedManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitReceived = this.value;
@@ -1369,23 +1362,25 @@ export class TrafficGraphsController {
         });
 
         // Draw received graph with user-selected y-axis limit
-        receivedSliderStep.on("onchange", value => {
+        receivedSliderStep.on("onchange", (value) => {
             isYLimitReceivedManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitReceived = value;
                 drawOneDayReceivedGraph(yLimitReceived);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
-                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, 0);
+                if (ReceivedMsgGraph.activeLink !== "0")
+                    ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, 0);
             } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitReceivedFiltered = value;
                 draw10MinReceivedGraph(yLimitReceivedFiltered);
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
-                if (ReceivedMsgGraph.activeLink !== "0") ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, 0);
+                if (ReceivedMsgGraph.activeLink !== "0")
+                    ReceivedMsgGraph = plotSingleOperator(ReceivedMsgGraph, layer, 0);
             }
         });
 
         // Draw sent graph with user-selected y-axis limit
-        d3.select("#buttonYLimitSent").on("input", function() {
+        d3.select("#buttonYLimitSent").on("input", function () {
             isYLimitSentManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitSent = this.value;
@@ -1397,7 +1392,7 @@ export class TrafficGraphsController {
         });
 
         // Draw sent graph with user-selected y-axis limit
-        sentSliderStep.on("onchange", value => {
+        sentSliderStep.on("onchange", (value) => {
             isYLimitSentManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitSent = value;
@@ -1413,12 +1408,12 @@ export class TrafficGraphsController {
         });
 
         // Draw failed graph with user-selected y-axis limit
-        d3.select("#buttonYLimitFailed").on("input", function() {
+        d3.select("#buttonYLimitFailed").on("input", function () {
             isYLimitFailedManuallySet = true;
             if (TrafficGraphsController.chartTimeUnit == "1day") {
                 yLimitFailed = this.value;
                 drawOneDayFailedGraph(yLimitFailed);
-            }  else if (TrafficGraphsController.chartTimeUnit == "10min") {
+            } else if (TrafficGraphsController.chartTimeUnit == "10min") {
                 yLimitFailedFiltered = this.value;
                 draw10MinFailedGraph(yLimitFailedFiltered);
             }
@@ -1429,15 +1424,13 @@ export class TrafficGraphsController {
         let lastUpdateTimeStamp = new Date(
             Math.max.apply(
                 null,
-                data.map(d => new Date(d.datetime))
+                data.map((d) => new Date(d.datetime))
             )
         );
         lastUpdateTimeStamp.setMinutes(lastUpdateTimeStamp.getMinutes() + 10);
         lastUpdateTimeStamp = new Date(lastUpdateTimeStamp);
 
-        d3.select("#lastUpdated")
-            .classed("text-stale-info", false)
-            .text(fullDateFormat(lastUpdateTimeStamp));
+        d3.select("#lastUpdated").classed("text-stale-info", false).text(fullDateFormat(lastUpdateTimeStamp));
 
         function setLastUpdatedAlert() {
             // Calculate time diff bw current and lastUpdateTimeStamp
