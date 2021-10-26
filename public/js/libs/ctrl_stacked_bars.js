@@ -55,7 +55,7 @@ const showAllOperators = (graph, layer) => {
     }
 };
 
-const cellOverHandler = (target, graph) => {
+const indicateSelecteableOptionsOnLegend = (target, graph) => {
     let legendHovered = d3.select(target).datum().replace(/\s/g, "");
     if (graph.activeLink === "0") d3.select(target).style("cursor", "pointer");
     else {
@@ -65,7 +65,7 @@ const cellOverHandler = (target, graph) => {
     }
 };
 
-const cellClickHandler = (target, graph, layer) => {
+const ctrlGraphByLegendSelections = (target, graph, layer) => {
     graph.clickedLegend = d3.select(target).datum().replace(/\s/g, ""); // To control legend selections
     if (graph.activeLink === "0") {
         // Nothing selected, turn on this selection
@@ -73,7 +73,7 @@ const cellClickHandler = (target, graph, layer) => {
         graph.clickedNode = target;
 
         let operatorsLegend = d3.select(target.parentNode).selectAll("rect");
-        operatorsLegend.each( (legend, i, n) => {
+        operatorsLegend.each((legend, i, n) => {
             graph.legendIdentityArray.push(legend);
             if (legend !== graph.clickedLegend) {
                 d3.select(n[i]).style("opacity", 0.5);
@@ -124,4 +124,4 @@ const resetSelectedLegend = (graphs) => {
     return updatedGraphs;
 };
 
-export { plotSingleOperator, cellOverHandler, cellClickHandler, resetSelectedLegend };
+export { plotSingleOperator, indicateSelecteableOptionsOnLegend, ctrlGraphByLegendSelections, resetSelectedLegend };

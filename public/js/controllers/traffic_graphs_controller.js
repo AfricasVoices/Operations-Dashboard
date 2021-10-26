@@ -1,5 +1,5 @@
 import { BarChart } from "../libs/bar_chart.js";
-import { plotSingleOperator, cellOverHandler, cellClickHandler, resetSelectedLegend } from "../libs/ctrl_stacked_bars.js"
+import { plotSingleOperator, indicateSelecteableOptionsOnLegend, ctrlGraphByLegendSelections, resetSelectedLegend } from "../libs/ctrl_stacked_bars.js"
 
 // GRAPH CONTROLLER
 export class TrafficGraphsController {
@@ -308,11 +308,11 @@ export class TrafficGraphsController {
             .scale(colorReceived)
             .labels(operators)
             .on("cellover", function () {
-                cellOverHandler(this, ReceivedMsgGraph)
+                indicateSelecteableOptionsOnLegend(this, ReceivedMsgGraph)
             })
             .on("cellclick", function () {
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
-                ReceivedMsgGraph = cellClickHandler(this, ReceivedMsgGraph, layer)
+                ReceivedMsgGraph = ctrlGraphByLegendSelections(this, ReceivedMsgGraph, layer)
             });
 
         d3.select(".receivedLegend").call(receivedLegend);
@@ -330,11 +330,11 @@ export class TrafficGraphsController {
             .scale(colorSent)
             .labels(operators)
             .on("cellover", function () {
-                cellOverHandler(this, SentMsgGraph)
+                indicateSelecteableOptionsOnLegend(this, SentMsgGraph)
             })
             .on("cellclick", function () {
                 let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
-                SentMsgGraph = cellClickHandler(this, SentMsgGraph, layer)
+                SentMsgGraph = ctrlGraphByLegendSelections(this, SentMsgGraph, layer)
             });
 
         d3.select(".sentLegend").call(sentLegend);
