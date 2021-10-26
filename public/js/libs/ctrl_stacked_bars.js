@@ -47,7 +47,10 @@ const showAllOperators = (graph, layer) => {
     // Restore opacity of erased bars
     for (let i = 0; i < graph.legendIdentityArray.length; i++) {
         if (graph.legendIdentityArray[i] != graph.class_keep) {
-            d3.selectAll(`.${graph.legendIdentityArray[i]}`).transition().duration(500).delay(150).style("opacity", 1);
+            d3.selectAll(`.${graph.legendIdentityArray[i]}`).transition()
+                .duration(500)
+                .delay(150)
+                .style("opacity", 1);
         }
     }
 };
