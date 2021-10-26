@@ -73,11 +73,11 @@ const ctrlGraphByLegendSelections = (target, graph, layer) => {
         graph.clickedNode = target;
 
         let operatorsLegend = d3.select(target.parentNode).selectAll("rect");
-        operatorsLegend.each((legend, i, n) => {
-            graph.legendIdentityArray.push(legend);
-            if (legend !== graph.clickedLegend) {
+        operatorsLegend.each((d, i, n) => {
+            graph.legendIdentityArray.push(d);
+            if (d !== graph.clickedLegend) {
                 d3.select(n[i]).style("opacity", 0.5);
-            } else if (legend == graph.clickedLegend) {
+            } else if (d == graph.clickedLegend) {
                 d3.select(n[i]).style("stroke", "black").style("stroke-width", 2);
             }
         });
@@ -89,11 +89,11 @@ const ctrlGraphByLegendSelections = (target, graph, layer) => {
             graph.activeLink = "0"; // Reset
 
             let operatorsLegend = d3.select(target.parentNode).selectAll("rect");
-            operatorsLegend.each((legend, i, n) => {
-                if (legend !== graph.clickedLegend) {
+            operatorsLegend.each((d, i, n) => {
+                if (d !== graph.clickedLegend) {
                     d3.select(n[i]).style("opacity", 1);
                 }
-                if (legend == graph.clickedLegend) {
+                if (d == graph.clickedLegend) {
                     d3.select(n[i]).style("stroke", "none");
                 }
             });
@@ -109,11 +109,11 @@ const resetSelectedLegend = (graphs) => {
     graphs.forEach(graph => {
         if (graph.clickedNode) {
             let operatorsLegend2 = d3.select(graph.clickedNode.parentNode).selectAll("rect");
-            operatorsLegend2.each((legend, i, n) => {
-                if (legend !== graph.clickedLegend) {
+            operatorsLegend2.each((d, i, n) => {
+                if (d !== graph.clickedLegend) {
                     d3.select(n[i]).style("opacity", 1);
                 }
-                if (legend == graph.clickedLegend) {
+                if (d == graph.clickedLegend) {
                     d3.select(n[i]).style("stroke", "none");
                 }
             });
