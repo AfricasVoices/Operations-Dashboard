@@ -1,7 +1,7 @@
 import { BarChart } from "../libs/bar_chart.js";
 import {
     plotSingleOperator,
-    indicateSelecteableLegends,
+    indicateSelectableLegends,
     ctrlGraphByLegendSelections,
     resetSelectedLegend,
 } from "../libs/ctrl_stacked_bars.js";
@@ -314,7 +314,7 @@ export class TrafficGraphsController {
             .scale(colorReceived)
             .labels(operators)
             .on("cellover", function () {
-                indicateSelecteableLegends(this, ReceivedMsgGraph);
+                indicateSelectableLegends(this, ReceivedMsgGraph);
             })
             .on("cellclick", function () {
                 let layer = TrafficGraphsController.getGraphByMsgDirection(ReceivedMsgGraph, "received");
@@ -336,7 +336,7 @@ export class TrafficGraphsController {
             .scale(colorSent)
             .labels(operators)
             .on("cellover", function () {
-                indicateSelecteableLegends(this, SentMsgGraph);
+                indicateSelectableLegends(this, SentMsgGraph);
             })
             .on("cellclick", function () {
                 let layer = TrafficGraphsController.getGraphByMsgDirection(SentMsgGraph, "sent");
