@@ -266,7 +266,7 @@ export class TrafficGraphsController {
         let sentSliderStep = d3
             .sliderLeft()
             .min(0)
-            .max(yLimitSent + 0.2 * yLimitSent)
+            .max(yLimitSent + (0.2 * yLimitSent))
             .height(Height)
             .ticks(5)
             .step(5)
