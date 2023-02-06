@@ -19,10 +19,6 @@ class Controller {
         document
             .querySelector(Controller.DOMstrings.systemsMenu)
             .addEventListener("click", Controller.navigateToSelectedSystem);
-        document
-            .querySelector(Controller.DOMstrings.homeLink)
-            .addEventListener("click", Controller.displayCodingProgress);
-        
     }
 
     static clearAllTimers() {
