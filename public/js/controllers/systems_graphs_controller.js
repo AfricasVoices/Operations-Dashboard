@@ -2,6 +2,12 @@ import { AreaChart } from "../libs/area_chart.js";
 
 export class SystemsGraphsController {
     static updateGraphs(data) {
+        if (Object.keys(data).length == 0) {
+            import ('./ui_controller.js').then((module) => {
+                module.UIController.noActivePipelineAlertMsg("Miranda not in operation");
+            });
+            return false;
+        }
         // Clear previous graphs before redrawing
         d3.selectAll("svg").remove();
 
