@@ -20,7 +20,7 @@ class Controller {
             .querySelector(Controller.DOMstrings.systemsMenu)
             .addEventListener("click", Controller.navigateToSelectedSystem);
         document
-            .querySelector(Controller.DOMstrings.homeLink)
+            .querySelector(Controller.DOMstrings.homePageLink)
             .addEventListener("click", Controller.displayCodingProgress);
     }
 
