@@ -11,6 +11,7 @@ export class UIController {
             mainContainer: "#main-container",
             activeLinkClassName: "active-link",
             activeLinks: "a.active-link",
+            homePageLink: "#homepage-link",
         };
     }
 
