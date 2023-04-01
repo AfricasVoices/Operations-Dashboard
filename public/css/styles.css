@@ -331,7 +331,7 @@ th:hover {
 .other {
     color: #e6194b;
 }
-#alertNopipeline {
+#alertNoData{
     width: 250px;
     color: white;
     font-weight: bolder;
