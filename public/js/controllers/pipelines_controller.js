@@ -2,7 +2,7 @@ export class PipelinesController {
     static updatePipelinePage(pipelineMetrics) {
           if (Object.keys(pipelineMetrics).length == 0) {
             import ('./ui_controller.js').then((module) => {
-                module.UIController.noActivePipelineAlertMsg("No pipelines running");
+                module.UIController.showNoDataAlert("No pipelines running");
             });
             return false;
         }
