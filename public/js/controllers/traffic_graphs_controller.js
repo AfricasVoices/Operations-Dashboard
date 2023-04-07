@@ -581,7 +581,8 @@ export class TrafficGraphsController {
                         }
                     });
 
-                    let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
+                    let tooltipText = `<div>${d3.timeFormat("%H:%M")(d0.datetime)}-${d3.timeFormat("%H:%M")(d1.datetime)}</div>`;
+                    tooltipText += `<div>${d3.timeFormat("%Y-%m-%d")(d1.datetime)}</div>`
                     if (tooltipContent.length) {
                         tooltipContent.forEach((d) => {
                             let operator = d.split(":")[0];
@@ -593,8 +594,8 @@ export class TrafficGraphsController {
 
                     customTooltip
                         .html(tooltipText)
-                        .attr("y", () => (tooltipContent.length > 0 ? -35 - tooltipContent.length * 15 : -45))
-                        .attr("height", () => (tooltipContent.length > 0 ? 30 + tooltipContent.length * 15 : 40))
+                        .attr("y", () => (tooltipContent.length > 0 ? -35 - tooltipContent.length * 15 : -75))
+                        .attr("height", () => (tooltipContent.length > 0 ? 30 + tooltipContent.length * 30 : 60))
                         .style("text-align", "center")
                         .style("padding", "2px 0px")
                         .style("color", "black")
@@ -1011,7 +1012,8 @@ export class TrafficGraphsController {
                         }
                     });
 
-                    let tooltipText = `<div>${d3.timeFormat("%Y-%m-%d (%H:%M)")(d.datetime)}</div>`;
+                    let tooltipText = `<div>${d3.timeFormat("%H:%M")(d0.datetime)}-${d3.timeFormat("%H:%M")(d1.datetime)}</div>`;   
+                    tooltipText += `<div>${d3.timeFormat("%Y-%m-%d")(d1.datetime)}</div>`
                     if (tooltipContent.length) {
                         tooltipContent.forEach((d) => {
                             let operator = d.split(":")[0];
@@ -1023,8 +1025,8 @@ export class TrafficGraphsController {
 
                     customTooltip
                         .html(tooltipText)
-                        .attr("y", () => (tooltipContent.length > 0 ? -35 - tooltipContent.length * 15 : -45))
-                        .attr("height", () => (tooltipContent.length > 0 ? 30 + tooltipContent.length * 15 : 40))
+                        .attr("y", () => (tooltipContent.length > 0 ? -35 - tooltipContent.length * 15 : -75))
+                        .attr("height", () => (tooltipContent.length > 0 ? 30 + tooltipContent.length * 30 : 60))
                         .style("text-align", "center")
                         .style("padding", "2px 0px")
                         .style("color", "black")
