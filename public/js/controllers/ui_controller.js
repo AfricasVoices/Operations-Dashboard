@@ -336,4 +336,14 @@ export class UIController {
         </div> `;
         UIController.statusBody.insertAdjacentHTML("beforeend", html);
     }
+
+  static showNoDataAlert(msg) {
+        UIController.resetUI();
+        let html = `<div class="container">
+            <div class="card border border-0">
+            <span class=' p-2  mx-auto ' id='alertNoData'>${msg}</span>
+            </div>
+        </div> `;
+        UIController.statusBody.insertAdjacentHTML("beforeend", html);
+    }
 }

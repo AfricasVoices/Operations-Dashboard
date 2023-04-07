@@ -1,5 +1,11 @@
 export class PipelinesController {
     static updatePipelinePage(pipelineMetrics) {
+          if (Object.keys(pipelineMetrics).length == 0) {
+            import ('./ui_controller.js').then((module) => {
+                module.UIController.showNoDataAlert("No pipelines running");
+            });
+            return false;
+        }
         // Group pipeline metrics by pipeline name
         let metricsByPipeline = d3.group(pipelineMetrics, (d) => d.pipeline_name);
 
